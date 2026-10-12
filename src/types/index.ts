@@ -2,6 +2,7 @@ export type UserRole = 'admin' | 'member';
 
 export interface User {
   id: string;
+  legacyId?: string;
   name: string;
   nickname: string;
   readonly email: string;
@@ -20,7 +21,7 @@ export interface User {
 }
 
 export type UserPatch = Partial<
-  Omit<User, 'id' | 'email' | 'updatedAt' | 'updatedBy'>
+  Omit<User, 'id' | 'legacyId' | 'email' | 'updatedAt' | 'updatedBy'>
 >;
 
 export interface Config {

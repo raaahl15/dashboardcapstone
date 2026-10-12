@@ -200,7 +200,7 @@ export const LoginGateway: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-11 px-3.5 rounded-2xl border-[1.5px] border-[#6B7F99] bg-white text-[#0B1B33] placeholder:text-[#5F6F86] focus:border-[#0062CC] focus:ring-1 focus:ring-[#0062CC] text-xs transition-all outline-none"
-                placeholder="lead.engineer@dme-area1.epc"
+                placeholder="nama@mail.ugm.ac.id"
                 required
               />
             </div>

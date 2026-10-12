@@ -12,11 +12,11 @@ service cloud.firestore {
     function isAreaOneTeamMember() {
       return isSignedIn()
         && request.auth.token.email in [
-          'lead.engineer@dme-area1.epc',
-          'process.engineer@dme-area1.epc',
-          'inst1.engineer@dme-area1.epc',
-          'inst2.engineer@dme-area1.epc',
-          'cost.engineer@dme-area1.epc'
+          'rahulghulamhidayatulloh2004@mail.ugm.ac.id',
+          'ihsaanzauhairtsaqifprawira@mail.ugm.ac.id',
+          'altaframadhanparvez@mail.ugm.ac.id',
+          'jonathanpangihutanms@mail.ugm.ac.id',
+          'heidifalinabrilian@mail.ugm.ac.id'
         ];
     }
 

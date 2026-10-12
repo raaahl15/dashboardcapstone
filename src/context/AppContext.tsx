@@ -258,32 +258,87 @@ const LOCAL_STORAGE_USERS_KEY = 'area1_dme_users_data';
 const BROADCAST_CHANNEL_NAME = 'area1_dme_realtime_sync';
 
 function sortAndNormalizeUsers(rawUsers: User[]): User[] {
-  const byId = new Map<string, User>();
-  for (const base of INITIAL_USERS) {
-    byId.set(base.id, { ...base });
+  const validIncoming = Array.isArray(rawUsers)
+    ? rawUsers.filter((u): u is User => Boolean(u && u.id))
+    : [];
+
+  if (validIncoming.length === 0) {
+    return INITIAL_USERS.map((base) => ({ ...base }));
   }
-  for (const incoming of rawUsers) {
-    if (!incoming || !incoming.id) continue;
-    const fallback = byId.get(incoming.id);
-    byId.set(incoming.id, {
-      ...(fallback || {}),
-      ...incoming,
-      nickname: incoming.nickname || fallback?.nickname || incoming.name.split(' ')[0],
-      email: fallback?.email || incoming.email,
-    });
+
+  const initialById = new Map<string, User>(
+    INITIAL_USERS.map((base) => [base.id, base])
+  );
+
+  const isFirestoreMode = validIncoming.some(
+    (u) => Boolean(u.legacyId) || !initialById.has(u.id)
+  );
+
+  // If in Firestore mode and rawUsers contains both UID-based docs (with legacyId)
+  // and stale legacy-ID docs (e.g. from old localStorage cache), ignore the stale legacy-ID duplicates
+  const legacyIdsPresentOnUidDocs = new Set<string>(
+    validIncoming
+      .filter((u) => Boolean(u.legacyId) && u.id !== u.legacyId)
+      .map((u) => u.legacyId as string)
+  );
+
+  const normalizedList: User[] = [];
+  const seenIds = new Set<string>();
+
+  for (const incoming of validIncoming) {
+    if (seenIds.has(incoming.id)) continue;
+    if (
+      isFirestoreMode &&
+      !incoming.legacyId &&
+      legacyIdsPresentOnUidDocs.has(incoming.id)
+    ) {
+      continue;
+    }
+    seenIds.add(incoming.id);
+
+    const fallback =
+      initialById.get(incoming.id) ??
+      (incoming.legacyId ? initialById.get(incoming.legacyId) : undefined);
+
+    const definedIncoming = Object.fromEntries(
+      Object.entries(incoming).filter(([, value]) => value !== undefined)
+    ) as Partial<User>;
+
+    const merged: User = {
+      ...(fallback ? { ...fallback } : ({} as User)),
+      ...definedIncoming,
+      id: incoming.id,
+    };
+
+    if (incoming.legacyId !== undefined) {
+      merged.legacyId = incoming.legacyId;
+    }
+
+    if (merged.nickname === undefined) {
+      merged.nickname =
+        fallback?.nickname ?? (merged.name ? merged.name.split(' ')[0] : '');
+    }
+
+    normalizedList.push(merged);
   }
-  const ordered: User[] = [];
-  for (const id of USER_ORDER) {
-    const found = byId.get(id);
-    if (found) {
-      ordered.push(found);
-      byId.delete(id);
+
+  if (!isFirestoreMode) {
+    for (const base of INITIAL_USERS) {
+      if (!seenIds.has(base.id)) {
+        normalizedList.push({ ...base });
+      }
     }
   }
-  for (const remaining of byId.values()) {
-    ordered.push(remaining);
-  }
-  return ordered;
+
+  return normalizedList.sort((a, b) => {
+    const keyA = a.legacyId ?? a.id;
+    const keyB = b.legacyId ?? b.id;
+    const idxA = USER_ORDER.indexOf(keyA);
+    const idxB = USER_ORDER.indexOf(keyB);
+    const rankA = idxA === -1 ? USER_ORDER.length : idxA;
+    const rankB = idxB === -1 ? USER_ORDER.length : idxB;
+    return rankA - rankB;
+  });
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -337,9 +392,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const dataUnsubscribe = useRef<(() => void) | null>(null);
   const usersUnsubscribe = useRef<(() => void) | null>(null);
 
-  // Current active user from single source of truth `users`
+  // Current active user from single source of truth `users` (matches id or legacyId)
   const currentUser = useMemo(() => {
-    return users.find((u) => u.id === currentUserId) || users[0];
+    return (
+      users.find(
+        (u) =>
+          u.id === currentUserId ||
+          (Boolean(u.legacyId) && u.legacyId === currentUserId)
+      ) || users[0]
+    );
   }, [users, currentUserId]);
 
   const isPM = currentUser.role === 'admin';
@@ -1178,7 +1239,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     value: RaciRoleValue
   ) => {
     const resolvedUser = getUser(memberUidOrKey);
-    const targetUid = resolvedUser?.id || memberUidOrKey;
+    const targetUid =
+      resolvedUser?.legacyId || resolvedUser?.id || memberUidOrKey;
     const uidToLegacyKey: Record<
       string,
       'rahul' | 'ihsan' | 'althaf' | 'jonathan' | 'heidi'
@@ -1468,7 +1530,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const importDataFromJson = (jsonStr: string) => {
     try {
       const data = JSON.parse(jsonStr);
-      if (data.users && Array.isArray(data.users)) {
+      if (
+        data.users &&
+        Array.isArray(data.users) &&
+        !usersCollectionActiveRef.current
+      ) {
         setUsers(sortAndNormalizeUsers(data.users as User[]));
       }
       if (data.config) setConfig(data.config);
@@ -1492,7 +1558,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const resetToDefaults = () => {
-    setUsers(INITIAL_USERS);
+    if (!usersCollectionActiveRef.current) {
+      setUsers(INITIAL_USERS);
+    }
     setConfig(INITIAL_CONFIG);
     setTasks(INITIAL_TASKS);
     setDeliverables(INITIAL_DELIVERABLES);
@@ -1571,7 +1639,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setDefenseQuestions(m.defenseQuestions);
     }
 
-    if (isLiveFirebaseConfig && db) {
+    if (isLiveFirebaseConfig && db && !usersCollectionActiveRef.current) {
       const firestoreDb = db;
       await Promise.all(
         users.map((u) =>

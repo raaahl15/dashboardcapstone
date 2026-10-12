@@ -6,11 +6,11 @@ Dashboard FEED Area 1 dengan login Firebase Authentication dan satu sumber data 
 
 | Anggota Tim | Posisi | Username (`Nama_Posisi`) | Password (`Posisi_Nama`) | Email Firebase |
 | :--- | :--- | :--- | :--- | :--- |
-| **Rahul Ghulam Hidayatulloh** | Project Manager | `Rahul_PM` | `PM_Rahul` | `lead.engineer@dme-area1.epc` |
-| **Ihsan Halim** | Lead Process Engineer | `Ihsan_Process` | `Process_Ihsan` | `process.engineer@dme-area1.epc` |
-| **M. Althaf** | Lead Instrument Engineer 1 | `Althaf_Inst1` | `Inst1_Althaf` | `inst1.engineer@dme-area1.epc` |
-| **Jonathan** | Lead Instrument Engineer 2 | `Jonathan_Inst2` | `Inst2_Jonathan` | `inst2.engineer@dme-area1.epc` |
-| **Heidi** | Cost Engineer | `Heidi_Cost` | `Cost_Heidi` | `cost.engineer@dme-area1.epc` |
+| **Rahul Ghulam Hidayatulloh** | Project Manager | `Rahul_PM` | `PM_Rahul` | `rahulghulamhidayatulloh2004@mail.ugm.ac.id` |
+| **Ihsaan Zauhair Tsaqif Prawira** | Lead Process Engineer | `Ihsan_Process` | `Process_Ihsan` | `ihsaanzauhairtsaqifprawira@mail.ugm.ac.id` |
+| **Altaf Ramadhan Parvez** | Lead Instrument Engineer 1 | `Althaf_Inst1` | `Inst1_Althaf` | `altaframadhanparvez@mail.ugm.ac.id` |
+| **Jonathan Pangihutan Michael Siahaan** | Lead Instrument Engineer 2 | `Jonathan_Inst2` | `Inst2_Jonathan` | `jonathanpangihutanms@mail.ugm.ac.id` |
+| **Heidi Falina Brilian** | Cost Engineer | `Heidi_Cost` | `Cost_Heidi` | `heidifalinabrilian@mail.ugm.ac.id` |
 
 ## Menyiapkan Firebase
 

@@ -106,8 +106,12 @@ export function resolveUserFromRef(
   if (!trimmed || trimmed.toUpperCase() === 'ALL') return undefined;
   const normalized = trimmed.toLowerCase();
 
-  // 1. Cek kecocokan langsung pada id (UID)
-  const byId = users.find((u) => u.id.toLowerCase() === normalized);
+  // 1. Cek kecocokan langsung pada id (UID) atau legacyId (case-insensitive)
+  const byId = users.find(
+    (u) =>
+      u.id.toLowerCase() === normalized ||
+      (typeof u.legacyId === 'string' && u.legacyId.toLowerCase() === normalized)
+  );
   if (byId) return byId;
 
   // 2. Cek kecocokan pada nickname, name, code, atau email
@@ -123,7 +127,11 @@ export function resolveUserFromRef(
   // 3. Cek kamus alias historis (mis. 'Rahul Gunawan', 'Ihsan H.', 'Althaf (Lead Inst 1)')
   const mappedUid = LEGACY_ALIAS_TO_UID[normalized];
   if (mappedUid) {
-    const byAlias = users.find((u) => u.id === mappedUid);
+    const byAlias = users.find(
+      (u) =>
+        u.id.toLowerCase() === mappedUid.toLowerCase() ||
+        (typeof u.legacyId === 'string' && u.legacyId.toLowerCase() === mappedUid.toLowerCase())
+    );
     if (byAlias) return byAlias;
   }
 
