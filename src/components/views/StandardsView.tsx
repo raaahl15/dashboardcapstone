@@ -1,0 +1,290 @@
+import React, { useState } from 'react';
+import { useApp } from '../../context/AppContext';
+import {
+  BookOpen,
+  FileText,
+  ShieldCheck,
+  ExternalLink,
+  Plus,
+  Pencil,
+  Trash2,
+  Download,
+  X,
+} from 'lucide-react';
+import { StandardReferenceItem } from '../../types';
+
+export const StandardsView: React.FC = () => {
+  const {
+    regulations,
+    standards,
+    addStandard,
+    deleteStandard,
+    isPM,
+  } = useApp();
+
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [newCode, setNewCode] = useState('');
+  const [newSubCode, setNewSubCode] = useState('ISA');
+  const [newTitle, setNewTitle] = useState('');
+  const [newSubtitle, setNewSubtitle] = useState('');
+  const [newUrl, setNewUrl] = useState('');
+
+  const handleCreateStandard = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCode.trim() || !newTitle.trim()) return;
+
+    addStandard({
+      code: newCode.trim(),
+      subCode: newSubCode.trim(),
+      title: newTitle.trim(),
+      subtitle: newSubtitle.trim() || 'Standar kepatuhan perancangan proses',
+      url: newUrl.trim() || 'https://www.iso.org',
+    });
+    setNewCode('');
+    setNewTitle('');
+    setNewSubtitle('');
+    setNewUrl('');
+    setShowAddModal(false);
+  };
+
+  return (
+    <div className="space-y-6 animate-in fade-in duration-200">
+      {/* ========================================================================= */}
+      {/* HEADER COCKPIT BAR */}
+      {/* ========================================================================= */}
+      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#007BFF] animate-pulse"></span>
+            <span className="text-[10px] font-bold tracking-wider font-heading uppercase text-[#0062CC]">
+              GOVERNANCE & STANDARDISASI
+            </span>
+          </div>
+          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
+            Rules The Team !
+          </h1>
+          <p className="text-xs text-[#4A5A72] mt-1">
+            Pedoman kepatuhan regulasi Capstone DTNTF dan direktori standar internasional
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5" /> 3 Regulasi Utama
+          </span>
+          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5" /> {standards.length} Standar Industri
+          </span>
+          <span className="px-3.5 py-1.5 bg-[#D1FAE5] text-[#065F46] rounded-full font-bold flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> EPC Compliance Active
+          </span>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 3 MASTER REGULATION CARDS */}
+      {/* ========================================================================= */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {regulations.map((reg) => (
+          <div
+            key={reg.id}
+            className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col justify-between hover:shadow-cockpit-pop transition-all group"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <div className="w-10 h-10 rounded-2xl bg-[#EAF6FD] text-[#0062CC] flex items-center justify-center shadow-xs">
+                  <FileText className="w-5 h-5" />
+                </div>
+                <button className="text-[#4A5A72] hover:text-[#0062CC] transition-colors">
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+              </div>
+
+              <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33] mb-1.5 leading-snug">
+                {reg.title}
+              </h3>
+              <p className="text-xs text-[#4A5A72] mb-5 leading-relaxed">
+                {reg.subtitle}
+              </p>
+            </div>
+
+            <div>
+              <div className="p-2.5 rounded-xl bg-[#EAF6FD] text-center mb-4 border border-[#C9DCEB]/40">
+                <span className="text-[11px] font-bold text-[#0062CC]">
+                  {reg.badge}
+                </span>
+              </div>
+
+              <a
+                href={reg.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-11 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
+              >
+                Buka <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ========================================================================= */}
+      {/* STANDARD REFERENCES DIRECTORY */}
+      {/* ========================================================================= */}
+      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
+              Standard References
+            </h2>
+            <p className="text-xs text-[#4A5A72]">
+              Direktori standar desain rekayasa kimia dan instrumentasi proses
+            </p>
+          </div>
+
+          {isPM && (
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              + Add
+            </button>
+          )}
+        </div>
+
+        {/* Standards Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {standards.map((std) => (
+            <div
+              key={std.id}
+              className="p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
+            >
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="w-10 h-10 rounded-xl bg-[#EAF6FD] text-[#0062CC] font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-[#C9DCEB]/50">
+                    {std.subCode}
+                  </span>
+                  <div className="flex items-center gap-1 text-[#4A5A72]">
+                    {isPM && (
+                      <button
+                        onClick={() => deleteStandard(std.id)}
+                        className="p-1 hover:text-[#B91C1C]"
+                        title="Hapus Standar"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33] mb-1">
+                  {std.title}
+                </h4>
+                <p className="text-[11px] text-[#4A5A72] leading-snug mb-4">
+                  {std.subtitle}
+                </p>
+              </div>
+
+              <a
+                href={std.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2 bg-[#F8FAFC] hover:bg-[#EAF6FD] text-[#0062CC] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-[#EAF6FD]"
+              >
+                Buka <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Add Standard Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+              Tambah Standar Rujukan Baru
+            </h3>
+            <form onSubmit={handleCreateStandard} className="mt-4 space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Kode Standar</label>
+                  <input
+                    type="text"
+                    value={newCode}
+                    onChange={(e) => setNewCode(e.target.value)}
+                    placeholder="Contoh: API 650"
+                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold mb-1">Penerbit</label>
+                  <input
+                    type="text"
+                    value={newSubCode}
+                    onChange={(e) => setNewSubCode(e.target.value)}
+                    placeholder="Contoh: API / ISO / ISA"
+                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Judul Dokumen Standar</label>
+                <input
+                  type="text"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  placeholder="Contoh: Welded Tanks for Oil Storage"
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Cakupan / Deskripsi Singkat</label>
+                <input
+                  type="text"
+                  value={newSubtitle}
+                  onChange={(e) => setNewSubtitle(e.target.value)}
+                  placeholder="Spesifikasi tangki atmosferik..."
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Tautan Web (URL)</label>
+                <input
+                  type="url"
+                  value={newUrl}
+                  onChange={(e) => setNewUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                >
+                  Simpan Standar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

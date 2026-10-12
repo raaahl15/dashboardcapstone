@@ -1,0 +1,276 @@
+import React, { useState } from 'react';
+import { useApp } from '../../context/AppContext';
+import { MigrationPreviewResult } from '../../utils/migrateUserRefs';
+import { Download, Upload, RefreshCw, X, Check, AlertCircle, Database } from 'lucide-react';
+
+interface ExportImportModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, onClose }) => {
+  const {
+    exportDataToJson,
+    importDataFromJson,
+    resetToDefaults,
+    isPM,
+    previewUserMigration,
+    executeUserMigration,
+  } = useApp();
+  const [importText, setImportText] = useState('');
+  const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [migrationPreview, setMigrationPreview] = useState<MigrationPreviewResult | null>(null);
+  const [isMigrating, setIsMigrating] = useState(false);
+
+  if (!isOpen) return null;
+
+  const handleDownload = () => {
+    const jsonStr = exportDataToJson();
+    const blob = new Blob([jsonStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `area1-dme-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setStatusMessage({ type: 'success', text: 'File cadangan JSON berhasil diunduh!' });
+  };
+
+  const handleImport = () => {
+    if (!importText.trim()) {
+      setStatusMessage({ type: 'error', text: 'Masukkan data JSON terlebih dahulu.' });
+      return;
+    }
+    const success = importDataFromJson(importText);
+    if (success) {
+      setStatusMessage({ type: 'success', text: 'Data proyek berhasil dipulihkan!' });
+      setTimeout(() => {
+        onClose();
+        setStatusMessage(null);
+        setImportText('');
+      }, 1200);
+    } else {
+      setStatusMessage({ type: 'error', text: 'Format JSON tidak valid atau struktur rusak.' });
+    }
+  };
+
+  const handleReset = () => {
+    if (
+      window.confirm(
+        'Reset seluruh data bersama ke pengaturan awal (initial seed)? Perubahan semua anggota tim akan dikembalikan.'
+      )
+    ) {
+      resetToDefaults();
+      setStatusMessage({ type: 'success', text: 'Data dikembalikan ke pengaturan awal pabrik.' });
+      setTimeout(() => {
+        onClose();
+        setStatusMessage(null);
+      }, 1000);
+    }
+  };
+
+  const handlePreviewMigration = () => {
+    const preview = previewUserMigration();
+    setMigrationPreview(preview);
+    setStatusMessage(null);
+  };
+
+  const handleConfirmMigration = async () => {
+    if (!migrationPreview) return;
+    setIsMigrating(true);
+    try {
+      const result = await executeUserMigration();
+      setMigrationPreview(null);
+      setStatusMessage({
+        type: 'success',
+        text:
+          result.totalRecordsToChange > 0
+            ? `Migrasi selesai! ${result.firestoreDocumentsToChange} dokumen utama (${result.totalRecordsToChange} entri referensi) berhasil dikonversi ke UID.`
+            : 'Data sudah sinkron menggunakan UID (0 dokumen diubah).',
+      });
+    } catch (error) {
+      setStatusMessage({
+        type: 'error',
+        text: error instanceof Error ? error.message : 'Gagal menjalankan migrasi referensi pengguna.',
+      });
+    } finally {
+      setIsMigrating(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="w-full max-w-lg bg-white rounded-[28px] shadow-cockpit-pop border border-white p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between pb-4 border-b border-[#EAF6FD]">
+          <div>
+            <h3 className="font-heading font-bold text-lg text-[#0B1B33]">
+              Cadangan & Pemulihan Data
+            </h3>
+            <p className="text-xs text-[#4A5A72] mt-0.5">
+              Ekspor atau impor dataset lengkap proyek Capstone Area 1
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-9 h-9 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center hover:bg-[#DCEBF7] transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {statusMessage && (
+          <div
+            className={`mt-4 p-3 rounded-2xl flex items-center gap-2 text-xs font-semibold ${
+              statusMessage.type === 'success'
+                ? 'bg-[#D1FAE5] text-[#065F46]'
+                : 'bg-[#FEE2E2] text-[#991B1B]'
+            }`}
+          >
+            {statusMessage.type === 'success' ? (
+              <Check className="w-4 h-4 shrink-0 text-[#047857]" />
+            ) : (
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#B91C1C]" />
+            )}
+            <span>{statusMessage.text}</span>
+          </div>
+        )}
+
+        <div className="mt-5 space-y-4">
+          {/* Export Section */}
+          <div className="p-4 rounded-2xl bg-[#EAF6FD] border border-white flex items-center justify-between">
+            <div>
+              <p className="font-heading font-bold text-xs text-[#0B1B33]">
+                Ekspor Cadangan (.JSON)
+              </p>
+              <p className="text-[11px] text-[#4A5A72]">
+                Simpan status rekayasa, RACI, logbook, dan timeline.
+              </p>
+            </div>
+            <button
+              onClick={handleDownload}
+              className="px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-xs transition-all"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Unduh
+            </button>
+          </div>
+
+          {/* Import Section */}
+          <div className="space-y-2">
+            <label className="block font-heading font-bold text-xs text-[#0B1B33]">
+              Impor Cadangan JSON
+            </label>
+            <textarea
+              value={importText}
+              onChange={(e) => setImportText(e.target.value)}
+              placeholder="Tempelkan isi file JSON cadangan di sini..."
+              rows={4}
+              className="w-full p-3 text-xs font-mono rounded-xl border border-[#6B7F99] focus:border-[#0062CC] focus:ring-1 focus:ring-[#0062CC] outline-none"
+            />
+            <div className="flex justify-end">
+              <button
+                onClick={handleImport}
+                className="px-4 py-2 bg-[#0B1B33] hover:bg-[#22314a] text-white rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                Pulihkan Data
+              </button>
+            </div>
+          </div>
+
+          {/* Admin-Only One-Time User Reference Migration Section */}
+          {isPM && (
+            <div className="pt-3 border-t border-[#EAF6FD] space-y-3">
+              <div className="flex items-center justify-between gap-3">
+                <div>
+                  <p className="font-heading font-bold text-xs text-[#0B1B33]">
+                    Migrasi Referensi Nama ke UID (Admin)
+                  </p>
+                  <p className="text-[11px] text-[#4A5A72]">
+                    Konversi referensi nama/kode lama menjadi UID (`users/&#123;uid&#125;`) secara idempotent tanpa menghapus field lama.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handlePreviewMigration}
+                  className="px-3.5 py-1.5 bg-[#EAF6FD] hover:bg-[#DCEBF7] text-[#0062CC] rounded-full text-xs font-semibold flex items-center gap-1.5 shrink-0 transition-all"
+                >
+                  <Database className="w-3.5 h-3.5" />
+                  Cek Migrasi
+                </button>
+              </div>
+
+              {migrationPreview && (
+                <div className="p-3.5 rounded-2xl bg-[#F8FAFC] border border-[#CBD5E1] space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-[#0B1B33]">
+                       hasil Pemeriksaan Migrasi:
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                      {migrationPreview.firestoreDocumentsToChange} Dokumen ({migrationPreview.totalRecordsToChange} Entri) Akan Diubah
+                    </span>
+                  </div>
+
+                  {migrationPreview.breakdown.length > 0 ? (
+                    <ul className="space-y-1 text-[11px] text-[#4A5A72] list-disc list-inside">
+                      {migrationPreview.breakdown.map((item) => (
+                        <li key={item.category}>
+                          {item.category}: <strong>{item.count}</strong> entri
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-[11px] text-[#047857] font-medium">
+                      Seluruh referensi pengguna sudah memakai UID kanonik (0 dokumen perlu diubah).
+                    </p>
+                  )}
+
+                  <div className="flex items-center justify-end gap-2 pt-1">
+                    <button
+                      type="button"
+                      onClick={() => setMigrationPreview(null)}
+                      className="px-3 py-1.5 rounded-full text-[11px] font-semibold text-[#4A5A72] hover:bg-slate-200/60 transition-colors"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="button"
+                      disabled={isMigrating}
+                      onClick={() => {
+                        void handleConfirmMigration();
+                      }}
+                      className="px-3.5 py-1.5 rounded-full text-[11px] font-bold bg-[#0062CC] hover:bg-[#0057B8] text-white transition-colors disabled:opacity-50"
+                    >
+                      {isMigrating
+                        ? 'Memproses...'
+                        : `Konfirmasi & Eksekusi (${migrationPreview.totalRecordsToChange} perubahan)`}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Reset Section */}
+          <div className="pt-3 border-t border-[#EAF6FD] flex items-center justify-between">
+            <div>
+              <p className="font-heading font-bold text-xs text-[#B91C1C]">
+                Reset Data Awal
+              </p>
+              <p className="text-[11px] text-[#4A5A72]">
+                Reset data bersama di Firestore ke data standar KAK & PRD.
+              </p>
+            </div>
+            <button
+              onClick={handleReset}
+              className="px-3.5 py-1.5 border border-[#B91C1C] text-[#B91C1C] hover:bg-[#FEE2E2] rounded-full text-xs font-semibold flex items-center gap-1 transition-all"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              Reset
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

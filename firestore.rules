@@ -1,0 +1,130 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper: Pengguna sudah login melalui Firebase Authentication
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper: Anggota resmi tim Area 1 DME (untuk koleksi projectData)
+    function isAreaOneTeamMember() {
+      return isSignedIn()
+        && request.auth.token.email in [
+          'lead.engineer@dme-area1.epc',
+          'process.engineer@dme-area1.epc',
+          'inst1.engineer@dme-area1.epc',
+          'inst2.engineer@dme-area1.epc',
+          'cost.engineer@dme-area1.epc'
+        ];
+    }
+
+    // Helper: Cek apakah pemanggil adalah pemilik dokumen users/{uid}
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Helper: Cek apakah pemanggil memiliki role 'admin' pada dokumen users/{request.auth.uid}
+    function isAdmin() {
+      return isSignedIn()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Helper: Validasi tipe dan batasan nilai dokumen users/{uid}
+    function isValidUserData(data) {
+      return data.name is string
+        && data.name.size() >= 1
+        && data.name.size() <= 60
+        && data.nickname is string
+        && data.nickname.size() >= 1
+        && data.nickname.size() <= 60
+        && data.jobdesk is list
+        && data.role in ['admin', 'member'];
+    }
+
+    // Helper: Pemilik dokumen hanya boleh mengubah field profil pribadinya sendiri
+    // (Tidak boleh mengubah role, title, raciTag, code, jobdesk, atau email)
+    function isOwnerAllowedProfileUpdate(uid) {
+      return isOwner(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name',
+          'nickname',
+          'avatarBg',
+          'avatarInitial',
+          'phone',
+          'photoURL',
+          'updatedAt',
+          'updatedBy'
+        ]);
+    }
+
+    // Helper: Cegah admin menurunkan role dirinya sendiri jika ia satu-satunya admin.
+    // Karena Firestore Rules tidak mendukung query agregasi koleksi (count), penurunan role
+    // diri sendiri ditolak kecuali dokumen metadata /config/adminMeta mencatat adminCount > 1.
+    function isNotDemotingSoleAdmin(uid) {
+      return request.auth.uid != uid
+        || request.resource.data.role == resource.data.role
+        || (
+          exists(/databases/$(database)/documents/config/adminMeta)
+          && get(/databases/$(database)/documents/config/adminMeta).data.adminCount > 1
+        );
+    }
+
+    // Helper: Admin boleh mengubah field jabatan (title, raciTag, code, jobdesk, role)
+    // maupun field profil anggota lain, namun email tetap hanya-baca (readonly).
+    function isAdminAllowedUpdate(uid) {
+      return isAdmin()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name',
+          'nickname',
+          'avatarBg',
+          'avatarInitial',
+          'phone',
+          'photoURL',
+          'tag',
+          'title',
+          'raciTag',
+          'code',
+          'jobdesk',
+          'role',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && isNotDemotingSoleAdmin(uid);
+    }
+
+    // =========================================================================
+    // Koleksi Profil Pengguna: users/{uid}
+    // =========================================================================
+    match /users/{uid} {
+      // 1. Baca: hanya pengguna yang sudah login (request.auth != null)
+      allow read: if isSignedIn();
+
+      // 2. Buat dokumen: hanya oleh admin, valid secara skema, dan role 'admin' hanya boleh oleh admin
+      allow create: if isAdmin()
+        && isValidUserData(request.resource.data)
+        && (request.resource.data.role != 'admin' || isAdmin());
+
+      // 3, 4, 5, 7. Ubah dokumen: pemilik (hanya field profil pribadi) atau admin (jabatan & profil anggota),
+      // dengan validasi tipe data dan proteksi penurunan role admin tunggal.
+      allow update: if isValidUserData(request.resource.data)
+        && (isOwnerAllowedProfileUpdate(uid) || isAdminAllowedUpdate(uid));
+
+      // 5, 6. Hapus dokumen: hanya oleh admin, dan admin tidak boleh menghapus dirinya sendiri
+      allow delete: if isAdmin() && request.auth.uid != uid;
+    }
+
+    // =========================================================================
+    // Koleksi Data Operasional Proyek (Tidak dilonggarkan)
+    // =========================================================================
+    match /projectData/area1 {
+      allow read, write: if isAreaOneTeamMember();
+    }
+
+    // Default deny untuk seluruh koleksi lainnya
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
