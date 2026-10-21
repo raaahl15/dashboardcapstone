@@ -38,7 +38,6 @@ export const TeamRaciView: React.FC = () => {
 
   const toggleFlip = (userId: string) => {
     setFlippedCards((prev) => ({
-      ...prev,
       [userId]: !prev[userId],
     }));
   };
@@ -53,7 +52,7 @@ export const TeamRaciView: React.FC = () => {
     userUid: string,
     currentVal: RaciRoleValue
   ) => {
-    if (!isPM && !isEditMode) return;
+    if (!isPM || !isEditMode) return;
     const seq: RaciRoleValue[] = ['R', 'A', 'C', 'I', ''];
     const nextIdx = (seq.indexOf(currentVal) + 1) % seq.length;
     updateRaciCell(rowId, userUid, seq[nextIdx]);
@@ -90,7 +89,7 @@ export const TeamRaciView: React.FC = () => {
     userUid: string,
     val: RaciRoleValue
   ) => {
-    const isClickable = isPM || isEditMode;
+    const isClickable = isPM && isEditMode;
 
     let bg = 'bg-[#E2E8F0] text-[#334155]';
     if (val === 'R') bg = 'bg-[#D1FAE5] text-[#065F46] font-bold';

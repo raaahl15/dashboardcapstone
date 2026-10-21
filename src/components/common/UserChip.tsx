@@ -134,13 +134,13 @@ export const UserChip: React.FC<UserChipProps> = ({
         aria-busy="true"
       >
         <span
-          className={`${dimensions.avatar} bg-slate-200 dark:bg-slate-700 shrink-0 ${avatarClassName}`}
+          className={`${dimensions.avatar} bg-slate-200 shrink-0 ${avatarClassName}`}
         />
         {variant !== 'avatar' && (
           <span className="inline-flex flex-col gap-1">
-            <span className="h-3 w-20 bg-slate-200 dark:bg-slate-700 rounded" />
+            <span className="h-3 w-20 bg-slate-200 rounded" />
             {variant === 'avatar-nama-jabatan' && (
-              <span className="h-2.5 w-24 bg-slate-200 dark:bg-slate-700 rounded" />
+              <span className="h-2.5 w-24 bg-slate-200 rounded" />
             )}
           </span>
         )}
@@ -153,7 +153,7 @@ export const UserChip: React.FC<UserChipProps> = ({
     const allAvatar = (
       <span
         title="Seluruh Tim — Konsorsium Area 1"
-        className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-800 ${dimensions.avatar} ${avatarClassName}`}
+        className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-amber-100 text-amber-800 border border-amber-300 ${dimensions.avatar} ${avatarClassName}`}
       >
         ALL
       </span>
@@ -167,22 +167,22 @@ export const UserChip: React.FC<UserChipProps> = ({
       <span className={`inline-flex items-center ${dimensions.gap} ${className}`}>
         {allAvatar}
         {variant === 'avatar-nama' ? (
-          <span className={`font-semibold text-slate-800 dark:text-slate-200 ${dimensions.name} ${nameClassName}`}>
+          <span className={`font-semibold text-slate-800 ${dimensions.name} ${nameClassName}`}>
             Seluruh Tim
           </span>
         ) : inlineTitle ? (
-          <span className={`font-semibold text-slate-800 dark:text-slate-200 ${dimensions.name} ${nameClassName}`}>
+          <span className={`font-semibold text-slate-800 ${dimensions.name} ${nameClassName}`}>
             Seluruh Tim{' '}
-            <span className={`font-normal text-slate-500 dark:text-slate-400 ${dimensions.title} ${titleClassName}`}>
+            <span className={`font-normal text-[#4A5A72] ${dimensions.title} ${titleClassName}`}>
               (Konsorsium Area 1)
             </span>
           </span>
         ) : (
           <span className="inline-flex flex-col leading-tight">
-            <span className={`font-bold text-slate-900 dark:text-white ${dimensions.name} ${nameClassName}`}>
+            <span className={`font-bold text-slate-900 ${dimensions.name} ${nameClassName}`}>
               Seluruh Tim
             </span>
-            <span className={`text-slate-500 dark:text-slate-400 ${dimensions.title} ${titleClassName}`}>
+            <span className={`text-[#4A5A72] ${dimensions.title} ${titleClassName}`}>
               Konsorsium Area 1
             </span>
           </span>
@@ -194,13 +194,42 @@ export const UserChip: React.FC<UserChipProps> = ({
   // 3. Resolve user from single source of truth `users` (with legacy fallback)
   const user = getUser(uid);
 
-  // 4. Neutral fallback if UID does not match any user
+  // 4. Fallback if UID is empty / unassigned
+  if (!uid || !uid.trim() || uid.trim() === '-') {
+    if (variant === 'avatar') {
+      return (
+        <span
+          title="Belum ditugaskan"
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#94A3B8] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
+        >
+          -
+        </span>
+      );
+    }
+
+    return (
+      <span
+        className={`inline-flex items-center ${dimensions.gap} text-[#4A5A72] ${className}`}
+      >
+        <span
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#94A3B8] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
+        >
+          -
+        </span>
+        <span className={`italic ${dimensions.name} ${nameClassName}`}>
+          Belum ditugaskan
+        </span>
+      </span>
+    );
+  }
+
+  // 5. Neutral fallback if UID does not match any user
   if (!user) {
     if (variant === 'avatar') {
       return (
         <span
-          title="Anggota tidak ditemukan"
-          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 ${dimensions.avatar} ${avatarClassName}`}
+          title={`Anggota tidak ditemukan (${uid})`}
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-200 text-[#4A5A72] ${dimensions.avatar} ${avatarClassName}`}
         >
           ?
         </span>
@@ -209,10 +238,10 @@ export const UserChip: React.FC<UserChipProps> = ({
 
     return (
       <span
-        className={`inline-flex items-center ${dimensions.gap} text-slate-500 dark:text-slate-400 ${className}`}
+        className={`inline-flex items-center ${dimensions.gap} text-[#4A5A72] ${className}`}
       >
         <span
-          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 ${dimensions.avatar} ${avatarClassName}`}
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-200 text-[#4A5A72] ${dimensions.avatar} ${avatarClassName}`}
         >
           ?
         </span>
@@ -253,7 +282,7 @@ export const UserChip: React.FC<UserChipProps> = ({
       <span className={`inline-flex items-center ${dimensions.gap} ${className}`}>
         {avatarNode}
         <span
-          className={`font-semibold text-slate-800 dark:text-slate-200 truncate ${dimensions.name} ${nameClassName}`}
+          className={`font-semibold text-slate-800 truncate ${dimensions.name} ${nameClassName}`}
         >
           {displayName}
         </span>
@@ -267,11 +296,11 @@ export const UserChip: React.FC<UserChipProps> = ({
       {avatarNode}
       {inlineTitle ? (
         <span
-          className={`font-semibold text-slate-800 dark:text-slate-200 truncate ${dimensions.name} ${nameClassName}`}
+          className={`font-semibold text-slate-800 truncate ${dimensions.name} ${nameClassName}`}
         >
           {displayName}{' '}
           <span
-            className={`font-normal text-slate-500 dark:text-slate-400 ${dimensions.title} ${titleClassName}`}
+            className={`font-normal text-[#4A5A72] ${dimensions.title} ${titleClassName}`}
           >
             ({user.title})
           </span>
@@ -279,12 +308,12 @@ export const UserChip: React.FC<UserChipProps> = ({
       ) : (
         <span className="inline-flex flex-col leading-tight min-w-0">
           <span
-            className={`font-bold text-slate-900 dark:text-white truncate ${dimensions.name} ${nameClassName}`}
+            className={`font-bold text-slate-900 truncate ${dimensions.name} ${nameClassName}`}
           >
             {displayName}
           </span>
           <span
-            className={`text-slate-500 dark:text-slate-400 truncate ${dimensions.title} ${titleClassName}`}
+            className={`text-[#4A5A72] truncate ${dimensions.title} ${titleClassName}`}
           >
             {user.title}
           </span>

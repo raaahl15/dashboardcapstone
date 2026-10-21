@@ -188,9 +188,14 @@ export const StageGateView: React.FC = () => {
                 100%
               </text>
 
-              {/* Needle pointing to ~78% */}
-              <g transform="translate(210, 210)">
-                <polygon fill="#0B1B33" points="-4,4 4,-4 95,-105 90,-110" />
+              {/* Dynamic Needle pointing to stageGateReadinessPercent (0%..100%) */}
+              <g
+                transform={`translate(210, 210) rotate(${Math.max(
+                  0,
+                  Math.min(180, (stageGateReadinessPercent / 100) * 180)
+                )})`}
+              >
+                <polygon fill="#0B1B33" points="0,-5 0,5 -135,0" />
                 <circle cx="0" cy="0" r="14" fill="#0B1B33" />
                 <circle cx="0" cy="0" r="5" fill="white" />
               </g>
@@ -215,10 +220,16 @@ export const StageGateView: React.FC = () => {
                   : 'bg-[#FEE2E2] text-[#991B1B]'
               }`}
             >
-              <AlertTriangle className="w-3.5 h-3.5" />
+              {stageGateReadinessPercent >= 85 ? (
+                <CheckCircle2 className="w-3.5 h-3.5" />
+              ) : (
+                <AlertTriangle className="w-3.5 h-3.5" />
+              )}
               {stageGateReadinessPercent >= 85
                 ? 'READY FOR STAGE-GATE DEFENSE'
-                : 'CONDITIONAL READY / NEED REVISION'}
+                : stageGateReadinessPercent >= 70
+                ? 'CONDITIONAL READY / NEED REVISION'
+                : 'NOT READY / CRITICAL GAP'}
             </span>
           </div>
 
@@ -277,7 +288,7 @@ export const StageGateView: React.FC = () => {
               <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
                 Audit Rubrik Mandiri
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FEF3C7] text-[#92400E]">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FEF3C7] text-[#92400E] tabular-nums">
                 Rata-rata Skor: {averageRubricScore}
               </span>
             </div>
@@ -286,7 +297,7 @@ export const StageGateView: React.FC = () => {
             </p>
           </div>
           <span className="text-[11px] text-[#4A5A72]">
-            Terakhir diperbarui: Hari ini, 09:42 WIB
+            {config.readinessLocked ? 'Status Terkunci oleh PM' : 'Terakhir diperbarui: Hari ini'}
           </span>
         </div>
 
@@ -323,9 +334,9 @@ export const StageGateView: React.FC = () => {
                   <div className="flex items-center gap-3 shrink-0">
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-bold tabular-nums ${
-                        param.score >= 80
+                        param.score >= 85
                           ? 'bg-[#D1FAE5] text-[#065F46]'
-                          : param.score >= 65
+                          : param.score >= 70
                           ? 'bg-[#FEF3C7] text-[#92400E]'
                           : 'bg-[#FEE2E2] text-[#991B1B]'
                       }`}
@@ -362,8 +373,12 @@ export const StageGateView: React.FC = () => {
                         {param.items.map((it, idx) => (
                           <div
                             key={idx}
-                            onClick={() => toggleRubricItem(param.id, idx)}
-                            className="p-2.5 rounded-xl bg-white border border-[#EAF6FD] flex items-center justify-between gap-3 cursor-pointer hover:bg-[#EAF6FD]/30 transition-colors"
+                            onClick={() => !config.readinessLocked && toggleRubricItem(param.id, idx)}
+                            className={`p-2.5 rounded-xl bg-white border border-[#EAF6FD] flex items-center justify-between gap-3 transition-colors ${
+                              config.readinessLocked
+                                ? 'opacity-75 cursor-not-allowed'
+                                : 'cursor-pointer hover:bg-[#EAF6FD]/30'
+                            }`}
                           >
                             <div className="flex items-center gap-2.5">
                               {it.checked ? (
@@ -404,9 +419,10 @@ export const StageGateView: React.FC = () => {
                           type="number"
                           min="0"
                           max="100"
+                          disabled={config.readinessLocked}
                           value={param.score}
                           onChange={(e) => updateRubricScore(param.id, Number(e.target.value))}
-                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs font-bold outline-none"
+                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs font-bold outline-none disabled:opacity-60 disabled:bg-gray-100"
                         />
                       </div>
                       <div className="sm:col-span-3">
@@ -415,9 +431,10 @@ export const StageGateView: React.FC = () => {
                         </label>
                         <input
                           type="text"
+                          disabled={config.readinessLocked}
                           value={param.mitigation}
                           onChange={(e) => updateRubricMitigation(param.id, e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none disabled:opacity-60 disabled:bg-gray-100"
                         />
                       </div>
                     </div>
@@ -566,9 +583,9 @@ export const StageGateView: React.FC = () => {
           {physicalChecklist.map((item) => (
             <div
               key={item.id}
-              onClick={() => isPM && togglePhysicalItem(item.id)}
+              onClick={() => isPM && !config.readinessLocked && togglePhysicalItem(item.id)}
               className={`p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs flex items-center justify-between gap-4 transition-all ${
-                isPM ? 'cursor-pointer hover:bg-[#F8FAFC]' : ''
+                isPM && !config.readinessLocked ? 'cursor-pointer hover:bg-[#F8FAFC]' : ''
               }`}
             >
               <div className="flex items-start gap-3">

@@ -156,12 +156,38 @@ export const HomepageView: React.FC = () => {
     updateDeliverable,
     verifiedLogbooksCount,
     users,
+    raciRows,
     meetingLogs,
     slideDecks,
     overallWeightedProgress,
     setActiveTab,
     isPM,
   } = useApp();
+
+  const [nowMs, setNowMs] = useState(() => Date.now());
+  React.useEffect(() => {
+    const id = window.setInterval(() => setNowMs(Date.now()), 60000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const tenderCountdown = useMemo(() => {
+    const targetMs = new Date('2026-12-15T23:59:00+07:00').getTime();
+    const startMs = new Date('2026-09-01T00:00:00+07:00').getTime();
+    const diffMs = Math.max(0, targetMs - nowMs);
+    const totalMinutes = Math.floor(diffMs / 60000);
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+    const minutes = totalMinutes % 60;
+    const totalSpan = Math.max(1, targetMs - startMs);
+    const elapsedRatio = Math.min(1, Math.max(0, (nowMs - startMs) / totalSpan));
+    const dashOffset = Math.round(264 * elapsedRatio);
+    return { days, hours, minutes, dashOffset };
+  }, [nowMs]);
+
+  const validRaciCount = useMemo(
+    () => raciRows.filter((r) => r.validationStatus.startsWith('Valid')).length,
+    [raciRows]
+  );
 
   // Modal states for editing
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -375,7 +401,7 @@ export const HomepageView: React.FC = () => {
 
               <div className="mt-1.5">
                 <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {meetingLogs.length + 2}
+                  {meetingLogs.length}
                 </span>
                 <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
                   sesi asistensi
@@ -428,48 +454,46 @@ export const HomepageView: React.FC = () => {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
         {/* ==================== LEFT COLUMN (3 cols) ==================== */}
         <div className="xl:col-span-3 flex flex-col gap-5">
-          {/* Profile Identity & PM Lead Card */}
-          <div className="glass-card p-5 text-center relative overflow-hidden">
-            <div className="text-[10px] text-[#334155] font-semibold tracking-wider font-mono mb-3 text-center">
-              {currentUser.tag}
-            </div>
-
-            <div className="flex justify-center mb-3">
-              <UserChip
-                uid={currentUser.id}
-                variant="avatar"
-                size="lg"
-                avatarClassName="w-20 h-20 rounded-full font-heading text-2xl font-bold shadow-sm border-2 border-white"
+          {/* Profile Identity Card */}
+          <div className="relative w-full h-[340px] rounded-[32px] overflow-hidden border border-white/70 shadow-cockpit-card hover:shadow-cockpit-pop transition-all group">
+            {currentUser.photoURL ? (
+              <img
+                src={currentUser.photoURL}
+                alt={currentUser.name}
+                className="absolute inset-0 w-full h-full object-cover object-[center_18%] group-hover:scale-105 transition-transform duration-700 ease-out"
               />
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-[#0B1B33] via-[#004A9E] to-[#007BFF] bg-tech-grid flex items-center justify-center pb-12">
+                <div className="w-24 h-24 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 text-white font-heading font-extrabold text-3xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
+                  {currentUser.avatarInitial || currentUser.code}
+                </div>
+              </div>
+            )}
+
+            <div className="absolute top-4 inset-x-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-black/45 backdrop-blur-md text-white border border-white/20 shadow-xs pointer-events-auto">
+                {currentUser.tag || 'TAG: PFD-R-101 • ISO: 10628'}
+              </span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-[10px] font-heading font-extrabold border border-white/20 shadow-xs pointer-events-auto">
+                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+                <span>{currentUser.role === 'admin' ? 'PM LEAD' : 'ENGINEER'}</span>
+              </div>
             </div>
 
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33]">
-              {currentUser.name}
-            </h3>
-            <p className="text-[11px] text-[#0062CC] font-bold mt-0.5">
-              @{currentUser.nickname}
-            </p>
-            <div className="flex items-center justify-center gap-2 mt-1.5">
-              <span className="text-xs text-[#334155] font-medium">{currentUser.title}</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#DBEAFE] text-[#1E3A8A]">
+            <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 via-black/55 to-transparent pt-16 pb-5 px-5 flex items-end justify-between gap-3">
+              <div className="min-w-0 pr-2">
+                <h3 className="font-heading font-extrabold text-lg text-white leading-tight drop-shadow-sm truncate">
+                  {currentUser.name}
+                </h3>
+                <p className="text-xs text-white/80 font-medium mt-0.5 drop-shadow-xs truncate flex items-center gap-1.5">
+                  <span>{currentUser.title}</span>
+                  <span className="text-white/40">•</span>
+                  <span className="text-[#93C5FD] font-semibold">@{currentUser.nickname}</span>
+                </p>
+              </div>
+              <div className="shrink-0 px-3.5 py-1.5 rounded-full border border-white/60 bg-white/15 backdrop-blur-md text-white text-xs font-heading font-extrabold tracking-wide shadow-xs flex items-center justify-center">
                 {currentUser.raciTag}
-              </span>
-            </div>
-
-            {/* Project Manager (PM) Lead Reference */}
-            <div className="mt-4 pt-3 border-t border-[#C9DCEB] flex items-center justify-between gap-2 text-left">
-              <span className="text-[10px] font-bold text-[#334155] uppercase tracking-wider shrink-0">
-                PM Lead:
-              </span>
-              <UserChip
-                uid="user-rahul"
-                variant="avatar-nama-jabatan"
-                size="xs"
-                useNickname
-                inlineTitle
-                nameClassName="!text-[11px] !font-bold !text-[#0B1B33]"
-                titleClassName="!text-[10px] !text-[#0062CC]"
-              />
+              </div>
             </div>
           </div>
 
@@ -504,16 +528,17 @@ export const HomepageView: React.FC = () => {
                   stroke="#007BFF"
                   strokeWidth="8"
                   strokeDasharray="264"
-                  strokeDashoffset="75"
+                  strokeDashoffset={String(tenderCountdown.dashOffset)}
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
                 <span className="font-heading text-2xl font-extrabold text-[#0B1B33] leading-none tabular-nums">
-                  65<span className="text-xs font-semibold ml-0.5">hari</span>
+                  {tenderCountdown.days}
+                  <span className="text-xs font-semibold ml-0.5">hari</span>
                 </span>
                 <span className="text-[10px] text-[#334155] font-medium mt-1 tabular-nums">
-                  12 jam 30 menit
+                  {tenderCountdown.hours} jam {tenderCountdown.minutes} menit
                 </span>
               </div>
             </div>
@@ -610,11 +635,11 @@ export const HomepageView: React.FC = () => {
 
         {/* ==================== CENTER COLUMN (5 cols) ==================== */}
         <div className="xl:col-span-5 flex flex-col gap-5">
-          {/* Project Status Card (Exception: Colored by Status, Single Status Icon Inside Badge Only) */}
+          <div className="flex flex-col gap-5 xl:h-[340px] xl:grid xl:grid-rows-2">
+          {/* Project Status Card */}
           <div
-            className={`${activeStatusConfig.cardBg} ${activeStatusConfig.cardBorder} rounded-[28px] p-5 border shadow-cockpit-card relative overflow-hidden transition-colors duration-200`}
+            className={`${activeStatusConfig.cardBg} ${activeStatusConfig.cardBorder} xl:h-full rounded-[28px] p-5 border shadow-cockpit-card relative overflow-hidden transition-colors duration-200`}
           >
-            {/* Left Vertical Status Strip (Color Only, No Icon) */}
             <div
               className={`absolute inset-y-0 left-0 w-2 ${activeStatusConfig.accentStrip}`}
               aria-hidden="true"
@@ -673,10 +698,9 @@ export const HomepageView: React.FC = () => {
             </div>
           </div>
 
-          {/* Two Small Adjacent Cards: Batas Penyerahan & Status ACC */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Card 1 */}
-            <div className="glass-card p-4 flex flex-col justify-between">
+          {/* Tender Deadline and Supervisor Approval Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:h-full">
+            <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] text-[#334155] font-medium block">
                   Batas Penyerahan Tender
@@ -685,7 +709,7 @@ export const HomepageView: React.FC = () => {
                   15 Des 2026
                 </span>
               </div>
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="px-2 py-0.5 rounded-md bg-[#E2E8F0] text-[#334155] text-[10px] font-semibold">
                   {config.tenderStatusText}
                 </span>
@@ -695,8 +719,7 @@ export const HomepageView: React.FC = () => {
               </div>
             </div>
 
-            {/* Card 2 */}
-            <div className="glass-card p-4 flex flex-col justify-between">
+            <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] text-[#334155] font-medium block">
                   Status ACC Pembimbing
@@ -705,7 +728,7 @@ export const HomepageView: React.FC = () => {
                   {config.supervisorStatus}
                 </span>
               </div>
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#92400E] text-[10px] font-bold flex items-center gap-1">
                   <Clock className="w-3 h-3 text-[#B45309]" />
                   Pending Review
@@ -715,6 +738,7 @@ export const HomepageView: React.FC = () => {
                 </span>
               </div>
             </div>
+          </div>
           </div>
 
           {/* Bimbingan Mendatang Card */}
@@ -893,8 +917,14 @@ export const HomepageView: React.FC = () => {
 
             <div className="mt-4 pt-3 border-t border-[#C9DCEB] flex items-center justify-between text-[11px] text-[#334155]">
               <span>Aturan Governance: Tepat 1 Accountable (A) &amp; min. 1 Responsible (R)</span>
-              <span className="px-2 py-0.5 rounded-full bg-[#D1FAE5] text-[#065F46] font-bold text-[10px]">
-                5/5 Valid
+              <span
+                className={`px-2 py-0.5 rounded-full font-bold text-[10px] tabular-nums ${
+                  validRaciCount === raciRows.length
+                    ? 'bg-[#D1FAE5] text-[#065F46]'
+                    : 'bg-[#FEF3C7] text-[#92400E]'
+                }`}
+              >
+                {validRaciCount}/{raciRows.length} Valid
               </span>
             </div>
           </div>
@@ -1156,7 +1186,6 @@ export const HomepageView: React.FC = () => {
                           type="button"
                           onClick={() => {
                             setEditProjectStatus(statusKey);
-                            updateConfig({ projectStatus: statusKey });
                           }}
                           className={`w-full min-h-[44px] px-4 py-2.5 rounded-2xl border text-left flex items-center justify-between transition-all ${
                             st.cardBg

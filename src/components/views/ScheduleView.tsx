@@ -322,29 +322,33 @@ export const ScheduleView: React.FC = () => {
 
           {/* Gantt Table Container */}
           <div className="overflow-x-auto border border-[#EAF6FD] rounded-2xl bg-white relative">
-            <div className="min-w-[760px]">
-              {/* Header: Months & Weeks */}
-              <div className="grid grid-cols-12 text-center text-xs font-bold border-b border-[#EAF6FD] bg-[#F8FAFC]">
+            <div className="min-w-[880px]">
+              {/* Header: Months & Weeks (4 label cols + 16 week cols = 20 cols) */}
+              <div className="grid grid-cols-[repeat(20,minmax(0,1fr))] text-center text-xs font-bold border-b border-[#EAF6FD] bg-[#F8FAFC]">
                 <div className="col-span-4 p-2 text-left pl-3 text-[#0B1B33] uppercase text-[11px] font-heading">
                   WBS PHASE &amp; DELIVERABLE
                 </div>
-                <div className="col-span-2 p-2 text-[#0062CC] border-l border-[#EAF6FD]">
-                  Sep 2026
+                <div className="col-span-4 p-2 text-[#0062CC] border-l border-[#EAF6FD]">
+                  Sep 2026 (W1–W4)
                 </div>
-                <div className="col-span-3 p-2 text-[#0062CC] border-l border-[#EAF6FD] bg-[#EAF6FD]/50">
-                  Okt 2026 (Active)
+                <div className="col-span-4 p-2 text-[#0062CC] border-l border-[#EAF6FD] bg-[#EAF6FD]/50">
+                  Okt 2026 (W5–W8 • Active)
                 </div>
-                <div className="col-span-3 p-2 text-[#0062CC] border-l border-[#EAF6FD]">
-                  Nov 2026
+                <div className="col-span-4 p-2 text-[#0062CC] border-l border-[#EAF6FD]">
+                  Nov 2026 (W9–W12)
+                </div>
+                <div className="col-span-4 p-2 text-[#0062CC] border-l border-[#EAF6FD]">
+                  Des 2026 (W13–W16)
                 </div>
               </div>
 
-              {/* Sub-Header: Week numbers 1 to 12 */}
-              <div className="grid grid-cols-12 text-center text-[10px] font-mono font-bold text-[#4A5A72] border-b border-[#EAF6FD] bg-white">
-                <div className="col-span-4 p-1.5 text-left pl-3 font-sans text-[#4A5A72]">
-                  Task Name / Responsible <span className="text-[9px] text-[#9FB3C8]">16 WEEKS</span>
+              {/* Sub-Header: Week numbers 1 to 16 */}
+              <div className="grid grid-cols-[repeat(20,minmax(0,1fr))] text-center text-[10px] font-mono font-bold text-[#4A5A72] border-b border-[#EAF6FD] bg-white">
+                <div className="col-span-4 p-1.5 text-left pl-3 font-sans text-[#0B1B33] flex items-center justify-between pr-2">
+                  <span>Task Name / Responsible</span>
+                  <span className="text-[9px] font-bold text-[#4A5A72]">16 WEEKS</span>
                 </div>
-                {['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'].map(
+                {Array.from({ length: 16 }, (_, idx) => `W${idx + 1}`).map(
                   (wk) => (
                     <div
                       key={wk}
@@ -369,12 +373,12 @@ export const ScheduleView: React.FC = () => {
                 {/* Vertical Red Milestone Lines at W3, W7 */}
                 <div
                   className="absolute top-0 bottom-0 pointer-events-none z-10 border-r-2 border-[#B91C1C]"
-                  style={{ left: `${(4 / 12) * 100 + (2.5 / 12) * ((8 / 12) * 100)}%` }}
+                  style={{ left: `${(4 / 20) * 100 + (2.5 / 16) * ((16 / 20) * 100)}%` }}
                   title="Milestone W3: Penguncian URS"
                 ></div>
                 <div
                   className="absolute top-0 bottom-0 pointer-events-none z-10 border-r-2 border-[#B91C1C]"
-                  style={{ left: `${(4 / 12) * 100 + (6.5 / 12) * ((8 / 12) * 100)}%` }}
+                  style={{ left: `${(4 / 20) * 100 + (6.5 / 16) * ((16 / 20) * 100)}%` }}
                   title="Milestone W7: Finalisasi PFD ISO 10628"
                 ></div>
 
@@ -404,19 +408,19 @@ export const ScheduleView: React.FC = () => {
                           ? 'ALL'
                           : resolvedOwner?.code || '?';
 
-                        // Bar span calculation across W1-W12
-                        const startCol = Math.max(1, Math.min(12, gt.startWeek));
-                        const endCol = Math.max(startCol, Math.min(12, gt.endWeek));
+                        // Bar span calculation across W1-W16
+                        const startCol = Math.max(1, Math.min(16, gt.startWeek));
+                        const endCol = Math.max(startCol, Math.min(16, gt.endWeek));
                         const duration = endCol - startCol + 1;
 
-                        const leftPercent = ((startCol - 1) / 12) * 100;
-                        const widthPercent = (duration / 12) * 100;
+                        const leftPercent = ((startCol - 1) / 16) * 100;
+                        const widthPercent = (duration / 16) * 100;
 
                         return (
                           <div
                             key={gt.id}
-                            className={`grid grid-cols-12 items-center py-2.5 transition-all ${
-                              isMatchPic ? 'bg-white' : 'bg-gray-50/40 opacity-40'
+                            className={`grid grid-cols-[repeat(20,minmax(0,1fr))] items-center py-2.5 transition-all ${
+                              isMatchPic ? 'bg-white' : 'bg-gray-50/40 opacity-50'
                             }`}
                           >
                             {/* Task Label & PIC */}
@@ -430,8 +434,8 @@ export const ScheduleView: React.FC = () => {
                               />
                             </div>
 
-                            {/* Gantt Bar Lane (Cols 5-12) */}
-                            <div className="col-span-8 relative h-7 flex items-center px-1">
+                            {/* Gantt Bar Lane (Cols 5-20 = 16 weeks) */}
+                            <div className="col-span-16 relative h-7 flex items-center px-1">
                               <div
                                 className={`absolute h-6 rounded-lg text-[10px] font-bold text-white flex items-center justify-center px-2 shadow-xs transition-all ${
                                   gt.isCritical
@@ -442,7 +446,7 @@ export const ScheduleView: React.FC = () => {
                                 } ${!isMatchPic ? 'border border-dashed border-[#6B7F99]' : ''}`}
                                 style={{
                                   left: `${leftPercent}%`,
-                                  width: `${Math.max(widthPercent, 8)}%`,
+                                  width: `${Math.max(widthPercent, 6)}%`,
                                 }}
                               >
                                 <span className="truncate">{badgeCode}</span>

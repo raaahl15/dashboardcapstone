@@ -38,11 +38,23 @@ export const WeeklyMoMView: React.FC = () => {
   const [newActionWeek, setNewActionWeek] = useState('W5');
   const [newActionIssue, setNewActionIssue] = useState('');
   const [newActionPic, setNewActionPic] = useState('user-ihsan');
-  const [newActionDeadline, setNewActionDeadline] = useState('21 Okt 2026');
+  const [newActionDeadline, setNewActionDeadline] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  });
 
   const [showMomModal, setShowMomModal] = useState(false);
   const [newMomWeek, setNewMomWeek] = useState(5);
-  const [newMomDate, setNewMomDate] = useState('Rabu, 14 Okt 2026 - 10:00 WIB');
+  const [newMomDate, setNewMomDate] = useState(() => {
+    const now = new Date();
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const dayName = days[now.getDay()];
+    const formatted = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${dayName}, ${formatted} - ${hours}:${minutes} WIB`;
+  });
   const [newMomLocation] = useState('Ruang Asistensi DTNTF');
   const [newMomTopic, setNewMomTopic] = useState('');
   const [newMomSummary, setNewMomSummary] = useState('');

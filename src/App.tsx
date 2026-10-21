@@ -4,14 +4,31 @@ import { Header } from './components/layout/Header';
 import { ExportImportModal } from './components/layout/ExportImportModal';
 import { ProfileModal } from './components/layout/ProfileModal';
 import { LoginGateway } from './components/login/LoginGateway';
-import { HomepageView } from './components/views/HomepageView';
-import { ScheduleView } from './components/views/ScheduleView';
-import { TeamRaciView } from './components/views/TeamRaciView';
-import { WeeklyMoMView } from './components/views/WeeklyMoMView';
-import { StandardsView } from './components/views/StandardsView';
-import { WorkspacesView } from './components/views/WorkspacesView';
-import { LogbookView } from './components/views/LogbookView';
-import { StageGateView } from './components/views/StageGateView';
+
+const HomepageView = React.lazy(() =>
+  import('./components/views/HomepageView').then((m) => ({ default: m.HomepageView }))
+);
+const ScheduleView = React.lazy(() =>
+  import('./components/views/ScheduleView').then((m) => ({ default: m.ScheduleView }))
+);
+const TeamRaciView = React.lazy(() =>
+  import('./components/views/TeamRaciView').then((m) => ({ default: m.TeamRaciView }))
+);
+const WeeklyMoMView = React.lazy(() =>
+  import('./components/views/WeeklyMoMView').then((m) => ({ default: m.WeeklyMoMView }))
+);
+const StandardsView = React.lazy(() =>
+  import('./components/views/StandardsView').then((m) => ({ default: m.StandardsView }))
+);
+const WorkspacesView = React.lazy(() =>
+  import('./components/views/WorkspacesView').then((m) => ({ default: m.WorkspacesView }))
+);
+const LogbookView = React.lazy(() =>
+  import('./components/views/LogbookView').then((m) => ({ default: m.LogbookView }))
+);
+const StageGateView = React.lazy(() =>
+  import('./components/views/StageGateView').then((m) => ({ default: m.StageGateView }))
+);
 
 const MainApp: React.FC = () => {
   const { isLoggedIn, isLoading, isDataLoaded, authError, syncError, logout, activeTab } = useApp();
@@ -77,18 +94,26 @@ const MainApp: React.FC = () => {
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-6">
-        {activeTab === 'homepage' && <HomepageView />}
-        {activeTab === 'schedule' && <ScheduleView />}
-        {activeTab === 'team-raci' && <TeamRaciView />}
-        {activeTab === 'weekly-mom' && <WeeklyMoMView />}
-        {activeTab === 'standards' && <StandardsView />}
-        {activeTab === 'workspaces' && <WorkspacesView />}
-        {activeTab === 'logbook' && <LogbookView />}
-        {activeTab === 'stage-gate' && <StageGateView />}
+        <React.Suspense
+          fallback={
+            <div className="min-h-[400px] flex items-center justify-center text-xs font-semibold text-[#4A5A72]">
+              Memuat tampilan modul...
+            </div>
+          }
+        >
+          {activeTab === 'homepage' && <HomepageView />}
+          {activeTab === 'schedule' && <ScheduleView />}
+          {activeTab === 'team-raci' && <TeamRaciView />}
+          {activeTab === 'weekly-mom' && <WeeklyMoMView />}
+          {activeTab === 'standards' && <StandardsView />}
+          {activeTab === 'workspaces' && <WorkspacesView />}
+          {activeTab === 'logbook' && <LogbookView />}
+          {activeTab === 'stage-gate' && <StageGateView />}
+        </React.Suspense>
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 px-4 text-center text-xs text-[#4A5A72] border-t border-white/50 bg-white/40 backdrop-blur-xs mt-10">
+      <footer className="w-full py-6 px-4 text-center text-xs text-[#334155] border-t border-white/70 bg-white/75 backdrop-blur-xs mt-10">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-4">
           <div className="flex items-center gap-2">
             <span className="font-heading font-extrabold text-[#0B1B33]">

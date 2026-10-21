@@ -209,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Notification Popover */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white rounded-[28px] shadow-cockpit-pop border border-white/90 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-[28px] shadow-cockpit-pop border border-white/90 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
                 <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
                   <div className="flex items-center gap-2">
                     <span className="font-heading font-bold text-sm text-[#0B1B33]">
@@ -261,7 +261,7 @@ export const Header: React.FC<HeaderProps> = ({
                           <p className="text-[12px] text-[#4A5A72] mt-0.5 leading-snug">
                             {notif.description}
                           </p>
-                          <span className="text-[10px] text-[#9FB3C8] block mt-1">
+                          <span className="text-[10px] text-[#4A5A72] block mt-1">
                             {notif.timeAgo}
                           </span>
                         </div>

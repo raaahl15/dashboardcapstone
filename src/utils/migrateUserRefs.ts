@@ -93,6 +93,14 @@ const LEGACY_ALIAS_TO_UID: Record<string, string> = {
   heidi_cost: 'user-heidi',
 };
 
+const CANONICAL_UID_TO_EMAIL: Record<string, string> = {
+  'user-rahul': 'rahulghulamhidayatulloh2004@mail.ugm.ac.id',
+  'user-ihsan': 'ihsaanzauhairtsaqifprawira@mail.ugm.ac.id',
+  'user-althaf': 'altaframadhanparvez@mail.ugm.ac.id',
+  'user-jonathan': 'jonathanpangihutanms@mail.ugm.ac.id',
+  'user-heidi': 'heidifalinabrilian@mail.ugm.ac.id',
+};
+
 /**
  * Mencocokkan referensi pengguna (UID atau string nama/kode/raciTag lama) ke objek User.
  * Mendukung fallback baca untuk data lama yang masih berupa nama ('Ihsan'), kode ('IH'), atau raciTag.
@@ -127,10 +135,12 @@ export function resolveUserFromRef(
   // 3. Cek kamus alias historis (mis. 'Rahul Gunawan', 'Ihsan H.', 'Althaf (Lead Inst 1)')
   const mappedUid = LEGACY_ALIAS_TO_UID[normalized];
   if (mappedUid) {
+    const canonicalEmail = CANONICAL_UID_TO_EMAIL[mappedUid];
     const byAlias = users.find(
       (u) =>
         u.id.toLowerCase() === mappedUid.toLowerCase() ||
-        (typeof u.legacyId === 'string' && u.legacyId.toLowerCase() === mappedUid.toLowerCase())
+        (typeof u.legacyId === 'string' && u.legacyId.toLowerCase() === mappedUid.toLowerCase()) ||
+        (canonicalEmail && u.email && u.email.toLowerCase() === canonicalEmail.toLowerCase())
     );
     if (byAlias) return byAlias;
   }

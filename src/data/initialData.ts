@@ -30,6 +30,7 @@ export const INITIAL_USERS: User[] = [
     code: 'RG',
     avatarInitial: 'RG',
     avatarBg: 'bg-gradient-to-tr from-blue-700 to-indigo-800',
+    photoURL: '/images/rahul.png',
     tag: 'TAG: PFD-R-101 • ISO: 10628',
     jobdesk: [
       'Kepemimpinan operasional proyek & integrasi lintas disiplin.',
@@ -1028,8 +1029,8 @@ export const INITIAL_PHYSICAL_CHECKLIST: PhysicalBundleItem[] = [
   {
     id: 'pb-3',
     title: 'Logbook fisik resmi dengan 12 entri dan paraf basah',
-    subtitle: 'Saat ini 6/12 entri terparaf dosen pembimbing di logbook fisik resmi.',
-    statusBadge: '6 / 12 Paraf',
+    subtitle: 'Saat ini 5/12 entri terparaf dosen pembimbing di logbook fisik resmi.',
+    statusBadge: '5 / 12 Paraf',
     ready: false,
   },
   {

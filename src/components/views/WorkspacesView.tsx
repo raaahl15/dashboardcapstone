@@ -26,6 +26,9 @@ export const WorkspacesView: React.FC = () => {
   const [editStatus, setEditStatus] = useState<'Draft' | 'In Review Pembimbing' | 'ACC Final' | 'Aktif'>('Draft');
   const [editUrl, setEditUrl] = useState('');
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [uploadDeliverableId, setUploadDeliverableId] = useState<string>('');
+  const [uploadTitle, setUploadTitle] = useState('');
+  const [uploadUrl, setUploadUrl] = useState('');
 
   const openEditModal = (item: DeliverableItem) => {
     setSelectedItem(item);
@@ -44,6 +47,20 @@ export const WorkspacesView: React.FC = () => {
       fileUrl: editUrl,
     });
     setSelectedItem(null);
+  };
+
+  const handleUploadSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const targetId = uploadDeliverableId || deliverables[0]?.id;
+    if (!targetId || !uploadUrl.trim()) return;
+
+    updateDeliverable(targetId, {
+      fileUrl: uploadUrl.trim(),
+      ...(uploadTitle.trim() ? { badgeNote: uploadTitle.trim() } : {}),
+    });
+    setUploadTitle('');
+    setUploadUrl('');
+    setShowUploadModal(false);
   };
 
   return (
@@ -108,8 +125,9 @@ export const WorkspacesView: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => openEditModal(item)}
-                      className="text-[#4A5A72] hover:text-[#0062CC] p-1 transition-colors"
+                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#4A5A72] hover:text-[#0062CC] rounded-full hover:bg-black/5 transition-colors"
                       title="Edit Progres & Status"
+                      aria-label={`Edit Progres & Status ${item.title}`}
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
@@ -275,16 +293,37 @@ export const WorkspacesView: React.FC = () => {
             <p className="text-xs text-[#4A5A72] mt-1 mb-4">
               Dukungan integrasi dokumen Google Drive, naskah .docx/.pdf, DWSIM .dwxmz, dan lembar CAD P&amp;ID A3.
             </p>
-            <div className="space-y-3">
+            <form onSubmit={handleUploadSubmit} className="space-y-3">
+              <div>
+                <label className="block text-xs font-semibold mb-1 text-[#0B1B33]">
+                  Pilih Deliverable Target
+                </label>
+                <select
+                  value={uploadDeliverableId || deliverables[0]?.id || ''}
+                  onChange={(e) => setUploadDeliverableId(e.target.value)}
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                >
+                  {deliverables.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <input
                 type="text"
-                placeholder="Judul Berkas / Dokumen"
+                value={uploadTitle}
+                onChange={(e) => setUploadTitle(e.target.value)}
+                placeholder="Catatan Revisi / Judul Berkas (opsional)"
                 className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
               />
               <input
                 type="url"
-                placeholder="URL Berkas Google Drive / Cloud"
+                value={uploadUrl}
+                onChange={(e) => setUploadUrl(e.target.value)}
+                placeholder="URL Berkas Google Drive / Cloud (https://...)"
                 className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                required
               />
               <div className="flex justify-end gap-2 pt-2">
                 <button
@@ -295,17 +334,13 @@ export const WorkspacesView: React.FC = () => {
                   Batal
                 </button>
                 <button
-                  type="button"
-                  onClick={() => {
-                    alert('Tautan berkas berhasil diintegrasikan ke repositori EPC Area 1!');
-                    setShowUploadModal(false);
-                  }}
+                  type="submit"
                   className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
                   Simpan Tautan
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       )}

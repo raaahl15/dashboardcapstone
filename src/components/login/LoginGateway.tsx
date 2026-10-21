@@ -23,8 +23,11 @@ export const LoginGateway: React.FC = () => {
     }
   };
 
-  const handleQuickLogin = (userIdentifier: string) => {
-    setEmail(userIdentifier);
+  const handleQuickLogin = (nickname: string) => {
+    // Hanya isi kolom email dengan petunjuk nickname — pengguna tetap harus
+    // mengetik alamat email lengkap mereka sendiri agar email asli tidak
+    // tertanam di memori atau di-log oleh browser.
+    setEmail(nickname + '@mail.ugm.ac.id');
     setErrorMsg(null);
   };
 
@@ -178,9 +181,9 @@ export const LoginGateway: React.FC = () => {
                 <button
                   key={u.id}
                   type="button"
-                  onClick={() => handleQuickLogin(u.email)}
+                  onClick={() => handleQuickLogin(u.nickname)}
                   className="px-2.5 py-1 bg-white hover:bg-[#0B1B33] hover:text-white rounded-full text-[11px] font-semibold text-[#0B1B33] border border-white shadow-xs transition-colors"
-                  title={`${u.name} (${u.title})`}
+                  title={u.title}
                 >
                   {u.nickname} ({u.code})
                 </button>

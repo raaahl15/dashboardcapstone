@@ -8,39 +8,123 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Helper: Anggota resmi tim Area 1 DME (untuk koleksi projectData)
+    // Helper: Daftar email tim bawaan Area 1 DME (fallback bila /config/teamAccess belum dibuat)
+    function isDefaultTeamEmail() {
+      return request.auth.token.email in [
+        'rahulghulamhidayatulloh2004@mail.ugm.ac.id',
+        'ihsaanzauhairtsaqifprawira@mail.ugm.ac.id',
+        'altaframadhanparvez@mail.ugm.ac.id',
+        'jonathanpangihutanms@mail.ugm.ac.id',
+        'heidifalinabrilian@mail.ugm.ac.id'
+      ];
+    }
+
+    // Helper: Anggota resmi tim Area 1 DME
+    // Mendukung allowlist dinamis pada dokumen /config/teamAccess.allowedEmails
+    // sehingga penambahan/penggantian anggota tidak wajib deploy ulang firestore.rules.
     function isAreaOneTeamMember() {
-      return isSignedIn()
-        && request.auth.token.email in [
-          'rahulghulamhidayatulloh2004@mail.ugm.ac.id',
-          'ihsaanzauhairtsaqifprawira@mail.ugm.ac.id',
-          'altaframadhanparvez@mail.ugm.ac.id',
-          'jonathanpangihutanms@mail.ugm.ac.id',
-          'heidifalinabrilian@mail.ugm.ac.id'
-        ];
+      return isSignedIn() && (
+        isDefaultTeamEmail()
+        || (
+          exists(/databases/$(database)/documents/config/teamAccess)
+          && request.auth.token.email in get(/databases/$(database)/documents/config/teamAccess).data.allowedEmails
+        )
+        || exists(/databases/$(database)/documents/users/$(request.auth.uid))
+      );
     }
 
     // Helper: Cek apakah pemanggil adalah pemilik dokumen users/{uid}
+    // Mendukung dokumen ber-ID Firebase Auth UID maupun ID kanonik ('user-rahul', dst.)
     function isOwner(uid) {
-      return isSignedIn() && request.auth.uid == uid;
+      return isSignedIn() && (
+        request.auth.uid == uid
+        || (resource != null && resource.data.email == request.auth.token.email)
+      );
     }
 
-    // Helper: Cek apakah pemanggil memiliki role 'admin' pada dokumen users/{request.auth.uid}
+    // Helper: Pemetaan email resmi anggota tim ke ID dokumen kanonik ('user-...')
+    function canonicalUidForEmail(email) {
+      return email == 'rahulghulamhidayatulloh2004@mail.ugm.ac.id' ? 'user-rahul'
+        : email == 'ihsaanzauhairtsaqifprawira@mail.ugm.ac.id' ? 'user-ihsan'
+        : email == 'altaframadhanparvez@mail.ugm.ac.id' ? 'user-althaf'
+        : email == 'jonathanpangihutanms@mail.ugm.ac.id' ? 'user-jonathan'
+        : email == 'heidifalinabrilian@mail.ugm.ac.id' ? 'user-heidi'
+        : '';
+    }
+
+    // Helper: Cek apakah pemanggil memiliki role 'admin'
+    // Mendukung custom claims, dokumen users/{auth.uid}, dokumen kanonik users/{canonicalUid},
+    // daftar adminEmails pada /config/teamAccess, serta bootstrap awal sebelum koleksi users terbentuk.
     function isAdmin() {
-      return isSignedIn()
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      let canonicalUid = canonicalUidForEmail(request.auth.token.email);
+      return isSignedIn() && (
+        request.auth.token.role == 'admin'
+        || (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        )
+        || (
+          canonicalUid != ''
+          && exists(/databases/$(database)/documents/users/$(canonicalUid))
+          && get(/databases/$(database)/documents/users/$(canonicalUid)).data.role == 'admin'
+        )
+        || (
+          exists(/databases/$(database)/documents/config/teamAccess)
+          && 'adminEmails' in get(/databases/$(database)/documents/config/teamAccess).data
+          && request.auth.token.email in get(/databases/$(database)/documents/config/teamAccess).data.adminEmails
+        )
+        || (
+          !exists(/databases/$(database)/documents/users/user-rahul)
+          && request.auth.token.email == 'rahulghulamhidayatulloh2004@mail.ugm.ac.id'
+        )
+      );
     }
 
-    // Helper: Validasi tipe dan batasan nilai dokumen users/{uid}
+    // Helper: Validasi tipe, struktur kunci, dan batasan nilai dokumen users/{uid}
     function isValidUserData(data) {
-      return data.name is string
+      return data.keys().hasOnly([
+          'id',
+          'legacyId',
+          'name',
+          'nickname',
+          'email',
+          'nim',
+          'role',
+          'tag',
+          'title',
+          'raciTag',
+          'code',
+          'avatarBg',
+          'avatarInitial',
+          'phone',
+          'photoURL',
+          'jobdesk',
+          'readNotificationIds',
+          'updatedAt',
+          'updatedBy'
+        ])
+        && data.name is string
         && data.name.size() >= 1
         && data.name.size() <= 60
         && data.nickname is string
         && data.nickname.size() >= 1
         && data.nickname.size() <= 60
+        && data.email is string
         && data.jobdesk is list
         && data.role in ['admin', 'member'];
+    }
+
+    // Helper: Bootstrap pembuatan dokumen awal koleksi users (mencegah masalah ayam-dan-telur saat DB kosong)
+    // Memastikan email dokumen kanonik sesuai dengan pemilik aslinya sehingga tidak dapat diambil alih.
+    function isCanonicalInitialUserSeed(uid) {
+      return isAreaOneTeamMember()
+        && !exists(/databases/$(database)/documents/users/$(uid))
+        && uid in ['user-rahul', 'user-ihsan', 'user-althaf', 'user-jonathan', 'user-heidi']
+        && canonicalUidForEmail(request.resource.data.email) == uid
+        && (
+          request.resource.data.role == 'member'
+          || (uid == 'user-rahul' && request.resource.data.role == 'admin')
+        );
     }
 
     // Helper: Pemilik dokumen hanya boleh mengubah field profil pribadinya sendiri
@@ -54,16 +138,15 @@ service cloud.firestore {
           'avatarInitial',
           'phone',
           'photoURL',
+          'readNotificationIds',
           'updatedAt',
           'updatedBy'
         ]);
     }
 
     // Helper: Cegah admin menurunkan role dirinya sendiri jika ia satu-satunya admin.
-    // Karena Firestore Rules tidak mendukung query agregasi koleksi (count), penurunan role
-    // diri sendiri ditolak kecuali dokumen metadata /config/adminMeta mencatat adminCount > 1.
     function isNotDemotingSoleAdmin(uid) {
-      return request.auth.uid != uid
+      return !isOwner(uid)
         || request.resource.data.role == resource.data.role
         || (
           exists(/databases/$(database)/documents/config/adminMeta)
@@ -88,38 +171,92 @@ service cloud.firestore {
           'code',
           'jobdesk',
           'role',
+          'readNotificationIds',
           'updatedAt',
           'updatedBy'
         ])
         && isNotDemotingSoleAdmin(uid);
     }
 
+    // Helper: Validasi struktur field dokumen projectData/area1
+    function hasOnlyAllowedProjectKeys(data) {
+      return data.keys().hasOnly([
+        'users',
+        'config',
+        'tasks',
+        'deliverables',
+        'weeklyPlans',
+        'ganttTasks',
+        'raciRows',
+        'slideDecks',
+        'trackerActions',
+        'meetingLogs',
+        'regulations',
+        'standards',
+        'logbooks',
+        'rubricParameters',
+        'defenseQuestions',
+        'physicalChecklist',
+        'notifications'
+      ]);
+    }
+
+    // Helper: Bagian dokumen projectData/area1 yang hanya boleh diubah oleh Admin (PM)
+    function isAllowedProjectUpdate() {
+      return isAdmin()
+        || !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+          'config',
+          'deliverables',
+          'weeklyPlans',
+          'ganttTasks',
+          'raciRows',
+          'slideDecks',
+          'meetingLogs',
+          'regulations',
+          'standards',
+          'physicalChecklist',
+          'users'
+        ]);
+    }
+
+    // =========================================================================
+    // Koleksi Konfigurasi Sistem: config/{docId} (mis. teamAccess, adminMeta)
+    // =========================================================================
+    match /config/{docId} {
+      allow read: if isAreaOneTeamMember();
+      allow write: if isAdmin();
+    }
+
     // =========================================================================
     // Koleksi Profil Pengguna: users/{uid}
     // =========================================================================
     match /users/{uid} {
-      // 1. Baca: hanya pengguna yang sudah login (request.auth != null)
-      allow read: if isSignedIn();
+      // 1. Baca: hanya anggota tim yang sudah login
+      allow read: if isAreaOneTeamMember();
 
-      // 2. Buat dokumen: hanya oleh admin, valid secara skema, dan role 'admin' hanya boleh oleh admin
-      allow create: if isAdmin()
-        && isValidUserData(request.resource.data)
-        && (request.resource.data.role != 'admin' || isAdmin());
+      // 2. Buat dokumen: oleh admin atau saat bootstrap awal 5 akun kanonik tim
+      allow create: if isValidUserData(request.resource.data)
+        && (isAdmin() || isCanonicalInitialUserSeed(uid));
 
-      // 3, 4, 5, 7. Ubah dokumen: pemilik (hanya field profil pribadi) atau admin (jabatan & profil anggota),
-      // dengan validasi tipe data dan proteksi penurunan role admin tunggal.
+      // 3. Ubah dokumen: pemilik (hanya field profil pribadi) atau admin (jabatan & profil anggota)
       allow update: if isValidUserData(request.resource.data)
         && (isOwnerAllowedProfileUpdate(uid) || isAdminAllowedUpdate(uid));
 
-      // 5, 6. Hapus dokumen: hanya oleh admin, dan admin tidak boleh menghapus dirinya sendiri
-      allow delete: if isAdmin() && request.auth.uid != uid;
+      // 4. Hapus dokumen: hanya oleh admin, dan admin tidak boleh menghapus dirinya sendiri
+      allow delete: if isAdmin() && !isOwner(uid);
     }
 
     // =========================================================================
-    // Koleksi Data Operasional Proyek (Tidak dilonggarkan)
+    // Koleksi Data Operasional Proyek: projectData/area1
     // =========================================================================
     match /projectData/area1 {
-      allow read, write: if isAreaOneTeamMember();
+      allow read: if isAreaOneTeamMember();
+      allow create: if isAreaOneTeamMember()
+        && hasOnlyAllowedProjectKeys(request.resource.data);
+      allow update: if isAreaOneTeamMember()
+        && hasOnlyAllowedProjectKeys(request.resource.data)
+        && isAllowedProjectUpdate();
+      allow delete: if isAdmin();
     }
 
     // Default deny untuk seluruh koleksi lainnya

@@ -9,7 +9,6 @@ import React, {
   ReactNode,
 } from 'react';
 import {
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -17,17 +16,12 @@ import {
 import {
   QueryDocumentSnapshot,
   QuerySnapshot,
-  collection,
-  doc,
+  getDocFromServer,
   onSnapshot,
+  runTransaction,
   serverTimestamp,
   setDoc,
   updateDoc,
-} from 'firebase/firestore';
-import type {
-  CollectionReference,
-  DocumentReference,
-  Firestore,
 } from 'firebase/firestore';
 import {
   User,
@@ -76,272 +70,36 @@ import {
   previewMigrateUserRefs,
   resolveUserFromRef,
 } from '../utils/migrateUserRefs';
+import {
+  ADMIN_ONLY_USER_FIELDS,
+  AppContextType,
+  INITIAL_PROJECT_DATA,
+  ImportDataResult,
+  NavTab,
+  PROJECT_DATA_REF,
+  ProjectSectionKey,
+  SECTION_KEYS,
+  SharedProjectData,
+  USER_ORDER,
+} from './appContextTypes';
+import {
+  computeNextTrackerCode,
+  formatTimeNow,
+  newId,
+  parseAndValidateImportJson,
+  sanitizeExternalUrl,
+  serializeSections,
+  sortAndNormalizeUsers,
+  translateAuthError,
+  typedCollection,
+  typedDoc,
+} from './appContextHelpers';
 
-export type NavTab =
-  | 'homepage'
-  | 'schedule'
-  | 'team-raci'
-  | 'weekly-mom'
-  | 'standards'
-  | 'workspaces'
-  | 'logbook'
-  | 'stage-gate';
-
-interface AppContextType {
-  // Auth, Users & Session
-  currentUser: User;
-  users: User[];
-  isUsersLoaded: boolean;
-  getUser: (uidOrLegacyRef: string | undefined | null) => User | undefined;
-  updateUser: (uid: string, patch: UserPatch) => Promise<void>;
-  isLoggedIn: boolean;
-  isLoading: boolean;
-  isDataLoaded: boolean;
-  authError: string | null;
-  syncError: string | null;
-  firebaseConfigured: boolean;
-  lastSyncedAt: string | null;
-  isSyncing: boolean;
-  refreshData: () => Promise<void>;
-  activeTab: NavTab;
-  setActiveTab: (tab: NavTab) => void;
-  login: (identifier: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  isPM: boolean;
-
-  // Data states & mutators
-  config: Config;
-  updateConfig: (patch: Partial<Config>) => void;
-
-  tasks: TaskItem[];
-  addTask: (task: Omit<TaskItem, 'id'>) => void;
-  toggleTask: (id: string) => void;
-  deleteTask: (id: string) => void;
-
-  deliverables: DeliverableItem[];
-  updateDeliverable: (id: string, patch: Partial<DeliverableItem>) => void;
-
-  weeklyPlans: WeeklyPlanItem[];
-  addWeeklyPlan: (plan: Omit<WeeklyPlanItem, 'id'>) => void;
-  updateWeeklyPlan: (id: string, patch: Partial<WeeklyPlanItem>) => void;
-  deleteWeeklyPlan: (id: string) => void;
-
-  ganttTasks: GanttTaskItem[];
-  addGanttTask: (task: Omit<GanttTaskItem, 'id'>) => void;
-  deleteGanttTask: (id: string) => void;
-
-  raciRows: RaciRow[];
-  updateRaciCell: (
-    rowId: string,
-    memberUidOrKey: string,
-    value: RaciRoleValue
-  ) => void;
-  addRaciRow: (row: Omit<RaciRow, 'id'>) => void;
-
-  slideDecks: SlideDeckItem[];
-  addSlideDeck: (deck: Omit<SlideDeckItem, 'id'>) => void;
-  deleteSlideDeck: (id: string) => void;
-
-  trackerActions: TrackerActionItem[];
-  addTrackerAction: (item: Omit<TrackerActionItem, 'id' | 'code'>) => void;
-  toggleTrackerActionStatus: (id: string) => void;
-  deleteTrackerAction: (id: string) => void;
-
-  meetingLogs: MeetingLogItem[];
-  addMeetingLog: (log: Omit<MeetingLogItem, 'id'>) => void;
-
-  regulations: RegulationDirective[];
-  standards: StandardReferenceItem[];
-  addStandard: (std: Omit<StandardReferenceItem, 'id'>) => void;
-  deleteStandard: (id: string) => void;
-
-  logbooks: LogbookItem[];
-  addLogbook: (entry: Omit<LogbookItem, 'id' | 'verifiedByLecturer'>) => void;
-  toggleLogbookVerification: (id: string) => void;
-  deleteLogbook: (id: string) => void;
-
-  rubricParameters: RubricParameter[];
-  updateRubricScore: (id: string, score: number) => void;
-  toggleRubricItem: (paramId: string, itemIdx: number) => void;
-  updateRubricMitigation: (id: string, mitigation: string) => void;
-
-  defenseQuestions: DefenseQuestion[];
-  updateDefenseResponse: (id: string, newResponse: string) => void;
-  addDefenseQuestion: (q: Omit<DefenseQuestion, 'id'>) => void;
-
-  physicalChecklist: PhysicalBundleItem[];
-  togglePhysicalItem: (id: string) => void;
-
-  notifications: AppNotification[];
-  markNotificationAsRead: (id: string) => void;
-  markAllNotificationsAsRead: () => void;
-
-  // Calculated Metrics
-  verifiedLogbooksCount: number;
-  totalLogbooksCount: number;
-  overallWeightedProgress: number;
-  averageRubricScore: number;
-  stageGateReadinessPercent: number;
-  unreadNotificationsCount: number;
-
-  // Backup, Restore & Migration
-  exportDataToJson: () => string;
-  importDataFromJson: (jsonStr: string) => boolean;
-  resetToDefaults: () => void;
-  previewUserMigration: () => MigrationPreviewResult;
-  executeUserMigration: () => Promise<MigrationPreviewResult>;
-}
-
-interface SharedProjectData {
-  users?: User[];
-  config: Config;
-  tasks: TaskItem[];
-  deliverables: DeliverableItem[];
-  weeklyPlans: WeeklyPlanItem[];
-  ganttTasks: GanttTaskItem[];
-  raciRows: RaciRow[];
-  slideDecks: SlideDeckItem[];
-  trackerActions: TrackerActionItem[];
-  meetingLogs: MeetingLogItem[];
-  standards: StandardReferenceItem[];
-  logbooks: LogbookItem[];
-  rubricParameters: RubricParameter[];
-  defenseQuestions: DefenseQuestion[];
-  physicalChecklist: PhysicalBundleItem[];
-  notifications: AppNotification[];
-}
-
-const INITIAL_PROJECT_DATA: SharedProjectData = {
-  users: INITIAL_USERS,
-  config: INITIAL_CONFIG,
-  tasks: INITIAL_TASKS,
-  deliverables: INITIAL_DELIVERABLES,
-  weeklyPlans: INITIAL_WEEKLY_PLANS,
-  ganttTasks: INITIAL_GANTT_TASKS,
-  raciRows: INITIAL_RACI_ROWS,
-  slideDecks: INITIAL_SLIDE_DECKS,
-  trackerActions: INITIAL_TRACKER_ACTIONS,
-  meetingLogs: INITIAL_MEETING_LOGS,
-  standards: INITIAL_STANDARDS,
-  logbooks: INITIAL_LOGBOOKS,
-  rubricParameters: INITIAL_RUBRIC_PARAMETERS,
-  defenseQuestions: INITIAL_DEFENSE_QUESTIONS,
-  physicalChecklist: INITIAL_PHYSICAL_CHECKLIST,
-  notifications: INITIAL_NOTIFICATIONS,
-};
-
-const USER_ORDER = ['user-rahul', 'user-ihsan', 'user-althaf', 'user-jonathan', 'user-heidi'];
-const ADMIN_ONLY_USER_FIELDS: Array<keyof UserPatch> = [
-  'role',
-  'title',
-  'raciTag',
-  'code',
-  'jobdesk',
-];
-
-const typedDoc = <T,>(
-  firestore: Firestore,
-  path: string,
-  ...pathSegments: string[]
-) => doc(firestore, path, ...pathSegments) as unknown as DocumentReference<T>;
-
-const typedCollection = <T,>(
-  firestore: Firestore,
-  path: string,
-  ...pathSegments: string[]
-) => collection(firestore, path, ...pathSegments) as unknown as CollectionReference<T>;
-
-const PROJECT_DATA_REF = ['projectData', 'area1'] as const;
-const LOCAL_STORAGE_SESSION_KEY = 'area1_dme_session_user_id';
-const LOCAL_STORAGE_DATA_KEY = 'area1_dme_project_data';
-const LOCAL_STORAGE_USERS_KEY = 'area1_dme_users_data';
-const BROADCAST_CHANNEL_NAME = 'area1_dme_realtime_sync';
-
-function sortAndNormalizeUsers(rawUsers: User[]): User[] {
-  const validIncoming = Array.isArray(rawUsers)
-    ? rawUsers.filter((u): u is User => Boolean(u && u.id))
-    : [];
-
-  if (validIncoming.length === 0) {
-    return INITIAL_USERS.map((base) => ({ ...base }));
-  }
-
-  const initialById = new Map<string, User>(
-    INITIAL_USERS.map((base) => [base.id, base])
-  );
-
-  const isFirestoreMode = validIncoming.some(
-    (u) => Boolean(u.legacyId) || !initialById.has(u.id)
-  );
-
-  // If in Firestore mode and rawUsers contains both UID-based docs (with legacyId)
-  // and stale legacy-ID docs (e.g. from old localStorage cache), ignore the stale legacy-ID duplicates
-  const legacyIdsPresentOnUidDocs = new Set<string>(
-    validIncoming
-      .filter((u) => Boolean(u.legacyId) && u.id !== u.legacyId)
-      .map((u) => u.legacyId as string)
-  );
-
-  const normalizedList: User[] = [];
-  const seenIds = new Set<string>();
-
-  for (const incoming of validIncoming) {
-    if (seenIds.has(incoming.id)) continue;
-    if (
-      isFirestoreMode &&
-      !incoming.legacyId &&
-      legacyIdsPresentOnUidDocs.has(incoming.id)
-    ) {
-      continue;
-    }
-    seenIds.add(incoming.id);
-
-    const fallback =
-      initialById.get(incoming.id) ??
-      (incoming.legacyId ? initialById.get(incoming.legacyId) : undefined);
-
-    const definedIncoming = Object.fromEntries(
-      Object.entries(incoming).filter(([, value]) => value !== undefined)
-    ) as Partial<User>;
-
-    const merged: User = {
-      ...(fallback ? { ...fallback } : ({} as User)),
-      ...definedIncoming,
-      id: incoming.id,
-    };
-
-    if (incoming.legacyId !== undefined) {
-      merged.legacyId = incoming.legacyId;
-    }
-
-    if (merged.nickname === undefined) {
-      merged.nickname =
-        fallback?.nickname ?? (merged.name ? merged.name.split(' ')[0] : '');
-    }
-
-    normalizedList.push(merged);
-  }
-
-  if (!isFirestoreMode) {
-    for (const base of INITIAL_USERS) {
-      if (!seenIds.has(base.id)) {
-        normalizedList.push({ ...base });
-      }
-    }
-  }
-
-  return normalizedList.sort((a, b) => {
-    const keyA = a.legacyId ?? a.id;
-    const keyB = b.legacyId ?? b.id;
-    const idxA = USER_ORDER.indexOf(keyA);
-    const idxB = USER_ORDER.indexOf(keyB);
-    const rankA = idxA === -1 ? USER_ORDER.length : idxA;
-    const rankB = idxB === -1 ? USER_ORDER.length : idxB;
-    return rankA - rankB;
-  });
-}
+export type { NavTab, AppContextType };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
+
+const SYNC_DEBOUNCE_MS = 400;
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -355,10 +113,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [activeTab, setActiveTab] = useState<NavTab>('homepage');
   const [users, setUsers] = useState<User[]>(() => {
     try {
-      const saved = window.localStorage.getItem(LOCAL_STORAGE_USERS_KEY);
-      if (saved) {
-        return sortAndNormalizeUsers(JSON.parse(saved) as User[]);
-      }
+      // Bersihkan sisa cache dari versi lama (mode lokal sudah dihapus).
+      ['area1_dme_session_user_id', 'area1_dme_project_data', 'area1_dme_users_data'].forEach(
+        (key) => window.localStorage.removeItem(key)
+      );
     } catch {
       // ignore storage errors
     }
@@ -374,41 +132,69 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [slideDecks, setSlideDecks] = useState<SlideDeckItem[]>(INITIAL_SLIDE_DECKS);
   const [trackerActions, setTrackerActions] = useState<TrackerActionItem[]>(INITIAL_TRACKER_ACTIONS);
   const [meetingLogs, setMeetingLogs] = useState<MeetingLogItem[]>(INITIAL_MEETING_LOGS);
-  const [regulations] = useState<RegulationDirective[]>(INITIAL_REGULATIONS);
+  const [regulations, setRegulations] = useState<RegulationDirective[]>(INITIAL_REGULATIONS);
   const [standards, setStandards] = useState<StandardReferenceItem[]>(INITIAL_STANDARDS);
   const [logbooks, setLogbooks] = useState<LogbookItem[]>(INITIAL_LOGBOOKS);
   const [rubricParameters, setRubricParameters] = useState<RubricParameter[]>(INITIAL_RUBRIC_PARAMETERS);
   const [defenseQuestions, setDefenseQuestions] = useState<DefenseQuestion[]>(INITIAL_DEFENSE_QUESTIONS);
   const [physicalChecklist, setPhysicalChecklist] = useState<PhysicalBundleItem[]>(INITIAL_PHYSICAL_CHECKLIST);
-  const [notifications, setNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
+  const [rawNotifications, setRawNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
 
-  const lastSyncedPayload = useRef<string | null>(null);
-  const lastServerTimestampRef = useRef<number>(0);
-  const clientIdRef = useRef<string>(`client-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
-  const broadcastChannelRef = useRef<BroadcastChannel | null>(null);
+  const lastSyncedSections = useRef<Record<ProjectSectionKey, string> | null>(null);
+  const pendingSectionKeysRef = useRef<Set<ProjectSectionKey>>(new Set());
+  const syncDebounceRef = useRef<number>(0);
   const seedInProgress = useRef(false);
   const usersSeedInProgress = useRef(false);
   const usersCollectionActiveRef = useRef(false);
   const dataUnsubscribe = useRef<(() => void) | null>(null);
   const usersUnsubscribe = useRef<(() => void) | null>(null);
+  const loadTimeoutRef = useRef<number>(0);
+  const isDataLoadedRef = useRef(false);
+  const usersRef = useRef<User[]>(users);
 
-  // Current active user from single source of truth `users` (matches id or legacyId)
-  const currentUser = useMemo(() => {
-    return (
-      users.find(
-        (u) =>
-          u.id === currentUserId ||
-          (Boolean(u.legacyId) && u.legacyId === currentUserId)
-      ) || users[0]
+  useEffect(() => {
+    isDataLoadedRef.current = isDataLoaded;
+  }, [isDataLoaded]);
+
+  useEffect(() => {
+    usersRef.current = users;
+  }, [users]);
+
+  // Matched active user from single source of truth `users` (matches id or legacyId)
+  const matchedCurrentUser = useMemo(() => {
+    if (!currentUserId) return undefined;
+    return users.find(
+      (u) =>
+        u.id === currentUserId ||
+        (Boolean(u.legacyId) && u.legacyId === currentUserId)
     );
   }, [users, currentUserId]);
 
-  const isPM = currentUser.role === 'admin';
+  const currentUser = useMemo(() => {
+    return matchedCurrentUser || users[0];
+  }, [matchedCurrentUser, users]);
+
+  // Jangan pernah memberikan hak isPM dari fallback users[0] saat currentUserId kosong/tidak cocok
+  const isPM = Boolean(
+    isLoggedIn && currentUserId && matchedCurrentUser && matchedCurrentUser.role === 'admin'
+  );
+
+  // Per-user notification read status: menggabungkan readNotificationIds milik pengguna aktif
+  const notifications = useMemo(() => {
+    const readIds = new Set<string>(matchedCurrentUser?.readNotificationIds || []);
+    return rawNotifications.map((n) => ({
+      ...n,
+      read: Boolean(n.read || readIds.has(n.id)),
+    }));
+  }, [rawNotifications, matchedCurrentUser]);
 
   // Helper getUser(uid): resolves by UID with fallback to nickname, name, code, or raciTag
   const getUser = useCallback(
     (uidOrLegacyRef: string | undefined | null): User | undefined => {
-      return resolveUserFromRef(uidOrLegacyRef, users);
+      return (
+        resolveUserFromRef(uidOrLegacyRef, users) ??
+        resolveUserFromRef(uidOrLegacyRef, INITIAL_USERS)
+      );
     },
     [users]
   );
@@ -462,39 +248,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       const actorUid = currentUser.id;
       const nowIso = new Date().toISOString();
       const previousUsers = users;
+      const nextUsersList = previousUsers.map((u) =>
+        u.id === uid
+          ? {
+              ...u,
+              ...(changedFields as UserPatch),
+              updatedAt: nowIso,
+              updatedBy: actorUid,
+            }
+          : u
+      );
 
-      setUsers((prev) => {
-        const next = prev.map((u) =>
-          u.id === uid
-            ? {
-                ...u,
-                ...(changedFields as UserPatch),
-                updatedAt: nowIso,
-                updatedBy: actorUid,
-              }
-            : u
-        );
-        try {
-          window.localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(next));
-        } catch {
-          // ignore storage errors
-        }
-        return next;
-      });
-
-      // Broadcast granular per-field user patch for instant cross-tab sync without overwriting other fields
-      try {
-        broadcastChannelRef.current?.postMessage({
-          type: 'USER_PATCH',
-          clientId: clientIdRef.current,
-          uid,
-          patch: changedFields,
-          updatedAt: nowIso,
-          updatedBy: actorUid,
-        });
-      } catch {
-        // ignore BroadcastChannel errors
-      }
+      setUsers(nextUsersList);
 
       if (isLiveFirebaseConfig && db && auth?.currentUser) {
         const firestoreDb = db;
@@ -505,14 +270,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             updatedAt: serverTimestamp(),
             updatedBy: actorUid,
           });
+          // Sinkronkan jumlah admin ke /config/adminMeta bila role diubah oleh PM
+          if (isPM && 'role' in changedFields) {
+            const nextAdminCount = nextUsersList.filter((u) => u.role === 'admin').length;
+            await setDoc(
+              typedDoc<Record<string, unknown>>(firestoreDb, 'config', 'adminMeta'),
+              {
+                adminCount: nextAdminCount,
+                updatedAt: serverTimestamp(),
+                updatedBy: actorUid,
+              },
+              { merge: true }
+            ).catch(() => {
+              // Abaikan bila gagal menulis metadata opsional
+            });
+          }
         } catch (err: unknown) {
           // Roll back optimistic state on Firestore rejection
           setUsers(previousUsers);
-          try {
-            window.localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(previousUsers));
-          } catch {
-            // ignore
-          }
           const rawCode =
             typeof err === 'object' && err !== null && 'code' in err
               ? String((err as { code?: unknown }).code)
@@ -534,329 +309,92 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     [users, currentUser.id, isPM]
   );
 
-  // Expose updateUser on window for console testing (e.g. testing member role change rejection)
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      (
-        window as unknown as {
-          updateUser?: (uid: string, patch: UserPatch) => Promise<void>;
-        }
-      ).updateUser = updateUser;
-    }
-  }, [updateUser]);
-
-  const formatTimeNow = () => {
-    return new Date().toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-    });
-  };
-
   const applyProjectData = useCallback(
     (
       raw?: Partial<SharedProjectData>,
-      updatedAt?: number,
-      options?: { skipUsersIfFirestoreActive?: boolean }
+      options?: {
+        skipUsersIfFirestoreActive?: boolean;
+        preservePendingSections?: boolean;
+      }
     ) => {
       const payload: SharedProjectData = {
         ...INITIAL_PROJECT_DATA,
         ...(raw || {}),
       };
-      const serialized = JSON.stringify(payload);
-      lastSyncedPayload.current = serialized;
-      if (typeof updatedAt === 'number' && updatedAt > 0) {
-        lastServerTimestampRef.current = updatedAt;
-      }
-      try {
-        window.localStorage.setItem(LOCAL_STORAGE_DATA_KEY, serialized);
-      } catch {
-        // ignore localStorage quota errors
-      }
-      const shouldApplyUsers =
-        !(options?.skipUsersIfFirestoreActive && usersCollectionActiveRef.current) &&
-        payload.users &&
-        Array.isArray(payload.users) &&
-        payload.users.length > 0;
+      const incomingSerialized = serializeSections(payload);
+      const pendingKeys = options?.preservePendingSections
+        ? pendingSectionKeysRef.current
+        : new Set<ProjectSectionKey>();
 
-      if (shouldApplyUsers && payload.users) {
-        const normalizedUsers = sortAndNormalizeUsers(payload.users);
-        setUsers(normalizedUsers);
-        setIsUsersLoaded(true);
-        try {
-          window.localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(normalizedUsers));
-        } catch {
-          // ignore
+      if (!lastSyncedSections.current) {
+        lastSyncedSections.current = incomingSerialized;
+      } else {
+        for (const key of SECTION_KEYS) {
+          if (!pendingKeys.has(key)) {
+            lastSyncedSections.current[key] = incomingSerialized[key];
+          }
         }
       }
-      setConfig(payload.config);
-      setTasks(payload.tasks);
-      setDeliverables(payload.deliverables);
-      setWeeklyPlans(payload.weeklyPlans);
-      setGanttTasks(payload.ganttTasks);
-      setRaciRows(payload.raciRows);
-      setSlideDecks(payload.slideDecks);
-      setTrackerActions(payload.trackerActions);
-      setMeetingLogs(payload.meetingLogs);
-      setStandards(payload.standards);
-      setLogbooks(payload.logbooks);
-      setRubricParameters(payload.rubricParameters);
-      setDefenseQuestions(payload.defenseQuestions);
-      setPhysicalChecklist(payload.physicalChecklist);
-      setNotifications(payload.notifications);
+
+      const shouldApplyUsers =
+        !(options?.skipUsersIfFirestoreActive && usersCollectionActiveRef.current) &&
+        raw?.users &&
+        Array.isArray(raw.users) &&
+        raw.users.length > 0;
+
+      if (shouldApplyUsers && raw?.users) {
+        const normalizedUsers = sortAndNormalizeUsers(raw.users);
+        setUsers(normalizedUsers);
+        setIsUsersLoaded(true);
+      }
+      if (!pendingKeys.has('config')) setConfig(payload.config);
+      if (!pendingKeys.has('tasks')) setTasks(payload.tasks);
+      if (!pendingKeys.has('deliverables')) setDeliverables(payload.deliverables);
+      if (!pendingKeys.has('weeklyPlans')) setWeeklyPlans(payload.weeklyPlans);
+      if (!pendingKeys.has('ganttTasks')) setGanttTasks(payload.ganttTasks);
+      if (!pendingKeys.has('raciRows')) setRaciRows(payload.raciRows);
+      if (!pendingKeys.has('slideDecks')) setSlideDecks(payload.slideDecks);
+      if (!pendingKeys.has('trackerActions')) setTrackerActions(payload.trackerActions);
+      if (!pendingKeys.has('meetingLogs') && payload.meetingLogs) setMeetingLogs(payload.meetingLogs);
+      if (!pendingKeys.has('regulations') && payload.regulations) setRegulations(payload.regulations);
+      if (!pendingKeys.has('standards') && payload.standards) setStandards(payload.standards);
+      if (!pendingKeys.has('logbooks')) setLogbooks(payload.logbooks);
+      if (!pendingKeys.has('rubricParameters')) setRubricParameters(payload.rubricParameters);
+      if (!pendingKeys.has('defenseQuestions')) setDefenseQuestions(payload.defenseQuestions);
+      if (!pendingKeys.has('physicalChecklist')) setPhysicalChecklist(payload.physicalChecklist);
+      if (!pendingKeys.has('notifications')) setRawNotifications(payload.notifications);
       setLastSyncedAt(formatTimeNow());
     },
     []
   );
 
-  const fetchSharedServerData = useCallback(
-    async (forceApply = false): Promise<boolean> => {
-      try {
-        setIsSyncing(true);
-        const response = await fetch('/api/project-data', {
-          method: 'GET',
-          headers: { Accept: 'application/json' },
-          cache: 'no-store',
-        });
-        if (!response.ok) return false;
-        const result = (await response.json()) as {
-          updatedAt?: number;
-          clientId?: string;
-          data?: Partial<SharedProjectData> | null;
-        };
-        if (result && result.data) {
-          const remoteTime = result.updatedAt || 0;
-          if (
-            forceApply ||
-            remoteTime > lastServerTimestampRef.current ||
-            !lastSyncedPayload.current
-          ) {
-            applyProjectData(result.data, remoteTime, {
-              skipUsersIfFirestoreActive: true,
-            });
-          }
-          setIsDataLoaded(true);
-          setIsUsersLoaded(true);
-          setIsLoading(false);
-          setSyncError(null);
-          return true;
-        } else if (result && !result.data) {
-          let seedData: SharedProjectData = INITIAL_PROJECT_DATA;
-          try {
-            const saved = window.localStorage.getItem(LOCAL_STORAGE_DATA_KEY);
-            if (saved) {
-              seedData = {
-                ...INITIAL_PROJECT_DATA,
-                ...(JSON.parse(saved) as Partial<SharedProjectData>),
-              };
-            }
-          } catch {
-            // use INITIAL_PROJECT_DATA
-          }
-          applyProjectData(seedData, Date.now(), {
-            skipUsersIfFirestoreActive: true,
-          });
-          await fetch('/api/project-data', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              clientId: clientIdRef.current,
-              data: seedData,
-            }),
-          }).catch(() => {});
-          setIsDataLoaded(true);
-          setIsUsersLoaded(true);
-          setIsLoading(false);
-          setSyncError(null);
-          return true;
-        }
-      } catch {
-        // Server endpoint unavailable; fallback to localStorage
-      } finally {
-        setIsSyncing(false);
-      }
-      return false;
-    },
-    [applyProjectData]
-  );
-
-  const loadLocalProjectData = useCallback(async () => {
-    const syncedFromServer = await fetchSharedServerData(true);
-    if (syncedFromServer) return;
-
-    try {
-      const saved = window.localStorage.getItem(LOCAL_STORAGE_DATA_KEY);
-      if (saved) {
-        applyProjectData(JSON.parse(saved) as Partial<SharedProjectData>);
-      } else {
-        applyProjectData(INITIAL_PROJECT_DATA);
-        window.localStorage.setItem(LOCAL_STORAGE_DATA_KEY, JSON.stringify(INITIAL_PROJECT_DATA));
-      }
-    } catch {
-      applyProjectData(INITIAL_PROJECT_DATA);
-    }
-    setIsDataLoaded(true);
-    setIsUsersLoaded(true);
-    setIsLoading(false);
-    setSyncError(null);
-  }, [applyProjectData, fetchSharedServerData]);
-
+  // Muat ulang paksa dari server Firestore (listener onSnapshot sudah real-time; ini untuk tombol segarkan).
   const refreshData = useCallback(async () => {
-    const ok = await fetchSharedServerData(true);
-    if (!ok) {
-      try {
-        const saved = window.localStorage.getItem(LOCAL_STORAGE_DATA_KEY);
-        if (saved) {
-          applyProjectData(JSON.parse(saved) as Partial<SharedProjectData>);
-        }
-      } catch {
-        // ignore
+    if (!isLiveFirebaseConfig || !db) return;
+    setIsSyncing(true);
+    try {
+      const snap = await getDocFromServer(typedDoc<SharedProjectData>(db, ...PROJECT_DATA_REF));
+      if (snap.exists()) {
+        applyProjectData(snap.data() as Partial<SharedProjectData>, {
+          skipUsersIfFirestoreActive: true,
+        });
+        setSyncError(null);
       }
+    } catch (err: unknown) {
+      console.error('[firestore] gagal menyegarkan data:', err);
+      setSyncError('gagal menyegarkan data dari server.');
+    } finally {
+      setIsSyncing(false);
     }
-  }, [applyProjectData, fetchSharedServerData]);
-
-  // Real-time listeners: SSE (/api/project-data/stream), polling fallback, BroadcastChannel, and storage event
-  useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === LOCAL_STORAGE_DATA_KEY && event.newValue) {
-        if (event.newValue !== lastSyncedPayload.current) {
-          try {
-            applyProjectData(JSON.parse(event.newValue) as Partial<SharedProjectData>, undefined, {
-              skipUsersIfFirestoreActive: true,
-            });
-          } catch {
-            // ignore invalid json
-          }
-        }
-      }
-      if (event.key === LOCAL_STORAGE_USERS_KEY && event.newValue) {
-        try {
-          setUsers(sortAndNormalizeUsers(JSON.parse(event.newValue) as User[]));
-          setIsUsersLoaded(true);
-        } catch {
-          // ignore
-        }
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-
-    if (typeof window !== 'undefined' && 'BroadcastChannel' in window) {
-      const bc = new BroadcastChannel(BROADCAST_CHANNEL_NAME);
-      broadcastChannelRef.current = bc;
-      bc.onmessage = (event) => {
-        const msg = event.data as {
-          type?: string;
-          clientId?: string;
-          uid?: string;
-          patch?: UserPatch;
-          updatedAt?: number | string;
-          updatedBy?: string;
-          data?: Partial<SharedProjectData>;
-        };
-        if (!msg || msg.clientId === clientIdRef.current) return;
-
-        if (msg.type === 'USER_PATCH' && msg.uid && msg.patch) {
-          setUsers((prev) => {
-            const next = prev.map((u) =>
-              u.id === msg.uid
-                ? {
-                    ...u,
-                    ...msg.patch,
-                    updatedAt: msg.updatedAt ?? u.updatedAt,
-                    updatedBy: msg.updatedBy ?? u.updatedBy,
-                  }
-                : u
-            );
-            try {
-              window.localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(next));
-            } catch {
-              // ignore
-            }
-            return next;
-          });
-          return;
-        }
-
-        if (msg.data) {
-          applyProjectData(
-            msg.data,
-            typeof msg.updatedAt === 'number' ? msg.updatedAt : undefined,
-            { skipUsersIfFirestoreActive: true }
-          );
-        }
-      };
-    }
-
-    let eventSource: EventSource | null = null;
-    if (typeof window !== 'undefined' && 'EventSource' in window) {
-      try {
-        eventSource = new EventSource('/api/project-data/stream');
-        eventSource.onmessage = (event) => {
-          try {
-            const parsed = JSON.parse(event.data) as {
-              updatedAt?: number;
-              clientId?: string;
-              data?: Partial<SharedProjectData>;
-            };
-            if (
-              parsed &&
-              parsed.data &&
-              parsed.clientId !== clientIdRef.current &&
-              (parsed.updatedAt || 0) >= lastServerTimestampRef.current
-            ) {
-              const incomingSerialized = JSON.stringify({
-                ...INITIAL_PROJECT_DATA,
-                ...parsed.data,
-              });
-              if (incomingSerialized !== lastSyncedPayload.current) {
-                applyProjectData(parsed.data, parsed.updatedAt, {
-                  skipUsersIfFirestoreActive: true,
-                });
-              }
-            }
-          } catch {
-            // ignore malformed SSE message
-          }
-        };
-      } catch {
-        // ignore SSE setup errors
-      }
-    }
-
-    const pollInterval = window.setInterval(() => {
-      void fetchSharedServerData(false);
-    }, 2000);
-
-    const handleFocus = () => {
-      void fetchSharedServerData(false);
-    };
-    window.addEventListener('focus', handleFocus);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('focus', handleFocus);
-      window.clearInterval(pollInterval);
-      eventSource?.close();
-      broadcastChannelRef.current?.close();
-      broadcastChannelRef.current = null;
-    };
-  }, [applyProjectData, fetchSharedServerData]);
+  }, [applyProjectData]);
 
   // Firebase Auth & Firestore onSnapshot listeners for `users` collection and `projectData/area1`
   useEffect(() => {
     if (!isLiveFirebaseConfig || !auth || !db) {
       setIsUsersLoaded(true);
-      const savedUserId = window.localStorage.getItem(LOCAL_STORAGE_SESSION_KEY);
-      const matched = INITIAL_USERS.find((u) => u.id === savedUserId);
-      if (matched) {
-        setCurrentUserId(matched.id);
-        setIsLoggedIn(true);
-        void loadLocalProjectData();
-      } else {
-        setIsLoggedIn(false);
-        setCurrentUserId('');
-        setIsLoading(false);
-      }
+      setIsLoggedIn(false);
+      setCurrentUserId('');
+      setIsLoading(false);
       return;
     }
 
@@ -866,6 +404,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const unsubscribeAuth = onAuthStateChanged(
       firebaseAuth,
       (firebaseUser) => {
+        window.clearTimeout(loadTimeoutRef.current);
+        window.clearTimeout(syncDebounceRef.current);
+        pendingSectionKeysRef.current.clear();
         dataUnsubscribe.current?.();
         dataUnsubscribe.current = null;
         usersUnsubscribe.current?.();
@@ -874,15 +415,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setIsDataLoaded(false);
 
         if (!firebaseUser) {
-          const savedUserId = window.localStorage.getItem(LOCAL_STORAGE_SESSION_KEY);
-          const localUser = INITIAL_USERS.find((u) => u.id === savedUserId);
-          if (localUser) {
-            setCurrentUserId(localUser.id);
-            setIsLoggedIn(true);
-            setIsUsersLoaded(true);
-            void loadLocalProjectData();
-            return;
-          }
           setIsLoggedIn(false);
           setCurrentUserId('');
           setIsUsersLoaded(true);
@@ -890,9 +422,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           return;
         }
 
-        const matchedUser = INITIAL_USERS.find(
-          (user) => user.email.toLowerCase() === firebaseUser.email?.toLowerCase()
-        );
+        const matchedUser =
+          usersRef.current.find(
+            (user) => user.email.toLowerCase() === firebaseUser.email?.toLowerCase()
+          ) ??
+          INITIAL_USERS.find(
+            (user) => user.email.toLowerCase() === firebaseUser.email?.toLowerCase()
+          );
+
         if (!matchedUser) {
           setAuthError('Akun ini tidak terdaftar sebagai anggota tim Area 1.');
           setIsLoggedIn(false);
@@ -913,6 +450,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setIsLoggedIn(true);
         setIsLoading(true);
 
+        loadTimeoutRef.current = window.setTimeout(() => {
+          if (!isDataLoadedRef.current) {
+            console.error('[firestore] timeout: tidak ada respons dari projectData/area1 setelah 15 detik');
+            setSyncError(
+              'Tidak ada respons dari Firestore. Pastikan database Firestore sudah dibuat (mode Native) dan aturan (rules) sudah dipublish.'
+            );
+            setIsLoading(false);
+          }
+        }, 15000);
+
         // 1. Single realtime onSnapshot listener for `users` collection
         const usersColRef = typedCollection<User>(firestoreDb, 'users');
         usersUnsubscribe.current = onSnapshot(
@@ -922,8 +469,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
               if (snapshot.metadata.fromCache) return;
               if (!usersSeedInProgress.current) {
                 usersSeedInProgress.current = true;
+                // Inisialisasi kelima akun kanonik tim bila koleksi users masih kosong
+                const docsToSeed = INITIAL_USERS;
                 Promise.all(
-                  INITIAL_USERS.map((u) =>
+                  docsToSeed.map((u) =>
                     setDoc(typedDoc<User>(firestoreDb, 'users', u.id), {
                       ...u,
                       updatedAt: serverTimestamp(),
@@ -936,7 +485,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
                     usersCollectionActiveRef.current = true;
                     setIsUsersLoaded(true);
                   })
-                  .catch(() => {
+                  .catch((err: { code?: string; message?: string }) => {
+                    console.warn('[firestore] seeding koleksi users dilewati/ditolak:', err);
                     usersSeedInProgress.current = false;
                     setIsUsersLoaded(true);
                   });
@@ -952,14 +502,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             const normalized = sortAndNormalizeUsers(loadedUsers);
             setUsers(normalized);
             setIsUsersLoaded(true);
-            try {
-              window.localStorage.setItem(LOCAL_STORAGE_USERS_KEY, JSON.stringify(normalized));
-            } catch {
-              // ignore storage errors
-            }
           },
-          () => {
-            // Fallback to local users if Firestore rules or connectivity block `users` collection
+          (err) => {
+            console.warn('[firestore] listener koleksi users gagal, memakai daftar bawaan:', err);
             usersCollectionActiveRef.current = false;
             setIsUsersLoaded(true);
           }
@@ -974,54 +519,71 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
               if (snapshot.metadata.fromCache) return;
               if (!seedInProgress.current) {
                 seedInProgress.current = true;
-                const seed = INITIAL_PROJECT_DATA;
-                const seedPayload = JSON.stringify(seed);
+                const { users: _seedUsers, ...seed } = INITIAL_PROJECT_DATA;
+                void _seedUsers;
                 void setDoc(projectRef, seed)
                   .then(() => {
-                    lastSyncedPayload.current = seedPayload;
+                    window.clearTimeout(loadTimeoutRef.current);
+                    lastSyncedSections.current = serializeSections({
+                      ...INITIAL_PROJECT_DATA,
+                    });
                     seedInProgress.current = false;
                     setIsDataLoaded(true);
                     setIsLoading(false);
                   })
-                  .catch(() => {
+                  .catch((err: { code?: string; message?: string }) => {
+                    console.error('[firestore] seeding projectData/area1 failed:', err);
+                    setSyncError(`Firestore: ${err.code ?? err.message}`);
                     seedInProgress.current = false;
-                    void loadLocalProjectData();
+                    setIsLoading(false);
                   });
               }
               return;
             }
 
-            applyProjectData(snapshot.data() as Partial<SharedProjectData>, Date.now(), {
+            window.clearTimeout(loadTimeoutRef.current);
+
+            // Jika ada pendingWrites lokal, tetap terapkan seksi lain yang tidak sedang diedit lokal
+            applyProjectData(snapshot.data() as Partial<SharedProjectData>, {
               skipUsersIfFirestoreActive: true,
+              preservePendingSections:
+                snapshot.metadata.hasPendingWrites ||
+                pendingSectionKeysRef.current.size > 0,
             });
             setIsDataLoaded(true);
             setIsLoading(false);
             setSyncError(null);
           },
-          () => {
-            void loadLocalProjectData();
+          (err) => {
+            window.clearTimeout(loadTimeoutRef.current);
+            console.error('[firestore] projectData/area1 listener error:', err);
+            setSyncError(`Firestore: ${err.code ?? err.message}`);
+            setIsLoading(false);
           }
         );
       },
-      () => {
+      (err) => {
+        console.error('[auth] onAuthStateChanged error:', err);
+        setAuthError(err.message);
         setIsUsersLoaded(true);
-        void loadLocalProjectData();
+        setIsLoading(false);
       }
     );
 
     return () => {
+      window.clearTimeout(loadTimeoutRef.current);
+      window.clearTimeout(syncDebounceRef.current);
       unsubscribeAuth();
       dataUnsubscribe.current?.();
       usersUnsubscribe.current?.();
     };
-  }, [applyProjectData, loadLocalProjectData]);
+  }, [applyProjectData]);
 
-  // Push any state change immediately to shared server, BroadcastChannel, localStorage, and Firestore
+  // Push only the changed sections to Firestore with 400ms debounce
   useEffect(() => {
     if (!isLoggedIn || !isDataLoaded) return;
 
     const payload: SharedProjectData = {
-      users,
       config,
       tasks,
       deliverables,
@@ -1031,67 +593,82 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       slideDecks,
       trackerActions,
       meetingLogs,
+      regulations,
       standards,
       logbooks,
       rubricParameters,
       defenseQuestions,
       physicalChecklist,
-      notifications,
+      notifications: rawNotifications,
     };
-    const serialized = JSON.stringify(payload);
-    if (serialized === lastSyncedPayload.current) return;
+    const current = serializeSections(payload);
+    const previous = lastSyncedSections.current;
+    const changedKeys = SECTION_KEYS.filter((key) => !previous || previous[key] !== current[key]);
+    if (changedKeys.length === 0) return;
 
-    lastSyncedPayload.current = serialized;
-    const now = Date.now();
-    lastServerTimestampRef.current = now;
-    setLastSyncedAt(formatTimeNow());
+    changedKeys.forEach((k) => pendingSectionKeysRef.current.add(k));
+    window.clearTimeout(syncDebounceRef.current);
 
-    try {
-      window.localStorage.setItem(LOCAL_STORAGE_DATA_KEY, serialized);
-    } catch {
-      // ignore storage quota errors
-    }
+    const flushToFirestore = () => {
+      const prev = lastSyncedSections.current;
+      const keysToFlush = SECTION_KEYS.filter((key) => !prev || prev[key] !== current[key]);
+      if (keysToFlush.length === 0) {
+        pendingSectionKeysRef.current.clear();
+        return;
+      }
 
-    try {
-      broadcastChannelRef.current?.postMessage({
-        clientId: clientIdRef.current,
-        updatedAt: now,
-        data: payload,
-      });
-    } catch {
-      // ignore BroadcastChannel errors
-    }
+      lastSyncedSections.current = {
+        ...(prev || current),
+        ...Object.fromEntries(keysToFlush.map((k) => [k, current[k]])),
+      } as Record<ProjectSectionKey, string>;
+      setLastSyncedAt(formatTimeNow());
 
-    void fetch('/api/project-data', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        clientId: clientIdRef.current,
-        data: payload,
-      }),
-    })
-      .then(async (res) => {
-        if (res.ok) {
-          const json = (await res.json()) as { updatedAt?: number };
-          if (json.updatedAt) {
-            lastServerTimestampRef.current = json.updatedAt;
-          }
-        }
-      })
-      .catch(() => {
-        // persisted in localStorage as fallback
-      });
+      if (isLiveFirebaseConfig && db) {
+        const firestoreDb = db;
+        const patch: Record<string, unknown> = {};
+        keysToFlush.forEach((key) => {
+          patch[key] = payload[key];
+        });
+        setIsSyncing(true);
+        updateDoc(typedDoc<SharedProjectData>(firestoreDb, ...PROJECT_DATA_REF), patch)
+          .then(() => {
+            keysToFlush.forEach((k) => pendingSectionKeysRef.current.delete(k));
+            setSyncError(null);
+          })
+          .catch((err: { code?: string; message?: string }) => {
+            console.error('[firestore] gagal menyimpan projectData/area1:', err);
+            keysToFlush.forEach((k) => pendingSectionKeysRef.current.delete(k));
+            if (lastSyncedSections.current) {
+              keysToFlush.forEach((key) => {
+                lastSyncedSections.current![key] = '';
+              });
+            }
+            setSyncError(
+              err.code === 'permission-denied'
+                ? 'akses ditolak oleh aturan Firestore.'
+                : `gagal menyimpan (${err.code ?? err.message ?? 'unknown'}).`
+            );
+          })
+          .finally(() => setIsSyncing(false));
+      } else {
+        pendingSectionKeysRef.current.clear();
+      }
+    };
 
-    if (isLiveFirebaseConfig && db) {
-      const firestoreDb = db;
-      void setDoc(typedDoc<SharedProjectData>(firestoreDb, ...PROJECT_DATA_REF), payload).catch(() => {
-        // persisted locally and on shared server
-      });
-    }
+    syncDebounceRef.current = window.setTimeout(flushToFirestore, SYNC_DEBOUNCE_MS);
+
+    const handleBeforeUnload = () => {
+      window.clearTimeout(syncDebounceRef.current);
+      flushToFirestore();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
   }, [
     isLoggedIn,
     isDataLoaded,
-    users,
     config,
     tasks,
     deliverables,
@@ -1106,12 +683,74 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     rubricParameters,
     defenseQuestions,
     physicalChecklist,
-    notifications,
+    rawNotifications,
   ]);
+
+  // Helper transaksi atomik untuk operasi tambah/ubah/hapus item koleksi kolaboratif
+  const commitSectionTransaction = useCallback(
+    <K extends ProjectSectionKey>(
+      sectionKey: K,
+      fallbackCurrent: SharedProjectData[K],
+      updater: (currentList: SharedProjectData[K]) => SharedProjectData[K],
+      applyState: (nextList: SharedProjectData[K]) => void
+    ) => {
+      pendingSectionKeysRef.current.add(sectionKey);
+      const optimisticNext = updater(fallbackCurrent);
+      if (lastSyncedSections.current) {
+        lastSyncedSections.current[sectionKey] = JSON.stringify(optimisticNext);
+      }
+      applyState(optimisticNext);
+      setLastSyncedAt(formatTimeNow());
+
+      if (!isLiveFirebaseConfig || !db) {
+        pendingSectionKeysRef.current.delete(sectionKey);
+        return;
+      }
+
+      const firestoreDb = db;
+      const projectRef = typedDoc<SharedProjectData>(firestoreDb, ...PROJECT_DATA_REF);
+      setIsSyncing(true);
+
+      void runTransaction(firestoreDb, async (tx) => {
+        const snap = await tx.get(projectRef);
+        const serverData = snap.exists()
+          ? (snap.data() as Partial<SharedProjectData>)
+          : undefined;
+        const baseSection = (serverData?.[sectionKey] ??
+          fallbackCurrent) as SharedProjectData[K];
+        const committedNext = updater(baseSection);
+        tx.update(projectRef, { [sectionKey]: committedNext });
+        return committedNext;
+      })
+        .then((committedNext) => {
+          if (lastSyncedSections.current) {
+            lastSyncedSections.current[sectionKey] = JSON.stringify(committedNext);
+          }
+          applyState(committedNext);
+          pendingSectionKeysRef.current.delete(sectionKey);
+          setSyncError(null);
+        })
+        .catch((err: { code?: string; message?: string }) => {
+          console.error(`[firestore] transaksi ${sectionKey} gagal:`, err);
+          pendingSectionKeysRef.current.delete(sectionKey);
+          if (lastSyncedSections.current) {
+            lastSyncedSections.current[sectionKey] = '';
+          }
+          setSyncError(
+            err.code === 'permission-denied'
+              ? 'akses ditolak oleh aturan Firestore.'
+              : `gagal menyimpan (${err.code ?? err.message ?? 'unknown'}).`
+          );
+        })
+        .finally(() => setIsSyncing(false));
+    },
+    []
+  );
 
   const login = async (identifier: string, password: string) => {
     const cleanInput = identifier.trim();
-    const matchedUser = resolveUserFromRef(cleanInput, users);
+    const matchedUser =
+      resolveUserFromRef(cleanInput, users) ?? resolveUserFromRef(cleanInput, INITIAL_USERS);
 
     if (!matchedUser) {
       const msg = 'Akun tidak terdaftar pada tim Area 1. Gunakan email atau username anggota tim.';
@@ -1126,30 +765,33 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
 
     setAuthError(null);
-    window.localStorage.setItem(LOCAL_STORAGE_SESSION_KEY, matchedUser.id);
 
-    if (isLiveFirebaseConfig && auth) {
-      try {
-        await signInWithEmailAndPassword(auth, matchedUser.email, password);
-        return;
-      } catch {
-        try {
-          await createUserWithEmailAndPassword(auth, matchedUser.email, password);
-          return;
-        } catch {
-          // Fall back to local/shared server authenticated session when offline
-        }
-      }
+    if (!isLiveFirebaseConfig || !auth) {
+      const msg = 'Firebase belum dikonfigurasi. Login tidak tersedia.';
+      setAuthError(msg);
+      throw new Error(msg);
     }
 
-    setCurrentUserId(matchedUser.id);
-    setIsLoggedIn(true);
-    setIsUsersLoaded(true);
-    await loadLocalProjectData();
+    try {
+      // Sesi ditetapkan oleh onAuthStateChanged setelah Firebase memverifikasi kredensial.
+      await signInWithEmailAndPassword(auth, matchedUser.email, password);
+    } catch (err: unknown) {
+      const msg = translateAuthError(err);
+      setAuthError(msg);
+      throw new Error(msg);
+    }
   };
 
   const logout = async () => {
-    window.localStorage.removeItem(LOCAL_STORAGE_SESSION_KEY);
+    window.clearTimeout(loadTimeoutRef.current);
+    window.clearTimeout(syncDebounceRef.current);
+    pendingSectionKeysRef.current.clear();
+    dataUnsubscribe.current?.();
+    dataUnsubscribe.current = null;
+    usersUnsubscribe.current?.();
+    usersUnsubscribe.current = null;
+    usersCollectionActiveRef.current = false;
+
     if (isLiveFirebaseConfig && auth) {
       try {
         await signOut(auth);
@@ -1157,52 +799,102 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         // ignore signOut errors
       }
     }
+
+    lastSyncedSections.current = null;
     setIsLoggedIn(false);
+    setIsDataLoaded(false);
     setCurrentUserId('');
+    setActiveTab('homepage');
+    setAuthError(null);
+    setSyncError(null);
+    setConfig(INITIAL_CONFIG);
+    setTasks(INITIAL_TASKS);
+    setDeliverables(INITIAL_DELIVERABLES);
+    setWeeklyPlans(INITIAL_WEEKLY_PLANS);
+    setGanttTasks(INITIAL_GANTT_TASKS);
+    setRaciRows(INITIAL_RACI_ROWS);
+    setSlideDecks(INITIAL_SLIDE_DECKS);
+    setTrackerActions(INITIAL_TRACKER_ACTIONS);
+    setMeetingLogs(INITIAL_MEETING_LOGS);
+    setRegulations(INITIAL_REGULATIONS);
+    setStandards(INITIAL_STANDARDS);
+    setLogbooks(INITIAL_LOGBOOKS);
+    setRubricParameters(INITIAL_RUBRIC_PARAMETERS);
+    setDefenseQuestions(INITIAL_DEFENSE_QUESTIONS);
+    setPhysicalChecklist(INITIAL_PHYSICAL_CHECKLIST);
+    setRawNotifications(INITIAL_NOTIFICATIONS);
   };
 
   // State mutators
   const updateConfig = (patch: Partial<Config>) => {
+    if (!isPM) return;
     setConfig((prev) => ({ ...prev, ...patch }));
   };
 
   const addTask = (newTask: Omit<TaskItem, 'id'>) => {
+    if (!isPM) return;
     const resolvedUid = getUser(newTask.pic)?.id || newTask.pic;
-    const item: TaskItem = {
-      ...newTask,
-      pic: resolvedUid,
-      id: `task-${Date.now()}`,
-    };
-    setTasks((prev) => [item, ...prev]);
+    const itemId = `task-${newId()}`;
+    commitSectionTransaction(
+      'tasks',
+      tasks,
+      (list) => [
+        { ...newTask, pic: resolvedUid, id: itemId },
+        ...list.filter((t) => t.id !== itemId),
+      ],
+      setTasks
+    );
   };
 
   const toggleTask = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
+    const target = tasks.find((t) => t.id === id);
+    if (!target) return;
+    const resolvedOwner = getUser(target.pic);
+    if (!isPM && resolvedOwner?.id !== currentUser.id) return;
+
+    commitSectionTransaction(
+      'tasks',
+      tasks,
+      (list) =>
+        list.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+      setTasks
     );
   };
 
   const deleteTask = (id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
+    if (!isPM) return;
+    commitSectionTransaction(
+      'tasks',
+      tasks,
+      (list) => list.filter((t) => t.id !== id),
+      setTasks
+    );
   };
 
   const updateDeliverable = (id: string, patch: Partial<DeliverableItem>) => {
+    if (!isPM) return;
+    const nextPatch: Partial<DeliverableItem> = { ...patch };
+    if (nextPatch.fileUrl !== undefined) {
+      nextPatch.fileUrl = sanitizeExternalUrl(nextPatch.fileUrl);
+    }
     setDeliverables((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, ...patch } : d))
+      prev.map((d) => (d.id === id ? { ...d, ...nextPatch } : d))
     );
   };
 
   const addWeeklyPlan = (plan: Omit<WeeklyPlanItem, 'id'>) => {
+    if (!isPM) return;
     const resolvedUid = getUser(plan.pic)?.id || plan.pic;
     const newPlan: WeeklyPlanItem = {
       ...plan,
       pic: resolvedUid,
-      id: `plan-${Date.now()}`,
+      id: `plan-${newId()}`,
     };
     setWeeklyPlans((prev) => [...prev, newPlan]);
   };
 
   const updateWeeklyPlan = (id: string, patch: Partial<WeeklyPlanItem>) => {
+    if (!isPM) return;
     const nextPatch = { ...patch };
     if (nextPatch.pic) {
       nextPatch.pic = getUser(nextPatch.pic)?.id || nextPatch.pic;
@@ -1213,10 +905,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const deleteWeeklyPlan = (id: string) => {
+    if (!isPM) return;
     setWeeklyPlans((prev) => prev.filter((p) => p.id !== id));
   };
 
   const addGanttTask = (gt: Omit<GanttTaskItem, 'id'>) => {
+    if (!isPM) return;
     const rawRef = gt.pic || gt.picCode;
     const resolvedUid =
       rawRef?.toUpperCase() === 'ALL' ? 'ALL' : getUser(rawRef)?.id || rawRef;
@@ -1224,12 +918,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       ...gt,
       pic: resolvedUid,
       picCode: resolvedUid,
-      id: `gt-${Date.now()}`,
+      id: `gt-${newId()}`,
     };
     setGanttTasks((prev) => [...prev, newTask]);
   };
 
   const deleteGanttTask = (id: string) => {
+    if (!isPM) return;
     setGanttTasks((prev) => prev.filter((gt) => gt.id !== id));
   };
 
@@ -1238,6 +933,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     memberUidOrKey: string,
     value: RaciRoleValue
   ) => {
+    if (!isPM) return;
     const resolvedUser = getUser(memberUidOrKey);
     const targetUid =
       resolvedUser?.legacyId || resolvedUser?.id || memberUidOrKey;
@@ -1283,6 +979,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const addRaciRow = (row: Omit<RaciRow, 'id'>) => {
+    if (!isPM) return;
     const assignments: Record<string, RaciRoleValue> = {
       'user-rahul': row.assignments?.['user-rahul'] ?? row.rahul ?? '',
       'user-ihsan': row.assignments?.['user-ihsan'] ?? row.ihsan ?? '',
@@ -1293,166 +990,257 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const newRow: RaciRow = {
       ...row,
       assignments,
-      id: `raci-${Date.now()}`,
+      id: `raci-${newId()}`,
     };
     setRaciRows((prev) => [...prev, newRow]);
   };
 
   const addSlideDeck = (deck: Omit<SlideDeckItem, 'id'>) => {
+    if (!isPM) return;
     const resolvedUid = getUser(deck.presenter)?.id || deck.presenter;
     const item: SlideDeckItem = {
       ...deck,
       presenter: resolvedUid,
-      id: `deck-${Date.now()}`,
+      url: sanitizeExternalUrl(deck.url),
+      id: `deck-${newId()}`,
     };
     setSlideDecks((prev) => [item, ...prev]);
   };
 
   const deleteSlideDeck = (id: string) => {
+    if (!isPM) return;
     setSlideDecks((prev) => prev.filter((d) => d.id !== id));
   };
 
   const addTrackerAction = (item: Omit<TrackerActionItem, 'id' | 'code'>) => {
-    const nextNum = trackerActions.length + 1;
-    const code = `ACT-0${nextNum}`;
+    if (!isPM) return;
     const rawRef = item.pic || item.picCode;
     const resolvedUid = getUser(rawRef)?.id || rawRef;
-    const newItem: TrackerActionItem = {
-      ...item,
-      pic: resolvedUid,
-      picCode: resolvedUid,
-      id: `act-${Date.now()}`,
-      code,
-    };
-    setTrackerActions((prev) => [...prev, newItem]);
+    const itemId = `act-${newId()}`;
+
+    commitSectionTransaction(
+      'trackerActions',
+      trackerActions,
+      (list) => {
+        const existing = list.find((a) => a.id === itemId);
+        if (existing) return list;
+        const code = computeNextTrackerCode(list);
+        const newItem: TrackerActionItem = {
+          ...item,
+          pic: resolvedUid,
+          picCode: resolvedUid,
+          id: itemId,
+          code,
+        };
+        return [...list, newItem];
+      },
+      setTrackerActions
+    );
   };
 
   const toggleTrackerActionStatus = (id: string) => {
-    setTrackerActions((prev) =>
-      prev.map((act) =>
-        act.id === id
-          ? {
-              ...act,
-              progress: act.progress === 'Resolved' ? 'In Progress' : 'Resolved',
-            }
-          : act
-      )
+    commitSectionTransaction(
+      'trackerActions',
+      trackerActions,
+      (list) =>
+        list.map((act) =>
+          act.id === id
+            ? {
+                ...act,
+                progress: act.progress === 'Resolved' ? 'In Progress' : 'Resolved',
+              }
+            : act
+        ),
+      setTrackerActions
     );
   };
 
   const deleteTrackerAction = (id: string) => {
-    setTrackerActions((prev) => prev.filter((a) => a.id !== id));
+    if (!isPM) return;
+    commitSectionTransaction(
+      'trackerActions',
+      trackerActions,
+      (list) => list.filter((a) => a.id !== id),
+      setTrackerActions
+    );
   };
 
   const addMeetingLog = (log: Omit<MeetingLogItem, 'id'>) => {
+    if (!isPM) return;
     const normalizedMembers = log.presentMembers.map(
       (ref) => getUser(ref)?.id || ref
     );
     const newLog: MeetingLogItem = {
       ...log,
       presentMembers: normalizedMembers,
-      id: `mom-${Date.now()}`,
+      id: `mom-${newId()}`,
     };
     setMeetingLogs((prev) => [newLog, ...prev]);
   };
 
   const addStandard = (std: Omit<StandardReferenceItem, 'id'>) => {
+    if (!isPM) return;
     const newStd: StandardReferenceItem = {
       ...std,
-      id: `std-${Date.now()}`,
+      url: sanitizeExternalUrl(std.url),
+      id: `std-${newId()}`,
     };
     setStandards((prev) => [...prev, newStd]);
   };
 
   const deleteStandard = (id: string) => {
+    if (!isPM) return;
     setStandards((prev) => prev.filter((s) => s.id !== id));
   };
 
   const addLogbook = (entry: Omit<LogbookItem, 'id' | 'verifiedByLecturer'>) => {
     const resolvedUid = getUser(entry.authorId)?.id || entry.authorId;
+    const itemId = `log-${newId()}`;
     const newEntry: LogbookItem = {
       date: entry.date,
       authorId: resolvedUid,
       workDescription: entry.workDescription,
       issueSolution: entry.issueSolution,
-      id: `log-${Date.now()}`,
+      id: itemId,
       verifiedByLecturer: false,
     };
-    setLogbooks((prev) => [newEntry, ...prev]);
+    commitSectionTransaction(
+      'logbooks',
+      logbooks,
+      (list) => [newEntry, ...list.filter((l) => l.id !== itemId)],
+      setLogbooks
+    );
   };
 
   const toggleLogbookVerification = (id: string) => {
-    setLogbooks((prev) =>
-      prev.map((log) =>
-        log.id === id
-          ? {
-              ...log,
-              verifiedByLecturer: !log.verifiedByLecturer,
-              verifiedDate: !log.verifiedByLecturer ? 'Hari ini' : undefined,
-            }
-          : log
-      )
+    if (!isPM) return;
+    commitSectionTransaction(
+      'logbooks',
+      logbooks,
+      (list) =>
+        list.map((log) =>
+          log.id === id
+            ? {
+                ...log,
+                verifiedByLecturer: !log.verifiedByLecturer,
+                verifiedDate: !log.verifiedByLecturer ? 'Hari ini' : undefined,
+              }
+            : log
+        ),
+      setLogbooks
     );
   };
 
   const deleteLogbook = (id: string) => {
-    setLogbooks((prev) => prev.filter((l) => l.id !== id));
+    const target = logbooks.find((l) => l.id === id);
+    if (!target) return;
+    const resolvedAuthor = getUser(target.authorId || target.authorName || target.authorCode);
+    if (!isPM && resolvedAuthor?.id !== currentUser.id) return;
+
+    commitSectionTransaction(
+      'logbooks',
+      logbooks,
+      (list) => list.filter((l) => l.id !== id),
+      setLogbooks
+    );
   };
 
   const updateRubricScore = (id: string, score: number) => {
-    setRubricParameters((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, score } : p))
+    if (config.readinessLocked) return;
+    const clampedScore = Math.max(0, Math.min(100, Number.isFinite(score) ? score : 0));
+    commitSectionTransaction(
+      'rubricParameters',
+      rubricParameters,
+      (list) => list.map((p) => (p.id === id ? { ...p, score: clampedScore } : p)),
+      setRubricParameters
     );
   };
 
   const toggleRubricItem = (paramId: string, itemIdx: number) => {
-    setRubricParameters((prev) =>
-      prev.map((p) => {
-        if (p.id !== paramId) return p;
-        const newItems = p.items.map((it, idx) =>
-          idx === itemIdx ? { ...it, checked: !it.checked } : it
-        );
-        return { ...p, items: newItems };
-      })
+    if (config.readinessLocked) return;
+    commitSectionTransaction(
+      'rubricParameters',
+      rubricParameters,
+      (list) =>
+        list.map((p) => {
+          if (p.id !== paramId) return p;
+          const newItems = p.items.map((it, idx) =>
+            idx === itemIdx ? { ...it, checked: !it.checked } : it
+          );
+          return { ...p, items: newItems };
+        }),
+      setRubricParameters
     );
   };
 
   const updateRubricMitigation = (id: string, mitigation: string) => {
-    setRubricParameters((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, mitigation } : p))
+    if (config.readinessLocked) return;
+    commitSectionTransaction(
+      'rubricParameters',
+      rubricParameters,
+      (list) => list.map((p) => (p.id === id ? { ...p, mitigation } : p)),
+      setRubricParameters
     );
   };
 
   const updateDefenseResponse = (id: string, newResponse: string) => {
-    setDefenseQuestions((prev) =>
-      prev.map((q) => (q.id === id ? { ...q, verifiedResponse: newResponse } : q))
+    if (config.readinessLocked) return;
+    commitSectionTransaction(
+      'defenseQuestions',
+      defenseQuestions,
+      (list) =>
+        list.map((q) => (q.id === id ? { ...q, verifiedResponse: newResponse } : q)),
+      setDefenseQuestions
     );
   };
 
   const addDefenseQuestion = (q: Omit<DefenseQuestion, 'id'>) => {
+    if (!isPM || config.readinessLocked) return;
     const resolvedUid = getUser(q.pic)?.id || q.pic;
     const newQ: DefenseQuestion = {
       ...q,
       pic: resolvedUid,
-      id: `q-${Date.now()}`,
+      id: `q-${newId()}`,
     };
-    setDefenseQuestions((prev) => [...prev, newQ]);
+    commitSectionTransaction(
+      'defenseQuestions',
+      defenseQuestions,
+      (list) => [...list, newQ],
+      setDefenseQuestions
+    );
   };
 
   const togglePhysicalItem = (id: string) => {
-    setPhysicalChecklist((prev) =>
-      prev.map((it) => (it.id === id ? { ...it, ready: !it.ready } : it))
+    if (!isPM || config.readinessLocked) return;
+    commitSectionTransaction(
+      'physicalChecklist',
+      physicalChecklist,
+      (list) => list.map((it) => (it.id === id ? { ...it, ready: !it.ready } : it)),
+      setPhysicalChecklist
     );
   };
 
   const markNotificationAsRead = (id: string) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-    );
+    if (!matchedCurrentUser) return;
+    const existing = matchedCurrentUser.readNotificationIds || [];
+    if (existing.includes(id)) return;
+    const nextReadIds = [...existing, id];
+    void updateUser(matchedCurrentUser.id, { readNotificationIds: nextReadIds }).catch(() => {
+      // ignore background read-status sync error
+    });
   };
 
   const markAllNotificationsAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    if (!matchedCurrentUser) return;
+    const allIds = Array.from(
+      new Set([
+        ...(matchedCurrentUser.readNotificationIds || []),
+        ...rawNotifications.map((n) => n.id),
+      ])
+    );
+    void updateUser(matchedCurrentUser.id, { readNotificationIds: allIds }).catch(() => {
+      // ignore background read-status sync error
+    });
   };
 
   // Metrics
@@ -1495,7 +1283,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (pb.ready) checkedItems++;
     });
 
-    if (totalItems === 0) return 78;
+    if (totalItems === 0) return 0;
     return Math.round((checkedItems / totalItems) * 100);
   }, [rubricParameters, physicalChecklist]);
 
@@ -1518,46 +1306,49 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       slideDecks,
       trackerActions,
       meetingLogs,
+      regulations,
       standards,
       logbooks,
       rubricParameters,
       defenseQuestions,
       physicalChecklist,
+      notifications: rawNotifications,
     };
     return JSON.stringify(payload, null, 2);
   };
 
-  const importDataFromJson = (jsonStr: string) => {
-    try {
-      const data = JSON.parse(jsonStr);
-      if (
-        data.users &&
-        Array.isArray(data.users) &&
-        !usersCollectionActiveRef.current
-      ) {
-        setUsers(sortAndNormalizeUsers(data.users as User[]));
-      }
-      if (data.config) setConfig(data.config);
-      if (data.tasks) setTasks(data.tasks);
-      if (data.deliverables) setDeliverables(data.deliverables);
-      if (data.weeklyPlans) setWeeklyPlans(data.weeklyPlans);
-      if (data.ganttTasks) setGanttTasks(data.ganttTasks);
-      if (data.raciRows) setRaciRows(data.raciRows);
-      if (data.slideDecks) setSlideDecks(data.slideDecks);
-      if (data.trackerActions) setTrackerActions(data.trackerActions);
-      if (data.meetingLogs) setMeetingLogs(data.meetingLogs);
-      if (data.standards) setStandards(data.standards);
-      if (data.logbooks) setLogbooks(data.logbooks);
-      if (data.rubricParameters) setRubricParameters(data.rubricParameters);
-      if (data.defenseQuestions) setDefenseQuestions(data.defenseQuestions);
-      if (data.physicalChecklist) setPhysicalChecklist(data.physicalChecklist);
-      return true;
-    } catch {
-      return false;
+  const importDataFromJson = (jsonStr: string): ImportDataResult => {
+    if (!isPM) return 'invalid';
+    const d = parseAndValidateImportJson(jsonStr);
+    if (!d) return 'invalid';
+    if (d.users !== undefined && usersCollectionActiveRef.current) {
+      return 'users-unavailable';
     }
+
+    if (d.users && !usersCollectionActiveRef.current) {
+      setUsers(sortAndNormalizeUsers(d.users));
+    }
+    if (d.config) setConfig(d.config);
+    if (d.tasks) setTasks(d.tasks);
+    if (d.deliverables) setDeliverables(d.deliverables);
+    if (d.weeklyPlans) setWeeklyPlans(d.weeklyPlans);
+    if (d.ganttTasks) setGanttTasks(d.ganttTasks);
+    if (d.raciRows) setRaciRows(d.raciRows);
+    if (d.slideDecks) setSlideDecks(d.slideDecks);
+    if (d.trackerActions) setTrackerActions(d.trackerActions);
+    if (d.meetingLogs) setMeetingLogs(d.meetingLogs);
+    if (d.regulations) setRegulations(d.regulations);
+    if (d.standards) setStandards(d.standards);
+    if (d.logbooks) setLogbooks(d.logbooks);
+    if (d.rubricParameters) setRubricParameters(d.rubricParameters);
+    if (d.defenseQuestions) setDefenseQuestions(d.defenseQuestions);
+    if (d.physicalChecklist) setPhysicalChecklist(d.physicalChecklist);
+    if (d.notifications) setRawNotifications(d.notifications);
+    return 'success';
   };
 
   const resetToDefaults = () => {
+    if (!isPM) return;
     if (!usersCollectionActiveRef.current) {
       setUsers(INITIAL_USERS);
     }
@@ -1570,12 +1361,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSlideDecks(INITIAL_SLIDE_DECKS);
     setTrackerActions(INITIAL_TRACKER_ACTIONS);
     setMeetingLogs(INITIAL_MEETING_LOGS);
+    setRegulations(INITIAL_REGULATIONS);
     setStandards(INITIAL_STANDARDS);
     setLogbooks(INITIAL_LOGBOOKS);
     setRubricParameters(INITIAL_RUBRIC_PARAMETERS);
     setDefenseQuestions(INITIAL_DEFENSE_QUESTIONS);
     setPhysicalChecklist(INITIAL_PHYSICAL_CHECKLIST);
-    setNotifications(INITIAL_NOTIFICATIONS);
+    setRawNotifications(INITIAL_NOTIFICATIONS);
   };
 
   const previewUserMigration = useCallback((): MigrationPreviewResult => {
@@ -1596,7 +1388,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         rubric: rubricParameters,
         defenseQuestions,
         physicalChecklist,
-        notifications,
+        notifications: rawNotifications,
       },
       users
     );
@@ -1616,7 +1408,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     rubricParameters,
     defenseQuestions,
     physicalChecklist,
-    notifications,
+    rawNotifications,
     users,
   ]);
 
@@ -1641,15 +1433,21 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
     if (isLiveFirebaseConfig && db && !usersCollectionActiveRef.current) {
       const firestoreDb = db;
-      await Promise.all(
-        users.map((u) =>
-          setDoc(typedDoc<User>(firestoreDb, 'users', u.id), {
-            ...u,
-            updatedAt: serverTimestamp(),
-            updatedBy: currentUser.id,
-          }).catch(() => {})
-        )
-      );
+      try {
+        await Promise.all(
+          users.map((u) =>
+            setDoc(typedDoc<User>(firestoreDb, 'users', u.id), {
+              ...u,
+              updatedAt: serverTimestamp(),
+              updatedBy: currentUser.id,
+            })
+          )
+        );
+      } catch (err: unknown) {
+        const e = err as { code?: string; message?: string };
+        console.error('[firestore] gagal menyimpan koleksi users saat migrasi:', err);
+        setSyncError(`Gagal menyinkronkan profil pengguna (${e?.code ?? e?.message ?? 'unknown'}).`);
+      }
     }
 
     return preview;

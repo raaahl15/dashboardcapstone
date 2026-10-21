@@ -22,6 +22,17 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
   const [migrationPreview, setMigrationPreview] = useState<MigrationPreviewResult | null>(null);
   const [isMigrating, setIsMigrating] = useState(false);
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleDownload = () => {
@@ -41,14 +52,19 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
       setStatusMessage({ type: 'error', text: 'Masukkan data JSON terlebih dahulu.' });
       return;
     }
-    const success = importDataFromJson(importText);
-    if (success) {
+    const result = importDataFromJson(importText);
+    if (result === 'success') {
       setStatusMessage({ type: 'success', text: 'Data proyek berhasil dipulihkan!' });
       setTimeout(() => {
         onClose();
         setStatusMessage(null);
         setImportText('');
       }, 1200);
+    } else if (result === 'users-unavailable') {
+      setStatusMessage({
+        type: 'error',
+        text: 'Impor dibatalkan tanpa mengubah data: backup memuat profil pengguna, tetapi profil tidak dapat dipulihkan saat koleksi pengguna aktif.',
+      });
     } else {
       setStatusMessage({ type: 'error', text: 'Format JSON tidak valid atau struktur rusak.' });
     }
@@ -111,10 +127,13 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
             </p>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center hover:bg-[#DCEBF7] transition-colors"
+            className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center hover:bg-[#DCEBF7] transition-colors"
+            title="Tutup Modal"
+            aria-label="Tutup modal cadangan dan pemulihan data"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -155,28 +174,30 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
             </button>
           </div>
 
-          {/* Import Section */}
-          <div className="space-y-2">
-            <label className="block font-heading font-bold text-xs text-[#0B1B33]">
-              Impor Cadangan JSON
-            </label>
-            <textarea
-              value={importText}
-              onChange={(e) => setImportText(e.target.value)}
-              placeholder="Tempelkan isi file JSON cadangan di sini..."
-              rows={4}
-              className="w-full p-3 text-xs font-mono rounded-xl border border-[#6B7F99] focus:border-[#0062CC] focus:ring-1 focus:ring-[#0062CC] outline-none"
-            />
-            <div className="flex justify-end">
-              <button
-                onClick={handleImport}
-                className="px-4 py-2 bg-[#0B1B33] hover:bg-[#22314a] text-white rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all"
-              >
-                <Upload className="w-3.5 h-3.5" />
-                Pulihkan Data
-              </button>
+          {/* Import Section (Admin only) */}
+          {isPM && (
+            <div className="space-y-2">
+              <label className="block font-heading font-bold text-xs text-[#0B1B33]">
+                Impor Cadangan JSON
+              </label>
+              <textarea
+                value={importText}
+                onChange={(e) => setImportText(e.target.value)}
+                placeholder="Tempelkan isi file JSON cadangan di sini..."
+                rows={4}
+                className="w-full p-3 text-xs font-mono rounded-xl border border-[#6B7F99] focus:border-[#0062CC] focus:ring-1 focus:ring-[#0062CC] outline-none"
+              />
+              <div className="flex justify-end">
+                <button
+                  onClick={handleImport}
+                  className="px-4 py-2 bg-[#0B1B33] hover:bg-[#22314a] text-white rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  Pulihkan Data
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Admin-Only One-Time User Reference Migration Section */}
           {isPM && (
@@ -251,24 +272,26 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
             </div>
           )}
 
-          {/* Reset Section */}
-          <div className="pt-3 border-t border-[#EAF6FD] flex items-center justify-between">
-            <div>
-              <p className="font-heading font-bold text-xs text-[#B91C1C]">
-                Reset Data Awal
-              </p>
-              <p className="text-[11px] text-[#4A5A72]">
-                Reset data bersama di Firestore ke data standar KAK & PRD.
-              </p>
+          {/* Reset Section (Admin only) */}
+          {isPM && (
+            <div className="pt-3 border-t border-[#EAF6FD] flex items-center justify-between">
+              <div>
+                <p className="font-heading font-bold text-xs text-[#B91C1C]">
+                  Reset Data Awal
+                </p>
+                <p className="text-[11px] text-[#4A5A72]">
+                  Reset data bersama di Firestore ke data standar KAK & PRD.
+                </p>
+              </div>
+              <button
+                onClick={handleReset}
+                className="px-3.5 py-1.5 border border-[#B91C1C] text-[#B91C1C] hover:bg-[#FEE2E2] rounded-full text-xs font-semibold flex items-center gap-1 transition-all"
+              >
+                <RefreshCw className="w-3.5 h-3.5" />
+                Reset
+              </button>
             </div>
-            <button
-              onClick={handleReset}
-              className="px-3.5 py-1.5 border border-[#B91C1C] text-[#B91C1C] hover:bg-[#FEE2E2] rounded-full text-xs font-semibold flex items-center gap-1 transition-all"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              Reset
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@ export interface User {
   tag?: string;
   phone?: string;
   photoURL?: string;
+  readNotificationIds?: string[];
   updatedAt?: unknown;
   updatedBy?: string;
 }

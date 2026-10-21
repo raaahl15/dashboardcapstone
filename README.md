@@ -1,24 +1,28 @@
 # Area 1-DME Engineering Operations Cockpit
 
-Dashboard FEED Area 1 dengan login Firebase Authentication dan satu sumber data proyek bersama di Cloud Firestore. Perubahan data disinkronkan antarsesi/perangkat; browser tidak lagi menjadi penyimpanan utama.
+Dashboard FEED Area 1 dengan login Firebase Authentication dan satu sumber data proyek bersama di Cloud Firestore. Perubahan data disinkronkan antarsesi/perangkat secara real-time; browser tidak menyimpan data proyek.
 
-## Daftar Akun Tim (`Nama_Posisi` / `Posisi_Nama`)
+## Akun Tim
 
-| Anggota Tim | Posisi | Username (`Nama_Posisi`) | Password (`Posisi_Nama`) | Email Firebase |
-| :--- | :--- | :--- | :--- | :--- |
-| **Rahul Ghulam Hidayatulloh** | Project Manager | `Rahul_PM` | `PM_Rahul` | `rahulghulamhidayatulloh2004@mail.ugm.ac.id` |
-| **Ihsaan Zauhair Tsaqif Prawira** | Lead Process Engineer | `Ihsan_Process` | `Process_Ihsan` | `ihsaanzauhairtsaqifprawira@mail.ugm.ac.id` |
-| **Altaf Ramadhan Parvez** | Lead Instrument Engineer 1 | `Althaf_Inst1` | `Inst1_Althaf` | `altaframadhanparvez@mail.ugm.ac.id` |
-| **Jonathan Pangihutan Michael Siahaan** | Lead Instrument Engineer 2 | `Jonathan_Inst2` | `Inst2_Jonathan` | `jonathanpangihutanms@mail.ugm.ac.id` |
-| **Heidi Falina Brilian** | Cost Engineer | `Heidi_Cost` | `Cost_Heidi` | `heidifalinabrilian@mail.ugm.ac.id` |
+Akun dibuat **secara manual** di Firebase Console (Authentication → Users). Aplikasi tidak membuat akun otomatis. Password ditetapkan dan dibagikan secara pribadi oleh admin, **jangan ditulis di repositori**.
+
+| Anggota Tim | Posisi | Email Firebase |
+| :--- | :--- | :--- |
+| **Rahul Ghulam Hidayatulloh** | Project Manager | `rahulghulamhidayatulloh2004@mail.ugm.ac.id` |
+| **Ihsaan Zauhair Tsaqif Prawira** | Lead Process Engineer | `ihsaanzauhairtsaqifprawira@mail.ugm.ac.id` |
+| **Altaf Ramadhan Parvez** | Lead Instrument Engineer 1 | `altaframadhanparvez@mail.ugm.ac.id` |
+| **Jonathan Pangihutan Michael Siahaan** | Lead Instrument Engineer 2 | `jonathanpangihutanms@mail.ugm.ac.id` |
+| **Heidi Falina Brilian** | Cost Engineer | `heidifalinabrilian@mail.ugm.ac.id` |
+
+Login dapat memakai email lengkap di atas, atau nama panggilan/kode anggota (mis. `Rahul`).
 
 ## Menyiapkan Firebase
 
-1. File `.env.local` sudah disiapkan dengan konfigurasi `VITE_FIREBASE_*` sehingga aplikasi dapat langsung dijalankan.
-2. Jika ingin menghubungkan ke project [Firebase Console](https://console.firebase.google.com/) milik Anda:
-   - Aktifkan **Authentication → Sign-in method → Email/Password** (akun tim akan otomatis dibuat di Firebase saat pertama kali login).
-   - Buat database **Cloud Firestore** dan terapkan aturan akses dari `firestore.rules`.
-   - Ganti nilai `VITE_FIREBASE_*` di `.env.local` dengan konfigurasi Web App dari Firebase Project Settings Anda.
+1. Salin `.env.example` menjadi `.env.local`, lalu isi nilai `VITE_FIREBASE_*` dari Firebase Console → Project Settings → Your apps → Web app.
+2. Di [Firebase Console](https://console.firebase.google.com/):
+   - Aktifkan **Authentication → Sign-in method → Email/Password**.
+   - Buat pengguna untuk kelima email tim di atas.
+   - Buat database **Cloud Firestore** (mode Native) dan publish aturan dari `firestore.rules`.
 3. Deploy rules dan website (opsional):
 
 ```sh
@@ -42,8 +46,7 @@ Jangan commit `.env.local`. File `.env.example` berisi placeholder untuk konfigu
 
 ## Perilaku data dan akses
 
-- Login benar-benar diverifikasi oleh Firebase Authentication; tidak ada login demo atau fallback password.
-- Data dashboard dan perubahan yang diimpor/reset disimpan bersama di dokumen Firestore `projectData/area1`. Dokumen dibuat otomatis dari data awal saat anggota tim pertama kali masuk.
-- Semua akun pada daftar yang diizinkan dapat membaca dan mengubah data bersama. Label peran di dashboard adalah informasi profil, bukan batas otorisasi; kelola akun yang diizinkan melalui Firebase Authentication dan `firestore.rules`.
+- Login diverifikasi sepenuhnya oleh Firebase Authentication; tidak ada login demo, fallback password, maupun mode lokal/offline.
+- Data dashboard disimpan bersama di dokumen Firestore `projectData/area1`. Dokumen dibuat otomatis dari data awal saat anggota tim pertama kali masuk.
+- Semua akun pada daftar yang diizinkan dapat membaca dan mengubah data bersama (`firestore.rules`). Impor/reset data dan migrasi hanya ditampilkan untuk admin di UI; ini adalah pembatasan antarmuka, bukan batas otorisasi di server.
 - Jika Firebase belum dikonfigurasi atau koneksi/sinkronisasi gagal, aplikasi menampilkan pesan dan tidak menganggap login atau penyimpanan berhasil.
-

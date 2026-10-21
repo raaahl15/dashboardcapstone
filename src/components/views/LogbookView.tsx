@@ -13,6 +13,7 @@ import {
 export const LogbookView: React.FC = () => {
   const {
     logbooks,
+    meetingLogs,
     addLogbook,
     toggleLogbookVerification,
     deleteLogbook,
@@ -25,10 +26,27 @@ export const LogbookView: React.FC = () => {
 
   const [filterAuthor, setFilterAuthor] = useState<string>('All');
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newDate, setNewDate] = useState('11 Okt 2026');
+  const [newDate, setNewDate] = useState(() =>
+    new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+  );
   const [newDesc, setNewDesc] = useState('');
   const [newIssue, setNewIssue] = useState('');
   const [newSolution, setNewSolution] = useState('');
+
+  const momLogbookStatus = React.useMemo(() => {
+    if (!meetingLogs || meetingLogs.length === 0) {
+      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
+    }
+    const latestMom = meetingLogs[0];
+    const momDateKey = (latestMom.dayText || latestMom.weekLabel || '').trim().toLowerCase();
+    const hasMatchingLogbook = logbooks.some(
+      (l) => l.date.trim().toLowerCase() === momDateKey || logbooks.length >= meetingLogs.length
+    );
+    return {
+      hasUnloggedMom: !hasMatchingLogbook,
+      latestMomLabel: latestMom.dayText || latestMom.weekLabel || `W${latestMom.week}`,
+    };
+  }, [meetingLogs, logbooks]);
 
   // Filtered logbooks using UID resolution (with legacy fallback)
   const filteredLogbooks = logbooks.filter((log) => {
@@ -88,7 +106,7 @@ export const LogbookView: React.FC = () => {
 
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all shrink-0"
+          className="min-h-[44px] px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all shrink-0"
         >
           <Plus className="w-4 h-4" />
           Add Logbook
@@ -123,15 +141,29 @@ export const LogbookView: React.FC = () => {
             </span>
           </div>
 
-          {/* 24-Hour Rule Alert Box */}
-          <div className="lg:col-span-7 p-3.5 rounded-2xl bg-[#FEF3C7]/90 border border-[#B45309]/30 flex items-start gap-2.5 text-xs text-[#92400E]">
-            <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+          {/* Dynamic 24-Hour Rule Alert Box */}
+          <div
+            className={`lg:col-span-7 p-3.5 rounded-2xl flex items-start gap-2.5 text-xs ${
+              momLogbookStatus.hasUnloggedMom
+                ? 'bg-[#FEF3C7]/90 border border-[#B45309]/30 text-[#92400E]'
+                : 'bg-[#D1FAE5]/90 border border-[#047857]/30 text-[#065F46]'
+            }`}
+          >
+            {momLogbookStatus.hasUnloggedMom ? (
+              <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+            ) : (
+              <Check className="w-4 h-4 text-[#047857] shrink-0 mt-0.5" />
+            )}
             <div>
               <p className="font-semibold leading-relaxed">
-                Pengingat: MoM 7 Okt belum memiliki entri logbook dalam 24 jam.
+                {momLogbookStatus.hasUnloggedMom
+                  ? `Pengingat: MoM ${momLogbookStatus.latestMomLabel} belum memiliki entri logbook dalam 24 jam.`
+                  : `Tersinkron: MoM terbaru (${momLogbookStatus.latestMomLabel}) telah memiliki dokumentasi entri logbook (${logbooks.length} total entri).`}
               </p>
-              <p className="text-[11px] text-[#92400E]/80 mt-0.5">
-                Pastikan uraian pekerjaan teknis segera didokumentasikan sebelum sesi asistensi berikutnya.
+              <p className="text-[11px] opacity-85 mt-0.5">
+                {momLogbookStatus.hasUnloggedMom
+                  ? 'Pastikan uraian pekerjaan teknis segera didokumentasikan sebelum sesi asistensi berikutnya.'
+                  : 'Seluruh sesi asistensi yang tercatat telah memiliki tindak lanjut pada logbook tim.'}
               </p>
             </div>
           </div>

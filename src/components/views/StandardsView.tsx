@@ -6,12 +6,8 @@ import {
   ShieldCheck,
   ExternalLink,
   Plus,
-  Pencil,
   Trash2,
-  Download,
-  X,
 } from 'lucide-react';
-import { StandardReferenceItem } from '../../types';
 
 export const StandardsView: React.FC = () => {
   const {
@@ -95,9 +91,15 @@ export const StandardsView: React.FC = () => {
                 <div className="w-10 h-10 rounded-2xl bg-[#EAF6FD] text-[#0062CC] flex items-center justify-center shadow-xs">
                   <FileText className="w-5 h-5" />
                 </div>
-                <button className="text-[#4A5A72] hover:text-[#0062CC] transition-colors">
+                <a
+                  href={reg.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Buka dokumen ${reg.title}`}
+                  className="text-[#4A5A72] hover:text-[#0062CC] transition-colors"
+                >
                   <ExternalLink className="w-4 h-4" />
-                </button>
+                </a>
               </div>
 
               <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33] mb-1.5 leading-snug">
@@ -148,7 +150,7 @@ export const StandardsView: React.FC = () => {
               className="px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
-              + Add
+              Add
             </button>
           )}
         </div>
@@ -169,8 +171,9 @@ export const StandardsView: React.FC = () => {
                     {isPM && (
                       <button
                         onClick={() => deleteStandard(std.id)}
-                        className="p-1 hover:text-[#B91C1C]"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-[#B91C1C] transition-colors"
                         title="Hapus Standar"
+                        aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
