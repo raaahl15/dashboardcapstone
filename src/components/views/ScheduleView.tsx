@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import {
@@ -26,6 +26,45 @@ export const ScheduleView: React.FC = () => {
   } = useApp();
 
   const [selectedPicFilter, setSelectedPicFilter] = useState<string>('All');
+  const [weeklyPlanListMaxHeight, setWeeklyPlanListMaxHeight] = useState<number>();
+  const weeklyPlannerRef = useRef<HTMLDivElement>(null);
+  const weeklyPlanListRef = useRef<HTMLDivElement>(null);
+  const ganttCardRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const updateWeeklyPlanListHeight = () => {
+      const planner = weeklyPlannerRef.current;
+      const planList = weeklyPlanListRef.current;
+      const ganttCard = ganttCardRef.current;
+      if (!planner || !planList || !ganttCard) return;
+      if (window.innerWidth < 1024) {
+        setWeeklyPlanListMaxHeight(undefined);
+        return;
+      }
+
+      const availableHeight =
+        ganttCard.getBoundingClientRect().bottom -
+        planList.getBoundingClientRect().top -
+        24;
+      const nextHeight = Math.max(0, availableHeight);
+      setWeeklyPlanListMaxHeight((currentHeight) =>
+        currentHeight !== undefined && Math.abs(currentHeight - nextHeight) < 1
+          ? currentHeight
+          : nextHeight
+      );
+    };
+
+    updateWeeklyPlanListHeight();
+    const resizeObserver = new ResizeObserver(updateWeeklyPlanListHeight);
+    if (weeklyPlannerRef.current) resizeObserver.observe(weeklyPlannerRef.current);
+    if (ganttCardRef.current) resizeObserver.observe(ganttCardRef.current);
+    window.addEventListener('resize', updateWeeklyPlanListHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateWeeklyPlanListHeight);
+    };
+  }, [weeklyPlans.length]);
 
   // Modals
   const [showAddPlanModal, setShowAddPlanModal] = useState(false);
@@ -90,46 +129,50 @@ export const ScheduleView: React.FC = () => {
       {/* ========================================================================= */}
       {/* HEADER COCKPIT BAR */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-0.5 bg-[#DBEAFE] text-[#1E3A8A] rounded-full text-[10px] font-bold tracking-wider font-heading uppercase">
-              DME UNIT 01 • OPERATIONS
-            </span>
-            <span className="text-xs text-[#4A5A72] font-semibold">
-              Critical Path Baseline Rev-3.2
-            </span>
-          </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            This is your team Schedule!
-          </h1>
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+            DME UNIT 01 • OPERATIONS
+          </span>
+          <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+            Critical Path Baseline Rev-3.2
+          </span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="px-4 py-2 bg-[#EAF6FD] text-[#0062CC] rounded-full text-xs font-bold flex items-center gap-2 border border-[#C9DCEB]/50">
-            <Clock className="w-3.5 h-3.5" />
-            <span>Current Sprint: Week 4 - Conceptual &amp; Basic Engineering</span>
-          </div>
+        <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
+          <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+            This is your team Schedule!
+          </h1>
 
-          {isPM && (
-            <button
-              type="button"
-              onClick={() => setShowAddPlanModal(true)}
-              className="min-h-[44px] px-4 py-2 bg-white hover:bg-[#EAF6FD] text-[#0B1B33] rounded-full text-xs font-bold border border-white shadow-xs flex items-center gap-1.5 transition-all"
-            >
-              <Calendar className="w-3.5 h-3.5 text-[#0062CC]" />
-              Atur Jadwal
-            </button>
-          )}
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="h-8 px-3.5 bg-white/70 border border-white text-[#0062CC] rounded-full text-[12px] font-semibold flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5" />
+              <span>Current Sprint: Week 4 - Conceptual &amp; Basic Engineering</span>
+            </div>
+
+            {isPM && (
+              <button
+                type="button"
+                onClick={() => setShowAddPlanModal(true)}
+                className="min-h-[44px] px-4 py-2 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white shadow-xs flex items-center gap-1.5 transition-all"
+              >
+                <Calendar className="w-3.5 h-3.5 text-[#0062CC]" />
+                Atur Jadwal
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
       {/* 2-COLUMN LAYOUT: Weekly Planner (Left) & Interactive Gantt (Right) */}
       {/* ========================================================================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* ==================== LEFT: Weekly Planner (4 cols) ==================== */}
-        <div className="lg:col-span-4 bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
+        <div
+          ref={weeklyPlannerRef}
+          className="lg:col-span-4 glass-card p-5 sm:p-6 space-y-4"
+        >
           <div className="flex items-center justify-between">
             <div>
               <h2 className="font-heading font-bold text-base text-[#0B1B33]">
@@ -151,13 +194,21 @@ export const ScheduleView: React.FC = () => {
             )}
           </div>
 
-          <div className="space-y-3 max-h-[720px] overflow-y-auto pr-1">
+          <div
+            ref={weeklyPlanListRef}
+            className="space-y-3 overflow-y-auto pr-1"
+            style={
+              weeklyPlanListMaxHeight === undefined
+                ? undefined
+                : { maxHeight: `${weeklyPlanListMaxHeight}px` }
+            }
+          >
             {weeklyPlans.map((plan) => {
               const picRef = plan.pic || plan.picCode;
               return (
                 <div
                   key={plan.id}
-                  className="p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs hover:shadow-sm transition-all"
+                  className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -250,7 +301,10 @@ export const ScheduleView: React.FC = () => {
         </div>
 
         {/* ==================== RIGHT: Interactive Gantt Chart (8 cols) ==================== */}
-        <div className="lg:col-span-8 bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
+        <div
+          ref={ganttCardRef}
+          className="lg:col-span-8 glass-card self-start p-5 sm:p-6 space-y-4"
+        >
           {/* Top Controls: Filter PIC & Add Task */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 flex-wrap">

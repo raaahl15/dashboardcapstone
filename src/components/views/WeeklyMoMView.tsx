@@ -23,6 +23,7 @@ export const WeeklyMoMView: React.FC = () => {
     deleteTrackerAction,
     meetingLogs,
     addMeetingLog,
+    deleteMeetingLog,
     users,
     isPM,
   } = useApp();
@@ -118,51 +119,36 @@ export const WeeklyMoMView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
+      {/* TOP ZONE: Heading, description, and MoM actions */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-0.5 bg-[#DBEAFE] text-[#1E3A8A] rounded-full text-[10px] font-bold tracking-wider font-heading uppercase">
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          Manage Your Progres!
+        </h1>
+
+        <div className="space-y-2.5">
+          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              Repositori materi presentasi asistensi mingguan, pelacak komitmen tindakan korektif, dan logbook asistensi DTNTF.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
               FEED ASISTENSI &amp; EVALUASI
             </span>
+            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold tracking-normal inline-flex items-center">
+              Semester Gasal 2026/2027
+            </span>
           </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            Manage Your Progres!
-          </h1>
-          <p className="text-xs text-[#4A5A72] mt-1 max-w-2xl">
-            Repositori materi presentasi asistensi mingguan, pelacak komitmen tindakan korektif, dan logbook asistensi DTNTF.
-          </p>
         </div>
-
-        {isPM && (
-          <div className="flex items-center gap-2.5">
-            <button
-              type="button"
-              onClick={() => setShowDeckModal(true)}
-              className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Add Slide Deck
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowMomModal(true)}
-              className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Add MoM
-            </button>
-          </div>
-        )}
       </div>
 
       {/* ========================================================================= */}
       {/* FORMAT SLIDE DECK BANNER (15 MENIT) */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[24px] p-5 border border-white shadow-cockpit-card space-y-3">
+      <div className="glass-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-[#0062CC]" />
@@ -170,7 +156,7 @@ export const WeeklyMoMView: React.FC = () => {
               Format Slide Deck (15 menit)
             </h3>
           </div>
-          <span className="px-3 py-1 bg-[#EAF6FD] text-[#0062CC] rounded-full text-[10px] font-bold flex items-center gap-1 border border-white">
+          <span className="px-3 py-1 bg-white/70 text-[#0062CC] rounded-full text-[10px] font-bold flex items-center gap-1 border border-white">
             <FileCheck2 className="w-3 h-3" /> Pedoman Asistensi Departemen
           </span>
         </div>
@@ -202,8 +188,8 @@ export const WeeklyMoMView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         {/* ==================== LEFT: Your Slide Deck (4 cols) ==================== */}
-        <div className="lg:col-span-4 bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
-          <div className="flex items-center justify-between">
+        <div className="lg:col-span-4 glass-card p-5 sm:p-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 className="font-heading font-bold text-base text-[#0B1B33]">
                 Your Slide Deck
@@ -212,19 +198,29 @@ export const WeeklyMoMView: React.FC = () => {
                 Materi tayang kompilasi tim
               </p>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/70 text-[#0062CC]">
               {slideDecks.length} Berkas Terarsip
             </span>
+            {isPM && (
+              <button
+                type="button"
+                onClick={() => setShowDeckModal(true)}
+                className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Add Slide Deck
+              </button>
+            )}
           </div>
 
           <div className="space-y-3 max-h-[720px] overflow-y-auto pr-1">
             {slideDecks.map((deck) => (
               <div
                 key={deck.id}
-                className="p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs hover:shadow-sm transition-all"
+                className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs hover:shadow-sm transition-all"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/70 text-[#0062CC]">
                     {deck.weekLabel}
                   </span>
                   <span className="text-[11px] text-[#4A5A72] font-medium">
@@ -236,7 +232,7 @@ export const WeeklyMoMView: React.FC = () => {
                   {deck.title}
                 </h4>
 
-                <div className="flex items-center justify-between pt-2 border-t border-[#EAF6FD]">
+                <div className="flex items-center justify-between pt-2 border-t border-white/80">
                   <UserChip
                     uid={deck.presenter || deck.presenterCode}
                     variant="avatar-nama-jabatan"
@@ -262,7 +258,7 @@ export const WeeklyMoMView: React.FC = () => {
                       href={deck.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3 py-1 bg-[#EAF6FD] hover:bg-[#0062CC] hover:text-white text-[#0062CC] rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
+                      className="px-3 py-1 bg-white/70 hover:bg-[#0062CC] hover:text-white text-[#0062CC] rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
                     >
                       Buka <ExternalLink className="w-3 h-3" />
                     </a>
@@ -276,7 +272,7 @@ export const WeeklyMoMView: React.FC = () => {
         {/* ==================== RIGHT: Tracker Action & Meeting Log (8 cols) ==================== */}
         <div className="lg:col-span-8 space-y-5">
           {/* Tracker Action Table */}
-          <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
+          <div className="glass-card p-5 sm:p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
@@ -296,7 +292,7 @@ export const WeeklyMoMView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowActionModal(true)}
-                  className="min-h-[44px] px-4 bg-white hover:bg-[#EAF6FD] text-[#0B1B33] rounded-full text-xs font-bold border border-[#C9DCEB] flex items-center gap-1 shadow-xs transition-all"
+                  className="min-h-[44px] px-4 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1 shadow-xs transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 text-[#0062CC]" />
                   Tambah Baris
@@ -304,10 +300,10 @@ export const WeeklyMoMView: React.FC = () => {
               )}
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-[#EAF6FD] bg-white">
+            <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
               <table className="w-full text-left border-collapse min-w-[620px]">
                 <thead>
-                  <tr className="border-b border-[#EAF6FD] bg-[#F8FAFC] text-[10px] font-heading font-bold text-[#4A5A72]">
+                  <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72]">
                     <th className="p-3">ID Action</th>
                     <th className="p-3">Week</th>
                     <th className="p-3">Kendala dan Masukan Dosen</th>
@@ -317,9 +313,9 @@ export const WeeklyMoMView: React.FC = () => {
                     {isPM && <th className="p-3 text-center">Aksi</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EAF6FD] text-xs">
+                <tbody className="divide-y divide-white/80 text-xs">
                   {trackerActions.map((act) => (
-                    <tr key={act.id} className="hover:bg-[#F8FAFC]/70 transition-colors">
+                    <tr key={act.id} className="hover:bg-white/70 transition-colors">
                       <td className="p-3 font-mono font-bold text-[#0062CC]">
                         {act.code}
                       </td>
@@ -381,8 +377,8 @@ export const WeeklyMoMView: React.FC = () => {
           </div>
 
           {/* Meeting Log Feed */}
-          <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
-            <div className="flex items-center justify-between">
+          <div className="glass-card p-5 sm:p-6 space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="font-heading font-bold text-base text-[#0B1B33]">
                   Meeting Log
@@ -391,16 +387,28 @@ export const WeeklyMoMView: React.FC = () => {
                   Catatan resmi asistensi dan arahan teknis evaluasi
                 </p>
               </div>
-              <span className="text-[11px] text-[#4A5A72] font-semibold flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-[#0062CC]" /> Semester Gasal 2026/2027
-              </span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-[11px] text-[#4A5A72] font-semibold flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-[#0062CC]" /> Semester Gasal 2026/2027
+                </span>
+                {isPM && (
+                  <button
+                    type="button"
+                    onClick={() => setShowMomModal(true)}
+                    className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add MoM
+                  </button>
+                )}
+              </div>
             </div>
 
             <div className="space-y-4">
               {meetingLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-5 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs space-y-3"
+                  className="p-5 rounded-2xl bg-white/70 border border-white/80 shadow-xs space-y-3"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
@@ -411,12 +419,25 @@ export const WeeklyMoMView: React.FC = () => {
                         <Calendar className="w-3.5 h-3.5 text-[#0062CC]" /> {log.dayText}
                       </span>
                     </div>
-                    <span className="text-[11px] text-[#4A5A72] flex items-center gap-1">
-                      {log.location}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[11px] text-[#4A5A72] flex items-center gap-1">
+                        {log.location}
+                      </span>
+                      {isPM && (
+                        <button
+                          type="button"
+                          onClick={() => deleteMeetingLog(log.id)}
+                          className="min-h-[44px] min-w-[44px] rounded-full text-[#4A5A72] hover:bg-[#FEE2E2] hover:text-[#B91C1C] flex items-center justify-center transition-colors"
+                          title="Hapus catatan MoM"
+                          aria-label={`Hapus MoM ${log.weekLabel}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs border-y border-[#EAF6FD] py-2">
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs border-y border-white/80 py-2">
                     <span className="text-[#4A5A72]">
                       Dosen Evaluator: <strong className="text-[#0B1B33]">{log.evaluator}</strong>
                     </span>

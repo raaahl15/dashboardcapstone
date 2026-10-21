@@ -129,43 +129,49 @@ export const TeamRaciView: React.FC = () => {
   const heidiUser = getUser('user-heidi');
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-0.5 bg-[#DBEAFE] text-[#1E3A8A] rounded-full text-[10px] font-bold tracking-wider font-heading uppercase">
-              EPC WORK PACKAGE 1.0
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          Our Team and Matrix Raci
+        </h1>
+
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
+          <div className="xl:col-span-7 flex flex-col justify-between gap-2.5">
+            <div className="glass-faint px-4 py-2.5 flex items-center">
+              <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+                Struktur tata kelola EPC dan akuntabilitas deliverable sesuai KAK-IC-DME-2026-001
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+                EPC WORK PACKAGE 1.0
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+                Revisi Dokumen: Rev.03
+              </span>
+            </div>
+          </div>
+
+          <div className="xl:col-span-5 flex flex-wrap items-end gap-2">
+            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <Users className="w-3.5 h-3.5" /> {users.length} Engineers
             </span>
-            <span className="text-xs text-[#4A5A72] font-semibold">
-              Revisi Dokumen: Rev.03
+            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <FileText className="w-3.5 h-3.5" /> 6 Core Deliverables
+            </span>
+            <span className="h-8 px-3.5 rounded-full bg-[#D1FAE5] border border-white/70 text-[#065F46] text-[12px] font-semibold inline-flex items-center gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> PM AUTHORIZATION ACTIVE
             </span>
           </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            Our Team and Matrix Raci
-          </h1>
-          <p className="text-xs text-[#4A5A72] mt-1">
-            Struktur tata kelola EPC dan akuntabilitas deliverable sesuai KAK-IC-DME-2026-001
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2.5">
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full text-xs font-bold flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5" /> {users.length} Engineers
-          </span>
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full text-xs font-bold flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5" /> 6 Core Deliverables
-          </span>
-          <span className="px-3.5 py-1.5 bg-[#D1FAE5] text-[#065F46] rounded-full text-xs font-bold flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> PM AUTHORIZATION ACTIVE
-          </span>
         </div>
       </div>
 
       {/* 2-Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
         {/* ==================== LEFT: Struktur Tim Operasional (5 cols) ==================== */}
-        <div className="lg:col-span-5 bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
+        <div className="lg:col-span-5 glass-card p-5 sm:p-6 space-y-4 lg:flex lg:flex-col">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
               <Users className="w-4 h-4 text-[#0062CC]" />
@@ -177,10 +183,10 @@ export const TeamRaciView: React.FC = () => {
           </div>
 
           {/* Org Tree Flow */}
-          <div className="space-y-4 pt-1">
+          <div className="space-y-4 pt-1 lg:min-h-0 lg:flex-1 lg:grid lg:grid-rows-[minmax(0,1fr)_16px_minmax(0,1fr)_16px_minmax(0,1fr)] lg:space-y-0">
             {/* Level 1: Project Manager (Rahul) */}
-            <div className="flex justify-center">
-              <div className="w-full max-w-sm">
+            <div className="flex min-h-0 justify-center">
+              <div className="h-full w-full max-w-sm">
                 {rahulUser && (
                   <FlipCard
                     user={rahulUser}
@@ -194,12 +200,12 @@ export const TeamRaciView: React.FC = () => {
             </div>
 
             {/* Connecting Tree Line */}
-            <div className="w-full flex justify-center">
-              <div className="w-0.5 h-4 bg-[#C9DCEB]"></div>
+            <div className="flex w-full justify-center">
+              <div className="h-full w-0.5 bg-[#C9DCEB]"></div>
             </div>
 
             {/* Level 2: Ihsan & Althaf */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="grid min-h-0 grid-cols-1 gap-3.5 sm:grid-cols-2">
               {ihsanUser && (
                 <FlipCard
                   user={ihsanUser}
@@ -221,12 +227,12 @@ export const TeamRaciView: React.FC = () => {
             </div>
 
             {/* Connecting Tree Line */}
-            <div className="w-full flex justify-center">
-              <div className="w-0.5 h-4 bg-[#C9DCEB]"></div>
+            <div className="flex w-full justify-center">
+              <div className="h-full w-0.5 bg-[#C9DCEB]"></div>
             </div>
 
             {/* Level 3: Jonathan & Heidi */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="grid min-h-0 grid-cols-1 gap-3.5 sm:grid-cols-2">
               {jonathanUser && (
                 <FlipCard
                   user={jonathanUser}
@@ -250,7 +256,7 @@ export const TeamRaciView: React.FC = () => {
         </div>
 
         {/* ==================== RIGHT: Matriks RACI Capstone (7 cols) ==================== */}
-        <div className="lg:col-span-7 bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
+        <div className="lg:col-span-7 glass-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-heading font-bold text-base text-[#0B1B33]">
@@ -298,7 +304,7 @@ export const TeamRaciView: React.FC = () => {
           </div>
 
           {/* RACI Legend */}
-          <div className="flex flex-wrap items-center gap-3 p-2.5 bg-[#F8FAFC] rounded-2xl border border-[#EAF6FD] text-xs">
+          <div className="flex flex-wrap items-center gap-3 p-2.5 bg-white/50 rounded-2xl border border-white/80 text-xs">
             <span className="font-bold text-[#0B1B33] text-[11px] uppercase">LEGENDA RACI:</span>
             <span className="flex items-center gap-1.5 text-[#065F46] font-semibold text-[11px]">
               <span className="w-2.5 h-2.5 rounded-full bg-[#047857]"></span> R Responsible
@@ -315,10 +321,10 @@ export const TeamRaciView: React.FC = () => {
           </div>
 
           {/* RACI Matrix Table */}
-          <div className="overflow-x-auto rounded-2xl border border-[#EAF6FD] bg-white">
+          <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
             <table className="w-full text-left border-collapse min-w-[620px]">
               <thead>
-                <tr className="border-b border-[#EAF6FD] bg-[#F8FAFC] text-[11px] font-heading font-bold text-[#4A5A72]">
+                <tr className="border-b border-white/80 bg-white/70 text-[11px] font-heading font-bold text-[#4A5A72]">
                   <th className="p-3 text-[#0B1B33]">Deliverable Dokumen</th>
                   {memberOrderUids.map((uid) => (
                     <th key={uid} className="p-3 text-center">
@@ -340,7 +346,7 @@ export const TeamRaciView: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-[#EAF6FD] text-xs">
                 {raciRows.map((row) => (
-                  <tr key={row.id} className="hover:bg-[#F8FAFC]/70 transition-colors">
+                  <tr key={row.id} className="hover:bg-white/70 transition-colors">
                     <td className="p-3 max-w-[200px]">
                       <p className="font-heading font-bold text-xs text-[#0B1B33] leading-snug">
                         {row.deliverable}
@@ -469,60 +475,69 @@ const FlipCard: React.FC<{
   return (
     <div
       onClick={onFlip}
-      className="cursor-pointer perspective-1000 min-h-[180px] w-full"
+      className="cursor-pointer perspective-1000 min-h-[180px] w-full lg:h-full lg:min-h-0"
     >
       <div
-        className={`relative w-full h-full rounded-[22px] p-4.5 border border-[#EAF6FD] transition-transform duration-500 transform-style-preserve-3d shadow-xs hover:shadow-sm ${
-          isFlipped ? 'rotate-y-180 bg-[#0B1B33] text-white' : 'bg-white text-[#0B1B33]'
+        className={`relative h-full min-h-[180px] w-full rounded-[22px] border border-white/80 transition-transform duration-500 transform-style-preserve-3d shadow-xs hover:shadow-sm ${
+          isFlipped ? 'rotate-y-180' : ''
         }`}
       >
         {/* FRONT SIDE */}
-        <div className={`backface-hidden ${isFlipped ? 'hidden' : 'block'}`}>
-          <div className="flex items-center justify-between mb-3">
-            <UserChip
-              uid={user.id}
-              variant="avatar"
-              size="md"
-              avatarClassName="w-11 h-11 rounded-2xl font-heading font-extrabold text-xs"
+        <div
+          className={`backface-hidden absolute inset-0 overflow-hidden rounded-[22px] ${
+            isFlipped ? 'hidden' : 'block'
+          }`}
+        >
+          {user.photoURL ? (
+            <img
+              src={user.photoURL}
+              alt={user.name}
+              className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
             />
-            <div className="flex items-center gap-1.5">
-              {canEdit && (
-                <button
-                  type="button"
-                  onClick={onEdit}
-                  title="Edit Profil"
-                  className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0062CC] hover:bg-[#DCEBF7] flex items-center justify-center transition-colors"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              )}
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-[#DBEAFE] text-[#1E3A8A]">
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0B1B33] via-[#004A9E] to-[#007BFF] bg-tech-grid text-4xl font-extrabold text-white">
+              {user.avatarInitial || user.code}
+            </div>
+          )}
+
+          <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-end gap-1.5">
+            {canEdit && (
+              <button
+                type="button"
+                onClick={onEdit}
+                title="Edit Profil"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur-md transition-colors hover:bg-black/65"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pb-4 pt-14">
+            <div className="flex items-end justify-between gap-2">
+              <div className="min-w-0">
+                <h3 className="truncate font-heading text-sm font-extrabold leading-tight text-white drop-shadow-sm">
+                  {user.name}
+                </h3>
+                <p className="mt-0.5 truncate text-[11px] font-medium text-white/80 drop-shadow-xs">
+                  {user.title}
+                  <span className="text-white/40"> • </span>
+                  <span className="font-semibold text-[#93C5FD]">@{user.nickname}</span>
+                </p>
+              </div>
+              <span className="shrink-0 rounded-full border border-white/60 bg-white/15 px-2.5 py-1 text-[10px] font-extrabold text-white backdrop-blur-md">
                 {user.raciTag}
               </span>
             </div>
           </div>
-
-          <div className="flex items-baseline gap-1.5 flex-wrap">
-            <h3 className="font-heading font-bold text-xs text-[#0B1B33] truncate">
-              {user.name}
-            </h3>
-            <span className="text-[10px] font-bold text-[#0062CC]">
-              ({user.nickname})
-            </span>
-          </div>
-          <p className="text-[11px] text-[#4A5A72] font-semibold mt-0.5">
-            {user.title}
-          </p>
-
-          <div className="mt-3.5 pt-2 border-t border-[#EAF6FD] flex items-center justify-between text-[10px] text-[#4A5A72]">
-            <span className="flex items-center gap-1 font-medium">
-              <RotateCcw className="w-3 h-3 text-[#0062CC]" /> Klik kartu untuk rincian Jobdesk
-            </span>
-          </div>
         </div>
 
         {/* BACK SIDE */}
-        <div className={`backface-hidden rotate-y-180 ${!isFlipped ? 'hidden' : 'block'}`}>
+        <div
+          className={`backface-hidden absolute inset-0 overflow-y-auto rounded-[22px] bg-[#0B1B33] p-4.5 text-white rotate-y-180 ${
+            !isFlipped ? 'hidden' : 'block'
+          }`}
+        >
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-white/15">
             <span className="font-heading font-bold text-xs text-[#4CBAF5] uppercase tracking-wider">
               {user.title}

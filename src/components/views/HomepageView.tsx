@@ -471,9 +471,6 @@ export const HomepageView: React.FC = () => {
             )}
 
             <div className="absolute top-4 inset-x-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider bg-black/45 backdrop-blur-md text-white border border-white/20 shadow-xs pointer-events-auto">
-                {currentUser.tag || 'TAG: PFD-R-101 • ISO: 10628'}
-              </span>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-[10px] font-heading font-extrabold border border-white/20 shadow-xs pointer-events-auto">
                 <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
                 <span>{currentUser.role === 'admin' ? 'PM LEAD' : 'ENGINEER'}</span>

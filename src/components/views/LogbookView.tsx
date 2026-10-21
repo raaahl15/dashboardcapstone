@@ -90,33 +90,40 @@ export const LogbookView: React.FC = () => {
   const progressPercent = Math.min(100, Math.round((verifiedLogbooksCount / 12) * 100));
 
   return (
-    <div className="space-y-5 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
+      {/* TOP ZONE: Heading, description, and logbook actions */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            This Is Your Logbook
-          </h1>
-          <p className="text-xs text-[#4A5A72] mt-1">
-            Audit kedisiplinan logbook & pemenuhan kuota 12 entri per unit Area 1 • Capstone K2026 DTNTF
-          </p>
-        </div>
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          This Is Your Logbook
+        </h1>
 
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="min-h-[44px] px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all shrink-0"
-        >
-          <Plus className="w-4 h-4" />
-          Add Logbook
-        </button>
+        <div className="space-y-2.5">
+          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              Audit kedisiplinan logbook &amp; pemenuhan kuota 12 entri per unit Area 1 • Capstone K2026 DTNTF
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+              LOGBOOK • CAPSTONE K2026 DTNTF
+            </span>
+            <button
+              onClick={() => setShowAddModal(true)}
+              className="min-h-[44px] px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all shrink-0"
+            >
+              <Plus className="w-4 h-4" />
+              Add Logbook
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* ========================================================================= */}
       {/* COMPLIANCE TOP METRIC & FILTER CARD */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-5">
+      <div className="glass-card p-6 space-y-5">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
           {/* Progress to 12 Quota */}
           <div className="lg:col-span-5 space-y-2">
@@ -170,14 +177,14 @@ export const LogbookView: React.FC = () => {
         </div>
 
         {/* Contribution chips & Filter row */}
-        <div className="pt-3 border-t border-[#EAF6FD] flex flex-wrap items-center justify-between gap-4">
+        <div className="pt-3 border-t border-white/80 flex flex-wrap items-center justify-between gap-4">
           {/* Contribution Badges */}
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold text-[#0B1B33]">KONTRIBUSI UNIT:</span>
             {users.map((u) => (
               <span
                 key={u.id}
-                className="px-3 py-1 rounded-full text-xs font-semibold bg-[#EAF6FD] text-[#0062CC] border border-white inline-flex items-center gap-1"
+                className="px-3 py-1 rounded-full text-xs font-semibold bg-white/70 text-[#0062CC] border border-white inline-flex items-center gap-1"
               >
                 <span>{u.nickname}:</span>
                 <strong>{contributionByUid[u.id] ?? 0}</strong>
@@ -193,7 +200,7 @@ export const LogbookView: React.FC = () => {
               className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                 filterAuthor === 'All'
                   ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white text-[#4A5A72] border border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                  : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
               }`}
             >
               All
@@ -207,7 +214,7 @@ export const LogbookView: React.FC = () => {
                   className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                     isSelected
                       ? 'bg-[#0B1B33] text-white shadow-xs'
-                      : 'bg-white text-[#4A5A72] border border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                      : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
                   }`}
                 >
                   {u.nickname}
@@ -221,11 +228,11 @@ export const LogbookView: React.FC = () => {
       {/* ========================================================================= */}
       {/* LOGBOOK TABLE */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-5 sm:p-6 border border-white shadow-cockpit-card space-y-4">
-        <div className="overflow-x-auto rounded-2xl border border-[#EAF6FD] bg-white">
+      <div className="glass-card p-5 sm:p-6 space-y-4">
+        <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
           <table className="w-full text-left border-collapse min-w-[760px]">
             <thead>
-              <tr className="border-b border-[#EAF6FD] bg-[#F8FAFC] text-[10px] font-heading font-bold text-[#4A5A72] uppercase tracking-wider">
+              <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72] uppercase tracking-wider">
                 <th className="p-3.5">Tanggal</th>
                 <th className="p-3.5">Pencatat</th>
                 <th className="p-3.5">Uraian Pekerjaan</th>
@@ -234,14 +241,14 @@ export const LogbookView: React.FC = () => {
                 <th className="p-3.5 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#EAF6FD] text-xs">
+            <tbody className="divide-y divide-white/80 text-xs">
               {filteredLogbooks.map((log) => {
                 const authorRef = log.authorId || log.authorName || log.authorCode;
                 const resolvedAuthor = getUser(authorRef);
                 const canDelete = isPM || resolvedAuthor?.id === currentUser.id;
 
                 return (
-                  <tr key={log.id} className="hover:bg-[#F8FAFC]/70 transition-colors">
+                  <tr key={log.id} className="hover:bg-white/70 transition-colors">
                     {/* Tanggal */}
                     <td className="p-3.5 font-bold text-[#0B1B33] whitespace-nowrap">
                       {log.date}
@@ -330,7 +337,7 @@ export const LogbookView: React.FC = () => {
         </div>
 
         {/* Footer Notes */}
-        <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-[#4A5A72] border-t border-[#EAF6FD]">
+        <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-[#4A5A72] border-t border-white/80">
           <div className="flex items-center gap-1.5 font-medium">
             <Info className="w-4 h-4 text-[#0062CC]" />
             <span>Status Terverifikasi merefleksikan paraf basah di logbook fisik resmi.</span>

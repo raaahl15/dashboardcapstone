@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/layout/Header';
+import { UserChip } from './components/common/UserChip';
 import { ExportImportModal } from './components/layout/ExportImportModal';
 import { ProfileModal } from './components/layout/ProfileModal';
 import { LoginGateway } from './components/login/LoginGateway';
@@ -115,12 +116,21 @@ const MainApp: React.FC = () => {
       {/* Footer */}
       <footer className="w-full py-6 px-4 text-center text-xs text-[#334155] border-t border-white/70 bg-white/75 backdrop-blur-xs mt-10">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-4">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
             <span className="font-heading font-extrabold text-[#0B1B33]">
-              Area 1-DME FEED Cockpit
+              Dashboard Capstone Area 1
             </span>
             <span>•</span>
-            <span>ISA-5.1 &amp; ISO 10628 Engineering Standard</span>
+            <span>Created by</span>
+            <UserChip
+              uid="user-rahul"
+              variant="avatar-nama-jabatan"
+              size="xs"
+              inlineTitle
+              avatarClassName="hidden"
+              nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
+              titleClassName="!text-xs !text-[#4A5A72]"
+            />
           </div>
           <div>
             <span>

@@ -114,6 +114,7 @@ export interface AppContextType {
 
   meetingLogs: MeetingLogItem[];
   addMeetingLog: (log: Omit<MeetingLogItem, 'id'>) => void;
+  deleteMeetingLog: (id: string) => void;
 
   regulations: RegulationDirective[];
   standards: StandardReferenceItem[];

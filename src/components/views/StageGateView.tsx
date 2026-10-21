@@ -84,101 +84,125 @@ export const StageGateView: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
+      {/* TOP ZONE: Heading, description, and Stage-Gate actions */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-3 py-0.5 bg-[#DBEAFE] text-[#1E3A8A] rounded-full text-[10px] font-bold tracking-wider font-heading uppercase">
-              AUDIT INTERNAL TAHAP 3
-            </span>
-            <span className="text-xs text-[#4A5A72] font-semibold">
-              Sidang Akhir: 15 Des 2026
-            </span>
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          Stage-Gate Readiness &amp; Self-Audit
+        </h1>
+
+        <div className="space-y-2.5">
+          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum sidang Stage-Gate 15 Des 2026
+            </p>
           </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            Stage-Gate Readiness & Self-Audit
-          </h1>
-          <p className="text-xs text-[#4A5A72] mt-0.5 max-w-2xl">
-            Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum sidang Stage-Gate 15 Des 2026
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <button
-            onClick={() => window.print()}
-            className="px-4 py-2 bg-white hover:bg-[#EAF6FD] text-[#0B1B33] rounded-full text-xs font-bold border border-[#C9DCEB] flex items-center gap-1.5 shadow-xs transition-all"
-          >
-            <Printer className="w-3.5 h-3.5 text-[#0062CC]" />
-            Cetak Rubrik Form
-          </button>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+                AUDIT INTERNAL TAHAP 3
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+                Sidang Akhir: 15 Des 2026
+              </span>
+            </div>
 
-          {isPM && (
-            <button
-              onClick={handleToggleLock}
-              className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all ${
-                config.readinessLocked
-                  ? 'bg-[#0B1B33] text-white hover:bg-[#22314a]'
-                  : 'bg-[#0062CC] hover:bg-[#0057B8] text-white'
-              }`}
-            >
-              {config.readinessLocked ? (
-                <>
-                  <Lock className="w-3.5 h-3.5" />
-                  Status Terkunci
-                </>
-              ) : (
-                <>
-                  <Unlock className="w-3.5 h-3.5" />
-                  Kunci Status Final
-                </>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => window.print()}
+                className="min-h-[44px] px-4 py-2 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1.5 shadow-xs transition-all"
+              >
+                <Printer className="w-3.5 h-3.5 text-[#0062CC]" />
+                Cetak Rubrik Form
+              </button>
+
+              {isPM && (
+                <button
+                  onClick={handleToggleLock}
+                  className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all ${
+                    config.readinessLocked
+                      ? 'bg-[#0B1B33] text-white hover:bg-[#22314a]'
+                      : 'bg-[#0062CC] hover:bg-[#0057B8] text-white'
+                  }`}
+                >
+                  {config.readinessLocked ? (
+                    <>
+                      <Lock className="w-3.5 h-3.5" />
+                      Status Terkunci
+                    </>
+                  ) : (
+                    <>
+                      <Unlock className="w-3.5 h-3.5" />
+                      Kunci Status Final
+                    </>
+                  )}
+                </button>
               )}
-            </button>
-          )}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* ========================================================================= */}
       {/* MASTER READINESS GAUGE & METRIC CARDS */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-5">
+      <div className="glass-card p-6 space-y-5">
         <div className="flex flex-col items-center text-center">
           <span className="text-[11px] font-bold text-[#4A5A72] uppercase tracking-wider mb-2">
             INDEKS KESIAPAN BERKAS & SIDANG
           </span>
 
           {/* Semicircle Gauge Graphic */}
-          <div className="relative w-64 sm:w-80 h-36 sm:h-44 flex items-end justify-center">
-            <svg className="w-full h-full" viewBox="0 0 420 220" fill="none">
-              {/* Red Zone (0 - 70%) */}
+          <div className="relative w-64 sm:w-80 aspect-[21/11] flex items-end justify-center">
+            <svg
+              className="absolute inset-0 h-full w-full"
+              viewBox="0 0 420 220"
+              fill="none"
+              aria-hidden="true"
+            >
               <path
-                d="M 50 210 A 160 160 0 0 1 120 95"
+                d="M 50 210 A 160 160 0 0 1 370 210"
+                pathLength="100"
+                stroke="#DCEBF7"
+                strokeWidth="16"
+                strokeLinecap="round"
+              />
+              <path
+                d="M 50 210 A 160 160 0 0 1 370 210"
+                pathLength="100"
+                strokeDasharray="70 30"
+                strokeDashoffset="0"
                 stroke="#B91C1C"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
-              {/* Amber Zone (70 - 85%) */}
               <path
-                d="M 130 87 A 160 160 0 0 1 245 55"
+                d="M 50 210 A 160 160 0 0 1 370 210"
+                pathLength="100"
+                strokeDasharray="15 85"
+                strokeDashoffset="-70"
                 stroke="#B45309"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
-              {/* Green Zone (85 - 100%) */}
               <path
-                d="M 255 57 A 160 160 0 0 1 370 210"
+                d="M 50 210 A 160 160 0 0 1 370 210"
+                pathLength="100"
+                strokeDasharray="15 85"
+                strokeDashoffset="-85"
                 stroke="#047857"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
 
               {/* Threshold flags */}
-              <text x="110" y="75" fill="#B45309" fontSize="13" fontWeight="bold" fontFamily="Inter">
+              <text x="312" y="65" fill="#B45309" fontSize="13" fontWeight="bold" fontFamily="Inter">
                 70%
               </text>
-              <text x="260" y="45" fill="#047857" fontSize="13" fontWeight="bold" fontFamily="Inter">
+              <text x="365" y="128" fill="#047857" fontSize="13" fontWeight="bold" fontFamily="Inter">
                 85%
               </text>
               <text x="40" y="215" fill="#991B1B" fontSize="11" fontWeight="bold" fontFamily="Inter">
@@ -239,8 +263,8 @@ export const StageGateView: React.FC = () => {
         </div>
 
         {/* 3 Mini Score Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[#EAF6FD]">
-          <div className="p-4 rounded-2xl bg-white border border-[#EAF6FD] text-center shadow-xs">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/80">
+          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
             <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
               RUBRIK MANDIRI
             </span>
@@ -252,7 +276,7 @@ export const StageGateView: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white border border-[#EAF6FD] text-center shadow-xs">
+          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
             <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
               DEFENSE BANK
             </span>
@@ -264,7 +288,7 @@ export const StageGateView: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white border border-[#EAF6FD] text-center shadow-xs">
+          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
             <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
               HARDCOPY BERKAS
             </span>
@@ -281,7 +305,7 @@ export const StageGateView: React.FC = () => {
       {/* ========================================================================= */}
       {/* SEKSI 1: AUDIT RUBRIK MANDIRI */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-4">
+      <div className="glass-card p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
@@ -310,15 +334,15 @@ export const StageGateView: React.FC = () => {
             return (
               <div
                 key={param.id}
-                className="rounded-2xl border border-[#EAF6FD] bg-white overflow-hidden shadow-xs"
+                className="rounded-2xl border border-white/80 bg-white/60 overflow-hidden shadow-xs"
               >
                 {/* Header Bar */}
                 <div
                   onClick={() => setExpandedParam(isExpanded ? '' : param.id)}
-                  className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-[#F8FAFC] transition-colors"
+                  className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-white/70 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-7 h-7 rounded-full bg-[#EAF6FD] text-[#0062CC] font-heading font-extrabold text-xs flex items-center justify-center shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-white/70 text-[#0062CC] font-heading font-extrabold text-xs flex items-center justify-center shrink-0">
                       {param.num}
                     </span>
                     <div className="min-w-0">
@@ -364,7 +388,7 @@ export const StageGateView: React.FC = () => {
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="p-4 pt-2 border-t border-[#EAF6FD] bg-[#F8FAFC]/50 space-y-4 text-xs">
+                  <div className="p-4 pt-2 border-t border-white/80 bg-white/40 space-y-4 text-xs">
                     <div>
                       <span className="font-bold text-[10px] text-[#0062CC] uppercase tracking-wider block mb-2">
                         KRITERIA VERIFIKASI PARAMETER
@@ -374,10 +398,10 @@ export const StageGateView: React.FC = () => {
                           <div
                             key={idx}
                             onClick={() => !config.readinessLocked && toggleRubricItem(param.id, idx)}
-                            className={`p-2.5 rounded-xl bg-white border border-[#EAF6FD] flex items-center justify-between gap-3 transition-colors ${
+                            className={`p-2.5 rounded-xl bg-white/70 border border-white/80 flex items-center justify-between gap-3 transition-colors ${
                               config.readinessLocked
                                 ? 'opacity-75 cursor-not-allowed'
-                                : 'cursor-pointer hover:bg-[#EAF6FD]/30'
+                                : 'cursor-pointer hover:bg-white'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
@@ -449,7 +473,7 @@ export const StageGateView: React.FC = () => {
       {/* ========================================================================= */}
       {/* SEKSI 2: DEFENSE DOSSIER */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-4">
+      <div className="glass-card p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
@@ -508,11 +532,11 @@ export const StageGateView: React.FC = () => {
           {filteredQuestions.map((q) => (
             <div
               key={q.id}
-              className="p-5 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs flex flex-col justify-between space-y-4"
+              className="p-5 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex flex-col justify-between space-y-4"
             >
               <div>
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase text-[#0062CC] mb-2">
-                  <span className="px-2 py-0.5 rounded-md bg-[#EAF6FD]">
+                  <span className="px-2 py-0.5 rounded-md bg-white/70">
                     {q.chapterTag}
                   </span>
                   <div className="inline-flex items-center gap-1 text-[#4A5A72] normal-case">
@@ -531,7 +555,7 @@ export const StageGateView: React.FC = () => {
                   "{q.question}"
                 </h4>
 
-                <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#EAF6FD]">
+                <div className="p-3 rounded-xl bg-white/50 border border-white/80">
                   <span className="text-[10px] font-bold text-[#4A5A72] uppercase block mb-1">
                     CATATAN RESPON TERVERIFIKASI:
                   </span>
@@ -541,7 +565,7 @@ export const StageGateView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-[#EAF6FD] flex items-center justify-between text-xs">
+              <div className="pt-2 border-t border-white/80 flex items-center justify-between text-xs">
                 <span className="text-[#065F46] font-bold flex items-center gap-1 text-[11px]">
                   <CheckCircle2 className="w-3.5 h-3.5 text-[#047857]" /> Siap Sidang
                 </span>
@@ -563,7 +587,7 @@ export const StageGateView: React.FC = () => {
       {/* ========================================================================= */}
       {/* SEKSI 3: CHECKLIST BERKAS FISIK */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-4">
+      <div className="glass-card p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
@@ -584,8 +608,8 @@ export const StageGateView: React.FC = () => {
             <div
               key={item.id}
               onClick={() => isPM && !config.readinessLocked && togglePhysicalItem(item.id)}
-              className={`p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs flex items-center justify-between gap-4 transition-all ${
-                isPM && !config.readinessLocked ? 'cursor-pointer hover:bg-[#F8FAFC]' : ''
+              className={`p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex items-center justify-between gap-4 transition-all ${
+                isPM && !config.readinessLocked ? 'cursor-pointer hover:bg-white' : ''
               }`}
             >
               <div className="flex items-start gap-3">

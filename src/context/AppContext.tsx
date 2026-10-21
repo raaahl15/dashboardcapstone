@@ -1078,6 +1078,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setMeetingLogs((prev) => [newLog, ...prev]);
   };
 
+  const deleteMeetingLog = (id: string) => {
+    if (!isPM) return;
+    setMeetingLogs((prev) => prev.filter((log) => log.id !== id));
+  };
+
   const addStandard = (std: Omit<StandardReferenceItem, 'id'>) => {
     if (!isPM) return;
     const newStd: StandardReferenceItem = {
@@ -1511,6 +1516,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         meetingLogs,
         addMeetingLog,
+        deleteMeetingLog,
 
         regulations,
         standards,

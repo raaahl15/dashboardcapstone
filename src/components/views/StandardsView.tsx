@@ -44,36 +44,43 @@ export const StandardsView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
+      {/* TOP ZONE: Heading, description, and standards summary */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#007BFF] animate-pulse"></span>
-            <span className="text-[10px] font-bold tracking-wider font-heading uppercase text-[#0062CC]">
-              GOVERNANCE & STANDARDISASI
-            </span>
-          </div>
-          <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-            Rules The Team !
-          </h1>
-          <p className="text-xs text-[#4A5A72] mt-1">
-            Pedoman kepatuhan regulasi Capstone DTNTF dan direktori standar internasional
-          </p>
-        </div>
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          Rules The Team !
+        </h1>
 
-        <div className="flex flex-wrap items-center gap-2.5 text-xs">
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
-            <BookOpen className="w-3.5 h-3.5" /> 3 Regulasi Utama
-          </span>
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5" /> {standards.length} Standar Industri
-          </span>
-          <span className="px-3.5 py-1.5 bg-[#D1FAE5] text-[#065F46] rounded-full font-bold flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> EPC Compliance Active
-          </span>
+        <div className="space-y-2.5">
+          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              Pedoman kepatuhan regulasi Capstone DTNTF dan direktori standar internasional
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+                GOVERNANCE &amp; STANDARDISASI
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+                CAPSTONE DTNTF
+              </span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <BookOpen className="w-3.5 h-3.5" /> 3 Regulasi Utama
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <FileText className="w-3.5 h-3.5" /> {standards.length} Standar Industri
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-[#D1FAE5] border border-white/70 text-[#065F46] text-[12px] font-semibold inline-flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> EPC Compliance Active
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -84,11 +91,11 @@ export const StandardsView: React.FC = () => {
         {regulations.map((reg) => (
           <div
             key={reg.id}
-            className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col justify-between hover:shadow-cockpit-pop transition-all group"
+            className="glass-card p-6 flex flex-col justify-between hover:shadow-cockpit-pop transition-all group"
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-[#EAF6FD] text-[#0062CC] flex items-center justify-center shadow-xs">
+                <div className="w-10 h-10 rounded-2xl bg-white/70 text-[#0062CC] flex items-center justify-center shadow-xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <a
@@ -111,7 +118,7 @@ export const StandardsView: React.FC = () => {
             </div>
 
             <div>
-              <div className="p-2.5 rounded-xl bg-[#EAF6FD] text-center mb-4 border border-[#C9DCEB]/40">
+              <div className="p-2.5 rounded-xl bg-white/50 text-center mb-4 border border-white/80">
                 <span className="text-[11px] font-bold text-[#0062CC]">
                   {reg.badge}
                 </span>
@@ -133,7 +140,7 @@ export const StandardsView: React.FC = () => {
       {/* ========================================================================= */}
       {/* STANDARD REFERENCES DIRECTORY */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card space-y-5">
+      <div className="glass-card p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
@@ -160,11 +167,11 @@ export const StandardsView: React.FC = () => {
           {standards.map((std) => (
             <div
               key={std.id}
-              className="p-4 rounded-2xl bg-white border border-[#EAF6FD] shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
+              className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="w-10 h-10 rounded-xl bg-[#EAF6FD] text-[#0062CC] font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-[#C9DCEB]/50">
+                  <span className="w-10 h-10 rounded-xl bg-white/70 text-[#0062CC] font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-white/80">
                     {std.subCode}
                   </span>
                   <div className="flex items-center gap-1 text-[#4A5A72]">

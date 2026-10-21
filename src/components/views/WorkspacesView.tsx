@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import {
-  FolderOpen,
   Calendar,
   Layers,
   Upload,
@@ -64,41 +63,51 @@ export const WorkspacesView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="space-y-4 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
+      {/* TOP ZONE: Heading, description, and workspace summary */}
       {/* ========================================================================= */}
-      <div className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <FolderOpen className="w-4 h-4 text-[#0062CC]" />
-            <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-[#0B1B33]">
-              Work-In-Progress Deliverables
-            </h1>
+      <div className="space-y-3">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          Work-In-Progress Deliverables
+        </h1>
+
+        <div className="space-y-2.5">
+          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              Repositori draf FEED/DED Area 1 • Status verifikasi disiplin proses &amp; instrumentasi
+            </p>
           </div>
-          <p className="text-xs text-[#4A5A72] mt-0.5">
-            Repositori draf FEED/DED Area 1 • Status verifikasi disiplin proses &amp; instrumentasi
-          </p>
-        </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 text-xs">
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5" /> 6 Core Deliverables
-          </span>
-          <span className="px-3.5 py-1.5 bg-[#EAF6FD] text-[#0062CC] rounded-full font-bold flex items-center gap-1.5">
-            <Calendar className="w-3.5 h-3.5" /> Target Tender: 15 Des 2026
-          </span>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+                WORKSPACES • FEED/DED AREA 1
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+                STATUS VERIFIKASI
+              </span>
+            </div>
 
-          {isPM && (
-            <button
-              type="button"
-              onClick={() => setShowUploadModal(true)}
-              className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-            >
-              <Upload className="w-3.5 h-3.5" />
-              Upload Berkas Baru
-            </button>
-          )}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <Layers className="w-3.5 h-3.5" /> 6 Core Deliverables
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5" /> Target Tender: 15 Des 2026
+              </span>
+              {isPM && (
+                <button
+                  type="button"
+                  onClick={() => setShowUploadModal(true)}
+                  className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                >
+                  <Upload className="w-3.5 h-3.5" />
+                  Upload Berkas Baru
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -109,13 +118,13 @@ export const WorkspacesView: React.FC = () => {
         {deliverables.map((item) => (
           <div
             key={item.id}
-            className="bg-white/[0.88] backdrop-blur-md rounded-[28px] p-6 border border-white shadow-cockpit-card flex flex-col justify-between hover:shadow-cockpit-pop transition-all space-y-4"
+            className="glass-card p-6 flex flex-col justify-between hover:shadow-cockpit-pop transition-all space-y-4"
           >
             <div>
               {/* Card Header: Title & Progress */}
               <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="w-8 h-8 rounded-xl bg-[#EAF6FD] text-[#0062CC] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-xl bg-white/70 text-[#0062CC] flex items-center justify-center shrink-0">
                     <FileText className="w-4 h-4" />
                   </div>
                   <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">
@@ -154,19 +163,10 @@ export const WorkspacesView: React.FC = () => {
                 {item.subtitle}
               </p>
 
-              {/* Special Tag (if applicable) */}
-              {item.modelTag && (
-                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#EAF6FD] border border-[#C9DCEB]/50 text-xs">
-                  <span className="text-[10px] text-[#4A5A72] font-semibold">Tautan model:</span>
-                  <span className="font-mono font-bold text-[#0062CC] text-[11px] bg-white px-2 py-0.5 rounded-md border border-white">
-                    {item.modelTag}
-                  </span>
-                </div>
-              )}
             </div>
 
             {/* Bottom Row: Status Badge & Open Button */}
-            <div className="pt-3 border-t border-[#EAF6FD] flex items-center justify-between">
+            <div className="pt-3 border-t border-white/80 flex items-center justify-between">
               <div>
                 {item.status === 'In Review Pembimbing' ? (
                   <span className="px-3 py-1 bg-[#FEF3C7] text-[#92400E] rounded-full text-[11px] font-bold flex items-center gap-1.5">
@@ -195,21 +195,9 @@ export const WorkspacesView: React.FC = () => {
                 Lihat <ExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
+
           </div>
         ))}
-      </div>
-
-      <div className="text-center pt-2 flex items-center justify-center gap-1.5 text-xs text-[#4A5A72] font-medium">
-        <span>Created by</span>
-        <UserChip
-          uid="user-rahul"
-          variant="avatar-nama-jabatan"
-          size="xs"
-          inlineTitle
-          avatarClassName="hidden"
-          nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
-          titleClassName="!text-xs !text-[#4A5A72]"
-        />
       </div>
 
       {/* Edit Deliverable Modal */}
