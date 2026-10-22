@@ -491,7 +491,7 @@ export const WeeklyMoMView: React.FC = () => {
                   <input
                     type="number"
                     min="1"
-                    max="16"
+                    max="18"
                     value={newDeckWeek}
                     onChange={(e) => setNewDeckWeek(Number(e.target.value))}
                     className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
@@ -648,7 +648,7 @@ export const WeeklyMoMView: React.FC = () => {
                   <input
                     type="number"
                     min="1"
-                    max="16"
+                    max="18"
                     value={newMomWeek}
                     onChange={(e) => setNewMomWeek(Number(e.target.value))}
                     className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"

@@ -210,7 +210,12 @@ const SECTION_ITEM_VALIDATORS: Record<
     hasStrings(it, ['id', 'phaseName', 'name']) &&
     typeof it.phaseId === 'number' &&
     typeof it.startWeek === 'number' &&
-    typeof it.endWeek === 'number',
+    typeof it.endWeek === 'number' &&
+    (it.status === undefined ||
+      ['Selesai', 'Berjalan', 'Belum', 'Terlambat', 'Perlu dicek'].includes(
+        String(it.status)
+      )),
+  ganttPhases: (it) => typeof it.id === 'number' && hasStrings(it, ['name']),
   raciRows: (it) => hasStrings(it, ['id', 'deliverable', 'validationStatus']),
   slideDecks: (it) =>
     hasStrings(it, ['id', 'title', 'presenter', 'url']) &&

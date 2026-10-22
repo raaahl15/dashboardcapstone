@@ -5,6 +5,7 @@ import {
   DeliverableItem,
   WeeklyPlanItem,
   GanttTaskItem,
+  GanttPhase,
   RaciRow,
   SlideDeckItem,
   TrackerActionItem,
@@ -466,7 +467,7 @@ export const INITIAL_GANTT_TASKS: GanttTaskItem[] = [
   {
     id: 'gt-11',
     phaseId: 4,
-    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W16)',
+    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W18)',
     name: '4.1 Konsolidasi Laporan',
     pic: 'user-rahul',
     picCode: 'user-rahul',
@@ -476,7 +477,7 @@ export const INITIAL_GANTT_TASKS: GanttTaskItem[] = [
   {
     id: 'gt-12',
     phaseId: 4,
-    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W16)',
+    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W18)',
     name: '4.2 Asistensi Terpadu & ACC',
     pic: 'user-ihsan',
     picCode: 'user-ihsan',
@@ -486,26 +487,33 @@ export const INITIAL_GANTT_TASKS: GanttTaskItem[] = [
   {
     id: 'gt-13',
     phaseId: 4,
-    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W16)',
+    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W18)',
     name: '4.3 Penyerahan Dokumen',
     pic: 'user-rahul',
     picCode: 'user-rahul',
-    startWeek: 14,
-    endWeek: 14,
+    startWeek: 18,
+    endWeek: 18,
     isStageGateMilestone: true,
   },
   {
     id: 'gt-14',
     phaseId: 4,
-    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W16)',
+    phaseName: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W18)',
     name: '4.4 Sidang Stage-Gate',
     pic: 'ALL',
     picCode: 'ALL',
     picName: 'Seluruh Tim',
-    startWeek: 15,
-    endWeek: 16,
+    startWeek: 17,
+    endWeek: 18,
     isCritical: true,
   },
+];
+
+export const INITIAL_GANTT_PHASES: GanttPhase[] = [
+  { id: 1, name: 'FASE 1: INISIASI & KONSEPTUALISASI / URS (W1 - W3)' },
+  { id: 2, name: 'FASE 2: BASIC ENGINEERING / FEED, PFD DAN DRAF P&ID (W4 - W7)' },
+  { id: 3, name: 'FASE 3: SKEMATIK INSTRUMENTASI & TEKNO-EKONOMI (W8 - W11)' },
+  { id: 4, name: 'FASE 4: FINALISASI LAPORAN, OTORISASI ACC & SIDANG TENDER (W12 - W18)' },
 ];
 
 export const INITIAL_RACI_ROWS: RaciRow[] = [

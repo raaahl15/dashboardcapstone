@@ -31,6 +31,7 @@ import {
   DeliverableItem,
   WeeklyPlanItem,
   GanttTaskItem,
+  GanttPhase,
   RaciRow,
   RaciRoleValue,
   SlideDeckItem,
@@ -51,6 +52,7 @@ import {
   INITIAL_DELIVERABLES,
   INITIAL_WEEKLY_PLANS,
   INITIAL_GANTT_TASKS,
+  INITIAL_GANTT_PHASES,
   INITIAL_RACI_ROWS,
   INITIAL_SLIDE_DECKS,
   INITIAL_TRACKER_ACTIONS,
@@ -128,6 +130,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [deliverables, setDeliverables] = useState<DeliverableItem[]>(INITIAL_DELIVERABLES);
   const [weeklyPlans, setWeeklyPlans] = useState<WeeklyPlanItem[]>(INITIAL_WEEKLY_PLANS);
   const [ganttTasks, setGanttTasks] = useState<GanttTaskItem[]>(INITIAL_GANTT_TASKS);
+  const [ganttPhases, setGanttPhases] = useState<GanttPhase[]>(INITIAL_GANTT_PHASES);
   const [raciRows, setRaciRows] = useState<RaciRow[]>(INITIAL_RACI_ROWS);
   const [slideDecks, setSlideDecks] = useState<SlideDeckItem[]>(INITIAL_SLIDE_DECKS);
   const [trackerActions, setTrackerActions] = useState<TrackerActionItem[]>(INITIAL_TRACKER_ACTIONS);
@@ -352,6 +355,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (!pendingKeys.has('deliverables')) setDeliverables(payload.deliverables);
       if (!pendingKeys.has('weeklyPlans')) setWeeklyPlans(payload.weeklyPlans);
       if (!pendingKeys.has('ganttTasks')) setGanttTasks(payload.ganttTasks);
+      if (!pendingKeys.has('ganttPhases')) setGanttPhases(payload.ganttPhases);
       if (!pendingKeys.has('raciRows')) setRaciRows(payload.raciRows);
       if (!pendingKeys.has('slideDecks')) setSlideDecks(payload.slideDecks);
       if (!pendingKeys.has('trackerActions')) setTrackerActions(payload.trackerActions);
@@ -589,6 +593,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       deliverables,
       weeklyPlans,
       ganttTasks,
+      ganttPhases,
       raciRows,
       slideDecks,
       trackerActions,
@@ -674,6 +679,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     deliverables,
     weeklyPlans,
     ganttTasks,
+    ganttPhases,
     raciRows,
     slideDecks,
     trackerActions,
@@ -812,6 +818,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setDeliverables(INITIAL_DELIVERABLES);
     setWeeklyPlans(INITIAL_WEEKLY_PLANS);
     setGanttTasks(INITIAL_GANTT_TASKS);
+    setGanttPhases(INITIAL_GANTT_PHASES);
     setRaciRows(INITIAL_RACI_ROWS);
     setSlideDecks(INITIAL_SLIDE_DECKS);
     setTrackerActions(INITIAL_TRACKER_ACTIONS);
@@ -923,9 +930,49 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setGanttTasks((prev) => [...prev, newTask]);
   };
 
+  const updateGanttTask = (id: string, patch: Partial<GanttTaskItem>) => {
+    if (!isPM) return;
+    const nextPatch = { ...patch };
+    const rawRef = nextPatch.pic || nextPatch.picCode;
+    if (rawRef) {
+      const resolvedUid = rawRef.toUpperCase() === 'ALL' ? 'ALL' : getUser(rawRef)?.id || rawRef;
+      nextPatch.pic = resolvedUid;
+      nextPatch.picCode = resolvedUid;
+    }
+    setGanttTasks((prev) =>
+      prev.map((task) => (task.id === id ? { ...task, ...nextPatch } : task))
+    );
+  };
+
   const deleteGanttTask = (id: string) => {
     if (!isPM) return;
     setGanttTasks((prev) => prev.filter((gt) => gt.id !== id));
+  };
+
+  const addGanttPhase = (phase: Omit<GanttPhase, 'id'>) => {
+    if (!isPM) return 0;
+    const id = ganttPhases.reduce((maxId, item) => Math.max(maxId, item.id), 0) + 1;
+    setGanttPhases((prev) => [...prev, { ...phase, id }]);
+    return id;
+  };
+
+  const updateGanttPhase = (id: number, patch: Partial<GanttPhase>) => {
+    if (!isPM) return;
+    setGanttPhases((prev) =>
+      prev.map((phase) => (phase.id === id ? { ...phase, ...patch, id } : phase))
+    );
+    if (patch.name?.trim()) {
+      const name = patch.name.trim();
+      setGanttTasks((prev) =>
+        prev.map((task) => (task.phaseId === id ? { ...task, phaseName: name } : task))
+      );
+    }
+  };
+
+  const deleteGanttPhase = (id: number) => {
+    if (!isPM || ganttPhases.length <= 1) return;
+    setGanttPhases((prev) => prev.filter((phase) => phase.id !== id));
+    setGanttTasks((prev) => prev.filter((task) => task.phaseId !== id));
   };
 
   const updateRaciCell = (
@@ -1338,6 +1385,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (d.deliverables) setDeliverables(d.deliverables);
     if (d.weeklyPlans) setWeeklyPlans(d.weeklyPlans);
     if (d.ganttTasks) setGanttTasks(d.ganttTasks);
+    if (d.ganttPhases) setGanttPhases(d.ganttPhases);
     if (d.raciRows) setRaciRows(d.raciRows);
     if (d.slideDecks) setSlideDecks(d.slideDecks);
     if (d.trackerActions) setTrackerActions(d.trackerActions);
@@ -1362,6 +1410,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setDeliverables(INITIAL_DELIVERABLES);
     setWeeklyPlans(INITIAL_WEEKLY_PLANS);
     setGanttTasks(INITIAL_GANTT_TASKS);
+    setGanttPhases(INITIAL_GANTT_PHASES);
     setRaciRows(INITIAL_RACI_ROWS);
     setSlideDecks(INITIAL_SLIDE_DECKS);
     setTrackerActions(INITIAL_TRACKER_ACTIONS);
@@ -1499,7 +1548,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         ganttTasks,
         addGanttTask,
+        updateGanttTask,
         deleteGanttTask,
+        ganttPhases,
+        addGanttPhase,
+        updateGanttPhase,
+        deleteGanttPhase,
 
         raciRows,
         updateRaciCell,

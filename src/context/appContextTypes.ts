@@ -6,6 +6,7 @@ import {
   DeliverableItem,
   WeeklyPlanItem,
   GanttTaskItem,
+  GanttPhase,
   RaciRow,
   RaciRoleValue,
   SlideDeckItem,
@@ -26,6 +27,7 @@ import {
   INITIAL_DELIVERABLES,
   INITIAL_WEEKLY_PLANS,
   INITIAL_GANTT_TASKS,
+  INITIAL_GANTT_PHASES,
   INITIAL_RACI_ROWS,
   INITIAL_SLIDE_DECKS,
   INITIAL_TRACKER_ACTIONS,
@@ -93,7 +95,12 @@ export interface AppContextType {
 
   ganttTasks: GanttTaskItem[];
   addGanttTask: (task: Omit<GanttTaskItem, 'id'>) => void;
+  updateGanttTask: (id: string, patch: Partial<GanttTaskItem>) => void;
   deleteGanttTask: (id: string) => void;
+  ganttPhases: GanttPhase[];
+  addGanttPhase: (phase: Omit<GanttPhase, 'id'>) => number;
+  updateGanttPhase: (id: number, patch: Partial<GanttPhase>) => void;
+  deleteGanttPhase: (id: number) => void;
 
   raciRows: RaciRow[];
   updateRaciCell: (
@@ -165,6 +172,7 @@ export interface SharedProjectData {
   deliverables: DeliverableItem[];
   weeklyPlans: WeeklyPlanItem[];
   ganttTasks: GanttTaskItem[];
+  ganttPhases: GanttPhase[];
   raciRows: RaciRow[];
   slideDecks: SlideDeckItem[];
   trackerActions: TrackerActionItem[];
@@ -184,6 +192,7 @@ export const INITIAL_PROJECT_DATA: SharedProjectData = {
   deliverables: INITIAL_DELIVERABLES,
   weeklyPlans: INITIAL_WEEKLY_PLANS,
   ganttTasks: INITIAL_GANTT_TASKS,
+  ganttPhases: INITIAL_GANTT_PHASES,
   raciRows: INITIAL_RACI_ROWS,
   slideDecks: INITIAL_SLIDE_DECKS,
   trackerActions: INITIAL_TRACKER_ACTIONS,
@@ -221,6 +230,7 @@ export const SECTION_KEYS = [
   'deliverables',
   'weeklyPlans',
   'ganttTasks',
+  'ganttPhases',
   'raciRows',
   'slideDecks',
   'trackerActions',

@@ -105,6 +105,14 @@ export interface GanttTaskItem {
   endWeek: number;   // 1 - 16
   isCritical?: boolean;
   isStageGateMilestone?: boolean;
+  status?: GanttTaskStatus;
+}
+
+export type GanttTaskStatus = 'Selesai' | 'Berjalan' | 'Belum' | 'Terlambat' | 'Perlu dicek';
+
+export interface GanttPhase {
+  id: number;
+  name: string;
 }
 
 export type RaciRoleValue = 'R' | 'A' | 'C' | 'I' | '';
