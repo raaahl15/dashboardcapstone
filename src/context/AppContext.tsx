@@ -267,9 +267,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       if (isLiveFirebaseConfig && db && auth?.currentUser) {
         const firestoreDb = db;
         const userDocRef = typedDoc<User>(firestoreDb, 'users', uid);
+        const firestoreChanges = { ...changedFields };
+        if (
+          isPM &&
+          !('nickname' in firestoreChanges) &&
+          targetUser.nickname.trim().length >= 1 &&
+          targetUser.nickname.trim().length <= 60
+        ) {
+          firestoreChanges.nickname = targetUser.nickname.trim();
+        }
         try {
           await updateDoc(userDocRef, {
-            ...changedFields,
+            ...firestoreChanges,
             updatedAt: serverTimestamp(),
             updatedBy: actorUid,
           });
