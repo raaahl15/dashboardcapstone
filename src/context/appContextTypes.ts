@@ -112,20 +112,25 @@ export interface AppContextType {
 
   slideDecks: SlideDeckItem[];
   addSlideDeck: (deck: Omit<SlideDeckItem, 'id'>) => void;
+  updateSlideDeck: (id: string, patch: Partial<Omit<SlideDeckItem, 'id'>>) => void;
   deleteSlideDeck: (id: string) => void;
 
   trackerActions: TrackerActionItem[];
   addTrackerAction: (item: Omit<TrackerActionItem, 'id' | 'code'>) => void;
+  updateTrackerAction: (id: string, patch: Partial<Omit<TrackerActionItem, 'id' | 'code'>>) => void;
   toggleTrackerActionStatus: (id: string) => void;
   deleteTrackerAction: (id: string) => void;
 
   meetingLogs: MeetingLogItem[];
   addMeetingLog: (log: Omit<MeetingLogItem, 'id'>) => void;
+  updateMeetingLog: (id: string, patch: Partial<Omit<MeetingLogItem, 'id'>>) => void;
   deleteMeetingLog: (id: string) => void;
 
   regulations: RegulationDirective[];
+  updateRegulation: (id: string, patch: Partial<Omit<RegulationDirective, 'id'>>) => void;
   standards: StandardReferenceItem[];
   addStandard: (std: Omit<StandardReferenceItem, 'id'>) => void;
+  updateStandard: (id: string, patch: Partial<Omit<StandardReferenceItem, 'id'>>) => void;
   deleteStandard: (id: string) => void;
 
   logbooks: LogbookItem[];

@@ -10,35 +10,50 @@ import {
   Check,
   FileCheck2,
   BookOpen,
+  Pencil,
 } from 'lucide-react';
 
 export const WeeklyMoMView: React.FC = () => {
   const {
     slideDecks,
     addSlideDeck,
+    updateSlideDeck,
     deleteSlideDeck,
     trackerActions,
     addTrackerAction,
+    updateTrackerAction,
     toggleTrackerActionStatus,
     deleteTrackerAction,
     meetingLogs,
     addMeetingLog,
+    updateMeetingLog,
     deleteMeetingLog,
+    getUser,
     users,
     isPM,
   } = useApp();
 
   // Modals
   const [showDeckModal, setShowDeckModal] = useState(false);
+  const [editingDeckId, setEditingDeckId] = useState<string | null>(null);
   const [newDeckWeek, setNewDeckWeek] = useState(5);
   const [newDeckTitle, setNewDeckTitle] = useState('');
   const [newDeckPresenter, setNewDeckPresenter] = useState('user-rahul');
+  const [newDeckDate, setNewDeckDate] = useState(() =>
+    new Date().toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    })
+  );
   const [newDeckUrl, setNewDeckUrl] = useState('');
 
   const [showActionModal, setShowActionModal] = useState(false);
+  const [editingActionId, setEditingActionId] = useState<string | null>(null);
   const [newActionWeek, setNewActionWeek] = useState('W5');
   const [newActionIssue, setNewActionIssue] = useState('');
   const [newActionPic, setNewActionPic] = useState('user-ihsan');
+  const [newActionProgress, setNewActionProgress] = useState<'Resolved' | 'In Progress'>('In Progress');
   const [newActionDeadline, setNewActionDeadline] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() + 7);
@@ -46,6 +61,7 @@ export const WeeklyMoMView: React.FC = () => {
   });
 
   const [showMomModal, setShowMomModal] = useState(false);
+  const [editingMomId, setEditingMomId] = useState<string | null>(null);
   const [newMomWeek, setNewMomWeek] = useState(5);
   const [newMomDate, setNewMomDate] = useState(() => {
     const now = new Date();
@@ -56,66 +72,167 @@ export const WeeklyMoMView: React.FC = () => {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${dayName}, ${formatted} - ${hours}:${minutes} WIB`;
   });
-  const [newMomLocation] = useState('Ruang Asistensi DTNTF');
+  const [newMomLocation, setNewMomLocation] = useState('Ruang Asistensi DTNTF');
+  const [newMomEvaluator, setNewMomEvaluator] = useState('Dosen Pembimbing (Dr. Ir. Chemical Eng)');
+  const [newMomMembers, setNewMomMembers] = useState<string[]>([]);
   const [newMomTopic, setNewMomTopic] = useState('');
   const [newMomSummary, setNewMomSummary] = useState('');
 
   const activeActionsCount = trackerActions.filter((a) => a.progress === 'In Progress').length;
 
-  const handleCreateDeck = (e: React.FormEvent) => {
+  const openAddDeckModal = () => {
+    setEditingDeckId(null);
+    setNewDeckWeek(5);
+    setNewDeckTitle('');
+    setNewDeckPresenter('user-rahul');
+    setNewDeckDate(new Date().toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }));
+    setNewDeckUrl('');
+    setShowDeckModal(true);
+  };
+
+  const openEditDeckModal = (deck: (typeof slideDecks)[number]) => {
+    setEditingDeckId(deck.id);
+    setNewDeckWeek(deck.week);
+    setNewDeckTitle(deck.title);
+    const presenterRef = deck.presenter || deck.presenterCode || 'user-rahul';
+    setNewDeckPresenter(getUser(presenterRef)?.id || presenterRef);
+    setNewDeckDate(deck.date);
+    setNewDeckUrl(deck.url === '#' ? '' : deck.url);
+    setShowDeckModal(true);
+  };
+
+  const handleSaveDeck = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newDeckTitle.trim()) return;
 
-    addSlideDeck({
+    const originalDeck = slideDecks.find((deck) => deck.id === editingDeckId);
+    const deckData = {
       week: newDeckWeek,
       weekLabel: `Week ${newDeckWeek}`,
-      title: newDeckTitle,
+      title: newDeckTitle.trim(),
       presenter: newDeckPresenter,
-      date: new Date().toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      }),
-      url: newDeckUrl || 'https://drive.google.com/presentation/d/new-deck',
-    });
+      date: newDeckDate.trim(),
+      url: newDeckUrl.trim() || (originalDeck?.url ?? 'https://drive.google.com/presentation/d/new-deck'),
+    };
+
+    if (editingDeckId) updateSlideDeck(editingDeckId, deckData);
+    else addSlideDeck(deckData);
+
+    setEditingDeckId(null);
     setNewDeckTitle('');
     setShowDeckModal(false);
   };
 
-  const handleCreateAction = (e: React.FormEvent) => {
+  const openAddActionModal = () => {
+    setEditingActionId(null);
+    setNewActionWeek('W5');
+    setNewActionIssue('');
+    setNewActionPic('user-ihsan');
+    setNewActionProgress('In Progress');
+    const deadline = new Date();
+    deadline.setDate(deadline.getDate() + 7);
+    setNewActionDeadline(deadline.toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }));
+    setShowActionModal(true);
+  };
+
+  const openEditActionModal = (action: (typeof trackerActions)[number]) => {
+    setEditingActionId(action.id);
+    setNewActionWeek(action.week);
+    setNewActionIssue(action.issue);
+    const picRef = action.pic || action.picCode || 'user-ihsan';
+    setNewActionPic(getUser(picRef)?.id || picRef);
+    setNewActionProgress(action.progress);
+    setNewActionDeadline(action.deadline);
+    setShowActionModal(true);
+  };
+
+  const handleSaveAction = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newActionIssue.trim()) return;
 
-    addTrackerAction({
-      week: newActionWeek,
-      issue: newActionIssue,
+    const actionData = {
+      week: newActionWeek.trim(),
+      issue: newActionIssue.trim(),
       pic: newActionPic,
       picCode: newActionPic,
-      deadline: newActionDeadline,
-      progress: 'In Progress',
-    });
+      deadline: newActionDeadline.trim(),
+      progress: newActionProgress,
+    };
+
+    if (editingActionId) updateTrackerAction(editingActionId, actionData);
+    else addTrackerAction(actionData);
+
+    setEditingActionId(null);
     setNewActionIssue('');
     setShowActionModal(false);
   };
 
-  const handleCreateMom = (e: React.FormEvent) => {
+  const openAddMomModal = () => {
+    const now = new Date();
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const formatted = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    setEditingMomId(null);
+    setNewMomWeek(5);
+    setNewMomDate(`${days[now.getDay()]}, ${formatted} - ${hours}:${minutes} WIB`);
+    setNewMomLocation('Ruang Asistensi DTNTF');
+    setNewMomEvaluator('Dosen Pembimbing (Dr. Ir. Chemical Eng)');
+    setNewMomMembers(users.map((user) => user.id));
+    setNewMomTopic('');
+    setNewMomSummary('');
+    setShowMomModal(true);
+  };
+
+  const openEditMomModal = (log: (typeof meetingLogs)[number]) => {
+    setEditingMomId(log.id);
+    setNewMomWeek(log.week);
+    setNewMomDate(log.dayText);
+    setNewMomLocation(log.location);
+    setNewMomEvaluator(log.evaluator);
+    setNewMomMembers(log.presentMembers.map((ref) => getUser(ref)?.id || ref));
+    setNewMomTopic(log.topic);
+    setNewMomSummary(log.summary);
+    setShowMomModal(true);
+  };
+
+  const handleSaveMom = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMomTopic.trim()) return;
 
-    addMeetingLog({
+    const momData = {
       week: newMomWeek,
       weekLabel: `Week ${newMomWeek}`,
-      dayText: newMomDate,
+      dayText: newMomDate.trim(),
       location: newMomLocation,
-      evaluator: 'Dosen Pembimbing (Dr. Ir. Chemical Eng)',
-      presenceRatio: `${users.length}/${users.length} Hadir`,
-      presentMembers: users.map((u) => u.id),
-      topic: newMomTopic,
-      summary: newMomSummary,
-    });
+      evaluator: newMomEvaluator.trim(),
+      presenceRatio: `${newMomMembers.length}/${users.length} Hadir`,
+      presentMembers: newMomMembers,
+      topic: newMomTopic.trim(),
+      summary: newMomSummary.trim(),
+    };
+
+    if (editingMomId) updateMeetingLog(editingMomId, momData);
+    else addMeetingLog(momData);
+
+    setEditingMomId(null);
     setNewMomTopic('');
     setNewMomSummary('');
     setShowMomModal(false);
+  };
+
+  const toggleMomMember = (uid: string) => {
+    setNewMomMembers((prev) =>
+      prev.includes(uid) ? prev.filter((memberId) => memberId !== uid) : [...prev, uid]
+    );
   };
 
   return (
@@ -204,7 +321,7 @@ export const WeeklyMoMView: React.FC = () => {
             {isPM && (
               <button
                 type="button"
-                onClick={() => setShowDeckModal(true)}
+                onClick={openAddDeckModal}
                 className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -245,14 +362,25 @@ export const WeeklyMoMView: React.FC = () => {
 
                   <div className="flex items-center gap-1.5">
                     {isPM && (
-                      <button
-                        type="button"
-                        onClick={() => deleteSlideDeck(deck.id)}
-                        className="p-1 text-[#4A5A72] hover:text-[#B91C1C]"
-                        title="Hapus Slide Deck"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => openEditDeckModal(deck)}
+                          className="p-1 text-[#4A5A72] hover:text-[#0062CC]"
+                          title="Edit Slide Deck"
+                          aria-label={`Edit Slide Deck ${deck.title}`}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deleteSlideDeck(deck.id)}
+                          className="p-1 text-[#4A5A72] hover:text-[#B91C1C]"
+                          title="Hapus Slide Deck"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
                     )}
                     <a
                       href={deck.url}
@@ -291,7 +419,7 @@ export const WeeklyMoMView: React.FC = () => {
               {isPM && (
                 <button
                   type="button"
-                  onClick={() => setShowActionModal(true)}
+                  onClick={openAddActionModal}
                   className="min-h-[44px] px-4 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1 shadow-xs transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 text-[#0062CC]" />
@@ -359,14 +487,26 @@ export const WeeklyMoMView: React.FC = () => {
                       </td>
                       {isPM && (
                         <td className="p-3 text-center">
-                          <button
-                            type="button"
-                            onClick={() => deleteTrackerAction(act.id)}
-                            className="text-[#4A5A72] hover:text-[#B91C1C]"
-                            title="Hapus Baris Action"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => openEditActionModal(act)}
+                              className="text-[#4A5A72] hover:text-[#0062CC]"
+                              title="Edit Action"
+                              aria-label={`Edit Action ${act.code}`}
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => deleteTrackerAction(act.id)}
+                              className="text-[#4A5A72] hover:text-[#B91C1C]"
+                              title="Hapus Baris Action"
+                              aria-label={`Hapus Action ${act.code}`}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </td>
                       )}
                     </tr>
@@ -394,7 +534,7 @@ export const WeeklyMoMView: React.FC = () => {
                 {isPM && (
                   <button
                     type="button"
-                    onClick={() => setShowMomModal(true)}
+                    onClick={openAddMomModal}
                     className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -423,6 +563,17 @@ export const WeeklyMoMView: React.FC = () => {
                       <span className="text-[11px] text-[#4A5A72] flex items-center gap-1">
                         {log.location}
                       </span>
+                      {isPM && (
+                        <button
+                          type="button"
+                          onClick={() => openEditMomModal(log)}
+                          className="min-h-[44px] min-w-[44px] rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] flex items-center justify-center transition-colors"
+                          title="Edit catatan MoM"
+                          aria-label={`Edit MoM ${log.weekLabel}`}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                      )}
                       {isPM && (
                         <button
                           type="button"
@@ -480,11 +631,11 @@ export const WeeklyMoMView: React.FC = () => {
       {/* ========================================================================= */}
       {showDeckModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
             <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Tambah Slide Deck Asistensi
+              {editingDeckId ? 'Edit Slide Deck Asistensi' : 'Tambah Slide Deck Asistensi'}
             </h3>
-            <form onSubmit={handleCreateDeck} className="mt-4 space-y-3">
+            <form onSubmit={handleSaveDeck} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold mb-1">Minggu</label>
@@ -527,6 +678,18 @@ export const WeeklyMoMView: React.FC = () => {
               </div>
 
               <div>
+                <label className="block text-xs font-semibold mb-1">Tanggal</label>
+                <input
+                  type="text"
+                  value={newDeckDate}
+                  onChange={(e) => setNewDeckDate(e.target.value)}
+                  placeholder="Contoh: 22 Okt 2026"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  required
+                />
+              </div>
+
+              <div>
                 <label className="block text-xs font-semibold mb-1">Tautan Drive (URL)</label>
                 <input
                   type="url"
@@ -540,7 +703,10 @@ export const WeeklyMoMView: React.FC = () => {
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowDeckModal(false)}
+                  onClick={() => {
+                    setShowDeckModal(false);
+                    setEditingDeckId(null);
+                  }}
                   className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
                 >
                   Batal
@@ -549,7 +715,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="submit"
                   className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
-                  Simpan Deck
+                  {editingDeckId ? 'Simpan Perubahan' : 'Simpan Deck'}
                 </button>
               </div>
             </form>
@@ -559,11 +725,11 @@ export const WeeklyMoMView: React.FC = () => {
 
       {showActionModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
             <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Tambah Action Item Asistensi
+              {editingActionId ? 'Edit Action Item Asistensi' : 'Tambah Action Item Asistensi'}
             </h3>
-            <form onSubmit={handleCreateAction} className="mt-4 space-y-3">
+            <form onSubmit={handleSaveAction} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold mb-1">Sesi Asistensi</label>
@@ -615,10 +781,27 @@ export const WeeklyMoMView: React.FC = () => {
                 />
               </div>
 
+              <div>
+                <label className="block text-xs font-semibold mb-1">Status</label>
+                <select
+                  value={newActionProgress}
+                  onChange={(e) =>
+                    setNewActionProgress(e.target.value as 'Resolved' | 'In Progress')
+                  }
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                >
+                  <option value="In Progress">In Progress</option>
+                  <option value="Resolved">Resolved</option>
+                </select>
+              </div>
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowActionModal(false)}
+                  onClick={() => {
+                    setShowActionModal(false);
+                    setEditingActionId(null);
+                  }}
                   className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
                 >
                   Batal
@@ -627,7 +810,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="submit"
                   className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
-                  Simpan Action
+                  {editingActionId ? 'Simpan Perubahan' : 'Simpan Action'}
                 </button>
               </div>
             </form>
@@ -637,11 +820,11 @@ export const WeeklyMoMView: React.FC = () => {
 
       {showMomModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
             <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Tambah Catatan Meeting Log (MoM)
+              {editingMomId ? 'Edit Catatan Meeting Log (MoM)' : 'Tambah Catatan Meeting Log (MoM)'}
             </h3>
-            <form onSubmit={handleCreateMom} className="mt-4 space-y-3">
+            <form onSubmit={handleSaveMom} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold mb-1">Minggu</label>
@@ -666,6 +849,48 @@ export const WeeklyMoMView: React.FC = () => {
                   />
                 </div>
               </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Lokasi / Media</label>
+                <input
+                  type="text"
+                  value={newMomLocation}
+                  onChange={(e) => setNewMomLocation(e.target.value)}
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Dosen Evaluator</label>
+                <input
+                  type="text"
+                  value={newMomEvaluator}
+                  onChange={(e) => setNewMomEvaluator(e.target.value)}
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  required
+                />
+              </div>
+
+              <fieldset className="space-y-2">
+                <legend className="block text-xs font-semibold">Anggota Hadir</legend>
+                <div className="grid grid-cols-2 gap-2">
+                  {users.map((user) => (
+                    <label
+                      key={user.id}
+                      className="flex items-center gap-2 rounded-xl border border-[#EAF6FD] px-3 py-2 text-xs"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={newMomMembers.includes(user.id)}
+                        onChange={() => toggleMomMember(user.id)}
+                        className="accent-[#0062CC]"
+                      />
+                      <span>{user.nickname}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
 
               <div>
                 <label className="block text-xs font-semibold mb-1">Topik Utama</label>
@@ -694,7 +919,10 @@ export const WeeklyMoMView: React.FC = () => {
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowMomModal(false)}
+                  onClick={() => {
+                    setShowMomModal(false);
+                    setEditingMomId(null);
+                  }}
                   className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
                 >
                   Batal
@@ -703,7 +931,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="submit"
                   className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
-                  Simpan MoM
+                  {editingMomId ? 'Simpan Perubahan' : 'Simpan MoM'}
                 </button>
               </div>
             </form>

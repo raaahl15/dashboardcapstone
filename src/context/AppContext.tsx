@@ -1063,6 +1063,29 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSlideDecks((prev) => [item, ...prev]);
   };
 
+  const updateSlideDeck = (
+    id: string,
+    patch: Partial<Omit<SlideDeckItem, 'id'>>
+  ) => {
+    if (!isPM) return;
+    setSlideDecks((prev) =>
+      prev.map((deck) =>
+        deck.id === id
+          ? {
+              ...deck,
+              ...patch,
+              ...(patch.presenter !== undefined
+                ? { presenter: getUser(patch.presenter)?.id || patch.presenter }
+                : {}),
+              ...(patch.url !== undefined
+                ? { url: sanitizeExternalUrl(patch.url) }
+                : {}),
+            }
+          : deck
+      )
+    );
+  };
+
   const deleteSlideDeck = (id: string) => {
     if (!isPM) return;
     setSlideDecks((prev) => prev.filter((d) => d.id !== id));
@@ -1090,6 +1113,30 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         };
         return [...list, newItem];
       },
+      setTrackerActions
+    );
+  };
+
+  const updateTrackerAction = (
+    id: string,
+    patch: Partial<Omit<TrackerActionItem, 'id' | 'code'>>
+  ) => {
+    if (!isPM) return;
+    const rawRef = patch.pic || patch.picCode;
+    const resolvedUid = rawRef ? getUser(rawRef)?.id || rawRef : undefined;
+    commitSectionTransaction(
+      'trackerActions',
+      trackerActions,
+      (list) =>
+        list.map((action) =>
+          action.id === id
+            ? {
+                ...action,
+                ...patch,
+                ...(resolvedUid ? { pic: resolvedUid, picCode: resolvedUid } : {}),
+              }
+            : action
+        ),
       setTrackerActions
     );
   };
@@ -1134,9 +1181,53 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setMeetingLogs((prev) => [newLog, ...prev]);
   };
 
+  const updateMeetingLog = (
+    id: string,
+    patch: Partial<Omit<MeetingLogItem, 'id'>>
+  ) => {
+    if (!isPM) return;
+    setMeetingLogs((prev) =>
+      prev.map((log) =>
+        log.id === id
+          ? {
+              ...log,
+              ...patch,
+              ...(patch.presentMembers
+                ? {
+                    presentMembers: patch.presentMembers.map(
+                      (ref) => getUser(ref)?.id || ref
+                    ),
+                  }
+                : {}),
+            }
+          : log
+      )
+    );
+  };
+
   const deleteMeetingLog = (id: string) => {
     if (!isPM) return;
     setMeetingLogs((prev) => prev.filter((log) => log.id !== id));
+  };
+
+  const updateRegulation = (
+    id: string,
+    patch: Partial<Omit<RegulationDirective, 'id'>>
+  ) => {
+    if (!isPM) return;
+    setRegulations((prev) =>
+      prev.map((regulation) =>
+        regulation.id === id
+          ? {
+              ...regulation,
+              ...patch,
+              ...(patch.url !== undefined
+                ? { url: sanitizeExternalUrl(patch.url) }
+                : {}),
+            }
+          : regulation
+      )
+    );
   };
 
   const addStandard = (std: Omit<StandardReferenceItem, 'id'>) => {
@@ -1147,6 +1238,26 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       id: `std-${newId()}`,
     };
     setStandards((prev) => [...prev, newStd]);
+  };
+
+  const updateStandard = (
+    id: string,
+    patch: Partial<Omit<StandardReferenceItem, 'id'>>
+  ) => {
+    if (!isPM) return;
+    setStandards((prev) =>
+      prev.map((standard) =>
+        standard.id === id
+          ? {
+              ...standard,
+              ...patch,
+              ...(patch.url !== undefined
+                ? { url: sanitizeExternalUrl(patch.url) }
+                : {}),
+            }
+          : standard
+      )
+    );
   };
 
   const deleteStandard = (id: string) => {
@@ -1570,20 +1681,25 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         slideDecks,
         addSlideDeck,
+        updateSlideDeck,
         deleteSlideDeck,
 
         trackerActions,
         addTrackerAction,
+        updateTrackerAction,
         toggleTrackerActionStatus,
         deleteTrackerAction,
 
         meetingLogs,
         addMeetingLog,
+        updateMeetingLog,
         deleteMeetingLog,
 
         regulations,
+        updateRegulation,
         standards,
         addStandard,
+        updateStandard,
         deleteStandard,
 
         logbooks,

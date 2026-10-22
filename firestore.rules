@@ -80,7 +80,20 @@ service cloud.firestore {
       );
     }
 
-    // Helper: Validasi tipe, struktur kunci, dan batasan nilai dokumen users/{uid}
+    // Helper: Validasi field wajib profil pengguna.
+    function hasValidUserFields(data) {
+      return data.name is string
+        && data.name.size() >= 1
+        && data.name.size() <= 60
+        && data.nickname is string
+        && data.nickname.size() >= 1
+        && data.nickname.size() <= 60
+        && data.email is string
+        && data.jobdesk is list
+        && data.role in ['admin', 'member'];
+    }
+
+    // Dokumen baru harus memakai skema yang dikenal.
     function isValidUserData(data) {
       return data.keys().hasOnly([
           'id',
@@ -103,15 +116,7 @@ service cloud.firestore {
           'updatedAt',
           'updatedBy'
         ])
-        && data.name is string
-        && data.name.size() >= 1
-        && data.name.size() <= 60
-        && data.nickname is string
-        && data.nickname.size() >= 1
-        && data.nickname.size() <= 60
-        && data.email is string
-        && data.jobdesk is list
-        && data.role in ['admin', 'member'];
+        && hasValidUserFields(data);
     }
 
     // Helper: Bootstrap pembuatan dokumen awal koleksi users (mencegah masalah ayam-dan-telur saat DB kosong)
@@ -241,7 +246,8 @@ service cloud.firestore {
         && (isAdmin() || isCanonicalInitialUserSeed(uid));
 
       // 3. Ubah dokumen: pemilik (hanya field profil pribadi) atau admin (jabatan & profil anggota)
-      allow update: if isValidUserData(request.resource.data)
+      // Abaikan field legacy yang sudah ada, tetapi tetap validasi field wajib dan batasi field yang berubah.
+      allow update: if hasValidUserFields(request.resource.data)
         && (isOwnerAllowedProfileUpdate(uid) || isAdminAllowedUpdate(uid));
 
       // 4. Hapus dokumen: hanya oleh admin, dan admin tidak boleh menghapus dirinya sendiri

@@ -7,39 +7,108 @@ import {
   ExternalLink,
   Plus,
   Trash2,
+  Pencil,
 } from 'lucide-react';
 
 export const StandardsView: React.FC = () => {
   const {
     regulations,
+    updateRegulation,
     standards,
     addStandard,
+    updateStandard,
     deleteStandard,
     isPM,
   } = useApp();
 
   const [showAddModal, setShowAddModal] = useState(false);
+  const [editingRegulationId, setEditingRegulationId] = useState<string | null>(null);
+  const [regulationTitle, setRegulationTitle] = useState('');
+  const [regulationSubtitle, setRegulationSubtitle] = useState('');
+  const [regulationBadge, setRegulationBadge] = useState('');
+  const [regulationUrl, setRegulationUrl] = useState('');
+  const [editingStandardId, setEditingStandardId] = useState<string | null>(null);
   const [newCode, setNewCode] = useState('');
   const [newSubCode, setNewSubCode] = useState('ISA');
   const [newTitle, setNewTitle] = useState('');
   const [newSubtitle, setNewSubtitle] = useState('');
   const [newUrl, setNewUrl] = useState('');
 
-  const handleCreateStandard = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCode.trim() || !newTitle.trim()) return;
+  const openEditRegulationModal = (regulation: (typeof regulations)[number]) => {
+    setEditingRegulationId(regulation.id);
+    setRegulationTitle(regulation.title);
+    setRegulationSubtitle(regulation.subtitle);
+    setRegulationBadge(regulation.badge);
+    setRegulationUrl(regulation.url === '#' ? '' : regulation.url);
+  };
 
-    addStandard({
-      code: newCode.trim(),
-      subCode: newSubCode.trim(),
-      title: newTitle.trim(),
-      subtitle: newSubtitle.trim() || 'Standar kepatuhan perancangan proses',
-      url: newUrl.trim() || 'https://www.iso.org',
+  const handleSaveRegulation = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingRegulationId || !regulationTitle.trim()) return;
+
+    const original = regulations.find((reg) => reg.id === editingRegulationId);
+    if (!original) return;
+
+    updateRegulation(editingRegulationId, {
+      title: regulationTitle.trim(),
+      subtitle: regulationSubtitle.trim(),
+      badge: regulationBadge.trim(),
+      url: regulationUrl.trim() || original.url,
     });
+    setEditingRegulationId(null);
+  };
+
+  const openAddModal = () => {
+    setEditingStandardId(null);
     setNewCode('');
+    setNewSubCode('ISA');
     setNewTitle('');
     setNewSubtitle('');
     setNewUrl('');
+    setShowAddModal(true);
+  };
+
+  const openEditModal = (standard: (typeof standards)[number]) => {
+    setEditingStandardId(standard.id);
+    setNewCode(standard.code);
+    setNewSubCode(standard.subCode);
+    setNewTitle(standard.title);
+    setNewSubtitle(standard.subtitle);
+    setNewUrl(standard.url === '#' ? '' : standard.url);
+    setShowAddModal(true);
+  };
+
+  const handleSaveStandard = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCode.trim() || !newTitle.trim()) return;
+
+    const standardData = {
+      code: newCode.trim(),
+      subCode: newSubCode.trim(),
+      title: newTitle.trim(),
+      subtitle: newSubtitle.trim(),
+      url:
+        newUrl.trim() ||
+        (editingStandardId
+          ? standards.find((standard) => standard.id === editingStandardId)?.url || '#'
+          : 'https://www.iso.org'),
+    };
+
+    if (editingStandardId) {
+      updateStandard(editingStandardId, standardData);
+    } else {
+      addStandard({
+        ...standardData,
+        subtitle: standardData.subtitle || 'Standar kepatuhan perancangan proses',
+      });
+    }
+
+    setNewCode('');
+    setNewSubCode('ISA');
+    setNewTitle('');
+    setNewSubtitle('');
+    setNewUrl('');
+    setEditingStandardId(null);
     setShowAddModal(false);
   };
 
@@ -98,15 +167,28 @@ export const StandardsView: React.FC = () => {
                 <div className="w-10 h-10 rounded-2xl bg-white/70 text-[#0062CC] flex items-center justify-center shadow-xs">
                   <FileText className="w-5 h-5" />
                 </div>
-                <a
-                  href={reg.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Buka dokumen ${reg.title}`}
-                  className="text-[#4A5A72] hover:text-[#0062CC] transition-colors"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
+                <div className="flex items-center gap-2">
+                  {isPM && (
+                    <button
+                      type="button"
+                      onClick={() => openEditRegulationModal(reg)}
+                      aria-label={`Edit regulasi ${reg.title}`}
+                      title="Edit Regulasi"
+                      className="w-10 h-10 rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] transition-colors flex items-center justify-center"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                  )}
+                  <a
+                    href={reg.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Buka dokumen ${reg.title}`}
+                    className="text-[#4A5A72] hover:text-[#0062CC] transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
 
               <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33] mb-1.5 leading-snug">
@@ -153,7 +235,7 @@ export const StandardsView: React.FC = () => {
 
           {isPM && (
             <button
-              onClick={() => setShowAddModal(true)}
+              onClick={openAddModal}
               className="px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -176,14 +258,24 @@ export const StandardsView: React.FC = () => {
                   </span>
                   <div className="flex items-center gap-1 text-[#4A5A72]">
                     {isPM && (
-                      <button
-                        onClick={() => deleteStandard(std.id)}
-                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-[#B91C1C] transition-colors"
-                        title="Hapus Standar"
-                        aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                      <>
+                        <button
+                          onClick={() => openEditModal(std)}
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-[#EAF6FD] hover:text-[#0062CC] transition-colors"
+                          title="Edit Standar"
+                          aria-label={`Edit Standar ${std.subCode} - ${std.title}`}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() => deleteStandard(std.id)}
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-[#B91C1C] transition-colors"
+                          title="Hapus Standar"
+                          aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -209,14 +301,84 @@ export const StandardsView: React.FC = () => {
         </div>
       </div>
 
-      {/* Add Standard Modal */}
+      {/* Edit Regulation Modal */}
+      {editingRegulationId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+              Edit Regulasi Utama
+            </h3>
+            <form onSubmit={handleSaveRegulation} className="mt-4 space-y-3">
+              <div>
+                <label className="block text-xs font-semibold mb-1">Judul Regulasi</label>
+                <input
+                  type="text"
+                  value={regulationTitle}
+                  onChange={(e) => setRegulationTitle(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Narasi / Deskripsi</label>
+                <textarea
+                  rows={3}
+                  value={regulationSubtitle}
+                  onChange={(e) => setRegulationSubtitle(e.target.value)}
+                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Badge</label>
+                <input
+                  type="text"
+                  value={regulationBadge}
+                  onChange={(e) => setRegulationBadge(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold mb-1">Tautan Dokumen (URL)</label>
+                <input
+                  type="url"
+                  value={regulationUrl}
+                  onChange={(e) => setRegulationUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setEditingRegulationId(null)}
+                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                >
+                  Simpan Perubahan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add/Edit Standard Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
           <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
             <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Tambah Standar Rujukan Baru
+              {editingStandardId ? 'Edit Standar Rujukan' : 'Tambah Standar Rujukan Baru'}
             </h3>
-            <form onSubmit={handleCreateStandard} className="mt-4 space-y-3">
+            <form onSubmit={handleSaveStandard} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold mb-1">Kode Standar</label>
@@ -279,7 +441,10 @@ export const StandardsView: React.FC = () => {
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setEditingStandardId(null);
+                  }}
                   className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
                 >
                   Batal
@@ -288,7 +453,7 @@ export const StandardsView: React.FC = () => {
                   type="submit"
                   className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
-                  Simpan Standar
+                  {editingStandardId ? 'Simpan Perubahan' : 'Simpan Standar'}
                 </button>
               </div>
             </form>
