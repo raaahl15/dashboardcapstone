@@ -19,6 +19,11 @@ import {
   DefenseQuestion,
   PhysicalBundleItem,
   AppNotification,
+  WorkOrder,
+  WorkOrderChecklistItem,
+  CreateWorkOrderInput,
+  UpdateWorkOrderMetaInput,
+  WorkOrderDraft,
 } from '../types';
 import {
   INITIAL_USERS,
@@ -44,6 +49,7 @@ import { MigrationPreviewResult } from '../utils/migrateUserRefs';
 
 export type NavTab =
   | 'homepage'
+  | 'work-orders'
   | 'schedule'
   | 'team-raci'
   | 'weekly-mom'
@@ -153,6 +159,38 @@ export interface AppContextType {
   notifications: AppNotification[];
   markNotificationAsRead: (id: string) => void;
   markAllNotificationsAsRead: () => void;
+
+  // Work Orders (Menu ke-9)
+  workOrders: WorkOrder[];
+  isWorkOrdersLoaded: boolean;
+  selectedWorkOrderId: string | null;
+  setSelectedWorkOrderId: (id: string | null) => void;
+  openWorkOrderDetail: (id: string) => void;
+  isWorkOrderFormOpen: boolean;
+  workOrderFormDraft: WorkOrderDraft | null;
+  openWorkOrderForm: (draft?: WorkOrderDraft) => void;
+  closeWorkOrderForm: () => void;
+  createWorkOrder: (input: CreateWorkOrderInput) => Promise<WorkOrder | null>;
+  updateWorkOrderMeta: (id: string, input: UpdateWorkOrderMetaInput) => Promise<void>;
+  updateWorkOrderExecution: (
+    id: string,
+    patch: {
+      checklist?: WorkOrderChecklistItem[];
+      evidenceUrl?: string;
+      evidenceNote?: string;
+    }
+  ) => Promise<void>;
+  startWorkOrder: (id: string) => Promise<void>;
+  blockWorkOrder: (id: string, reason: string) => Promise<void>;
+  unblockWorkOrder: (id: string) => Promise<void>;
+  submitWorkOrder: (
+    id: string,
+    evidence?: { evidenceUrl?: string; evidenceNote?: string }
+  ) => Promise<void>;
+  approveWorkOrder: (id: string) => Promise<void>;
+  requestWorkOrderRevision: (id: string, revisionNote: string) => Promise<void>;
+  reopenWorkOrder: (id: string, reason: string) => Promise<void>;
+  cancelWorkOrder: (id: string, reason: string) => Promise<void>;
 
   // Calculated Metrics
   verifiedLogbooksCount: number;

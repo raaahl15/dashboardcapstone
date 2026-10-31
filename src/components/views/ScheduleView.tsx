@@ -3,6 +3,18 @@ import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { GanttTaskStatus, WeeklyPlanItem } from '../../types';
 import {
+  formatYmdToIndonesian,
+  getDaysUntilDue,
+  getLinkedScheduleProgress,
+  getTodayLocalYmd,
+  isWorkOrderOverdue,
+} from '../../utils/workOrderHelpers';
+import {
+  WorkOrderOverdueBadge,
+  WorkOrderPriorityBadge,
+  WorkOrderStatusBadge,
+} from '../workorders/WorkOrderBadges';
+import {
   Calendar,
   Clock,
   Plus,
@@ -11,6 +23,9 @@ import {
   CheckCircle2,
   Filter,
   ShieldCheck,
+  AlertTriangle,
+  ClipboardList,
+  X,
 } from 'lucide-react';
 
 const GANTT_STATUSES: GanttTaskStatus[] = [
@@ -91,9 +106,18 @@ export const ScheduleView: React.FC = () => {
     users,
     getUser,
     isPM,
+    workOrders,
+    setSelectedWorkOrderId,
+    openWorkOrderForm,
   } = useApp();
 
   const [selectedPicFilter, setSelectedPicFilter] = useState<string>('All');
+  const [inspectLinkedTarget, setInspectLinkedTarget] = useState<{
+    linkType: 'gantt' | 'weeklyPlan';
+    targetId: string;
+    label: string;
+  } | null>(null);
+  const todayYmd = getTodayLocalYmd();
   const currentGanttWeek = getCurrentGanttWeek();
 
   // Modals
@@ -355,6 +379,12 @@ export const ScheduleView: React.FC = () => {
           >
             {weeklyPlans.map((plan) => {
               const picRef = plan.pic || plan.picCode;
+              const woProgress = getLinkedScheduleProgress(
+                workOrders,
+                'weeklyPlan',
+                plan.id,
+                todayYmd
+              );
               return (
                 <div
                   key={plan.id}
@@ -416,6 +446,47 @@ export const ScheduleView: React.FC = () => {
                     </span>
                     <p className="text-[11px] leading-relaxed">{plan.keyOutput}</p>
                   </div>
+
+                  {woProgress.total > 0 && (
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setInspectLinkedTarget({
+                            linkType: 'weeklyPlan',
+                            targetId: plan.id,
+                            label: plan.weekLabel,
+                          })
+                        }
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border transition-all hover:shadow-xs ${
+                          woProgress.completed === woProgress.total
+                            ? 'bg-[#D1FAE5] text-[#065F46] border-[#6EE7B7]'
+                            : 'bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD]'
+                        }`}
+                      >
+                        <ClipboardList className="w-3 h-3 shrink-0" />
+                        <span>
+                          {woProgress.completed}/{woProgress.total} WO selesai
+                        </span>
+                      </button>
+                      {woProgress.overdue > 0 && (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setInspectLinkedTarget({
+                              linkType: 'weeklyPlan',
+                              targetId: plan.id,
+                              label: plan.weekLabel,
+                            })
+                          }
+                          className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white inline-flex items-center gap-1"
+                        >
+                          <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
+                          <span>{woProgress.overdue} terlambat</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   <div className="mt-3 pt-2 border-t border-[#EAF6FD] flex items-center justify-between text-[10px] text-[#4A5A72]">
                     <span className="font-mono font-semibold">
@@ -675,6 +746,12 @@ export const ScheduleView: React.FC = () => {
 
                         const leftPercent = ((startCol - 1) / GANTT_WEEK_COUNT) * 100;
                         const widthPercent = (duration / GANTT_WEEK_COUNT) * 100;
+                        const woProgress = getLinkedScheduleProgress(
+                          workOrders,
+                          'gantt',
+                          gt.id,
+                          todayYmd
+                        );
 
                         return (
                           <div
@@ -685,9 +762,55 @@ export const ScheduleView: React.FC = () => {
                           >
                             {/* Task Label & PIC */}
                             <div className="col-span-6 pl-3 pr-2 flex items-start justify-between gap-2 text-[#0B1B33]">
-                              <span className="min-w-0 whitespace-normal break-words text-[11px] font-semibold leading-snug" title={gt.name}>
-                                {gt.name}
-                              </span>
+                              <div className="min-w-0 space-y-1">
+                                <span
+                                  className="block whitespace-normal break-words text-[11px] font-semibold leading-snug"
+                                  title={gt.name}
+                                >
+                                  {gt.name}
+                                </span>
+                                {woProgress.total > 0 && (
+                                  <div className="flex flex-wrap items-center gap-1">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setInspectLinkedTarget({
+                                          linkType: 'gantt',
+                                          targetId: gt.id,
+                                          label: gt.name,
+                                        })
+                                      }
+                                      className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border transition-colors ${
+                                        woProgress.completed === woProgress.total
+                                          ? 'bg-[#D1FAE5] text-[#065F46] border-[#6EE7B7]'
+                                          : 'bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD] hover:bg-[#DBEAFE]'
+                                      }`}
+                                    >
+                                      <ClipboardList className="w-2.5 h-2.5 shrink-0" />
+                                      <span>
+                                        {woProgress.completed}/{woProgress.total} WO selesai
+                                      </span>
+                                    </button>
+                                    {woProgress.overdue > 0 && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setInspectLinkedTarget({
+                                            linkType: 'gantt',
+                                            targetId: gt.id,
+                                            label: gt.name,
+                                          })
+                                        }
+                                        className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[#B91C1C] text-white inline-flex items-center gap-0.5"
+                                        title={`${woProgress.overdue} Work Order terlambat`}
+                                      >
+                                        <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
+                                        <span>{woProgress.overdue}</span>
+                                      </button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
                               <div className="flex items-center gap-0.5 shrink-0">
                                 {isPM && (
                                   <>
@@ -738,18 +861,39 @@ export const ScheduleView: React.FC = () => {
                                 />
                               ))}
                               <div
-                                className={`absolute h-6 rounded-lg text-[10px] font-bold text-white flex items-center justify-center px-2 shadow-xs transition-all ${
+                                onClick={
+                                  woProgress.total > 0
+                                    ? () =>
+                                        setInspectLinkedTarget({
+                                          linkType: 'gantt',
+                                          targetId: gt.id,
+                                          label: gt.name,
+                                        })
+                                    : undefined
+                                }
+                                className={`absolute h-6 rounded-lg text-[10px] font-bold text-white flex items-center justify-center gap-1 px-2 shadow-xs transition-all ${
                                   gt.isStageGateMilestone
                                     ? 'bg-[#B45309]'
                                     : GANTT_STATUS_STYLES[status]
-                                } ${!isMatchPic ? 'border border-dashed border-[#6B7F99]' : ''}`}
+                                } ${!isMatchPic ? 'border border-dashed border-[#6B7F99]' : ''} ${
+                                  woProgress.total > 0 ? 'cursor-pointer hover:brightness-105' : ''
+                                }`}
                                 style={{
                                   left: `${leftPercent}%`,
                                   width: `${Math.max(widthPercent, 6)}%`,
                                 }}
-                                title={`${gt.name} — ${status}${gt.isStageGateMilestone ? ' • Stage-gate milestone' : ''}`}
+                                title={`${gt.name} — ${status}${
+                                  woProgress.total > 0
+                                    ? ` • ${woProgress.completed}/${woProgress.total} WO selesai`
+                                    : ''
+                                }${gt.isStageGateMilestone ? ' • Stage-gate milestone' : ''}`}
                               >
-                                <span className="truncate">{badgeCode}</span>
+                                <span className="truncate">
+                                  {badgeCode}
+                                  {woProgress.total > 0 && duration >= 2
+                                    ? ` · ${woProgress.completed}/${woProgress.total} WO`
+                                    : ''}
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -1078,6 +1222,163 @@ export const ScheduleView: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Modal Daftar Work Order Tertaut ke Item Jadwal */}
+      {inspectLinkedTarget && (() => {
+        const linkedStats = getLinkedScheduleProgress(
+          workOrders,
+          inspectLinkedTarget.linkType,
+          inspectLinkedTarget.targetId,
+          todayYmd
+        );
+
+        return (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="schedule-linked-wo-title"
+          >
+            <div className="w-full max-w-lg max-h-[88vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#EAF6FD]">
+                <div className="min-w-0">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0062CC] block">
+                    {inspectLinkedTarget.linkType === 'gantt'
+                      ? 'WORK ORDER TERTAUT • GANTT TASK'
+                      : 'WORK ORDER TERTAUT • WEEKLY PLAN'}
+                  </span>
+                  <h3
+                    id="schedule-linked-wo-title"
+                    className="font-heading font-bold text-sm text-[#0B1B33] mt-0.5 leading-snug"
+                  >
+                    {inspectLinkedTarget.label}
+                  </h3>
+                  <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                      {linkedStats.completed}/{linkedStats.total} WO selesai
+                    </span>
+                    {linkedStats.overdue > 0 && (
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white">
+                        {linkedStats.overdue} terlambat
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setInspectLinkedTarget(null)}
+                  className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center shrink-0"
+                  aria-label="Tutup daftar Work Order tertaut"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {linkedStats.items.length === 0 ? (
+                <p className="text-xs text-[#4A5A72] py-4 text-center">
+                  Tidak ada Work Order aktif atau selesai pada item jadwal ini.
+                </p>
+              ) : (
+                <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                  {linkedStats.items.map((wo) => {
+                    const overdue = isWorkOrderOverdue(wo, todayYmd);
+                    const daysDelta = getDaysUntilDue(wo.dueDate, todayYmd);
+                    return (
+                      <button
+                        key={wo.id}
+                        type="button"
+                        onClick={() => {
+                          setInspectLinkedTarget(null);
+                          setSelectedWorkOrderId(wo.id);
+                        }}
+                        className="w-full text-left p-3.5 rounded-2xl bg-[#F8FAFC] hover:bg-[#EAF6FD]/70 border border-[#EAF6FD] transition-all space-y-2"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="font-mono text-xs font-extrabold text-[#0062CC]">
+                              {wo.code}
+                            </span>
+                            <WorkOrderStatusBadge
+                              status={wo.status}
+                              needsRevision={wo.needsRevision}
+                              size="xs"
+                            />
+                            <WorkOrderPriorityBadge priority={wo.priority} size="xs" />
+                          </div>
+                          {overdue && (
+                            <WorkOrderOverdueBadge
+                              daysLate={Math.abs(daysDelta)}
+                              size="xs"
+                            />
+                          )}
+                        </div>
+
+                        <p className="font-heading font-bold text-xs text-[#0B1B33] leading-snug">
+                          {wo.title}
+                        </p>
+
+                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-white">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {wo.assigneeIds.map((uid) => (
+                              <UserChip
+                                key={`${wo.id}-sched-${uid}`}
+                                uid={uid}
+                                variant="avatar-nama"
+                                size="xs"
+                                useNickname
+                                avatarClassName="w-5 h-5 rounded-full text-[9px]"
+                                nameClassName="!text-[11px] !font-semibold !text-[#334155]"
+                              />
+                            ))}
+                          </div>
+                          <span
+                            className={`text-[11px] font-semibold shrink-0 ${
+                              overdue ? 'text-[#B91C1C]' : 'text-[#4A5A72]'
+                            }`}
+                          >
+                            Tenggat: {formatYmdToIndonesian(wo.dueDate)}
+                          </span>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              <div className="pt-2 border-t border-[#EAF6FD] flex flex-wrap items-center justify-between gap-2">
+                {isPM ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const target = inspectLinkedTarget;
+                      setInspectLinkedTarget(null);
+                      openWorkOrderForm({
+                        scheduleLink:
+                          target.linkType === 'gantt'
+                            ? { type: 'gantt', taskId: target.targetId }
+                            : { type: 'weeklyPlan', planId: target.targetId },
+                      });
+                    }}
+                    className="min-h-[44px] px-4 rounded-full bg-[#EAF6FD] hover:bg-[#DBEAFE] text-[#0062CC] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Tambah WO ke Jadwal Ini
+                  </button>
+                ) : (
+                  <span />
+                )}
+                <button
+                  type="button"
+                  onClick={() => setInspectLinkedTarget(null)}
+                  className="min-h-[44px] px-5 rounded-full bg-[#0B1B33] text-white text-xs font-bold"
+                >
+                  Tutup
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 };

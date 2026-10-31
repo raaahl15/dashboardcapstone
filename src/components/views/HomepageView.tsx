@@ -1,13 +1,30 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
-import { Config, DeliverableItem, MeetingLogItem, SlideDeckItem } from '../../types';
+import {
+  Config,
+  DeliverableItem,
+  MeetingLogItem,
+  SlideDeckItem,
+  WorkOrder,
+  WorkOrderStatus,
+} from '../../types';
+import {
+  WO_ACTIVE_STATUSES,
+  WO_BOARD_COLUMNS,
+  formatYmdToIndonesian,
+  getDaysUntilDue,
+  getTodayLocalYmd,
+  isExclusivelyAssignedToCurrentPM,
+  isUserWorkOrderAssignee,
+  isWorkOrderOverdue,
+  sortWorkOrdersForCockpit,
+} from '../../utils/workOrderHelpers';
 import {
   Users,
   Clock,
   CheckCircle2,
   Circle,
-  Plus,
   Pencil,
   ArrowRight,
   Calendar,
@@ -21,6 +38,10 @@ import {
   MessagesSquare,
   Presentation,
   ExternalLink,
+  Archive,
+  Play,
+  Send,
+  RotateCcw,
 } from 'lucide-react';
 
 type ProjectStatusKey = Config['projectStatus'];
@@ -150,8 +171,6 @@ export const HomepageView: React.FC = () => {
     config,
     updateConfig,
     tasks,
-    addTask,
-    toggleTask,
     deliverables,
     updateDeliverable,
     verifiedLogbooksCount,
@@ -162,6 +181,12 @@ export const HomepageView: React.FC = () => {
     overallWeightedProgress,
     setActiveTab,
     isPM,
+    workOrders,
+    setSelectedWorkOrderId,
+    startWorkOrder,
+    unblockWorkOrder,
+    submitWorkOrder,
+    approveWorkOrder,
   } = useApp();
 
   const [nowMs, setNowMs] = useState(() => Date.now());
@@ -189,11 +214,88 @@ export const HomepageView: React.FC = () => {
     [raciRows]
   );
 
-  // Modal states for editing
-  const [showTaskModal, setShowTaskModal] = useState(false);
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newTaskPic, setNewTaskPic] = useState(currentUser.id);
-  const [newTaskDay, setNewTaskDay] = useState('Senin');
+  // Widget Tugas Saya (Work Order) & Arsip Checklist Lama (Baca-Saja)
+  const [woWidgetScope, setWoWidgetScope] = useState<'mine' | 'team'>('mine');
+  const [busyWoId, setBusyWoId] = useState<string | null>(null);
+  const [showLegacyTasksModal, setShowLegacyTasksModal] = useState(false);
+
+  const todayYmd = getTodayLocalYmd();
+
+  const myActiveWorkOrders = useMemo(
+    () =>
+      sortWorkOrdersForCockpit(
+        workOrders.filter(
+          (wo) =>
+            WO_ACTIVE_STATUSES.includes(wo.status) &&
+            isUserWorkOrderAssignee(wo, currentUser.id, getUser)
+        ),
+        todayYmd
+      ),
+    [workOrders, currentUser.id, getUser, todayYmd]
+  );
+
+  const myOverdueCount = useMemo(
+    () => myActiveWorkOrders.filter((wo) => isWorkOrderOverdue(wo, todayYmd)).length,
+    [myActiveWorkOrders, todayYmd]
+  );
+
+  const teamActiveWorkOrders = useMemo(
+    () =>
+      sortWorkOrdersForCockpit(
+        workOrders.filter((wo) => WO_ACTIVE_STATUSES.includes(wo.status)),
+        todayYmd
+      ),
+    [workOrders, todayYmd]
+  );
+
+  const teamOverdueCount = useMemo(
+    () => teamActiveWorkOrders.filter((wo) => isWorkOrderOverdue(wo, todayYmd)).length,
+    [teamActiveWorkOrders, todayYmd]
+  );
+
+  const teamStatusCounts = useMemo(() => {
+    const counts: Record<WorkOrderStatus, number> = {
+      Ditugaskan: 0,
+      Dikerjakan: 0,
+      Blocked: 0,
+      Diajukan: 0,
+      Selesai: 0,
+      Dibatalkan: 0,
+    };
+    workOrders.forEach((wo) => {
+      counts[wo.status] += 1;
+    });
+    return counts;
+  }, [workOrders]);
+
+  const handleQuickWoAction = async (
+    e: React.MouseEvent,
+    wo: WorkOrder,
+    action: 'start' | 'submit' | 'unblock' | 'complete-self' | 'detail'
+  ) => {
+    e.stopPropagation();
+    if (action === 'detail') {
+      setSelectedWorkOrderId(wo.id);
+      return;
+    }
+    setBusyWoId(wo.id);
+    try {
+      if (action === 'start') {
+        await startWorkOrder(wo.id);
+      } else if (action === 'unblock') {
+        await unblockWorkOrder(wo.id);
+      } else if (action === 'submit') {
+        await submitWorkOrder(wo.id);
+      } else if (action === 'complete-self') {
+        await approveWorkOrder(wo.id);
+      }
+    } catch {
+      // Apabila butuh input tambahan (mis. bukti wajib), arahkan ke panel detail
+      setSelectedWorkOrderId(wo.id);
+    } finally {
+      setBusyWoId(null);
+    }
+  };
 
   const [showNoticeModal, setShowNoticeModal] = useState(false);
   const [noticeText, setNoticeText] = useState(config.noticeBanner.text);
@@ -247,20 +349,6 @@ export const HomepageView: React.FC = () => {
     });
     return sorted[0] || null;
   }, [slideDecks]);
-
-  const handleCreateTask = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newTaskTitle.trim()) return;
-    addTask({
-      title: newTaskTitle.trim(),
-      pic: newTaskPic,
-      day: newTaskDay,
-      completed: false,
-      week: 'W5',
-    });
-    setNewTaskTitle('');
-    setShowTaskModal(false);
-  };
 
   const handleSaveNotice = (e: React.FormEvent) => {
     e.preventDefault();
@@ -545,86 +633,316 @@ export const HomepageView: React.FC = () => {
             </p>
           </div>
 
-          {/* Tugas Minggu Ini Dark Accent Card (Exception: Solid #0B1B33, Last card in Left Column -> flex-1) */}
+          {/* Tugas Saya (Work Order) Dark Accent Card (Exception: Solid #0B1B33, Last card in Left Column -> flex-1) */}
           <div className="flex-1 bg-[#0B1B33] text-white rounded-[28px] p-5 shadow-cockpit-pop border border-[#22314a] flex flex-col justify-between">
             <div className="flex flex-col flex-1 min-h-0">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-heading font-bold text-sm text-white">Tugas Minggu Ini</h3>
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-white/20 text-white">
-                  {completedTasksCount}/{tasks.length}
-                </span>
+              {/* Header & Summary Badges */}
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                <h3 className="font-heading font-bold text-sm text-white">
+                  Tugas Saya
+                </h3>
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-white/15 text-white">
+                    {isPM && woWidgetScope === 'team'
+                      ? `${teamActiveWorkOrders.length} Aktif`
+                      : `${myActiveWorkOrders.length} Aktif`}
+                  </span>
+                  {(isPM && woWidgetScope === 'team'
+                    ? teamOverdueCount
+                    : myOverdueCount) > 0 && (
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-[#B91C1C] text-white inline-flex items-center gap-1">
+                      <AlertTriangle className="w-3 h-3 shrink-0" />
+                      {isPM && woWidgetScope === 'team'
+                        ? teamOverdueCount
+                        : myOverdueCount}{' '}
+                      Terlambat
+                    </span>
+                  )}
+                </div>
               </div>
 
-              <div className="space-y-2 max-h-64 overflow-y-auto pr-1 flex-1">
-                {tasks.map((task) => {
-                  const taskOwner = getUser(task.pic);
-                  const isMyTask = taskOwner?.id === currentUser.id;
-                  const canCheck = isPM || isMyTask;
+              {/* PM Scope Switch: Saya / Seluruh Tim */}
+              {isPM && (
+                <div className="grid grid-cols-2 gap-1 p-1 rounded-full bg-white/10 border border-white/10 mb-3">
+                  <button
+                    type="button"
+                    onClick={() => setWoWidgetScope('mine')}
+                    className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
+                      woWidgetScope === 'mine'
+                        ? 'bg-[#007BFF] text-white shadow-xs'
+                        : 'text-[#9FB3C8] hover:text-white'
+                    }`}
+                  >
+                    Saya ({myActiveWorkOrders.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setWoWidgetScope('team')}
+                    className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
+                      woWidgetScope === 'team'
+                        ? 'bg-[#007BFF] text-white shadow-xs'
+                        : 'text-[#9FB3C8] hover:text-white'
+                    }`}
+                  >
+                    Seluruh Tim ({teamActiveWorkOrders.length})
+                  </button>
+                </div>
+              )}
 
-                  return (
-                    <div
-                      key={task.id}
-                      onClick={() => canCheck && toggleTask(task.id)}
-                      className={`flex items-start gap-2.5 p-2 rounded-xl transition-all ${
-                        canCheck ? 'cursor-pointer hover:bg-white/10' : 'cursor-default'
-                      }`}
-                    >
-                      {task.completed ? (
-                        <CheckCircle2 className="w-4 h-4 text-[#4CBAF5] shrink-0 mt-0.5" />
-                      ) : (
-                        <Circle className="w-4 h-4 text-[#9FB3C8] shrink-0 mt-0.5" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p
-                          className={`text-xs leading-snug ${
-                            task.completed
-                              ? 'line-through text-[#9FB3C8]'
-                              : 'text-white font-medium'
-                          }`}
-                        >
-                          {task.title}
-                        </p>
-                        <div className="flex items-center gap-1.5 mt-1 text-[10px] text-[#9FB3C8]">
-                          <UserChip
-                            uid={task.pic}
-                            variant="avatar-nama"
-                            size="xs"
-                            useNickname
-                            avatarClassName="w-4 h-4 text-[8px]"
-                            nameClassName="!text-[10px] !text-[#9FB3C8] !font-normal"
-                          />
-                          <span>• {task.day}</span>
+              {/* Content: Team Mode vs Personal Mode */}
+              {isPM && woWidgetScope === 'team' ? (
+                <div className="space-y-3 flex-1 min-h-0 flex flex-col">
+                  {/* Status Distribution Grid */}
+                  <div className="grid grid-cols-5 gap-1.5 text-center">
+                    {WO_BOARD_COLUMNS.map((st) => (
+                      <div
+                        key={st}
+                        className="p-2 rounded-xl bg-white/10 border border-white/10"
+                      >
+                        <span className="font-heading text-sm font-extrabold text-white tabular-nums block leading-none">
+                          {teamStatusCounts[st]}
+                        </span>
+                        <span className="text-[9px] text-[#9FB3C8] font-semibold block mt-1 truncate">
+                          {st}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Top 5 Team Active Work Orders */}
+                  {teamActiveWorkOrders.length === 0 ? (
+                    <div className="flex-1 flex flex-col items-center justify-center text-center py-5 px-3 rounded-2xl bg-white/5 border border-white/10">
+                      <CheckCircle2 className="w-6 h-6 text-[#34D399] mb-1.5" />
+                      <p className="text-xs font-semibold text-white">
+                        Tidak ada tugas aktif di seluruh tim
+                      </p>
+                      <p className="text-[11px] text-[#9FB3C8] mt-0.5">
+                        Seluruh Work Order tim telah selesai dikerjakan.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 max-h-56 overflow-y-auto pr-1 flex-1">
+                      {teamActiveWorkOrders.slice(0, 5).map((wo) => {
+                        const overdue = isWorkOrderOverdue(wo, todayYmd);
+                        const daysDelta = getDaysUntilDue(wo.dueDate, todayYmd);
+                        return (
+                          <div
+                            key={wo.id}
+                            onClick={() => setSelectedWorkOrderId(wo.id)}
+                            className="p-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 transition-all cursor-pointer space-y-1.5"
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <span className="font-mono text-[10px] font-extrabold text-[#4CBAF5] shrink-0">
+                                  {wo.code}
+                                </span>
+                                <span className="px-1.5 py-0.5 rounded bg-white/15 text-[9px] font-bold text-white truncate">
+                                  {wo.status}
+                                </span>
+                                {overdue && (
+                                  <span className="px-1.5 py-0.5 rounded bg-[#B91C1C] text-[9px] font-bold text-white shrink-0">
+                                    +{Math.abs(daysDelta)}h
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[10px] text-[#9FB3C8] shrink-0">
+                                {formatYmdToIndonesian(wo.dueDate)}
+                              </span>
+                            </div>
+                            <p className="text-xs font-medium text-white leading-snug line-clamp-1">
+                              {wo.title}
+                            </p>
+                            <div className="flex items-center justify-between gap-2">
+                              <div className="flex items-center gap-1 flex-wrap">
+                                {wo.assigneeIds.slice(0, 3).map((uid) => (
+                                  <UserChip
+                                    key={`${wo.id}-tm-${uid}`}
+                                    uid={uid}
+                                    variant="avatar-nama"
+                                    size="xs"
+                                    useNickname
+                                    avatarClassName="w-4 h-4 text-[8px]"
+                                    nameClassName="!text-[10px] !text-[#9FB3C8] !font-normal"
+                                  />
+                                ))}
+                              </div>
+                              {wo.status === 'Diajukan' && (
+                                <span className="px-2 py-0.5 rounded-full bg-[#FEF3C7] text-[#92400E] text-[9px] font-extrabold shrink-0">
+                                  Review PM
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              ) : myActiveWorkOrders.length === 0 ? (
+                /* Empty State Personal Mode */
+                <div className="flex-1 flex flex-col items-center justify-center text-center py-6 px-3 rounded-2xl bg-white/5 border border-white/10">
+                  <CheckCircle2 className="w-7 h-7 text-[#34D399] mb-2" />
+                  <p className="text-xs font-bold text-white">
+                    Tidak ada tugas aktif
+                  </p>
+                  <p className="text-[11px] text-[#9FB3C8] mt-1 leading-relaxed">
+                    Semua Work Order milik Anda sudah tuntas atau terkendali.
+                  </p>
+                </div>
+              ) : (
+                /* Top 5 Personal Active Work Orders */
+                <div className="space-y-2 max-h-64 overflow-y-auto pr-1 flex-1">
+                  {myActiveWorkOrders.slice(0, 5).map((wo) => {
+                    const overdue = isWorkOrderOverdue(wo, todayYmd);
+                    const daysDelta = getDaysUntilDue(wo.dueDate, todayYmd);
+                    const isSelfPM = isExclusivelyAssignedToCurrentPM(
+                      wo,
+                      currentUser.id,
+                      isPM,
+                      getUser
+                    );
+                    const isRowBusy = busyWoId === wo.id;
+
+                    return (
+                      <div
+                        key={wo.id}
+                        onClick={() => setSelectedWorkOrderId(wo.id)}
+                        className="p-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 transition-all cursor-pointer space-y-1.5"
+                      >
+                        <div className="flex items-center justify-between gap-1.5">
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="font-mono text-[10px] font-extrabold text-[#4CBAF5]">
+                              {wo.code}
+                            </span>
+                            {overdue && (
+                              <span className="px-1.5 py-0.5 rounded bg-[#B91C1C] text-[9px] font-bold text-white">
+                                Terlambat {Math.abs(daysDelta)}h
+                              </span>
+                            )}
+                            {wo.needsRevision && wo.status === 'Dikerjakan' && (
+                              <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] text-[9px] font-extrabold inline-flex items-center gap-0.5">
+                                <RotateCcw className="w-2.5 h-2.5" />
+                                Revisi
+                              </span>
+                            )}
+                            {wo.priority === 'Kritis' && (
+                              <span className="px-1.5 py-0.5 rounded bg-[#FEE2E2] text-[#991B1B] text-[9px] font-extrabold">
+                                Kritis
+                              </span>
+                            )}
+                          </div>
+                          <span
+                            className={`text-[10px] font-semibold shrink-0 ${
+                              overdue ? 'text-[#FCA5A5]' : 'text-[#9FB3C8]'
+                            }`}
+                          >
+                            {formatYmdToIndonesian(wo.dueDate)}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="text-xs font-medium text-white leading-snug line-clamp-2 flex-1 min-w-0">
+                            {wo.title}
+                          </p>
+
+                          {/* Quick Action Button */}
+                          {wo.status === 'Ditugaskan' && (
+                            <button
+                              type="button"
+                              disabled={isRowBusy}
+                              onClick={(e) => void handleQuickWoAction(e, wo, 'start')}
+                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#007BFF] hover:bg-[#0062CC] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                            >
+                              <Play className="w-2.5 h-2.5" />
+                              Mulai
+                            </button>
+                          )}
+
+                          {wo.status === 'Dikerjakan' &&
+                            (isSelfPM ? (
+                              <button
+                                type="button"
+                                disabled={isRowBusy}
+                                onClick={(e) =>
+                                  void handleQuickWoAction(e, wo, 'complete-self')
+                                }
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#059669] hover:bg-[#047857] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                              >
+                                <CheckCircle2 className="w-2.5 h-2.5" />
+                                Selesai
+                              </button>
+                            ) : wo.requireEvidence && !wo.evidenceUrl ? (
+                              <button
+                                type="button"
+                                onClick={(e) =>
+                                  void handleQuickWoAction(e, wo, 'detail')
+                                }
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#FEF3C7] text-[#92400E] text-[10px] font-extrabold transition-colors"
+                              >
+                                Isi Bukti
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                disabled={isRowBusy}
+                                onClick={(e) =>
+                                  void handleQuickWoAction(e, wo, 'submit')
+                                }
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#38BDF8] hover:bg-[#0EA5E9] disabled:opacity-50 text-[#0B1B33] text-[10px] font-extrabold inline-flex items-center gap-1 transition-colors"
+                              >
+                                <Send className="w-2.5 h-2.5" />
+                                Ajukan
+                              </button>
+                            ))}
+
+                          {wo.status === 'Blocked' && (
+                            <button
+                              type="button"
+                              disabled={isRowBusy}
+                              onClick={(e) =>
+                                void handleQuickWoAction(e, wo, 'unblock')
+                              }
+                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#FEE2E2] text-[#991B1B] text-[10px] font-extrabold transition-colors"
+                            >
+                              Lanjut
+                            </button>
+                          )}
+
+                          {wo.status === 'Diajukan' && (
+                            <span className="shrink-0 px-2 py-0.5 rounded-full bg-white/15 text-[#FDE68A] text-[10px] font-bold">
+                              Diajukan
+                            </span>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
-            <div className="pt-3 mt-3 border-t border-white/10">
-              {isPM ? (
+            {/* Footer: Navigate to Work Order Menu & Read-Only Legacy Tasks Archive */}
+            <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
+              <button
+                type="button"
+                onClick={() => setActiveTab('work-orders')}
+                className="w-full min-h-[44px] bg-white/15 hover:bg-white/25 text-white rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
+              >
+                <span>Buka Menu Work Order</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+
+              {tasks.length > 0 && (
                 <button
                   type="button"
-                  onClick={() => {
-                    setNewTaskPic(currentUser.id);
-                    setShowTaskModal(true);
-                  }}
-                  className="w-full min-h-[44px] bg-white/15 hover:bg-white/25 text-white rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
+                  onClick={() => setShowLegacyTasksModal(true)}
+                  className="w-full py-1.5 text-[11px] text-[#9FB3C8] hover:text-white font-medium flex items-center justify-center gap-1.5 transition-colors"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  Tambah Tugas
-                </button>
-              ) : (
-                <div className="flex items-center justify-between text-[11px] text-[#9FB3C8]">
-                  <span>Klik tugas milik Anda untuk menandai selesai</span>
-                  <span className="font-bold text-[#4CBAF5] tabular-nums">
-                    {tasks.length > 0
-                      ? Math.round((completedTasksCount / tasks.length) * 100)
-                      : 0}
-                    %
+                  <Archive className="w-3 h-3" />
+                  <span>
+                    Arsip Checklist Lama ({completedTasksCount}/{tasks.length})
                   </span>
-                </div>
+                </button>
               )}
             </div>
           </div>
@@ -1258,90 +1576,98 @@ export const HomepageView: React.FC = () => {
         </div>
       )}
 
-      {/* Add Task Modal */}
-      {showTaskModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+      {/* Read-Only Legacy Tasks Archive Modal */}
+      {showLegacyTasksModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="legacy-tasks-archive-title"
+        >
+          <div className="w-full max-w-md max-h-[88vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
-              <h3 className="font-heading font-bold text-sm text-[#0B1B33]">
-                Tambah Tugas Minggu Ini
-              </h3>
+              <div>
+                <h3
+                  id="legacy-tasks-archive-title"
+                  className="font-heading font-bold text-sm text-[#0B1B33]"
+                >
+                  Arsip Checklist Lama ({completedTasksCount}/{tasks.length})
+                </h3>
+                <p className="text-[11px] text-[#4A5A72] mt-0.5">
+                  Mode baca-saja • Penugasan aktif kini terpusat di menu Work Order
+                </p>
+              </div>
               <button
                 type="button"
-                onClick={() => setShowTaskModal(false)}
-                className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center"
+                onClick={() => setShowLegacyTasksModal(false)}
+                className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center shrink-0"
+                aria-label="Tutup Arsip Checklist Lama"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <form onSubmit={handleCreateTask} className="mt-4 space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
-                  Uraian Tugas
-                </label>
-                <input
-                  type="text"
-                  value={newTaskTitle}
-                  onChange={(e) => setNewTaskTitle(e.target.value)}
-                  placeholder="Contoh: Validasi kinetika reaktor dengan DWSIM"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
-                  required
-                />
-              </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
-                    PIC (Person In Charge)
-                  </label>
-                  <select
-                    value={newTaskPic}
-                    onChange={(e) => setNewTaskPic(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
-                  >
-                    {users.map((u) => (
-                      <option key={u.id} value={u.id}>
-                        {u.nickname} — {u.name} ({u.code})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
-                    Hari Target
-                  </label>
-                  <select
-                    value={newTaskDay}
-                    onChange={(e) => setNewTaskDay(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
-                  >
-                    <option value="Senin">Senin</option>
-                    <option value="Selasa">Selasa</option>
-                    <option value="Rabu">Rabu</option>
-                    <option value="Kamis">Kamis</option>
-                    <option value="Jumat">Jumat</option>
-                    <option value="Sabtu">Sabtu</option>
-                    <option value="Minggu">Minggu</option>
-                  </select>
-                </div>
-              </div>
+            <div className="p-3 rounded-2xl bg-[#EAF6FD] text-[11px] text-[#0B1B33] leading-relaxed">
+              Daftar tugas minggu awal disimpan utuh sebagai arsip referensi proyek tanpa perubahan data.
+            </div>
 
-              <div className="pt-3 flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowTaskModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:bg-[#EAF6FD] rounded-full"
+            <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+              {tasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#F8FAFC] border border-[#EAF6FD]"
                 >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full shadow-xs hover:bg-[#0057B8]"
-                >
-                  Simpan Tugas
-                </button>
-              </div>
-            </form>
+                  {task.completed ? (
+                    <CheckCircle2 className="w-4 h-4 text-[#059669] shrink-0 mt-0.5" />
+                  ) : (
+                    <Circle className="w-4 h-4 text-[#94A3B8] shrink-0 mt-0.5" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p
+                      className={`text-xs leading-snug ${
+                        task.completed
+                          ? 'line-through text-[#64748B]'
+                          : 'text-[#0B1B33] font-semibold'
+                      }`}
+                    >
+                      {task.title}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-[#4A5A72]">
+                      <UserChip
+                        uid={task.pic}
+                        variant="avatar-nama"
+                        size="xs"
+                        useNickname
+                        avatarClassName="w-4 h-4 text-[8px]"
+                        nameClassName="!text-[10px] !text-[#4A5A72] !font-semibold"
+                      />
+                      <span>• {task.day}</span>
+                      {task.week && <span>• {task.week}</span>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-2 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowLegacyTasksModal(false)}
+                className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:bg-[#EAF6FD] rounded-full"
+              >
+                Tutup
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowLegacyTasksModal(false);
+                  setActiveTab('work-orders');
+                }}
+                className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold rounded-full shadow-xs"
+              >
+                Buka Work Order
+              </button>
+            </div>
           </div>
         </div>
       )}

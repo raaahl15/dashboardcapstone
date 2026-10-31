@@ -91,6 +91,7 @@ export interface WeeklyPlanItem {
   status: 'Done' | 'In Progress' | 'Planning';
   keyOutput: string;
   docTag: string;
+  autoCompletedByWo?: boolean;
 }
 
 export interface GanttTaskItem {
@@ -106,6 +107,7 @@ export interface GanttTaskItem {
   isCritical?: boolean;
   isStageGateMilestone?: boolean;
   status?: GanttTaskStatus;
+  autoCompletedByWo?: boolean;
 }
 
 export type GanttTaskStatus = 'Selesai' | 'Berjalan' | 'Belum' | 'Terlambat' | 'Perlu dicek';
@@ -238,6 +240,115 @@ export interface AppNotification {
   title: string;
   description: string;
   timeAgo: string;
+  createdAt?: string;
   type: 'urgent' | 'warning' | 'info';
   read: boolean;
+  recipientIds?: string[]; // Canonical UIDs; undefined/empty = broadcast to all team members
+  workOrderId?: string;
+}
+
+export type WorkOrderPriority = 'Rendah' | 'Normal' | 'Tinggi' | 'Kritis';
+
+export type WorkOrderStatus =
+  | 'Ditugaskan'
+  | 'Dikerjakan'
+  | 'Blocked'
+  | 'Diajukan'
+  | 'Selesai'
+  | 'Dibatalkan';
+
+export type WorkOrderScheduleLink =
+  | { type: 'none' }
+  | { type: 'gantt'; taskId: string }
+  | { type: 'weeklyPlan'; planId: string };
+
+export type WorkOrderOrigin =
+  | { type: 'manual' }
+  | { type: 'mom'; trackerActionId: string; trackerActionCode: string };
+
+export interface WorkOrderChecklistItem {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+export interface WorkOrderHistoryEntry {
+  id: string;
+  at: string; // ISO 8601 timestamp
+  actorId: string; // Canonical UID ('user-rahul', etc.)
+  fromStatus: WorkOrderStatus | null;
+  toStatus: WorkOrderStatus;
+  eventLabel: string;
+  note: string;
+}
+
+export interface WorkOrder {
+  id: string;
+  code: string; // WO-001, WO-002, ...
+  title: string;
+  description: string;
+  assigneeIds: string[]; // >= 1 equal responsible owners
+  supporterIds: string[]; // Optional supporting members
+  priority: WorkOrderPriority;
+  status: WorkOrderStatus;
+  dueDate: string; // 'YYYY-MM-DD'
+  projectWeek: number;
+  scheduleLink: WorkOrderScheduleLink;
+  origin: WorkOrderOrigin;
+  checklist: WorkOrderChecklistItem[];
+  requireEvidence: boolean;
+  evidenceUrl: string;
+  evidenceNote: string;
+  blockedReason: string;
+  needsRevision: boolean;
+  revisionNote: string;
+  cancelReason: string;
+  reopenReason: string;
+  submittedAt: string;
+  completedAt: string;
+  cancelledAt: string;
+  createdAt: string;
+  createdBy: string;
+  updatedAt: string;
+  updatedBy: string;
+  history: WorkOrderHistoryEntry[];
+}
+
+export interface CreateWorkOrderInput {
+  title: string;
+  description: string;
+  assigneeIds: string[];
+  supporterIds?: string[];
+  priority: WorkOrderPriority;
+  dueDate: string;
+  scheduleLink: WorkOrderScheduleLink;
+  origin?: WorkOrderOrigin;
+  checklist?: WorkOrderChecklistItem[];
+  requireEvidence?: boolean;
+}
+
+export interface UpdateWorkOrderMetaInput {
+  title?: string;
+  description?: string;
+  assigneeIds?: string[];
+  supporterIds?: string[];
+  priority?: WorkOrderPriority;
+  dueDate?: string;
+  scheduleLink?: WorkOrderScheduleLink;
+  checklist?: WorkOrderChecklistItem[];
+  requireEvidence?: boolean;
+}
+
+export interface WorkOrderDraft {
+  editingWorkOrderId?: string;
+  title?: string;
+  description?: string;
+  assigneeIds?: string[];
+  supporterIds?: string[];
+  priority?: WorkOrderPriority;
+  dueDate?: string;
+  scheduleLink?: WorkOrderScheduleLink;
+  origin?: WorkOrderOrigin;
+  checklist?: WorkOrderChecklistItem[];
+  requireEvidence?: boolean;
 }

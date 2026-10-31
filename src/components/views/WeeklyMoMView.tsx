@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import {
+  buildMomSummaryPeriodOptions,
+  computeMomPeriodWorkOrders,
+  computeProjectWeekFromDate,
+  findWorkOrderForTrackerAction,
+  formatYmdToIndonesian,
+  getTodayLocalYmd,
+  parseIndonesianDateToYmd,
+} from '../../utils/workOrderHelpers';
+import { STATUS_BADGE_CONFIG } from '../workorders/WorkOrderBadges';
 import {
   Plus,
   ExternalLink,
@@ -11,6 +21,11 @@ import {
   FileCheck2,
   BookOpen,
   Pencil,
+  ClipboardList,
+  CheckCircle2,
+  AlertTriangle,
+  PauseCircle,
+  PlayCircle,
 } from 'lucide-react';
 
 export const WeeklyMoMView: React.FC = () => {
@@ -31,7 +46,41 @@ export const WeeklyMoMView: React.FC = () => {
     getUser,
     users,
     isPM,
+    config,
+    workOrders,
+    setSelectedWorkOrderId,
+    openWorkOrderForm,
   } = useApp();
+
+  const todayYmd = getTodayLocalYmd();
+  const currentProjectWeek = useMemo(
+    () => computeProjectWeekFromDate(todayYmd, config.projectStartDate).week,
+    [todayYmd, config.projectStartDate]
+  );
+
+  const momPeriodOptions = useMemo(
+    () => buildMomSummaryPeriodOptions(meetingLogs, currentProjectWeek),
+    [meetingLogs, currentProjectWeek]
+  );
+
+  const [selectedPeriodKey, setSelectedPeriodKey] = useState<string>('');
+  const activeMomPeriod = useMemo(
+    () =>
+      momPeriodOptions.find((opt) => opt.key === selectedPeriodKey) ??
+      momPeriodOptions[0],
+    [momPeriodOptions, selectedPeriodKey]
+  );
+
+  const momWoSummary = useMemo(
+    () =>
+      computeMomPeriodWorkOrders(
+        workOrders,
+        activeMomPeriod,
+        config.projectStartDate,
+        todayYmd
+      ),
+    [workOrders, activeMomPeriod, config.projectStartDate, todayYmd]
+  );
 
   // Modals
   const [showDeckModal, setShowDeckModal] = useState(false);
@@ -301,6 +350,218 @@ export const WeeklyMoMView: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
+      {/* WORK ORDER SEJAK RAPAT LALU (4 KELOMPOK RINGKASAN ANTAR-RAPAT) */}
+      {/* ========================================================================= */}
+      <div className="glass-card p-5 sm:p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <ClipboardList className="w-4 h-4 text-[#0062CC]" />
+              <h2 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">
+                Work Order Sejak Rapat Lalu
+              </h2>
+            </div>
+            <p className="text-xs text-[#4A5A72] mt-0.5">
+              Ringkasan otomatis capaian dan hambatan Work Order berdasarkan periode minggu rapat berurutan
+            </p>
+          </div>
+
+          {momPeriodOptions.length > 0 && (
+            <select
+              value={activeMomPeriod?.key || ''}
+              onChange={(e) => setSelectedPeriodKey(e.target.value)}
+              aria-label="Pilih periode ringkasan Work Order antar-rapat"
+              className="min-h-[40px] px-3.5 rounded-full bg-white/90 border border-[#C9DCEB] text-xs font-semibold text-[#0B1B33] outline-none focus:border-[#0062CC]"
+            >
+              {momPeriodOptions.map((opt) => (
+                <option key={opt.key} value={opt.key}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
+          {/* Kelompok 1: Selesai */}
+          <div className="rounded-2xl bg-white/75 border border-[#6EE7B7]/60 p-3.5 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-heading font-bold text-[#065F46] inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#047857]" />
+                Selesai
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#D1FAE5] text-[#065F46]">
+                {momWoSummary.completed.length}
+              </span>
+            </div>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
+              {momWoSummary.completed.length === 0 ? (
+                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                  Belum ada WO selesai pada periode ini
+                </p>
+              ) : (
+                momWoSummary.completed.map((wo) => (
+                  <button
+                    key={wo.id}
+                    type="button"
+                    onClick={() => setSelectedWorkOrderId(wo.id)}
+                    className="w-full text-left p-2.5 rounded-xl bg-[#D1FAE5]/40 hover:bg-[#D1FAE5]/80 transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono text-[10px] font-extrabold text-[#065F46]">
+                        {wo.code}
+                      </span>
+                      <span className="text-[10px] text-[#065F46] font-semibold">
+                        {wo.completedAt
+                          ? formatYmdToIndonesian(wo.completedAt.slice(0, 10))
+                          : `W${wo.projectWeek}`}
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                      {wo.title}
+                    </p>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Kelompok 2: Masih Berjalan */}
+          <div className="rounded-2xl bg-white/75 border border-[#93C5FD]/60 p-3.5 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-heading font-bold text-[#1E3A8A] inline-flex items-center gap-1.5">
+                <PlayCircle className="w-3.5 h-3.5 text-[#0062CC]" />
+                Masih Berjalan
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#DBEAFE] text-[#1E3A8A]">
+                {momWoSummary.inProgress.length}
+              </span>
+            </div>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
+              {momWoSummary.inProgress.length === 0 ? (
+                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                  Tidak ada WO berjalan
+                </p>
+              ) : (
+                momWoSummary.inProgress.map((wo) => (
+                  <button
+                    key={wo.id}
+                    type="button"
+                    onClick={() => setSelectedWorkOrderId(wo.id)}
+                    className="w-full text-left p-2.5 rounded-xl bg-[#EAF6FD]/70 hover:bg-[#DBEAFE]/70 transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono text-[10px] font-extrabold text-[#0062CC]">
+                        {wo.code}
+                      </span>
+                      <span className="text-[10px] font-bold text-[#334155]">
+                        {wo.status}
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                      {wo.title}
+                    </p>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Kelompok 3: Terlambat */}
+          <div className="rounded-2xl bg-white/75 border border-[#FCA5A5]/70 p-3.5 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-heading font-bold text-[#991B1B] inline-flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-[#B91C1C]" />
+                Terlambat
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FEE2E2] text-[#991B1B]">
+                {momWoSummary.overdue.length}
+              </span>
+            </div>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
+              {momWoSummary.overdue.length === 0 ? (
+                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                  Nihil keterlambatan WO
+                </p>
+              ) : (
+                momWoSummary.overdue.map((wo) => (
+                  <button
+                    key={wo.id}
+                    type="button"
+                    onClick={() => setSelectedWorkOrderId(wo.id)}
+                    className="w-full text-left p-2.5 rounded-xl bg-[#FEE2E2]/55 hover:bg-[#FEE2E2] transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono text-[10px] font-extrabold text-[#991B1B]">
+                        {wo.code}
+                      </span>
+                      <span className="text-[10px] font-bold text-[#B91C1C]">
+                        {formatYmdToIndonesian(wo.dueDate)}
+                      </span>
+                    </div>
+                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                      {wo.title}
+                    </p>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* Kelompok 4: Blocked */}
+          <div className="rounded-2xl bg-white/75 border border-[#FCD34D]/70 p-3.5 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-heading font-bold text-[#92400E] inline-flex items-center gap-1.5">
+                <PauseCircle className="w-3.5 h-3.5 text-[#B45309]" />
+                Blocked
+              </span>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FEF3C7] text-[#92400E]">
+                {momWoSummary.blocked.length}
+              </span>
+            </div>
+            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
+              {momWoSummary.blocked.length === 0 ? (
+                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                  Tidak ada WO yang terhambat
+                </p>
+              ) : (
+                momWoSummary.blocked.map((wo) => (
+                  <button
+                    key={wo.id}
+                    type="button"
+                    onClick={() => setSelectedWorkOrderId(wo.id)}
+                    className="w-full text-left p-2.5 rounded-xl bg-[#FEF3C7]/60 hover:bg-[#FEF3C7] transition-colors space-y-1"
+                  >
+                    <div className="flex items-center justify-between gap-1">
+                      <span className="font-mono text-[10px] font-extrabold text-[#92400E]">
+                        {wo.code}
+                      </span>
+                      <UserChip
+                        uid={wo.assigneeIds[0]}
+                        variant="avatar-nama"
+                        size="xs"
+                        useNickname
+                        avatarClassName="w-4 h-4 text-[8px]"
+                        nameClassName="!text-[10px] !font-semibold !text-[#92400E]"
+                      />
+                    </div>
+                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                      {wo.title}
+                    </p>
+                    {wo.blockedReason && (
+                      <p className="text-[10px] text-[#92400E] line-clamp-1">
+                        Alasan: {wo.blockedReason}
+                      </p>
+                    )}
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
       {/* 2-COLUMN MAIN CONTENT: Slide Decks (Left) & Tracker/MoM (Right) */}
       {/* ========================================================================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
@@ -429,7 +690,7 @@ export const WeeklyMoMView: React.FC = () => {
             </div>
 
             <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
-              <table className="w-full text-left border-collapse min-w-[620px]">
+              <table className="w-full text-left border-collapse min-w-[720px]">
                 <thead>
                   <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72]">
                     <th className="p-3">ID Action</th>
@@ -438,79 +699,146 @@ export const WeeklyMoMView: React.FC = () => {
                     <th className="p-3">Action PIC</th>
                     <th className="p-3">Tenggat</th>
                     <th className="p-3 text-center">Progres</th>
+                    <th className="p-3 text-center">Work Order</th>
                     {isPM && <th className="p-3 text-center">Aksi</th>}
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/80 text-xs">
-                  {trackerActions.map((act) => (
-                    <tr key={act.id} className="hover:bg-white/70 transition-colors">
-                      <td className="p-3 font-mono font-bold text-[#0062CC]">
-                        {act.code}
-                      </td>
-                      <td className="p-3 font-bold text-[#0B1B33]">
-                        {act.week}
-                      </td>
-                      <td className="p-3 max-w-[240px] text-xs text-[#0B1B33] font-medium leading-relaxed">
-                        {act.issue}
-                      </td>
-                      <td className="p-3">
-                        <UserChip
-                          uid={act.pic || act.picCode || act.picName}
-                          variant="avatar-nama"
-                          size="xs"
-                          useNickname
-                          avatarClassName="w-5 h-5 rounded-full text-[10px]"
-                          nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
-                        />
-                      </td>
-                      <td className="p-3 text-xs text-[#4A5A72]">
-                        {act.deadline}
-                      </td>
-                      <td className="p-3 text-center">
-                        <button
-                          type="button"
-                          onClick={() => toggleTrackerActionStatus(act.id)}
-                          className={`px-3 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 transition-all hover:scale-105 active:scale-95 ${
-                            act.progress === 'Resolved'
-                              ? 'bg-[#D1FAE5] text-[#065F46]'
-                              : 'bg-[#FEF3C7] text-[#92400E]'
-                          }`}
-                          title="Klik untuk mengubah status (Resolved / In Progress)"
-                        >
-                          {act.progress === 'Resolved' ? (
-                            <Check className="w-3 h-3 text-[#047857]" />
-                          ) : (
-                            <Clock className="w-3 h-3 text-[#B45309]" />
-                          )}
-                          {act.progress}
-                        </button>
-                      </td>
-                      {isPM && (
-                        <td className="p-3 text-center">
-                          <div className="flex items-center justify-center gap-2">
-                            <button
-                              type="button"
-                              onClick={() => openEditActionModal(act)}
-                              className="text-[#4A5A72] hover:text-[#0062CC]"
-                              title="Edit Action"
-                              aria-label={`Edit Action ${act.code}`}
-                            >
-                              <Pencil className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => deleteTrackerAction(act.id)}
-                              className="text-[#4A5A72] hover:text-[#B91C1C]"
-                              title="Hapus Baris Action"
-                              aria-label={`Hapus Action ${act.code}`}
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
+                  {trackerActions.map((act) => {
+                    const linkedWo = findWorkOrderForTrackerAction(workOrders, act.id);
+                    const hasActiveLinkedWo =
+                      linkedWo !== undefined && linkedWo.status !== 'Dibatalkan';
+                    const picRef = act.pic || act.picCode || act.picName || 'user-ihsan';
+                    const resolvedPicId = getUser(picRef)?.id || picRef;
+
+                    return (
+                      <tr key={act.id} className="hover:bg-white/70 transition-colors">
+                        <td className="p-3 font-mono font-bold text-[#0062CC]">
+                          {act.code}
                         </td>
-                      )}
-                    </tr>
-                  ))}
+                        <td className="p-3 font-bold text-[#0B1B33]">
+                          {act.week}
+                        </td>
+                        <td className="p-3 max-w-[240px] text-xs text-[#0B1B33] font-medium leading-relaxed">
+                          {act.issue}
+                        </td>
+                        <td className="p-3">
+                          <UserChip
+                            uid={act.pic || act.picCode || act.picName}
+                            variant="avatar-nama"
+                            size="xs"
+                            useNickname
+                            avatarClassName="w-5 h-5 rounded-full text-[10px]"
+                            nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
+                          />
+                        </td>
+                        <td className="p-3 text-xs text-[#4A5A72]">
+                          {act.deadline}
+                        </td>
+                        <td className="p-3 text-center">
+                          <button
+                            type="button"
+                            onClick={() => toggleTrackerActionStatus(act.id)}
+                            className={`px-3 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 transition-all hover:scale-105 active:scale-95 ${
+                              act.progress === 'Resolved'
+                                ? 'bg-[#D1FAE5] text-[#065F46]'
+                                : 'bg-[#FEF3C7] text-[#92400E]'
+                            }`}
+                            title="Klik untuk mengubah status (Resolved / In Progress)"
+                          >
+                            {act.progress === 'Resolved' ? (
+                              <Check className="w-3 h-3 text-[#047857]" />
+                            ) : (
+                              <Clock className="w-3 h-3 text-[#B45309]" />
+                            )}
+                            {act.progress}
+                          </button>
+                        </td>
+                        <td className="p-3 text-center whitespace-nowrap">
+                          {hasActiveLinkedWo && linkedWo ? (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedWorkOrderId(linkedWo.id)}
+                              className={`px-2.5 py-1 rounded-full text-[10px] font-bold border inline-flex items-center gap-1 transition-all hover:shadow-xs ${
+                                STATUS_BADGE_CONFIG[linkedWo.status].bg
+                              } ${STATUS_BADGE_CONFIG[linkedWo.status].text} ${
+                                STATUS_BADGE_CONFIG[linkedWo.status].border
+                              }`}
+                              title={`Buka ${linkedWo.code}`}
+                            >
+                              <span className="font-mono font-extrabold">
+                                {linkedWo.code}
+                              </span>
+                              <span>·</span>
+                              <span>
+                                {linkedWo.status}
+                                {linkedWo.needsRevision &&
+                                linkedWo.status === 'Dikerjakan'
+                                  ? ' (Revisi)'
+                                  : ''}
+                              </span>
+                            </button>
+                          ) : isPM ? (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                openWorkOrderForm({
+                                  title: act.issue,
+                                  description: `Tindak lanjut Action Item MoM ${act.code} (${act.week}): ${act.issue}`,
+                                  assigneeIds: [resolvedPicId],
+                                  dueDate: parseIndonesianDateToYmd(act.deadline),
+                                  priority: 'Normal',
+                                  origin: {
+                                    type: 'mom',
+                                    trackerActionId: act.id,
+                                    trackerActionCode: act.code,
+                                  },
+                                })
+                              }
+                              className="min-h-[32px] px-3 rounded-full bg-[#EAF6FD] hover:bg-[#0062CC] text-[#0062CC] hover:text-white border border-[#BAE6FD] text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                            >
+                              <Plus className="w-3 h-3" />
+                              Jadikan Tugas
+                            </button>
+                          ) : linkedWo ? (
+                            <button
+                              type="button"
+                              onClick={() => setSelectedWorkOrderId(linkedWo.id)}
+                              className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]"
+                            >
+                              {linkedWo.code} · Dibatalkan
+                            </button>
+                          ) : (
+                            <span className="text-[11px] text-[#94A3B8]">—</span>
+                          )}
+                        </td>
+                        {isPM && (
+                          <td className="p-3 text-center">
+                            <div className="flex items-center justify-center gap-2">
+                              <button
+                                type="button"
+                                onClick={() => openEditActionModal(act)}
+                                className="text-[#4A5A72] hover:text-[#0062CC]"
+                                title="Edit Action"
+                                aria-label={`Edit Action ${act.code}`}
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => deleteTrackerAction(act.id)}
+                                className="text-[#4A5A72] hover:text-[#B91C1C]"
+                                title="Hapus Baris Action"
+                                aria-label={`Hapus Action ${act.code}`}
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        )}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

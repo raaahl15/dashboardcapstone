@@ -267,6 +267,134 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // =========================================================================
+    // Koleksi Work Order (Menu ke-9): workOrders/{woId}
+    // =========================================================================
+    function isValidWorkOrderData(data) {
+      return data.keys().hasOnly([
+          'id',
+          'code',
+          'title',
+          'description',
+          'assigneeIds',
+          'supporterIds',
+          'priority',
+          'status',
+          'dueDate',
+          'projectWeek',
+          'scheduleLink',
+          'origin',
+          'checklist',
+          'requireEvidence',
+          'evidenceUrl',
+          'evidenceNote',
+          'blockedReason',
+          'needsRevision',
+          'revisionNote',
+          'cancelReason',
+          'reopenReason',
+          'submittedAt',
+          'completedAt',
+          'cancelledAt',
+          'createdAt',
+          'createdBy',
+          'updatedAt',
+          'updatedBy',
+          'history'
+        ])
+        && data.id is string
+        && data.code is string
+        && data.title is string
+        && data.title.size() >= 1
+        && data.title.size() <= 240
+        && data.description is string
+        && data.assigneeIds is list
+        && data.assigneeIds.size() >= 1
+        && data.supporterIds is list
+        && data.priority in ['Rendah', 'Normal', 'Tinggi', 'Kritis']
+        && data.status in ['Ditugaskan', 'Dikerjakan', 'Blocked', 'Diajukan', 'Selesai', 'Dibatalkan']
+        && data.dueDate is string
+        && data.dueDate.size() >= 8
+        && data.projectWeek is number
+        && data.scheduleLink is map
+        && data.scheduleLink.type in ['none', 'gantt', 'weeklyPlan']
+        && data.origin is map
+        && data.origin.type in ['manual', 'mom']
+        && data.checklist is list
+        && data.requireEvidence is bool
+        && data.evidenceUrl is string
+        && data.evidenceNote is string
+        && data.blockedReason is string
+        && data.needsRevision is bool
+        && data.revisionNote is string
+        && data.cancelReason is string
+        && data.reopenReason is string
+        && data.submittedAt is string
+        && data.completedAt is string
+        && data.cancelledAt is string
+        && data.createdAt is string
+        && data.createdBy is string
+        && data.updatedAt is string
+        && data.updatedBy is string
+        && data.history is list;
+    }
+
+    function isWorkOrderAssignee(woData) {
+      let canonicalUid = canonicalUidForEmail(request.auth.token.email);
+      return isSignedIn() && (
+        request.auth.uid in woData.assigneeIds
+        || (canonicalUid != '' && canonicalUid in woData.assigneeIds)
+      );
+    }
+
+    function isAdminAllowedWorkOrderUpdate() {
+      return isAdmin()
+        && request.resource.data.id == resource.data.id
+        && request.resource.data.code == resource.data.code
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.createdBy == resource.data.createdBy;
+    }
+
+    function isAssigneeAllowedWorkOrderUpdate() {
+      let prev = resource.data;
+      let next = request.resource.data;
+      return isAreaOneTeamMember()
+        && isWorkOrderAssignee(prev)
+        && prev.status in ['Ditugaskan', 'Dikerjakan', 'Blocked', 'Diajukan']
+        && next.diff(prev).affectedKeys().hasOnly([
+          'status',
+          'checklist',
+          'evidenceUrl',
+          'evidenceNote',
+          'blockedReason',
+          'needsRevision',
+          'submittedAt',
+          'updatedAt',
+          'updatedBy',
+          'history'
+        ])
+        && (
+          next.status == prev.status
+          || (prev.status == 'Ditugaskan' && next.status == 'Dikerjakan')
+          || (prev.status == 'Dikerjakan' && next.status == 'Blocked' && next.blockedReason.size() > 0)
+          || (prev.status == 'Blocked' && next.status == 'Dikerjakan')
+          || (
+            prev.status == 'Dikerjakan'
+            && next.status == 'Diajukan'
+            && (!prev.requireEvidence || (next.evidenceUrl.size() > 0 && next.evidenceUrl != '#'))
+          )
+        );
+    }
+
+    match /workOrders/{woId} {
+      allow read: if isAreaOneTeamMember();
+      allow create: if isAdmin() && isValidWorkOrderData(request.resource.data);
+      allow update: if isValidWorkOrderData(request.resource.data)
+        && (isAdminAllowedWorkOrderUpdate() || isAssigneeAllowedWorkOrderUpdate());
+      // Work Order tidak pernah dihapus, hanya dibatalkan agar riwayat & ringkasan MoM tetap utuh
+      allow delete: if false;
+    }
+
     // Default deny untuk seluruh koleksi lainnya
     match /{document=**} {
       allow read, write: if false;

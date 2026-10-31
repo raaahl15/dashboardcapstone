@@ -12,8 +12,10 @@ import {
   DeliverableItem,
   StandardReferenceItem,
   RegulationDirective,
+  WorkOrder,
 } from '../types';
 import { INITIAL_USERS, INITIAL_CONFIG } from '../data/initialData';
+import { isValidWorkOrderRecord } from '../utils/workOrderHelpers';
 import {
   ProjectSectionKey,
   SECTION_KEYS,
@@ -272,7 +274,7 @@ function isValidConfigObject(c: unknown): c is Config {
 
 export function parseAndValidateImportJson(
   jsonStr: string
-): Partial<SharedProjectData> | null {
+): (Partial<SharedProjectData> & { workOrders?: WorkOrder[] }) | null {
   try {
     const data: unknown = JSON.parse(jsonStr);
     if (!isRecord(data)) {
@@ -283,6 +285,7 @@ export function parseAndValidateImportJson(
       'schema_version',
       'exported_at',
       'users',
+      'workOrders',
       ...SECTION_KEYS,
     ]);
 
@@ -293,7 +296,7 @@ export function parseAndValidateImportJson(
       }
     }
 
-    const cleanResult: Partial<SharedProjectData> = {};
+    const cleanResult: Partial<SharedProjectData> & { workOrders?: WorkOrder[] } = {};
     let recognized = 0;
 
     const listKeys = SECTION_KEYS.filter(
@@ -356,6 +359,24 @@ export function parseAndValidateImportJson(
         return null;
       }
       cleanResult.users = data.users as unknown as User[];
+    }
+
+    if (data.workOrders !== undefined) {
+      if (
+        !Array.isArray(data.workOrders) ||
+        !data.workOrders.every((wo) => isValidWorkOrderRecord(wo))
+      ) {
+        return null;
+      }
+      cleanResult.workOrders = (data.workOrders as WorkOrder[]).map((wo) => ({
+        ...wo,
+        evidenceUrl: wo.evidenceUrl
+          ? sanitizeExternalUrl(wo.evidenceUrl) === '#'
+            ? ''
+            : sanitizeExternalUrl(wo.evidenceUrl)
+          : '',
+      }));
+      recognized++;
     }
 
     if (recognized === 0) return null;

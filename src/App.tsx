@@ -5,9 +5,14 @@ import { UserChip } from './components/common/UserChip';
 import { ExportImportModal } from './components/layout/ExportImportModal';
 import { ProfileModal } from './components/layout/ProfileModal';
 import { LoginGateway } from './components/login/LoginGateway';
+import { WorkOrderFormModal } from './components/workorders/WorkOrderFormModal';
+import { WorkOrderDetailModal } from './components/workorders/WorkOrderDetailModal';
 
 const HomepageView = React.lazy(() =>
   import('./components/views/HomepageView').then((m) => ({ default: m.HomepageView }))
+);
+const WorkOrdersView = React.lazy(() =>
+  import('./components/views/WorkOrdersView').then((m) => ({ default: m.WorkOrdersView }))
 );
 const ScheduleView = React.lazy(() =>
   import('./components/views/ScheduleView').then((m) => ({ default: m.ScheduleView }))
@@ -103,6 +108,7 @@ const MainApp: React.FC = () => {
           }
         >
           {activeTab === 'homepage' && <HomepageView />}
+          {activeTab === 'work-orders' && <WorkOrdersView />}
           {activeTab === 'schedule' && <ScheduleView />}
           {activeTab === 'team-raci' && <TeamRaciView />}
           {activeTab === 'weekly-mom' && <WeeklyMoMView />}
@@ -151,6 +157,10 @@ const MainApp: React.FC = () => {
         isOpen={showProfileModal}
         onClose={() => setShowProfileModal(false)}
       />
+
+      {/* Global Work Order Create/Edit & Detail Modals */}
+      <WorkOrderFormModal />
+      <WorkOrderDetailModal />
     </div>
   );
 };

@@ -31,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
     unreadNotificationsCount,
     markNotificationAsRead,
     markAllNotificationsAsRead,
+    openWorkOrderDetail,
     refreshData,
     lastSyncedAt,
     isSyncing,
@@ -103,6 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const navItems: { key: NavTab; label: string }[] = [
     { key: 'homepage', label: 'Homepage' },
+    { key: 'work-orders', label: 'Work Order' },
     { key: 'schedule', label: 'Schedule' },
     { key: 'team-raci', label: 'Team & RACI' },
     { key: 'weekly-mom', label: 'Weekly MoM' },
@@ -149,7 +151,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={item.key}
                 type="button"
                 onClick={() => setActiveTab(item.key)}
-                className={`px-4 min-h-[44px] rounded-full text-xs font-semibold tracking-tight transition-all duration-200 whitespace-nowrap ${
+                className={`px-3 2xl:px-4 min-h-[44px] rounded-full text-xs font-semibold tracking-tight transition-all duration-200 whitespace-nowrap ${
                   isActive
                     ? 'bg-[#0B1B33] text-white shadow-xs'
                     : 'text-[#4A5A72] hover:text-[#0B1B33] hover:bg-white/90'
@@ -232,42 +234,61 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
 
                 <div className="divide-y divide-[#EAF6FD] max-h-80 overflow-y-auto my-2">
-                  {notifications.map((notif) => (
-                    <div
-                      key={notif.id}
-                      onClick={() => markNotificationAsRead(notif.id)}
-                      className={`p-3 rounded-2xl transition-colors cursor-pointer ${
-                        notif.read ? 'bg-transparent opacity-75' : 'bg-[#EAF6FD]/50'
-                      }`}
-                    >
-                      <div className="flex items-start gap-2.5">
-                        {notif.type === 'urgent' ? (
-                          <span className="p-1.5 rounded-full bg-[#FEE2E2] text-[#B91C1C] mt-0.5 shrink-0">
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                          </span>
-                        ) : notif.type === 'warning' ? (
-                          <span className="p-1.5 rounded-full bg-[#FEF3C7] text-[#B45309] mt-0.5 shrink-0">
-                            <AlertTriangle className="w-3.5 h-3.5" />
-                          </span>
-                        ) : (
-                          <span className="p-1.5 rounded-full bg-[#EAF6FD] text-[#0062CC] mt-0.5 shrink-0">
-                            <Info className="w-3.5 h-3.5" />
-                          </span>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-heading font-bold text-xs text-[#0B1B33]">
-                            {notif.title}
-                          </p>
-                          <p className="text-[12px] text-[#4A5A72] mt-0.5 leading-snug">
-                            {notif.description}
-                          </p>
-                          <span className="text-[10px] text-[#4A5A72] block mt-1">
-                            {notif.timeAgo}
-                          </span>
+                  {notifications.length === 0 ? (
+                    <div className="py-6 px-3 text-center text-xs text-[#4A5A72]">
+                      Belum ada notifikasi operasional untuk akun Anda.
+                    </div>
+                  ) : (
+                    notifications.map((notif) => (
+                      <div
+                        key={notif.id}
+                        onClick={() => {
+                          markNotificationAsRead(notif.id);
+                          if (notif.workOrderId) {
+                            openWorkOrderDetail(notif.workOrderId);
+                            setShowNotifications(false);
+                          }
+                        }}
+                        className={`p-3 rounded-2xl transition-colors cursor-pointer hover:bg-[#EAF6FD]/70 ${
+                          notif.read ? 'bg-transparent opacity-75' : 'bg-[#EAF6FD]/50'
+                        }`}
+                      >
+                        <div className="flex items-start gap-2.5">
+                          {notif.type === 'urgent' ? (
+                            <span className="p-1.5 rounded-full bg-[#FEE2E2] text-[#B91C1C] mt-0.5 shrink-0">
+                              <AlertTriangle className="w-3.5 h-3.5" />
+                            </span>
+                          ) : notif.type === 'warning' ? (
+                            <span className="p-1.5 rounded-full bg-[#FEF3C7] text-[#B45309] mt-0.5 shrink-0">
+                              <AlertTriangle className="w-3.5 h-3.5" />
+                            </span>
+                          ) : (
+                            <span className="p-1.5 rounded-full bg-[#EAF6FD] text-[#0062CC] mt-0.5 shrink-0">
+                              <Info className="w-3.5 h-3.5" />
+                            </span>
+                          )}
+                          <div className="flex-1 min-w-0">
+                            <p className="font-heading font-bold text-xs text-[#0B1B33]">
+                              {notif.title}
+                            </p>
+                            <p className="text-[12px] text-[#4A5A72] mt-0.5 leading-snug">
+                              {notif.description}
+                            </p>
+                            <div className="flex items-center justify-between gap-2 mt-1">
+                              <span className="text-[10px] text-[#4A5A72]">
+                                {notif.timeAgo}
+                              </span>
+                              {notif.workOrderId && (
+                                <span className="text-[10px] font-bold text-[#0062CC]">
+                                  Buka WO →
+                                </span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                  )}
                 </div>
               </div>
             )}

@@ -17,6 +17,7 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot,
   getDocFromServer,
+  getDocsFromServer,
   onSnapshot,
   runTransaction,
   serverTimestamp,
@@ -44,6 +45,13 @@ import {
   DefenseQuestion,
   PhysicalBundleItem,
   AppNotification,
+  WorkOrder,
+  WorkOrderChecklistItem,
+  WorkOrderDraft,
+  WorkOrderHistoryEntry,
+  WorkOrderScheduleLink,
+  CreateWorkOrderInput,
+  UpdateWorkOrderMetaInput,
 } from '../types';
 import {
   INITIAL_USERS,
@@ -96,6 +104,19 @@ import {
   typedCollection,
   typedDoc,
 } from './appContextHelpers';
+import {
+  computeDeadlineReminderNotifications,
+  computeNextWorkOrderCode,
+  computeProjectWeekFromDate,
+  extractWorkOrderSeq,
+  findWorkOrderForTrackerAction,
+  formatIsoDateTimeShort,
+  formatWorkOrderCode,
+  formatYmdToIndonesian,
+  getTodayLocalYmd,
+  isExclusivelyAssignedToCurrentPM,
+  isUserWorkOrderAssignee,
+} from '../utils/workOrderHelpers';
 
 export type { NavTab, AppContextType };
 
@@ -142,6 +163,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [defenseQuestions, setDefenseQuestions] = useState<DefenseQuestion[]>(INITIAL_DEFENSE_QUESTIONS);
   const [physicalChecklist, setPhysicalChecklist] = useState<PhysicalBundleItem[]>(INITIAL_PHYSICAL_CHECKLIST);
   const [rawNotifications, setRawNotifications] = useState<AppNotification[]>(INITIAL_NOTIFICATIONS);
+  const [workOrders, setWorkOrders] = useState<WorkOrder[]>([]);
+  const [isWorkOrdersLoaded, setIsWorkOrdersLoaded] = useState(false);
+  const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string | null>(null);
+  const [isWorkOrderFormOpen, setIsWorkOrderFormOpen] = useState(false);
+  const [workOrderFormDraft, setWorkOrderFormDraft] = useState<WorkOrderDraft | null>(null);
 
   const lastSyncedSections = useRef<Record<ProjectSectionKey, string> | null>(null);
   const pendingSectionKeysRef = useRef<Set<ProjectSectionKey>>(new Set());
@@ -151,9 +177,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const usersCollectionActiveRef = useRef(false);
   const dataUnsubscribe = useRef<(() => void) | null>(null);
   const usersUnsubscribe = useRef<(() => void) | null>(null);
+  const workOrdersUnsubscribe = useRef<(() => void) | null>(null);
   const loadTimeoutRef = useRef<number>(0);
   const isDataLoadedRef = useRef(false);
   const usersRef = useRef<User[]>(users);
+  const rawNotificationsRef = useRef<AppNotification[]>(rawNotifications);
 
   useEffect(() => {
     isDataLoadedRef.current = isDataLoaded;
@@ -162,6 +190,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   useEffect(() => {
     usersRef.current = users;
   }, [users]);
+
+  useEffect(() => {
+    rawNotificationsRef.current = rawNotifications;
+  }, [rawNotifications]);
 
   // Matched active user from single source of truth `users` (matches id or legacyId)
   const matchedCurrentUser = useMemo(() => {
@@ -182,15 +214,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     isLoggedIn && currentUserId && matchedCurrentUser && matchedCurrentUser.role === 'admin'
   );
 
-  // Per-user notification read status: menggabungkan readNotificationIds milik pengguna aktif
-  const notifications = useMemo(() => {
-    const readIds = new Set<string>(matchedCurrentUser?.readNotificationIds || []);
-    return rawNotifications.map((n) => ({
-      ...n,
-      read: Boolean(n.read || readIds.has(n.id)),
-    }));
-  }, [rawNotifications, matchedCurrentUser]);
-
   // Helper getUser(uid): resolves by UID with fallback to nickname, name, code, or raciTag
   const getUser = useCallback(
     (uidOrLegacyRef: string | undefined | null): User | undefined => {
@@ -201,6 +224,39 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     },
     [users]
   );
+
+  // Per-user notification read status, recipient filtering, & ephemeral WO deadline reminders
+  const notifications = useMemo(() => {
+    const readIds = new Set<string>(matchedCurrentUser?.readNotificationIds || []);
+    const activeUid = matchedCurrentUser?.id || '';
+    const activeLegacyId = matchedCurrentUser?.legacyId || '';
+
+    const visibleStored = rawNotifications
+      .filter((n) => {
+        if (!n.recipientIds || n.recipientIds.length === 0) return true;
+        if (!activeUid) return false;
+        return n.recipientIds.some(
+          (rid) => rid === activeUid || (Boolean(activeLegacyId) && rid === activeLegacyId)
+        );
+      })
+      .map((n) => ({
+        ...n,
+        read: Boolean(n.read || readIds.has(n.id)),
+      }));
+
+    const deadlineReminders = activeUid
+      ? computeDeadlineReminderNotifications(
+          workOrders,
+          activeUid,
+          isPM,
+          readIds,
+          getTodayLocalYmd(),
+          getUser
+        )
+      : [];
+
+    return [...deadlineReminders, ...visibleStored];
+  }, [rawNotifications, matchedCurrentUser, workOrders, isPM, getUser]);
 
   // Helper updateUser(uid, patch): updates only changed fields with updateDoc + serverTimestamp + updatedBy
   const updateUser = useCallback(
@@ -386,12 +442,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (!isLiveFirebaseConfig || !db) return;
     setIsSyncing(true);
     try {
-      const snap = await getDocFromServer(typedDoc<SharedProjectData>(db, ...PROJECT_DATA_REF));
+      const [snap, woSnap] = await Promise.all([
+        getDocFromServer(typedDoc<SharedProjectData>(db, ...PROJECT_DATA_REF)),
+        getDocsFromServer(typedCollection<WorkOrder>(db, 'workOrders')).catch(() => null),
+      ]);
       if (snap.exists()) {
         applyProjectData(snap.data() as Partial<SharedProjectData>, {
           skipUsersIfFirestoreActive: true,
         });
         setSyncError(null);
+      }
+      if (woSnap) {
+        const loadedWos = woSnap.docs
+          .map((d) => ({ ...d.data(), id: d.id }))
+          .sort((a, b) => extractWorkOrderSeq(b.code) - extractWorkOrderSeq(a.code));
+        setWorkOrders(loadedWos);
+        setIsWorkOrdersLoaded(true);
       }
     } catch (err: unknown) {
       console.error('[firestore] gagal menyegarkan data:', err);
@@ -401,10 +467,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   }, [applyProjectData]);
 
-  // Firebase Auth & Firestore onSnapshot listeners for `users` collection and `projectData/area1`
+  // Firebase Auth & Firestore onSnapshot listeners for `users`, `projectData/area1`, and `workOrders`
   useEffect(() => {
     if (!isLiveFirebaseConfig || !auth || !db) {
       setIsUsersLoaded(true);
+      setIsWorkOrdersLoaded(true);
       setIsLoggedIn(false);
       setCurrentUserId('');
       setIsLoading(false);
@@ -424,13 +491,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         dataUnsubscribe.current = null;
         usersUnsubscribe.current?.();
         usersUnsubscribe.current = null;
+        workOrdersUnsubscribe.current?.();
+        workOrdersUnsubscribe.current = null;
         usersCollectionActiveRef.current = false;
         setIsDataLoaded(false);
+        setIsWorkOrdersLoaded(false);
 
         if (!firebaseUser) {
           setIsLoggedIn(false);
           setCurrentUserId('');
+          setWorkOrders([]);
           setIsUsersLoaded(true);
+          setIsWorkOrdersLoaded(true);
           setIsLoading(false);
           return;
         }
@@ -574,11 +646,32 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             setIsLoading(false);
           }
         );
+
+        // 3. Realtime onSnapshot listener for `workOrders` collection
+        const woColRef = typedCollection<WorkOrder>(firestoreDb, 'workOrders');
+        workOrdersUnsubscribe.current = onSnapshot(
+          woColRef,
+          (snapshot: QuerySnapshot<WorkOrder>) => {
+            const loadedWos = snapshot.docs
+              .map((docSnap: QueryDocumentSnapshot<WorkOrder>) => ({
+                ...docSnap.data(),
+                id: docSnap.id,
+              }))
+              .sort((a, b) => extractWorkOrderSeq(b.code) - extractWorkOrderSeq(a.code));
+            setWorkOrders(loadedWos);
+            setIsWorkOrdersLoaded(true);
+          },
+          (err) => {
+            console.warn('[firestore] listener koleksi workOrders gagal:', err);
+            setIsWorkOrdersLoaded(true);
+          }
+        );
       },
       (err) => {
         console.error('[auth] onAuthStateChanged error:', err);
         setAuthError(err.message);
         setIsUsersLoaded(true);
+        setIsWorkOrdersLoaded(true);
         setIsLoading(false);
       }
     );
@@ -589,6 +682,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       unsubscribeAuth();
       dataUnsubscribe.current?.();
       usersUnsubscribe.current?.();
+      workOrdersUnsubscribe.current?.();
     };
   }, [applyProjectData]);
 
@@ -805,6 +899,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     dataUnsubscribe.current = null;
     usersUnsubscribe.current?.();
     usersUnsubscribe.current = null;
+    workOrdersUnsubscribe.current?.();
+    workOrdersUnsubscribe.current = null;
     usersCollectionActiveRef.current = false;
 
     if (isLiveFirebaseConfig && auth) {
@@ -818,10 +914,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     lastSyncedSections.current = null;
     setIsLoggedIn(false);
     setIsDataLoaded(false);
+    setIsWorkOrdersLoaded(false);
     setCurrentUserId('');
     setActiveTab('homepage');
+    setSelectedWorkOrderId(null);
+    setIsWorkOrderFormOpen(false);
+    setWorkOrderFormDraft(null);
     setAuthError(null);
     setSyncError(null);
+    setWorkOrders([]);
     setConfig(INITIAL_CONFIG);
     setTasks(INITIAL_TASKS);
     setDeliverables(INITIAL_DELIVERABLES);
@@ -911,9 +1012,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const updateWeeklyPlan = (id: string, patch: Partial<WeeklyPlanItem>) => {
     if (!isPM) return;
-    const nextPatch = { ...patch };
+    const nextPatch: Partial<WeeklyPlanItem> = { ...patch };
     if (nextPatch.pic) {
       nextPatch.pic = getUser(nextPatch.pic)?.id || nextPatch.pic;
+    }
+    if ('status' in patch && patch.autoCompletedByWo === undefined) {
+      nextPatch.autoCompletedByWo = false;
     }
     setWeeklyPlans((prev) =>
       prev.map((p) => (p.id === id ? { ...p, ...nextPatch } : p))
@@ -941,12 +1045,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const updateGanttTask = (id: string, patch: Partial<GanttTaskItem>) => {
     if (!isPM) return;
-    const nextPatch = { ...patch };
+    const nextPatch: Partial<GanttTaskItem> = { ...patch };
     const rawRef = nextPatch.pic || nextPatch.picCode;
     if (rawRef) {
       const resolvedUid = rawRef.toUpperCase() === 'ALL' ? 'ALL' : getUser(rawRef)?.id || rawRef;
       nextPatch.pic = resolvedUid;
       nextPatch.picCode = resolvedUid;
+    }
+    if ('status' in patch && patch.autoCompletedByWo === undefined) {
+      nextPatch.autoCompletedByWo = false;
     }
     setGanttTasks((prev) =>
       prev.map((task) => (task.id === id ? { ...task, ...nextPatch } : task))
@@ -1407,13 +1514,1151 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const allIds = Array.from(
       new Set([
         ...(matchedCurrentUser.readNotificationIds || []),
-        ...rawNotifications.map((n) => n.id),
+        ...notifications.map((n) => n.id),
       ])
     );
     void updateUser(matchedCurrentUser.id, { readNotificationIds: allIds }).catch(() => {
       // ignore background read-status sync error
     });
   };
+
+  // =========================================================================
+  // WORK ORDERS (MENU KE-9) & ONE-WAY INTEGRATIONS
+  // =========================================================================
+
+  const openWorkOrderDetail = useCallback((woId: string) => {
+    setSelectedWorkOrderId(woId);
+    setActiveTab('work-orders');
+  }, []);
+
+  const openWorkOrderForm = useCallback((draft?: WorkOrderDraft) => {
+    setWorkOrderFormDraft(draft ?? null);
+    setIsWorkOrderFormOpen(true);
+  }, []);
+
+  const closeWorkOrderForm = useCallback(() => {
+    setIsWorkOrderFormOpen(false);
+    setWorkOrderFormDraft(null);
+  }, []);
+
+  const pushTargetedNotification = useCallback(
+    (params: {
+      title: string;
+      description: string;
+      type: AppNotification['type'];
+      recipientIds: string[];
+      workOrderId?: string;
+    }) => {
+      const uniqueRecipients = Array.from(
+        new Set(params.recipientIds.map((r) => getUser(r)?.id || r).filter(Boolean))
+      );
+      if (uniqueRecipients.length === 0) return;
+
+      const nowIso = new Date().toISOString();
+      const notifId = `notif-${newId()}`;
+      const newNotif: AppNotification = {
+        id: notifId,
+        title: params.title,
+        description: params.description,
+        timeAgo: formatIsoDateTimeShort(nowIso),
+        createdAt: nowIso,
+        type: params.type,
+        read: false,
+        recipientIds: uniqueRecipients,
+        ...(params.workOrderId ? { workOrderId: params.workOrderId } : {}),
+      };
+
+      commitSectionTransaction(
+        'notifications',
+        rawNotificationsRef.current,
+        (list) => [newNotif, ...list.filter((n) => n.id !== notifId)].slice(0, 60),
+        setRawNotifications
+      );
+    },
+    [commitSectionTransaction, getUser]
+  );
+
+  const getAdminUserIds = useCallback((): string[] => {
+    const admins = users.filter((u) => u.role === 'admin').map((u) => u.id);
+    return admins.length > 0 ? admins : ['user-rahul'];
+  }, [users]);
+
+  const applyScheduleSideEffectFromWorkOrders = useCallback(
+    (
+      nextWorkOrders: WorkOrder[],
+      link: WorkOrderScheduleLink,
+      mode: 'approved-or-cancelled' | 'reopened'
+    ) => {
+      if (!isPM || link.type === 'none') return;
+
+      if (link.type === 'gantt') {
+        const activeLinked = nextWorkOrders.filter(
+          (w) =>
+            w.status !== 'Dibatalkan' &&
+            w.scheduleLink.type === 'gantt' &&
+            w.scheduleLink.taskId === link.taskId
+        );
+        commitSectionTransaction(
+          'ganttTasks',
+          ganttTasks,
+          (list) =>
+            list.map((gt) => {
+              if (gt.id !== link.taskId) return gt;
+              // Status Terlambat & Perlu dicek di Gantt tidak diubah otomatis
+              if (gt.status === 'Terlambat' || gt.status === 'Perlu dicek') {
+                return gt;
+              }
+              if (mode === 'reopened') {
+                if (gt.status === 'Selesai' && gt.autoCompletedByWo) {
+                  return { ...gt, status: 'Berjalan', autoCompletedByWo: false };
+                }
+                return gt;
+              }
+              if (activeLinked.length === 0) return gt;
+              const completedCount = activeLinked.filter((w) => w.status === 'Selesai').length;
+              if (completedCount === activeLinked.length) {
+                if (gt.status === 'Selesai') return gt;
+                return { ...gt, status: 'Selesai', autoCompletedByWo: true };
+              }
+              if (completedCount > 0 && (!gt.status || gt.status === 'Belum')) {
+                return { ...gt, status: 'Berjalan', autoCompletedByWo: false };
+              }
+              return gt;
+            }),
+          setGanttTasks
+        );
+      } else if (link.type === 'weeklyPlan') {
+        const activeLinked = nextWorkOrders.filter(
+          (w) =>
+            w.status !== 'Dibatalkan' &&
+            w.scheduleLink.type === 'weeklyPlan' &&
+            w.scheduleLink.planId === link.planId
+        );
+        commitSectionTransaction(
+          'weeklyPlans',
+          weeklyPlans,
+          (list) =>
+            list.map((plan) => {
+              if (plan.id !== link.planId) return plan;
+              if (mode === 'reopened') {
+                if (plan.status === 'Done' && plan.autoCompletedByWo) {
+                  return { ...plan, status: 'In Progress', autoCompletedByWo: false };
+                }
+                return plan;
+              }
+              if (activeLinked.length === 0) return plan;
+              const completedCount = activeLinked.filter((w) => w.status === 'Selesai').length;
+              if (completedCount === activeLinked.length) {
+                if (plan.status === 'Done') return plan;
+                return { ...plan, status: 'Done', autoCompletedByWo: true };
+              }
+              if (completedCount > 0 && plan.status === 'Planning') {
+                return { ...plan, status: 'In Progress', autoCompletedByWo: false };
+              }
+              return plan;
+            }),
+          setWeeklyPlans
+        );
+      }
+    },
+    [isPM, commitSectionTransaction, ganttTasks, weeklyPlans]
+  );
+
+  const applyMomActionSideEffect = useCallback(
+    (wo: WorkOrder, nextProgress: 'Resolved' | 'In Progress') => {
+      if (!isPM || wo.origin.type !== 'mom') return;
+      const targetActionId = wo.origin.trackerActionId;
+      commitSectionTransaction(
+        'trackerActions',
+        trackerActions,
+        (list) =>
+          list.map((act) =>
+            act.id === targetActionId ? { ...act, progress: nextProgress } : act
+          ),
+        setTrackerActions
+      );
+    },
+    [isPM, commitSectionTransaction, trackerActions]
+  );
+
+  const normalizeUserIdList = useCallback(
+    (rawIds: string[]): string[] => {
+      const seen = new Set<string>();
+      const result: string[] = [];
+      for (const raw of rawIds) {
+        const clean = raw.trim();
+        if (!clean) continue;
+        const resolved = getUser(clean)?.id || clean;
+        if (!seen.has(resolved)) {
+          seen.add(resolved);
+          result.push(resolved);
+        }
+      }
+      return result;
+    },
+    [getUser]
+  );
+
+  const sanitizeOptionalHttpUrl = (rawUrl?: string): string => {
+    const trimmed = (rawUrl || '').trim();
+    if (!trimmed) return '';
+    const candidate = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+    const clean = sanitizeExternalUrl(candidate);
+    if (clean === '#') {
+      throw new Error('Tautan bukti hasil tidak valid. Gunakan URL http:// atau https://.');
+    }
+    return clean;
+  };
+
+  const commitWorkOrderPatch = useCallback(
+    async (woId: string, patchFields: Partial<WorkOrder>, nextWo: WorkOrder): Promise<void> => {
+      const previousList = workOrders;
+      setWorkOrders((prev) =>
+        prev
+          .map((item) => (item.id === woId ? nextWo : item))
+          .sort((a, b) => extractWorkOrderSeq(b.code) - extractWorkOrderSeq(a.code))
+      );
+      setLastSyncedAt(formatTimeNow());
+
+      if (!isLiveFirebaseConfig || !db) return;
+
+      const firestoreDb = db;
+      setIsSyncing(true);
+      try {
+        await updateDoc(
+          typedDoc<WorkOrder>(firestoreDb, 'workOrders', woId),
+          patchFields as Record<string, unknown>
+        );
+        setSyncError(null);
+      } catch (err: unknown) {
+        setWorkOrders(previousList);
+        const e = err as { code?: string; message?: string };
+        console.error('[firestore] gagal memperbarui Work Order:', err);
+        const msg =
+          e?.code === 'permission-denied'
+            ? 'Perubahan Work Order ditolak oleh aturan akses Firestore.'
+            : `Gagal menyimpan Work Order (${e?.code ?? e?.message ?? 'unknown'}).`;
+        setSyncError(msg);
+        throw new Error(msg);
+      } finally {
+        setIsSyncing(false);
+      }
+    },
+    [workOrders]
+  );
+
+  const createWorkOrder = useCallback(
+    async (input: CreateWorkOrderInput): Promise<WorkOrder | null> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat membuat Work Order.');
+      }
+      const title = input.title.trim();
+      if (!title || title.length > 240) {
+        throw new Error('Judul Work Order wajib diisi (maksimal 240 karakter).');
+      }
+
+      const assigneeIds = normalizeUserIdList(input.assigneeIds);
+      if (assigneeIds.length === 0) {
+        throw new Error('Pilih minimal satu penanggung jawab.');
+      }
+
+      const supporterIds = normalizeUserIdList(input.supporterIds || []).filter(
+        (uid) => !assigneeIds.includes(uid)
+      );
+
+      if (!input.dueDate || !/^\d{4}-\d{2}-\d{2}$/.test(input.dueDate.trim())) {
+        throw new Error('Tanggal tenggat wajib diisi.');
+      }
+      const dueDate = input.dueDate.trim();
+      const { week: projectWeek } = computeProjectWeekFromDate(
+        dueDate,
+        config.projectStartDate
+      );
+
+      const origin = input.origin ?? { type: 'manual' as const };
+      if (origin.type === 'mom') {
+        const existingLinked = findWorkOrderForTrackerAction(
+          workOrders,
+          origin.trackerActionId
+        );
+        if (existingLinked && existingLinked.status !== 'Dibatalkan') {
+          throw new Error(
+            `Action item ${origin.trackerActionCode} sudah memiliki Work Order (${existingLinked.code}).`
+          );
+        }
+      }
+
+      const checklist: WorkOrderChecklistItem[] = (input.checklist || [])
+        .map((c) => ({
+          id: c.id || `chk-${newId()}`,
+          text: c.text.trim(),
+          done: Boolean(c.done),
+        }))
+        .filter((c) => c.text.length > 0);
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const woId = `wo-${newId()}`;
+      const localMaxSeq = workOrders.reduce(
+        (max, w) => Math.max(max, extractWorkOrderSeq(w.code)),
+        0
+      );
+      const optimisticCode = computeNextWorkOrderCode(workOrders, localMaxSeq).code;
+
+      const buildWoObject = (finalCode: string): WorkOrder => {
+        const initialHistory: WorkOrderHistoryEntry = {
+          id: `hist-${newId()}`,
+          at: nowIso,
+          actorId,
+          fromStatus: null,
+          toStatus: 'Ditugaskan',
+          eventLabel:
+            origin.type === 'mom'
+              ? `Dibuat dari Action Item MoM (${origin.trackerActionCode})`
+              : 'Work Order dibuat & ditugaskan',
+          note: '',
+        };
+
+        return {
+          id: woId,
+          code: finalCode,
+          title,
+          description: input.description.trim(),
+          assigneeIds,
+          supporterIds,
+          priority: input.priority,
+          status: 'Ditugaskan',
+          dueDate,
+          projectWeek,
+          scheduleLink: input.scheduleLink,
+          origin,
+          checklist,
+          requireEvidence: Boolean(input.requireEvidence),
+          evidenceUrl: '',
+          evidenceNote: '',
+          blockedReason: '',
+          needsRevision: false,
+          revisionNote: '',
+          cancelReason: '',
+          reopenReason: '',
+          submittedAt: '',
+          completedAt: '',
+          cancelledAt: '',
+          createdAt: nowIso,
+          createdBy: actorId,
+          updatedAt: nowIso,
+          updatedBy: actorId,
+          history: [initialHistory],
+        };
+      };
+
+      let committedWo = buildWoObject(optimisticCode);
+      const previousList = workOrders;
+
+      if (isLiveFirebaseConfig && db) {
+        const firestoreDb = db;
+        const metaRef = typedDoc<{ lastSeq?: number; updatedAt?: string; updatedBy?: string }>(
+          firestoreDb,
+          'config',
+          'workOrderMeta'
+        );
+        const woRef = typedDoc<WorkOrder>(firestoreDb, 'workOrders', woId);
+        setIsSyncing(true);
+        try {
+          committedWo = await runTransaction(firestoreDb, async (tx) => {
+            const metaSnap = await tx.get(metaRef);
+            const serverSeq = metaSnap.exists() ? Number(metaSnap.data().lastSeq || 0) : 0;
+            const nextSeq = Math.max(localMaxSeq, serverSeq) + 1;
+            const finalCode = formatWorkOrderCode(nextSeq);
+            const finalWo = buildWoObject(finalCode);
+            tx.set(metaRef, {
+              lastSeq: nextSeq,
+              updatedAt: nowIso,
+              updatedBy: actorId,
+            });
+            tx.set(woRef, finalWo);
+            return finalWo;
+          });
+          setWorkOrders((prev) =>
+            [committedWo, ...prev.filter((w) => w.id !== committedWo.id)].sort(
+              (a, b) => extractWorkOrderSeq(b.code) - extractWorkOrderSeq(a.code)
+            )
+          );
+          setLastSyncedAt(formatTimeNow());
+          setSyncError(null);
+        } catch (err: unknown) {
+          setWorkOrders(previousList);
+          const e = err as { code?: string; message?: string };
+          console.error('[firestore] gagal membuat Work Order:', err);
+          const msg =
+            e?.code === 'permission-denied'
+              ? 'Pembuatan Work Order ditolak oleh aturan Firestore (pastikan firestore.rules terbaru sudah dideploy).'
+              : `Gagal membuat Work Order (${e?.code ?? e?.message ?? 'unknown'}).`;
+          setSyncError(msg);
+          throw new Error(msg);
+        } finally {
+          setIsSyncing(false);
+        }
+      } else {
+        setWorkOrders((prev) => [committedWo, ...prev]);
+      }
+
+      const recipients = assigneeIds.filter((uid) => uid !== actorId);
+      if (recipients.length > 0) {
+        pushTargetedNotification({
+          title: `Work Order Baru: ${committedWo.code}`,
+          description: `"${committedWo.title}" ditugaskan kepada Anda (Tenggat: ${formatYmdToIndonesian(committedWo.dueDate)}, Prioritas: ${committedWo.priority}).`,
+          type: committedWo.priority === 'Kritis' ? 'urgent' : 'info',
+          recipientIds: recipients,
+          workOrderId: committedWo.id,
+        });
+      }
+
+      return committedWo;
+    },
+    [
+      isPM,
+      normalizeUserIdList,
+      config.projectStartDate,
+      workOrders,
+      currentUser.id,
+      pushTargetedNotification,
+    ]
+  );
+
+  const updateWorkOrderMeta = useCallback(
+    async (id: string, input: UpdateWorkOrderMetaInput): Promise<void> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat mengubah konfigurasi Work Order.');
+      }
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status === 'Dibatalkan') {
+        throw new Error('Work Order yang sudah dibatalkan tidak dapat diubah.');
+      }
+
+      const nextTitle = input.title !== undefined ? input.title.trim() : existing.title;
+      if (!nextTitle || nextTitle.length > 240) {
+        throw new Error('Judul Work Order wajib diisi (maksimal 240 karakter).');
+      }
+
+      const nextDescription =
+        input.description !== undefined ? input.description.trim() : existing.description;
+
+      const nextAssigneeIds =
+        input.assigneeIds !== undefined
+          ? normalizeUserIdList(input.assigneeIds)
+          : existing.assigneeIds;
+      if (nextAssigneeIds.length === 0) {
+        throw new Error('Pilih minimal satu penanggung jawab.');
+      }
+
+      const nextSupporterIds = (
+        input.supporterIds !== undefined
+          ? normalizeUserIdList(input.supporterIds)
+          : existing.supporterIds
+      ).filter((uid) => !nextAssigneeIds.includes(uid));
+
+      const nextPriority = input.priority ?? existing.priority;
+      const nextDueDate =
+        input.dueDate !== undefined ? input.dueDate.trim() : existing.dueDate;
+      const { week: nextProjectWeek } = computeProjectWeekFromDate(
+        nextDueDate,
+        config.projectStartDate
+      );
+
+      // Tautan jadwal bisa diubah selama WO belum Selesai
+      const nextScheduleLink =
+        existing.status === 'Selesai'
+          ? existing.scheduleLink
+          : (input.scheduleLink ?? existing.scheduleLink);
+
+      const nextChecklist =
+        input.checklist !== undefined
+          ? input.checklist
+              .map((c) => ({
+                id: c.id || `chk-${newId()}`,
+                text: c.text.trim(),
+                done: Boolean(c.done),
+              }))
+              .filter((c) => c.text.length > 0)
+          : existing.checklist;
+
+      const nextRequireEvidence =
+        input.requireEvidence !== undefined
+          ? Boolean(input.requireEvidence)
+          : existing.requireEvidence;
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const newEntries: WorkOrderHistoryEntry[] = [];
+
+      const prevAssigneesKey = [...existing.assigneeIds].sort().join(',');
+      const nextAssigneesKey = [...nextAssigneeIds].sort().join(',');
+      const assigneesChanged = prevAssigneesKey !== nextAssigneesKey;
+      const dueDateChanged = existing.dueDate !== nextDueDate;
+
+      if (assigneesChanged) {
+        const names = nextAssigneeIds
+          .map((uid) => getUser(uid)?.nickname || uid)
+          .join(', ');
+        newEntries.push({
+          id: `hist-${newId()}`,
+          at: nowIso,
+          actorId,
+          fromStatus: existing.status,
+          toStatus: existing.status,
+          eventLabel: 'Penanggung jawab diperbarui',
+          note: `Penanggung jawab: ${names}`,
+        });
+      }
+
+      if (dueDateChanged) {
+        newEntries.push({
+          id: `hist-${newId()}`,
+          at: nowIso,
+          actorId,
+          fromStatus: existing.status,
+          toStatus: existing.status,
+          eventLabel: 'Tenggat diperbarui',
+          note: `${formatYmdToIndonesian(existing.dueDate)} → ${formatYmdToIndonesian(nextDueDate)}`,
+        });
+      }
+
+      if (newEntries.length === 0) {
+        newEntries.push({
+          id: `hist-${newId()}`,
+          at: nowIso,
+          actorId,
+          fromStatus: existing.status,
+          toStatus: existing.status,
+          eventLabel: 'Detail Work Order diperbarui oleh PM',
+          note: '',
+        });
+      }
+
+      const nextHistory = [...existing.history, ...newEntries];
+      const patchFields: Partial<WorkOrder> = {
+        title: nextTitle,
+        description: nextDescription,
+        assigneeIds: nextAssigneeIds,
+        supporterIds: nextSupporterIds,
+        priority: nextPriority,
+        dueDate: nextDueDate,
+        projectWeek: nextProjectWeek,
+        scheduleLink: nextScheduleLink,
+        checklist: nextChecklist,
+        requireEvidence: nextRequireEvidence,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: nextHistory,
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      if (assigneesChanged) {
+        const added = nextAssigneeIds.filter(
+          (uid) => !existing.assigneeIds.includes(uid) && uid !== actorId
+        );
+        const removed = existing.assigneeIds.filter(
+          (uid) => !nextAssigneeIds.includes(uid) && uid !== actorId
+        );
+        if (added.length > 0) {
+          pushTargetedNotification({
+            title: `Penugasan Baru: ${nextWo.code}`,
+            description: `Anda ditambahkan sebagai penanggung jawab pada "${nextWo.title}" (Tenggat: ${formatYmdToIndonesian(nextWo.dueDate)}).`,
+            type: nextWo.priority === 'Kritis' ? 'urgent' : 'info',
+            recipientIds: added,
+            workOrderId: nextWo.id,
+          });
+        }
+        if (removed.length > 0) {
+          pushTargetedNotification({
+            title: `Penugasan Dialihkan: ${nextWo.code}`,
+            description: `Penugasan Anda pada "${nextWo.title}" telah dialihkan oleh PM.`,
+            type: 'info',
+            recipientIds: removed,
+            workOrderId: nextWo.id,
+          });
+        }
+      } else if (dueDateChanged) {
+        const recipients = nextAssigneeIds.filter((uid) => uid !== actorId);
+        if (recipients.length > 0) {
+          pushTargetedNotification({
+            title: `Tenggat Diubah: ${nextWo.code}`,
+            description: `Tenggat "${nextWo.title}" diperbarui menjadi ${formatYmdToIndonesian(nextDueDate)}.`,
+            type: 'info',
+            recipientIds: recipients,
+            workOrderId: nextWo.id,
+          });
+        }
+      }
+    },
+    [
+      isPM,
+      workOrders,
+      normalizeUserIdList,
+      config.projectStartDate,
+      currentUser.id,
+      getUser,
+      commitWorkOrderPatch,
+      pushTargetedNotification,
+    ]
+  );
+
+  const updateWorkOrderExecution = useCallback(
+    async (
+      id: string,
+      patch: {
+        checklist?: WorkOrderChecklistItem[];
+        evidenceUrl?: string;
+        evidenceNote?: string;
+      }
+    ): Promise<void> => {
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status === 'Selesai' || existing.status === 'Dibatalkan') {
+        throw new Error('Work Order yang sudah selesai atau dibatalkan tidak dapat diubah.');
+      }
+      const isAssignee = isUserWorkOrderAssignee(existing, currentUser.id, getUser);
+      if (!isPM && !isAssignee) {
+        throw new Error('Hanya penanggung jawab atau PM yang dapat memperbarui pelaksanaan WO ini.');
+      }
+
+      const nextChecklist =
+        patch.checklist !== undefined ? patch.checklist : existing.checklist;
+      const nextEvidenceUrl =
+        patch.evidenceUrl !== undefined
+          ? sanitizeOptionalHttpUrl(patch.evidenceUrl)
+          : existing.evidenceUrl;
+      const nextEvidenceNote =
+        patch.evidenceNote !== undefined
+          ? patch.evidenceNote.trim()
+          : existing.evidenceNote;
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const evidenceChanged =
+        nextEvidenceUrl !== existing.evidenceUrl ||
+        nextEvidenceNote !== existing.evidenceNote;
+
+      const nextHistory = evidenceChanged
+        ? [
+            ...existing.history,
+            {
+              id: `hist-${newId()}`,
+              at: nowIso,
+              actorId,
+              fromStatus: existing.status,
+              toStatus: existing.status,
+              eventLabel: 'Bukti hasil diperbarui',
+              note: nextEvidenceNote || nextEvidenceUrl,
+            },
+          ]
+        : existing.history;
+
+      const patchFields: Partial<WorkOrder> = {
+        checklist: nextChecklist,
+        evidenceUrl: nextEvidenceUrl,
+        evidenceNote: nextEvidenceNote,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: nextHistory,
+      };
+
+      await commitWorkOrderPatch(id, patchFields, { ...existing, ...patchFields });
+    },
+    [workOrders, currentUser.id, getUser, isPM, commitWorkOrderPatch]
+  );
+
+  const startWorkOrder = useCallback(
+    async (id: string): Promise<void> => {
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Ditugaskan') {
+        throw new Error('Hanya Work Order berstatus Ditugaskan yang dapat dimulai.');
+      }
+      const isAssignee = isUserWorkOrderAssignee(existing, currentUser.id, getUser);
+      if (!isPM && !isAssignee) {
+        throw new Error('Hanya penanggung jawab atau PM yang dapat memulai Work Order ini.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Ditugaskan',
+        toStatus: 'Dikerjakan',
+        eventLabel: 'Mulai dikerjakan',
+        note: '',
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Dikerjakan',
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      await commitWorkOrderPatch(id, patchFields, { ...existing, ...patchFields });
+    },
+    [workOrders, currentUser.id, getUser, isPM, commitWorkOrderPatch]
+  );
+
+  const blockWorkOrder = useCallback(
+    async (id: string, reason: string): Promise<void> => {
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Dikerjakan') {
+        throw new Error('Hanya Work Order berstatus Dikerjakan yang dapat ditandai Blocked.');
+      }
+      const isAssignee = isUserWorkOrderAssignee(existing, currentUser.id, getUser);
+      if (!isPM && !isAssignee) {
+        throw new Error('Hanya penanggung jawab atau PM yang dapat mengubah status Blocked.');
+      }
+      const cleanReason = reason.trim();
+      if (!cleanReason) {
+        throw new Error('Alasan kendala (Blocked) wajib diisi.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Dikerjakan',
+        toStatus: 'Blocked',
+        eventLabel: 'Ditandai Blocked',
+        note: cleanReason,
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Blocked',
+        blockedReason: cleanReason,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      const pmRecipients = getAdminUserIds().filter((uid) => uid !== actorId);
+      if (pmRecipients.length > 0) {
+        pushTargetedNotification({
+          title: `${nextWo.code} Tertahan (Blocked)`,
+          description: `${currentUser.nickname} melaporkan kendala pada "${nextWo.title}": ${cleanReason}`,
+          type: 'warning',
+          recipientIds: pmRecipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      workOrders,
+      currentUser.id,
+      currentUser.nickname,
+      getUser,
+      isPM,
+      commitWorkOrderPatch,
+      getAdminUserIds,
+      pushTargetedNotification,
+    ]
+  );
+
+  const unblockWorkOrder = useCallback(
+    async (id: string): Promise<void> => {
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Blocked') {
+        throw new Error('Work Order ini tidak sedang berstatus Blocked.');
+      }
+      const isAssignee = isUserWorkOrderAssignee(existing, currentUser.id, getUser);
+      if (!isPM && !isAssignee) {
+        throw new Error('Hanya penanggung jawab atau PM yang dapat melanjutkan Work Order ini.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Blocked',
+        toStatus: 'Dikerjakan',
+        eventLabel: 'Kendala teratasi — kembali dikerjakan',
+        note: '',
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Dikerjakan',
+        blockedReason: '',
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      await commitWorkOrderPatch(id, patchFields, { ...existing, ...patchFields });
+    },
+    [workOrders, currentUser.id, getUser, isPM, commitWorkOrderPatch]
+  );
+
+  const submitWorkOrder = useCallback(
+    async (
+      id: string,
+      evidence?: { evidenceUrl?: string; evidenceNote?: string }
+    ): Promise<void> => {
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Dikerjakan') {
+        throw new Error('Hanya Work Order berstatus Dikerjakan yang dapat diajukan.');
+      }
+      const isAssignee = isUserWorkOrderAssignee(existing, currentUser.id, getUser);
+      if (!isPM && !isAssignee) {
+        throw new Error('Hanya penanggung jawab atau PM yang dapat mengajukan Work Order ini.');
+      }
+
+      const finalEvidenceUrl =
+        evidence?.evidenceUrl !== undefined
+          ? sanitizeOptionalHttpUrl(evidence.evidenceUrl)
+          : existing.evidenceUrl;
+      const finalEvidenceNote =
+        evidence?.evidenceNote !== undefined
+          ? evidence.evidenceNote.trim()
+          : existing.evidenceNote;
+
+      if (existing.requireEvidence && !finalEvidenceUrl) {
+        throw new Error(
+          'Work Order ini mewajibkan tautan bukti hasil (URL) sebelum dapat diajukan.'
+        );
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Dikerjakan',
+        toStatus: 'Diajukan',
+        eventLabel: existing.needsRevision
+          ? 'Diajukan ulang setelah revisi'
+          : 'Diajukan untuk review PM',
+        note: finalEvidenceNote || finalEvidenceUrl,
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Diajukan',
+        evidenceUrl: finalEvidenceUrl,
+        evidenceNote: finalEvidenceNote,
+        needsRevision: false,
+        submittedAt: nowIso,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      const pmRecipients = getAdminUserIds().filter((uid) => uid !== actorId);
+      if (pmRecipients.length > 0) {
+        pushTargetedNotification({
+          title: `${nextWo.code} Menunggu Persetujuan PM`,
+          description: `${currentUser.nickname} mengajukan hasil pekerjaan "${nextWo.title}".`,
+          type: 'info',
+          recipientIds: pmRecipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      workOrders,
+      currentUser.id,
+      currentUser.nickname,
+      getUser,
+      isPM,
+      commitWorkOrderPatch,
+      getAdminUserIds,
+      pushTargetedNotification,
+    ]
+  );
+
+  const approveWorkOrder = useCallback(
+    async (id: string): Promise<void> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat menyetujui Work Order menjadi Selesai.');
+      }
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+
+      const isSelfOnlyPM = isExclusivelyAssignedToCurrentPM(
+        existing,
+        currentUser.id,
+        isPM,
+        getUser
+      );
+      const canDirectComplete =
+        isSelfOnlyPM &&
+        (existing.status === 'Ditugaskan' || existing.status === 'Dikerjakan');
+
+      if (existing.status !== 'Diajukan' && !canDirectComplete) {
+        throw new Error('Work Order harus berstatus Diajukan sebelum disetujui Selesai.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: existing.status,
+        toStatus: 'Selesai',
+        eventLabel: canDirectComplete
+          ? 'Ditandai Selesai langsung oleh PM'
+          : 'Disetujui Selesai oleh PM',
+        note: '',
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Selesai',
+        needsRevision: false,
+        completedAt: nowIso,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      const nextList = workOrders.map((w) => (w.id === id ? nextWo : w));
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      // Integrasi satu arah ke Schedule & Weekly MoM
+      applyScheduleSideEffectFromWorkOrders(
+        nextList,
+        nextWo.scheduleLink,
+        'approved-or-cancelled'
+      );
+      applyMomActionSideEffect(nextWo, 'Resolved');
+
+      const recipients = nextWo.assigneeIds.filter((uid) => uid !== actorId);
+      if (recipients.length > 0) {
+        pushTargetedNotification({
+          title: `${nextWo.code} Disetujui Selesai`,
+          description: `PM menyetujui hasil pekerjaan "${nextWo.title}".`,
+          type: 'info',
+          recipientIds: recipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      isPM,
+      workOrders,
+      currentUser.id,
+      getUser,
+      commitWorkOrderPatch,
+      applyScheduleSideEffectFromWorkOrders,
+      applyMomActionSideEffect,
+      pushTargetedNotification,
+    ]
+  );
+
+  const requestWorkOrderRevision = useCallback(
+    async (id: string, revisionNote: string): Promise<void> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat meminta revisi Work Order.');
+      }
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Diajukan') {
+        throw new Error('Hanya Work Order berstatus Diajukan yang dapat diminta revisi.');
+      }
+      const cleanNote = revisionNote.trim();
+      if (!cleanNote) {
+        throw new Error('Catatan revisi wajib diisi oleh PM.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Diajukan',
+        toStatus: 'Dikerjakan',
+        eventLabel: 'Revisi diminta oleh PM (kembali ke Dikerjakan)',
+        note: cleanNote,
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Dikerjakan',
+        needsRevision: true,
+        revisionNote: cleanNote,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      const recipients = nextWo.assigneeIds.filter((uid) => uid !== actorId);
+      if (recipients.length > 0) {
+        pushTargetedNotification({
+          title: `Revisi Diperlukan: ${nextWo.code}`,
+          description: `Catatan PM pada "${nextWo.title}": ${cleanNote}`,
+          type: 'warning',
+          recipientIds: recipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      isPM,
+      workOrders,
+      currentUser.id,
+      commitWorkOrderPatch,
+      pushTargetedNotification,
+    ]
+  );
+
+  const reopenWorkOrder = useCallback(
+    async (id: string, reason: string): Promise<void> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat membuka kembali Work Order.');
+      }
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status !== 'Selesai') {
+        throw new Error('Hanya Work Order berstatus Selesai yang dapat dibuka kembali.');
+      }
+      const cleanReason = reason.trim();
+      if (!cleanReason) {
+        throw new Error('Alasan pembukaan kembali wajib diisi.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: 'Selesai',
+        toStatus: 'Dikerjakan',
+        eventLabel: 'Dibuka kembali oleh PM',
+        note: cleanReason,
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Dikerjakan',
+        reopenReason: cleanReason,
+        completedAt: '',
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      const nextList = workOrders.map((w) => (w.id === id ? nextWo : w));
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      applyScheduleSideEffectFromWorkOrders(nextList, nextWo.scheduleLink, 'reopened');
+      applyMomActionSideEffect(nextWo, 'In Progress');
+
+      const recipients = nextWo.assigneeIds.filter((uid) => uid !== actorId);
+      if (recipients.length > 0) {
+        pushTargetedNotification({
+          title: `${nextWo.code} Dibuka Kembali`,
+          description: `PM membuka kembali "${nextWo.title}": ${cleanReason}`,
+          type: 'warning',
+          recipientIds: recipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      isPM,
+      workOrders,
+      currentUser.id,
+      commitWorkOrderPatch,
+      applyScheduleSideEffectFromWorkOrders,
+      applyMomActionSideEffect,
+      pushTargetedNotification,
+    ]
+  );
+
+  const cancelWorkOrder = useCallback(
+    async (id: string, reason: string): Promise<void> => {
+      if (!isPM) {
+        throw new Error('Hanya Project Manager yang dapat membatalkan Work Order.');
+      }
+      const existing = workOrders.find((w) => w.id === id);
+      if (!existing) throw new Error('Work Order tidak ditemukan.');
+      if (existing.status === 'Dibatalkan') {
+        throw new Error('Work Order ini sudah dibatalkan.');
+      }
+      const cleanReason = reason.trim();
+      if (!cleanReason) {
+        throw new Error('Alasan pembatalan wajib diisi.');
+      }
+
+      const nowIso = new Date().toISOString();
+      const actorId = currentUser.id;
+      const historyEntry: WorkOrderHistoryEntry = {
+        id: `hist-${newId()}`,
+        at: nowIso,
+        actorId,
+        fromStatus: existing.status,
+        toStatus: 'Dibatalkan',
+        eventLabel: 'Dibatalkan oleh PM',
+        note: cleanReason,
+      };
+
+      const patchFields: Partial<WorkOrder> = {
+        status: 'Dibatalkan',
+        cancelReason: cleanReason,
+        cancelledAt: nowIso,
+        updatedAt: nowIso,
+        updatedBy: actorId,
+        history: [...existing.history, historyEntry],
+      };
+
+      const nextWo: WorkOrder = { ...existing, ...patchFields };
+      const nextList = workOrders.map((w) => (w.id === id ? nextWo : w));
+      await commitWorkOrderPatch(id, patchFields, nextWo);
+
+      // Jika WO dibatalkan, hitung ulang apakah sisa WO aktif pada jadwal tertaut kini semuanya Selesai
+      applyScheduleSideEffectFromWorkOrders(
+        nextList,
+        nextWo.scheduleLink,
+        'approved-or-cancelled'
+      );
+
+      const recipients = nextWo.assigneeIds.filter((uid) => uid !== actorId);
+      if (recipients.length > 0) {
+        pushTargetedNotification({
+          title: `${nextWo.code} Dibatalkan`,
+          description: `PM membatalkan "${nextWo.title}": ${cleanReason}`,
+          type: 'warning',
+          recipientIds: recipients,
+          workOrderId: nextWo.id,
+        });
+      }
+    },
+    [
+      isPM,
+      workOrders,
+      currentUser.id,
+      commitWorkOrderPatch,
+      applyScheduleSideEffectFromWorkOrders,
+      pushTargetedNotification,
+    ]
+  );
 
   // Metrics
   const verifiedLogbooksCount = useMemo(() => {
@@ -1466,7 +2711,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // JSON Export / Import
   const exportDataToJson = () => {
     const payload = {
-      schema_version: '3.3',
+      schema_version: '3.4',
       exported_at: new Date().toISOString(),
       users,
       config,
@@ -1474,6 +2719,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       deliverables,
       weeklyPlans,
       ganttTasks,
+      ganttPhases,
       raciRows,
       slideDecks,
       trackerActions,
@@ -1485,6 +2731,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       defenseQuestions,
       physicalChecklist,
       notifications: rawNotifications,
+      workOrders,
     };
     return JSON.stringify(payload, null, 2);
   };
@@ -1517,6 +2764,45 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     if (d.defenseQuestions) setDefenseQuestions(d.defenseQuestions);
     if (d.physicalChecklist) setPhysicalChecklist(d.physicalChecklist);
     if (d.notifications) setRawNotifications(d.notifications);
+    if (d.workOrders) {
+      setWorkOrders(
+        [...d.workOrders].sort(
+          (a, b) => extractWorkOrderSeq(b.code) - extractWorkOrderSeq(a.code)
+        )
+      );
+      if (isLiveFirebaseConfig && db) {
+        const firestoreDb = db;
+        const importedWos = d.workOrders;
+        const maxImportedSeq = importedWos.reduce(
+          (max, w) => Math.max(max, extractWorkOrderSeq(w.code)),
+          0
+        );
+        void Promise.all([
+          ...importedWos.map((wo) =>
+            setDoc(typedDoc<WorkOrder>(firestoreDb, 'workOrders', wo.id), wo)
+          ),
+          ...(maxImportedSeq > 0
+            ? [
+                setDoc(
+                  typedDoc<Record<string, unknown>>(
+                    firestoreDb,
+                    'config',
+                    'workOrderMeta'
+                  ),
+                  {
+                    lastSeq: maxImportedSeq,
+                    updatedAt: new Date().toISOString(),
+                    updatedBy: currentUser.id,
+                  },
+                  { merge: true }
+                ),
+              ]
+            : []),
+        ]).catch((err: unknown) => {
+          console.error('[firestore] gagal memulihkan koleksi workOrders:', err);
+        });
+      }
+    }
     return 'success';
   };
 
@@ -1722,6 +3008,27 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         notifications,
         markNotificationAsRead,
         markAllNotificationsAsRead,
+
+        workOrders,
+        isWorkOrdersLoaded,
+        selectedWorkOrderId,
+        setSelectedWorkOrderId,
+        openWorkOrderDetail,
+        isWorkOrderFormOpen,
+        workOrderFormDraft,
+        openWorkOrderForm,
+        closeWorkOrderForm,
+        createWorkOrder,
+        updateWorkOrderMeta,
+        updateWorkOrderExecution,
+        startWorkOrder,
+        blockWorkOrder,
+        unblockWorkOrder,
+        submitWorkOrder,
+        approveWorkOrder,
+        requestWorkOrderRevision,
+        reopenWorkOrder,
+        cancelWorkOrder,
 
         verifiedLogbooksCount,
         totalLogbooksCount,
