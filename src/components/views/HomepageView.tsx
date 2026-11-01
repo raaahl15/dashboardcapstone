@@ -320,7 +320,7 @@ export const HomepageView: React.FC = () => {
     PROJECT_STATUS_MAP[config.projectStatus] || PROJECT_STATUS_MAP['ON TRACK'];
   const StatusIcon = activeStatusConfig.IconComponent;
 
-  const logbookTarget = 12;
+  const logbookTarget = 72;
 
   // Latest Meeting Log (sorted by session date desc, fallback to week desc, then creation id desc)
   const latestMeetingLog = useMemo<MeetingLogItem | null>(() => {
@@ -447,10 +447,10 @@ export const HomepageView: React.FC = () => {
 
               <div className="mt-1.5">
                 <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {verifiedLogbooksCount}
+                  {verifiedLogbooksCount} / {logbookTarget}
                 </span>
                 <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
-                  dari {logbookTarget} target entri
+                  Target 72 (12 Kelompok + 60 Anggota)
                 </span>
               </div>
             </div>

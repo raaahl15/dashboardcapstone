@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { LogbookItem } from '../../types';
 import {
   Plus,
   AlertTriangle,
@@ -8,32 +9,147 @@ import {
   Info,
   Trash2,
   Check,
+  Search,
+  Filter,
+  Users,
+  Layers,
+  RotateCcw,
+  Edit2,
+  Sparkles,
+  CheckCircle2,
+  X,
+  BookOpen,
 } from 'lucide-react';
+
+interface EntityMeta {
+  id: string; // 'team-area-1' or user UID
+  name: string;
+  shortName: string;
+  roleTitle: string;
+  category: 'kelompok' | 'anggota';
+  avatarText: string;
+  avatarBg: string;
+}
 
 export const LogbookView: React.FC = () => {
   const {
     logbooks,
     meetingLogs,
     addLogbook,
+    updateLogbook,
     toggleLogbookVerification,
     deleteLogbook,
+    resetLogbooksToDefault,
     currentUser,
     users,
     getUser,
-    verifiedLogbooksCount,
     isPM,
   } = useApp();
 
-  const [filterAuthor, setFilterAuthor] = useState<string>('All');
+  // Filter & Search states
+  const [filterEntity, setFilterEntity] = useState<string>('All');
+  const [filterWeek, setFilterWeek] = useState<string>('All');
+  const [filterStatus, setFilterStatus] = useState<'All' | 'verified' | 'unverified'>('All');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  // Modal states
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newDate, setNewDate] = useState(() =>
+  const [editingLog, setEditingLog] = useState<LogbookItem | null>(null);
+
+  // Form states
+  const [formAuthorId, setFormAuthorId] = useState<string>(() => currentUser.id);
+  const [formWeekNumber, setFormWeekNumber] = useState<number>(1);
+  const [formDate, setFormDate] = useState(() =>
     new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
   );
-  const [newDesc, setNewDesc] = useState('');
-  const [newIssue, setNewIssue] = useState('');
-  const [newSolution, setNewSolution] = useState('');
+  const [formDesc, setFormDesc] = useState('');
+  const [formIssue, setFormIssue] = useState('');
+  const [formSolution, setFormSolution] = useState('');
+  const [formVerified, setFormVerified] = useState(false);
 
-  const momLogbookStatus = React.useMemo(() => {
+  // 6 Target Entities: 1 Kelompok + 5 Anggota
+  const entities: EntityMeta[] = useMemo(() => {
+    const list: EntityMeta[] = [
+      {
+        id: 'team-area-1',
+        name: 'Area 1 (Kelompok)',
+        shortName: 'Kelompok A1',
+        roleTitle: 'Unit Dehidrasi Metanol',
+        category: 'kelompok',
+        avatarText: 'A1',
+        avatarBg: 'bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white',
+      },
+    ];
+
+    users.forEach((u) => {
+      list.push({
+        id: u.id,
+        name: u.name,
+        shortName: u.nickname || u.name.split(' ')[0],
+        roleTitle: u.title || 'Engineer',
+        category: 'anggota',
+        avatarText: u.code || u.avatarInitial || u.name.slice(0, 2).toUpperCase(),
+        avatarBg: u.avatarBg || 'bg-gradient-to-tr from-blue-700 to-indigo-800 text-white',
+      });
+    });
+
+    return list;
+  }, [users]);
+
+  // Target constants
+  const TARGET_PER_ENTITY = 12;
+  const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 6 = 72
+
+  // Statistics per entity
+  const statsByEntity = useMemo(() => {
+    const stats: Record<
+      string,
+      { total: number; verified: number; percent: number; isCompleted: boolean }
+    > = {};
+
+    entities.forEach((ent) => {
+      stats[ent.id] = { total: 0, verified: 0, percent: 0, isCompleted: false };
+    });
+
+    logbooks.forEach((log) => {
+      const isTeam =
+        log.authorId === 'team-area-1' ||
+        log.authorId === 'kelompok' ||
+        log.authorId === 'area-1' ||
+        log.category === 'kelompok';
+
+      const targetId = isTeam
+        ? 'team-area-1'
+        : (getUser(log.authorId || log.authorName || log.authorCode)?.id || log.authorId);
+
+      if (stats[targetId]) {
+        stats[targetId].total += 1;
+        if (log.verifiedByLecturer) {
+          stats[targetId].verified += 1;
+        }
+      }
+    });
+
+    entities.forEach((ent) => {
+      const s = stats[ent.id];
+      s.percent = Math.min(100, Math.round((s.total / TARGET_PER_ENTITY) * 100));
+      s.isCompleted = s.total >= TARGET_PER_ENTITY;
+    });
+
+    return stats;
+  }, [entities, logbooks, getUser]);
+
+  // Overall stats
+  const totalVerified = useMemo(() => {
+    return logbooks.filter((l) => l.verifiedByLecturer).length;
+  }, [logbooks]);
+
+  const totalFilled = logbooks.length;
+  const overallVerifiedPercent = Math.min(100, Math.round((totalVerified / TOTAL_TARGET) * 100));
+  const overallFilledPercent = Math.min(100, Math.round((totalFilled / TOTAL_TARGET) * 100));
+
+  // Dynamic 24-Hour Rule Alert Box from MoM
+  const momLogbookStatus = useMemo(() => {
     if (!meetingLogs || meetingLogs.length === 0) {
       return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
     }
@@ -48,70 +164,169 @@ export const LogbookView: React.FC = () => {
     };
   }, [meetingLogs, logbooks]);
 
-  // Filtered logbooks using UID resolution (with legacy fallback)
-  const filteredLogbooks = logbooks.filter((log) => {
-    if (filterAuthor === 'All') return true;
-    const resolvedAuthor = getUser(log.authorId || log.authorName || log.authorCode);
-    return resolvedAuthor?.id === filterAuthor;
-  });
+  // Filtered logbooks list
+  const filteredLogbooks = useMemo(() => {
+    return logbooks.filter((log) => {
+      const isTeam =
+        log.authorId === 'team-area-1' ||
+        log.authorId === 'kelompok' ||
+        log.authorId === 'area-1' ||
+        log.category === 'kelompok';
 
-  // Calculate contribution counts per user UID
-  const contributionByUid: Record<string, number> = {};
-  users.forEach((u) => {
-    contributionByUid[u.id] = 0;
-  });
+      const resolvedAuthorId = isTeam
+        ? 'team-area-1'
+        : (getUser(log.authorId || log.authorName || log.authorCode)?.id || log.authorId);
 
-  logbooks.forEach((log) => {
-    const resolvedAuthor = getUser(log.authorId || log.authorName || log.authorCode);
-    if (resolvedAuthor && contributionByUid[resolvedAuthor.id] !== undefined) {
-      contributionByUid[resolvedAuthor.id] += 1;
-    }
-  });
+      // 1. Entity filter
+      if (filterEntity !== 'All' && resolvedAuthorId !== filterEntity) {
+        return false;
+      }
 
-  const handleCreateEntry = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newDesc.trim()) return;
+      // 2. Week filter
+      if (filterWeek !== 'All') {
+        const weekNum = parseInt(filterWeek, 10);
+        if (log.weekNumber !== weekNum) {
+          return false;
+        }
+      }
 
-    addLogbook({
-      date: newDate,
-      authorId: currentUser.id,
-      workDescription: newDesc.trim(),
-      issueSolution: `Kendala: ${newIssue.trim() || 'Tidak ada kendala kritis'}; Solusi: ${
-        newSolution.trim() || 'Melanjutkan sesuai jadwal'
-      }.`,
+      // 3. Status filter
+      if (filterStatus === 'verified' && !log.verifiedByLecturer) return false;
+      if (filterStatus === 'unverified' && log.verifiedByLecturer) return false;
+
+      // 4. Search query
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const descMatch = (log.workDescription || '').toLowerCase().includes(q);
+        const issueMatch = (log.issueSolution || '').toLowerCase().includes(q);
+        const dateMatch = (log.date || '').toLowerCase().includes(q);
+        if (!descMatch && !issueMatch && !dateMatch) return false;
+      }
+
+      return true;
     });
+  }, [logbooks, filterEntity, filterWeek, filterStatus, searchQuery, getUser]);
 
-    setNewDesc('');
-    setNewIssue('');
-    setNewSolution('');
-    setShowAddModal(false);
+  // Open Add modal with defaults
+  const handleOpenAdd = (defaultEntityId?: string, defaultWeek?: number) => {
+    setEditingLog(null);
+    setFormAuthorId(defaultEntityId || (filterEntity !== 'All' ? filterEntity : currentUser.id));
+    setFormWeekNumber(defaultWeek || (filterWeek !== 'All' ? parseInt(filterWeek, 10) : 1));
+    setFormDate(
+      new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })
+    );
+    setFormDesc('');
+    setFormIssue('');
+    setFormSolution('');
+    setFormVerified(false);
+    setShowAddModal(true);
   };
 
-  const progressPercent = Math.min(100, Math.round((verifiedLogbooksCount / 12) * 100));
+  // Open Edit modal
+  const handleOpenEdit = (log: LogbookItem) => {
+    setEditingLog(log);
+    const isTeam =
+      log.authorId === 'team-area-1' ||
+      log.authorId === 'kelompok' ||
+      log.authorId === 'area-1' ||
+      log.category === 'kelompok';
+    const resolvedId = isTeam
+      ? 'team-area-1'
+      : (getUser(log.authorId || log.authorName || log.authorCode)?.id || log.authorId);
+
+    setFormAuthorId(resolvedId);
+    setFormWeekNumber(log.weekNumber || 1);
+    setFormDate(log.date || '');
+    setFormDesc(log.workDescription || '');
+
+    // Parse issue and solution
+    const parts = (log.issueSolution || '').split(';');
+    const rawIssue = parts[0] || '';
+    const rawSol = parts[1] || '';
+    setFormIssue(rawIssue.replace(/^Kendala:\s*/i, '').trim());
+    setFormSolution(rawSol.replace(/^Solusi:\s*/i, '').replace(/\.$/, '').trim());
+    setFormVerified(Boolean(log.verifiedByLecturer));
+    setShowAddModal(true);
+  };
+
+  // Handle Form Submit (Add or Edit)
+  const handleSubmitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formDesc.trim()) return;
+
+    const isTeam = formAuthorId === 'team-area-1' || formAuthorId === 'kelompok';
+    const finalAuthorId = isTeam ? 'team-area-1' : (getUser(formAuthorId)?.id || formAuthorId);
+    const finalCategory: 'kelompok' | 'anggota' = isTeam ? 'kelompok' : 'anggota';
+
+    const formattedIssueSolution = `Kendala: ${
+      formIssue.trim() || 'Tidak ada kendala kritis'
+    }; Solusi: ${formSolution.trim() || 'Melanjutkan sesuai jadwal'}.`;
+
+    if (editingLog) {
+      updateLogbook(editingLog.id, {
+        authorId: finalAuthorId,
+        category: finalCategory,
+        weekNumber: formWeekNumber,
+        date: formDate.trim(),
+        workDescription: formDesc.trim(),
+        issueSolution: formattedIssueSolution,
+        verifiedByLecturer: isPM ? formVerified : editingLog.verifiedByLecturer,
+        verifiedDate: isPM && formVerified ? (editingLog.verifiedDate || formDate.trim()) : undefined,
+      });
+    } else {
+      addLogbook({
+        authorId: finalAuthorId,
+        category: finalCategory,
+        weekNumber: formWeekNumber,
+        date: formDate.trim(),
+        workDescription: formDesc.trim(),
+        issueSolution: formattedIssueSolution,
+      });
+    }
+
+    setShowAddModal(false);
+    setEditingLog(null);
+  };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-200">
+    <div className="space-y-5 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, description, and logbook actions */}
+      {/* TOP ZONE: Heading, Description & Action Buttons */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          This Is Your Logbook
-        </h1>
-
-        <div className="space-y-2.5">
-          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
-              Audit kedisiplinan logbook &amp; pemenuhan kuota 12 entri per unit Area 1 • Capstone K2026 DTNTF
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="font-heading text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-[-0.02em] leading-[1.1] text-[#0B1B33]">
+              Engineering Logbook
+            </h1>
+            <p className="text-xs sm:text-sm text-[#4A5A72] mt-1">
+              Audit kedisiplinan logbook &amp; pemenuhan kuota <strong>12 entri untuk Area 1 (Kelompok)</strong> dan <strong>12 entri per anggota</strong> (Total 72 entri).
             </p>
           </div>
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
-              LOGBOOK • CAPSTONE K2026 DTNTF
-            </span>
+
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            {totalFilled < TOTAL_TARGET && (
+              <button
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      `Apakah Anda ingin menyinkronkan data logbook ke kuota lengkap ${TOTAL_TARGET} entri (12 Kelompok + 12 per anggota)?`
+                    )
+                  ) {
+                    resetLogbooksToDefault();
+                  }
+                }}
+                className="min-h-[40px] px-4 py-2 bg-white/80 hover:bg-white text-[#0062CC] border border-[#0062CC]/30 rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                title="Lengkapi data logbook menjadi 72 entri standar"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-[#0062CC]" />
+                Sinkronkan 72 Entri
+              </button>
+            )}
+
             <button
-              onClick={() => setShowAddModal(true)}
-              className="min-h-[44px] px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all shrink-0"
+              onClick={() => handleOpenAdd()}
+              className="min-h-[40px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
             >
               <Plus className="w-4 h-4" />
               Add Logbook
@@ -121,18 +336,23 @@ export const LogbookView: React.FC = () => {
       </div>
 
       {/* ========================================================================= */}
-      {/* COMPLIANCE TOP METRIC & FILTER CARD */}
+      {/* GLOBAL QUOTA SUMMARY & MOM ALERT */}
       {/* ========================================================================= */}
-      <div className="glass-card p-6 space-y-5">
+      <div className="glass-card p-5 space-y-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-          {/* Progress to 12 Quota */}
+          {/* Progress Global 72 Quota */}
           <div className="lg:col-span-5 space-y-2">
-            <div className="flex items-baseline gap-2">
-              <span className="font-heading text-4xl font-extrabold text-[#0B1B33] tabular-nums">
-                {verifiedLogbooksCount} / 12
-              </span>
-              <span className="text-xs font-semibold text-[#4A5A72]">
-                Entri Terpenuhi (Target 12)
+            <div className="flex items-baseline justify-between">
+              <div className="flex items-baseline gap-2">
+                <span className="font-heading text-3xl sm:text-4xl font-extrabold text-[#0B1B33] tabular-nums">
+                  {totalFilled} / {TOTAL_TARGET}
+                </span>
+                <span className="text-xs font-semibold text-[#4A5A72]">
+                  Entri Terisi ({totalVerified} Terparaf)
+                </span>
+              </div>
+              <span className="text-xs font-bold text-[#0062CC] tabular-nums">
+                {overallFilledPercent}% Terisi
               </span>
             </div>
 
@@ -140,12 +360,16 @@ export const LogbookView: React.FC = () => {
             <div className="w-full h-3.5 rounded-full bg-[#DCEBF7] overflow-hidden p-0.5">
               <div
                 className="h-full rounded-full bg-hatch-pattern transition-all duration-500"
-                style={{ width: `${progressPercent}%` }}
+                style={{ width: `${overallFilledPercent}%` }}
               ></div>
             </div>
-            <span className="text-[11px] font-bold text-[#0062CC] block tabular-nums">
-              {progressPercent}%
-            </span>
+
+            <div className="flex items-center justify-between text-[11px] text-[#4A5A72]">
+              <span>Target: 12 Kelompok + 60 Anggota (5 × 12)</span>
+              <span className="font-semibold text-[#047857]">
+                {totalVerified} / {TOTAL_TARGET} ACC ({overallVerifiedPercent}%)
+              </span>
+            </div>
           </div>
 
           {/* Dynamic 24-Hour Rule Alert Box */}
@@ -165,59 +389,206 @@ export const LogbookView: React.FC = () => {
               <p className="font-semibold leading-relaxed">
                 {momLogbookStatus.hasUnloggedMom
                   ? `Pengingat: MoM ${momLogbookStatus.latestMomLabel} belum memiliki entri logbook dalam 24 jam.`
-                  : `Tersinkron: MoM terbaru (${momLogbookStatus.latestMomLabel}) telah memiliki dokumentasi entri logbook (${logbooks.length} total entri).`}
+                  : `Tersinkron: MoM mingguan terbaru (${momLogbookStatus.latestMomLabel}) telah memiliki entri logbook terkait.`}
               </p>
               <p className="text-[11px] opacity-85 mt-0.5">
-                {momLogbookStatus.hasUnloggedMom
-                  ? 'Pastikan uraian pekerjaan teknis segera didokumentasikan sebelum sesi asistensi berikutnya.'
-                  : 'Seluruh sesi asistensi yang tercatat telah memiliki tindak lanjut pada logbook tim.'}
+                Struktur Capstone K2026 DTNTF mewajibkan setiap entri terparaf oleh dosen pembimbing resmi pada buku logbook fisik.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Contribution chips & Filter row */}
-        <div className="pt-3 border-t border-white/80 flex flex-wrap items-center justify-between gap-4">
-          {/* Contribution Badges */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold text-[#0B1B33]">KONTRIBUSI UNIT:</span>
-            {users.map((u) => (
-              <span
-                key={u.id}
-                className="px-3 py-1 rounded-full text-xs font-semibold bg-white/70 text-[#0062CC] border border-white inline-flex items-center gap-1"
-              >
-                <span>{u.nickname}:</span>
-                <strong>{contributionByUid[u.id] ?? 0}</strong>
-              </span>
-            ))}
+        {/* ========================================================================= */}
+        {/* 6 ENTITY MATRIX CARDS (Kelompok + 5 Anggota) */}
+        {/* ========================================================================= */}
+        <div className="pt-3 border-t border-white/80">
+          <div className="flex items-center justify-between mb-2.5">
+            <span className="text-xs font-bold text-[#0B1B33] flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-[#0062CC]" />
+              MATRIKS KUOTA 6 ENTITAS (1 KELOMPOK + 5 ANGGOTA × 12 ENTRI):
+            </span>
+            <span className="text-[11px] text-[#4A5A72]">
+              Klik kartu untuk memfilter entri
+            </span>
           </div>
 
-          {/* Filter Pencatat Buttons */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            {entities.map((ent) => {
+              const stat = statsByEntity[ent.id] || { total: 0, verified: 0, percent: 0, isCompleted: false };
+              const isSelected = filterEntity === ent.id;
+
+              return (
+                <button
+                  key={ent.id}
+                  onClick={() => setFilterEntity(isSelected ? 'All' : ent.id)}
+                  className={`p-3 rounded-2xl text-left transition-all border ${
+                    isSelected
+                      ? 'bg-white shadow-md border-[#0062CC] ring-2 ring-[#0062CC]/20'
+                      : 'bg-white/70 hover:bg-white border-white/80 shadow-xs'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
+                    <span
+                      className={`w-6 h-6 rounded-md font-heading font-bold text-[10px] flex items-center justify-center shrink-0 ${ent.avatarBg}`}
+                    >
+                      {ent.avatarText}
+                    </span>
+                    <span
+                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full tabular-nums ${
+                        stat.isCompleted
+                          ? 'bg-[#D1FAE5] text-[#065F46]'
+                          : 'bg-[#FEF3C7] text-[#92400E]'
+                      }`}
+                    >
+                      {stat.total}/12
+                    </span>
+                  </div>
+
+                  <p className="font-heading font-bold text-xs text-[#0B1B33] truncate">
+                    {ent.shortName}
+                  </p>
+                  <p className="text-[10px] text-[#4A5A72] truncate">
+                    {ent.category === 'kelompok' ? 'Area 1 Unit' : ent.roleTitle}
+                  </p>
+
+                  {/* Mini progress bar */}
+                  <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden mt-2">
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${
+                        stat.isCompleted ? 'bg-[#047857]' : 'bg-[#0062CC]'
+                      }`}
+                      style={{ width: `${stat.percent}%` }}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between text-[9px] text-[#4A5A72] mt-1 tabular-nums">
+                    <span>ACC: {stat.verified}/12</span>
+                    <span>{stat.percent}%</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
+      {/* FILTER & SEARCH BAR */}
+      {/* ========================================================================= */}
+      <div className="glass-card p-4 space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* Entity Filter Pills */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-bold text-[#0B1B33] mr-1">FILTER PENCATAT:</span>
+            <span className="text-xs font-bold text-[#0B1B33] mr-1 flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-[#0062CC]" />
+              ENTITAS:
+            </span>
             <button
-              onClick={() => setFilterAuthor('All')}
+              onClick={() => setFilterEntity('All')}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                filterAuthor === 'All'
+                filterEntity === 'All'
                   ? 'bg-[#0B1B33] text-white shadow-xs'
                   : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
               }`}
             >
-              All
+              Semua ({logbooks.length})
             </button>
-            {users.map((u) => {
-              const isSelected = filterAuthor === u.id;
+            {entities.map((ent) => {
+              const count = statsByEntity[ent.id]?.total || 0;
+              const isSelected = filterEntity === ent.id;
               return (
                 <button
-                  key={u.id}
-                  onClick={() => setFilterAuthor(u.id)}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
+                  key={ent.id}
+                  onClick={() => setFilterEntity(ent.id)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1 ${
                     isSelected
                       ? 'bg-[#0B1B33] text-white shadow-xs'
                       : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
                   }`}
                 >
-                  {u.nickname}
+                  <span>{ent.shortName}</span>
+                  <span className="text-[10px] opacity-80 tabular-nums">({count})</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Search box */}
+          <div className="relative min-w-[200px] max-w-xs w-full sm:w-auto">
+            <Search className="w-3.5 h-3.5 text-[#6B7F99] absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari uraian, kendala..."
+              className="w-full h-8 pl-8 pr-3 bg-white/80 border border-white rounded-full text-xs outline-none focus:bg-white focus:ring-1 focus:ring-[#0062CC]"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6B7F99] hover:text-[#0B1B33]"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Secondary Filter: Week & Verification Status */}
+        <div className="pt-2 border-t border-white/60 flex flex-wrap items-center justify-between gap-3 text-xs">
+          {/* Week Selector */}
+          <div className="flex flex-wrap items-center gap-1">
+            <span className="text-[11px] font-semibold text-[#4A5A72] mr-1">Minggu:</span>
+            <button
+              onClick={() => setFilterWeek('All')}
+              className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
+                filterWeek === 'All'
+                  ? 'bg-[#0062CC] text-white'
+                  : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+              }`}
+            >
+              Semua
+            </button>
+            {Array.from({ length: 12 }, (_, i) => i + 1).map((w) => {
+              const isSelected = filterWeek === String(w);
+              return (
+                <button
+                  key={w}
+                  onClick={() => setFilterWeek(String(w))}
+                  className={`px-2 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
+                    isSelected
+                      ? 'bg-[#0062CC] text-white'
+                      : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+                  }`}
+                >
+                  W{w < 10 ? `0${w}` : w}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Status Filter */}
+          <div className="flex items-center gap-1.5">
+            <span className="text-[11px] font-semibold text-[#4A5A72] mr-1">Status Paraf:</span>
+            {(['All', 'verified', 'unverified'] as const).map((st) => {
+              const label =
+                st === 'All'
+                  ? 'Semua'
+                  : st === 'verified'
+                  ? 'Terverifikasi'
+                  : 'Belum Diparaf';
+              const isSelected = filterStatus === st;
+              return (
+                <button
+                  key={st}
+                  onClick={() => setFilterStatus(st)}
+                  className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
+                    isSelected
+                      ? 'bg-[#0B1B33] text-white'
+                      : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+                  }`}
+                >
+                  {label}
                 </button>
               );
             })}
@@ -230,108 +601,177 @@ export const LogbookView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="glass-card p-5 sm:p-6 space-y-4">
         <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
-          <table className="w-full text-left border-collapse min-w-[760px]">
+          <table className="w-full text-left border-collapse min-w-[860px]">
             <thead>
               <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72] uppercase tracking-wider">
-                <th className="p-3.5">Tanggal</th>
-                <th className="p-3.5">Pencatat</th>
-                <th className="p-3.5">Uraian Pekerjaan</th>
-                <th className="p-3.5">Kendala dan Solusi</th>
-                <th className="p-3.5 text-center">Paraf Dosen & Status</th>
-                <th className="p-3.5 text-center">Aksi</th>
+                <th className="p-3.5 w-28">Minggu &amp; Tgl</th>
+                <th className="p-3.5 w-44">Kategori &amp; Entitas</th>
+                <th className="p-3.5">Uraian Pekerjaan Teknis</th>
+                <th className="p-3.5 w-72">Kendala dan Solusi</th>
+                <th className="p-3.5 text-center w-40">Paraf Dosen</th>
+                <th className="p-3.5 text-center w-24">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/80 text-xs">
-              {filteredLogbooks.map((log) => {
-                const authorRef = log.authorId || log.authorName || log.authorCode;
-                const resolvedAuthor = getUser(authorRef);
-                const canDelete = isPM || resolvedAuthor?.id === currentUser.id;
+              {filteredLogbooks.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-[#4A5A72]">
+                    <BookOpen className="w-8 h-8 text-[#6B7F99] mx-auto mb-2 opacity-50" />
+                    <p className="font-semibold text-sm text-[#0B1B33]">Tidak ada entri logbook yang cocok</p>
+                    <p className="text-xs mt-1">Coba sesuaikan filter entitas atau kata kunci pencarian Anda.</p>
+                  </td>
+                </tr>
+              ) : (
+                filteredLogbooks.map((log) => {
+                  const isTeam =
+                    log.authorId === 'team-area-1' ||
+                    log.authorId === 'kelompok' ||
+                    log.authorId === 'area-1' ||
+                    log.category === 'kelompok';
 
-                return (
-                  <tr key={log.id} className="hover:bg-white/70 transition-colors">
-                    {/* Tanggal */}
-                    <td className="p-3.5 font-bold text-[#0B1B33] whitespace-nowrap">
-                      {log.date}
-                    </td>
+                  const authorRef = isTeam ? 'team-area-1' : (log.authorId || log.authorName || log.authorCode);
+                  const resolvedAuthor = getUser(authorRef);
+                  const canManage = isPM || isTeam || resolvedAuthor?.id === currentUser.id;
 
-                    {/* Pencatat (via UserChip) */}
-                    <td className="p-3.5 whitespace-nowrap">
-                      <UserChip
-                        uid={authorRef}
-                        variant="avatar-nama-jabatan"
-                        size="md"
-                        useNickname
-                        avatarClassName="w-8 h-8 rounded-full font-heading font-bold text-xs"
-                        nameClassName="font-heading !text-xs !font-bold !text-[#0B1B33]"
-                        titleClassName="!text-[10px] !text-[#4A5A72]"
-                      />
-                    </td>
+                  // Parse issue and solution
+                  const parts = (log.issueSolution || '').split(';');
+                  const issueText = parts[0] || '';
+                  const solutionText = parts.slice(1).join(';') || '';
 
-                    {/* Uraian Pekerjaan */}
-                    <td className="p-3.5 max-w-[280px] text-[#0B1B33] font-medium leading-relaxed">
-                      {log.workDescription}
-                    </td>
-
-                    {/* Kendala dan Solusi */}
-                    <td className="p-3.5 max-w-[240px] text-[11px] leading-relaxed">
-                      <p className="text-[#B45309] font-medium">
-                        {log.issueSolution.split(';')[0]}
-                      </p>
-                      <p className="text-[#047857] font-medium mt-0.5">
-                        {log.issueSolution.split(';')[1] || ''}
-                      </p>
-                    </td>
-
-                    {/* Paraf & Status */}
-                    <td className="p-3.5 text-center whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-2">
-                        {log.verifiedByLecturer ? (
-                          <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#D1FAE5] text-[#065F46] flex items-center gap-1">
-                            <Check className="w-3 h-3 text-[#047857]" />
-                            Terverifikasi
+                  return (
+                    <tr key={log.id} className="hover:bg-white/70 transition-colors">
+                      {/* Minggu & Tanggal */}
+                      <td className="p-3.5 whitespace-nowrap">
+                        <div className="flex flex-col gap-0.5">
+                          {log.weekNumber ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC] w-fit">
+                              W{log.weekNumber < 10 ? `0${log.weekNumber}` : log.weekNumber}
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-slate-100 text-slate-600 w-fit">
+                              ENTRI
+                            </span>
+                          )}
+                          <span className="font-bold text-[#0B1B33] text-xs">
+                            {log.date}
                           </span>
+                        </div>
+                      </td>
+
+                      {/* Kategori & Entitas */}
+                      <td className="p-3.5 whitespace-nowrap">
+                        {isTeam ? (
+                          <div className="inline-flex items-center gap-2">
+                            <span className="w-8 h-8 rounded-full font-heading font-bold text-xs bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white flex items-center justify-center shadow-xs">
+                              A1
+                            </span>
+                            <div className="flex flex-col leading-tight">
+                              <span className="font-heading font-bold text-xs text-[#0B1B33]">
+                                Area 1 (Kelompok)
+                              </span>
+                              <span className="text-[10px] text-[#0062CC] font-semibold">
+                                Unit Capstone
+                              </span>
+                            </div>
+                          </div>
                         ) : (
-                          <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-[#B45309]" />
-                            Belum Diparaf
-                          </span>
+                          <UserChip
+                            uid={authorRef}
+                            variant="avatar-nama-jabatan"
+                            size="md"
+                            useNickname
+                            avatarClassName="w-8 h-8 rounded-full font-heading font-bold text-xs"
+                            nameClassName="font-heading !text-xs !font-bold !text-[#0B1B33]"
+                            titleClassName="!text-[10px] !text-[#4A5A72]"
+                          />
                         )}
+                      </td>
 
-                        {/* Interactive Toggle Switch (PM Only) */}
-                        {isPM && (
-                          <button
-                            type="button"
-                            onClick={() => toggleLogbookVerification(log.id)}
-                            className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-                              log.verifiedByLecturer ? 'bg-[#0062CC]' : 'bg-[#C9DCEB]'
-                            }`}
-                            title="Verifikasi Paraf Dosen (Khusus PM)"
-                          >
-                            <div
-                              className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
-                                log.verifiedByLecturer ? 'translate-x-5' : 'translate-x-0'
+                      {/* Uraian Pekerjaan Teknis */}
+                      <td className="p-3.5 text-[#0B1B33] font-medium leading-relaxed">
+                        {log.workDescription}
+                      </td>
+
+                      {/* Kendala dan Solusi */}
+                      <td className="p-3.5 text-[11px] leading-relaxed">
+                        <div className="p-2 rounded-xl bg-white/70 border border-white/90 space-y-1">
+                          <p className="text-[#B45309] font-medium leading-snug">
+                            {issueText}
+                          </p>
+                          {solutionText && (
+                            <p className="text-[#047857] font-medium leading-snug">
+                              {solutionText}
+                            </p>
+                          )}
+                        </div>
+                      </td>
+
+                      {/* Paraf Dosen & Status */}
+                      <td className="p-3.5 text-center whitespace-nowrap">
+                        <div className="flex flex-col items-center justify-center gap-1.5">
+                          {log.verifiedByLecturer ? (
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#D1FAE5] text-[#065F46] flex items-center gap-1">
+                              <Check className="w-3 h-3 text-[#047857]" />
+                              Terverifikasi
+                            </span>
+                          ) : (
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-[#B45309]" />
+                              Belum Diparaf
+                            </span>
+                          )}
+
+                          {/* Interactive Toggle Switch (PM Only) */}
+                          {isPM && (
+                            <button
+                              type="button"
+                              onClick={() => toggleLogbookVerification(log.id)}
+                              className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
+                                log.verifiedByLecturer ? 'bg-[#0062CC]' : 'bg-[#C9DCEB]'
                               }`}
-                            />
-                          </button>
-                        )}
-                      </div>
-                    </td>
+                              title="Toggle status verifikasi paraf dosen (PM)"
+                            >
+                              <div
+                                className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                  log.verifiedByLecturer ? 'translate-x-5' : 'translate-x-0'
+                                }`}
+                              />
+                            </button>
+                          )}
+                        </div>
+                      </td>
 
-                    {/* Delete Action */}
-                    <td className="p-3.5 text-center">
-                      {canDelete && (
-                        <button
-                          onClick={() => deleteLogbook(log.id)}
-                          className="text-[#4A5A72] hover:text-[#B91C1C] transition-colors"
-                          title="Hapus Entri"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
+                      {/* Action buttons (Edit & Delete) */}
+                      <td className="p-3.5 text-center whitespace-nowrap">
+                        <div className="flex items-center justify-center gap-2">
+                          {canManage && (
+                            <button
+                              onClick={() => handleOpenEdit(log)}
+                              className="text-[#4A5A72] hover:text-[#0062CC] transition-colors p-1"
+                              title="Edit Entri"
+                            >
+                              <Edit2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                          {canManage && (
+                            <button
+                              onClick={() => {
+                                if (window.confirm('Hapus entri logbook ini?')) {
+                                  deleteLogbook(log.id);
+                                }
+                              }}
+                              className="text-[#4A5A72] hover:text-[#B91C1C] transition-colors p-1"
+                              title="Hapus Entri"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
@@ -340,92 +780,168 @@ export const LogbookView: React.FC = () => {
         <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-[#4A5A72] border-t border-white/80">
           <div className="flex items-center gap-1.5 font-medium">
             <Info className="w-4 h-4 text-[#0062CC]" />
-            <span>Status Terverifikasi merefleksikan paraf basah di logbook fisik resmi.</span>
+            <span>Status Terverifikasi merefleksikan paraf basah di logbook fisik resmi Capstone DTNTF.</span>
           </div>
           <span className="font-semibold text-[#0B1B33]">
-            Total {filteredLogbooks.length} entri ditampilkan • Kuota Departemen: 12 Entri Terparaf
+            Menampilkan {filteredLogbooks.length} dari total {logbooks.length} entri • Kuota Target: 72 Entri (6 × 12)
           </span>
         </div>
       </div>
 
-      {/* Add Logbook Modal */}
+      {/* ========================================================================= */}
+      {/* MODAL: ADD / EDIT LOGBOOK */}
+      {/* ========================================================================= */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Tambah Entri Logbook Baru
-            </h3>
-            <form onSubmit={handleCreateEntry} className="mt-4 space-y-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-150">
+          <div className="w-full max-w-lg bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
+              <h3 className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-[#0062CC]" />
+                {editingLog ? 'Edit Entri Logbook' : 'Tambah Entri Logbook Baru'}
+              </h3>
+              <button
+                onClick={() => {
+                  setShowAddModal(false);
+                  setEditingLog(null);
+                }}
+                className="text-[#6B7F99] hover:text-[#0B1B33]"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmitForm} className="space-y-3.5 text-xs">
+              {/* Entitas / Pencatat */}
               <div>
-                <label className="block text-xs font-semibold mb-1">Tanggal</label>
-                <input
-                  type="text"
-                  value={newDate}
-                  onChange={(e) => setNewDate(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                  Entitas Pencatat (Kelompok / Anggota)
+                </label>
+                <select
+                  value={formAuthorId}
+                  onChange={(e) => setFormAuthorId(e.target.value)}
+                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
                   required
-                />
+                >
+                  {entities.map((ent) => (
+                    <option key={ent.id} value={ent.id}>
+                      {ent.category === 'kelompok' ? `🏢 ${ent.name} (Kuota 12)` : `👤 ${ent.name} (${ent.roleTitle})`}
+                    </option>
+                  ))}
+                </select>
               </div>
 
-              <div className="flex items-center gap-2 py-1">
-                <span className="text-xs font-semibold text-[#0B1B33]">Pencatat:</span>
-                <UserChip
-                  uid={currentUser.id}
-                  variant="avatar-nama-jabatan"
-                  size="sm"
-                  inlineTitle
-                />
+              {/* Grid: Minggu & Tanggal */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                    Minggu Perkuliahan
+                  </label>
+                  <select
+                    value={formWeekNumber}
+                    onChange={(e) => setFormWeekNumber(parseInt(e.target.value, 10))}
+                    className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                  >
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map((w) => (
+                      <option key={w} value={w}>
+                        Minggu {w} (W{w < 10 ? `0${w}` : w})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#0B1B33] mb-1">Tanggal</label>
+                  <input
+                    type="text"
+                    value={formDate}
+                    onChange={(e) => setFormDate(e.target.value)}
+                    placeholder="Contoh: 14 Sep 2026"
+                    className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
+                    required
+                  />
+                </div>
               </div>
 
+              {/* Uraian Pekerjaan Teknis */}
               <div>
-                <label className="block text-xs font-semibold mb-1">
+                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
                   Uraian Pekerjaan Teknis
                 </label>
                 <textarea
                   rows={3}
-                  value={newDesc}
-                  onChange={(e) => setNewDesc(e.target.value)}
-                  placeholder="Deskripsikan pekerjaan rekayasa spesifik (simulasi DWSIM, piping P&ID, ISA/ISO)..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  value={formDesc}
+                  onChange={(e) => setFormDesc(e.target.value)}
+                  placeholder="Deskripsikan pekerjaan teknis rekayasa spesifik (simulasi DWSIM, piping P&ID, ISA-5.06, kalkulasi CAPEX/OPEX)..."
+                  className="w-full p-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC] leading-relaxed"
                   required
                 />
               </div>
 
+              {/* Kendala */}
               <div>
-                <label className="block text-xs font-semibold mb-1">Kendala Dihadapi</label>
+                <label className="block text-xs font-bold text-[#B45309] mb-1">
+                  Kendala Dihadapi
+                </label>
                 <input
                   type="text"
-                  value={newIssue}
-                  onChange={(e) => setNewIssue(e.target.value)}
-                  placeholder="Contoh: Kesulitan penentuan parameter kinetika"
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  value={formIssue}
+                  onChange={(e) => setFormIssue(e.target.value)}
+                  placeholder="Contoh: Konvergensi simulasi lambat pada aliran recycle"
+                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
                 />
               </div>
 
+              {/* Solusi */}
               <div>
-                <label className="block text-xs font-semibold mb-1">Solusi / Tindak Lanjut</label>
+                <label className="block text-xs font-bold text-[#047857] mb-1">
+                  Solusi / Tindak Lanjut
+                </label>
                 <input
                   type="text"
-                  value={newSolution}
-                  onChange={(e) => setNewSolution(e.target.value)}
-                  placeholder="Contoh: Konfirmasi ke dosen dan gunakan data Smith"
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  value={formSolution}
+                  onChange={(e) => setFormSolution(e.target.value)}
+                  placeholder="Contoh: Ganti metode inisialisasi solver ke Newton-Raphson"
+                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              {/* PM Verification Option */}
+              {isPM && (
+                <div className="pt-2 border-t border-[#EAF6FD] flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#0B1B33]">
+                    Status Paraf Dosen Pembimbing
+                  </span>
+                  <label className="inline-flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formVerified}
+                      onChange={(e) => setFormVerified(e.target.checked)}
+                      className="w-4 h-4 rounded text-[#0062CC] focus:ring-0"
+                    />
+                    <span className="text-xs font-medium text-[#4A5A72]">
+                      Tandai Terverifikasi
+                    </span>
+                  </label>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex justify-end gap-2 pt-3 border-t border-[#EAF6FD]">
                 <button
                   type="button"
-                  onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                  onClick={() => {
+                    setShowAddModal(false);
+                    setEditingLog(null);
+                  }}
+                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:text-[#0B1B33]"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold rounded-full shadow-xs transition-all"
                 >
-                  Simpan Entri
+                  {editingLog ? 'Perbarui Entri' : 'Simpan Entri'}
                 </button>
               </div>
             </form>

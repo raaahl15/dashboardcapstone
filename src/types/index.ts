@@ -188,8 +188,10 @@ export interface StandardReferenceItem {
 
 export interface LogbookItem {
   id: string;
+  weekNumber?: number; // Minggu 1 s.d. 12
+  category?: 'kelompok' | 'anggota'; // 'kelompok' untuk Area 1, 'anggota' untuk individual
   date: string;
-  authorId: string; // UID ('user-ihsan', etc.)
+  authorId: string; // 'team-area-1' ATAU UID pengguna ('user-rahul', 'user-ihsan', dll.)
   authorName?: string; // Legacy field preserved
   authorRole?: string; // Legacy field preserved
   authorCode?: string; // Legacy field preserved

@@ -1373,10 +1373,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const addLogbook = (entry: Omit<LogbookItem, 'id' | 'verifiedByLecturer'>) => {
-    const resolvedUid = getUser(entry.authorId)?.id || entry.authorId;
+    const isTeam =
+      entry.authorId === 'team-area-1' ||
+      entry.authorId === 'kelompok' ||
+      entry.authorId === 'area-1';
+    const resolvedUid = isTeam ? 'team-area-1' : (getUser(entry.authorId)?.id || entry.authorId);
     const itemId = `log-${newId()}`;
     const newEntry: LogbookItem = {
       date: entry.date,
+      weekNumber: entry.weekNumber,
+      category: isTeam ? 'kelompok' : (entry.category || 'anggota'),
       authorId: resolvedUid,
       workDescription: entry.workDescription,
       issueSolution: entry.issueSolution,
@@ -1387,6 +1393,24 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       'logbooks',
       logbooks,
       (list) => [newEntry, ...list.filter((l) => l.id !== itemId)],
+      setLogbooks
+    );
+  };
+
+  const updateLogbook = (id: string, patch: Partial<LogbookItem>) => {
+    commitSectionTransaction(
+      'logbooks',
+      logbooks,
+      (list) => list.map((l) => (l.id === id ? { ...l, ...patch } : l)),
+      setLogbooks
+    );
+  };
+
+  const resetLogbooksToDefault = () => {
+    commitSectionTransaction(
+      'logbooks',
+      logbooks,
+      () => INITIAL_LOGBOOKS,
       setLogbooks
     );
   };
@@ -2990,8 +3014,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
         logbooks,
         addLogbook,
+        updateLogbook,
         toggleLogbookVerification,
         deleteLogbook,
+        resetLogbooksToDefault,
 
         rubricParameters,
         updateRubricScore,

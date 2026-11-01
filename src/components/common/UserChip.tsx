@@ -191,6 +191,56 @@ export const UserChip: React.FC<UserChipProps> = ({
     );
   }
 
+  // 2b. Special team entity for Area 1 (Kelompok)
+  const isTeamArea1 =
+    uid &&
+    (uid === 'team-area-1' ||
+      uid === 'kelompok' ||
+      uid === 'area-1' ||
+      uid.trim().toLowerCase() === 'area 1 (kelompok)');
+
+  if (isTeamArea1) {
+    const teamAvatar = (
+      <span
+        title="Area 1 (Kelompok) — Unit Dehidrasi Metanol"
+        className={`inline-flex items-center justify-center font-bold font-heading shrink-0 bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white shadow-xs border border-white/20 ${dimensions.avatar} ${avatarClassName}`}
+      >
+        A1
+      </span>
+    );
+
+    if (variant === 'avatar') {
+      return teamAvatar;
+    }
+
+    return (
+      <span className={`inline-flex items-center ${dimensions.gap} ${className}`}>
+        {teamAvatar}
+        {variant === 'avatar-nama' ? (
+          <span className={`font-semibold text-slate-800 ${dimensions.name} ${nameClassName}`}>
+            Area 1 (Kelompok)
+          </span>
+        ) : inlineTitle ? (
+          <span className={`font-semibold text-slate-800 ${dimensions.name} ${nameClassName}`}>
+            Area 1 (Kelompok){' '}
+            <span className={`font-normal text-[#4A5A72] ${dimensions.title} ${titleClassName}`}>
+              (Unit Dehidrasi Metanol)
+            </span>
+          </span>
+        ) : (
+          <span className="inline-flex flex-col leading-tight">
+            <span className={`font-bold text-slate-900 ${dimensions.name} ${nameClassName}`}>
+              Area 1 (Kelompok)
+            </span>
+            <span className={`text-[#4A5A72] ${dimensions.title} ${titleClassName}`}>
+              Unit Dehidrasi Metanol
+            </span>
+          </span>
+        )}
+      </span>
+    );
+  }
+
   // 3. Resolve user from single source of truth `users` (with legacy fallback)
   const user = getUser(uid);
 

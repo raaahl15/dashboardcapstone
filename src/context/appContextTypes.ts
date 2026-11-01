@@ -141,8 +141,10 @@ export interface AppContextType {
 
   logbooks: LogbookItem[];
   addLogbook: (entry: Omit<LogbookItem, 'id' | 'verifiedByLecturer'>) => void;
+  updateLogbook: (id: string, patch: Partial<LogbookItem>) => void;
   toggleLogbookVerification: (id: string) => void;
   deleteLogbook: (id: string) => void;
+  resetLogbooksToDefault: () => void;
 
   rubricParameters: RubricParameter[];
   updateRubricScore: (id: string, score: number) => void;
