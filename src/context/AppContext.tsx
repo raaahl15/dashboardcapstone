@@ -787,6 +787,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     slideDecks,
     trackerActions,
     meetingLogs,
+    regulations,
     standards,
     logbooks,
     rubricParameters,
@@ -940,6 +941,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setDefenseQuestions(INITIAL_DEFENSE_QUESTIONS);
     setPhysicalChecklist(INITIAL_PHYSICAL_CHECKLIST);
     setRawNotifications(INITIAL_NOTIFICATIONS);
+    setUsers(INITIAL_USERS);
   };
 
   // State mutators
@@ -1377,7 +1379,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       entry.authorId === 'team-area-1' ||
       entry.authorId === 'kelompok' ||
       entry.authorId === 'area-1';
-    const resolvedUid = isTeam ? 'team-area-1' : (getUser(entry.authorId)?.id || entry.authorId);
+    const requestedUid = isTeam ? 'team-area-1' : (getUser(entry.authorId)?.id || entry.authorId);
+    // Non-PM hanya boleh mencatat atas nama sendiri atau kelompok
+    const resolvedUid = (!isPM && requestedUid !== 'team-area-1') ? currentUser.id : requestedUid;
     const itemId = `log-${newId()}`;
     const newEntry: LogbookItem = {
       date: entry.date,
@@ -1401,16 +1405,60 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     commitSectionTransaction(
       'logbooks',
       logbooks,
-      (list) => list.map((l) => (l.id === id ? { ...l, ...patch } : l)),
+      (list) =>
+        list.map((l) => {
+          if (l.id !== id) return l;
+          const targetAuthor = getUser(l.authorId || l.authorName || l.authorCode);
+          const isTeamEntry =
+            l.authorId === 'team-area-1' ||
+            l.authorId === 'kelompok' ||
+            l.authorId === 'area-1' ||
+            l.category === 'kelompok';
+
+          // Hanya PM, pencatat kelompok, atau pemilik entri yang boleh mengedit
+          if (!isPM && !isTeamEntry && targetAuthor?.id !== currentUser.id) {
+            return l;
+          }
+
+          // Non-PM dilarang memalsukan status paraf dosen atau memindahkan authorId
+          const safePatch = { ...patch };
+          if (!isPM) {
+            delete safePatch.verifiedByLecturer;
+            delete safePatch.verifiedDate;
+            delete safePatch.authorId;
+          }
+          return { ...l, ...safePatch };
+        }),
       setLogbooks
     );
   };
 
   const resetLogbooksToDefault = () => {
+    if (!isPM) return;
     commitSectionTransaction(
       'logbooks',
       logbooks,
-      () => INITIAL_LOGBOOKS,
+      (list) => {
+        // Non-destructive backfill: pertahankan entri yang sudah ada, lengkapi slot kuota yang belum terisi
+        const existingKeys = new Set(
+          list.map((l) => {
+            const isTeam =
+              l.authorId === 'team-area-1' ||
+              l.authorId === 'kelompok' ||
+              l.authorId === 'area-1' ||
+              l.category === 'kelompok';
+            const authorKey = isTeam
+              ? 'team-area-1'
+              : (getUser(l.authorId || l.authorName || l.authorCode)?.id || l.authorId);
+            return `${authorKey}_${l.weekNumber}`;
+          })
+        );
+        const missingFromTemplate = INITIAL_LOGBOOKS.filter((init) => {
+          const key = `${init.authorId}_${init.weekNumber}`;
+          return !existingKeys.has(key);
+        });
+        return [...list, ...missingFromTemplate];
+      },
       setLogbooks
     );
   };
@@ -2852,6 +2900,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setDefenseQuestions(INITIAL_DEFENSE_QUESTIONS);
     setPhysicalChecklist(INITIAL_PHYSICAL_CHECKLIST);
     setRawNotifications(INITIAL_NOTIFICATIONS);
+    setUsers(INITIAL_USERS);
   };
 
   const previewUserMigration = useCallback((): MigrationPreviewResult => {

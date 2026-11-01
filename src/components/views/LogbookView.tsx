@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { LogbookItem } from '../../types';
@@ -100,15 +100,17 @@ export const LogbookView: React.FC = () => {
   const TARGET_PER_ENTITY = 12;
   const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 6 = 72
 
-  // Statistics per entity
-  const statsByEntity = useMemo(() => {
+  // Statistics per entity (menghitung minggu unik 1..12 agar tidak terjadi false completion)
+  const { statsByEntity, totalFilled } = useMemo(() => {
     const stats: Record<
       string,
-      { total: number; verified: number; percent: number; isCompleted: boolean }
+      { total: number; verified: number; percent: number; isCompleted: boolean; uniqueWeeks: number }
     > = {};
+    const entityWeeks: Record<string, Set<number>> = {};
 
     entities.forEach((ent) => {
-      stats[ent.id] = { total: 0, verified: 0, percent: 0, isCompleted: false };
+      stats[ent.id] = { total: 0, verified: 0, percent: 0, isCompleted: false, uniqueWeeks: 0 };
+      entityWeeks[ent.id] = new Set();
     });
 
     logbooks.forEach((log) => {
@@ -124,19 +126,26 @@ export const LogbookView: React.FC = () => {
 
       if (stats[targetId]) {
         stats[targetId].total += 1;
+        if (typeof log.weekNumber === 'number' && log.weekNumber >= 1 && log.weekNumber <= 12) {
+          entityWeeks[targetId].add(log.weekNumber);
+        }
         if (log.verifiedByLecturer) {
           stats[targetId].verified += 1;
         }
       }
     });
 
+    let cappedFilledSum = 0;
     entities.forEach((ent) => {
       const s = stats[ent.id];
-      s.percent = Math.min(100, Math.round((s.total / TARGET_PER_ENTITY) * 100));
-      s.isCompleted = s.total >= TARGET_PER_ENTITY;
+      const covered = entityWeeks[ent.id].size;
+      s.uniqueWeeks = covered;
+      s.percent = Math.min(100, Math.round((covered / TARGET_PER_ENTITY) * 100));
+      s.isCompleted = covered >= TARGET_PER_ENTITY;
+      cappedFilledSum += Math.min(TARGET_PER_ENTITY, covered);
     });
 
-    return stats;
+    return { statsByEntity: stats, totalFilled: cappedFilledSum };
   }, [entities, logbooks, getUser]);
 
   // Overall stats
@@ -144,20 +153,27 @@ export const LogbookView: React.FC = () => {
     return logbooks.filter((l) => l.verifiedByLecturer).length;
   }, [logbooks]);
 
-  const totalFilled = logbooks.length;
   const overallVerifiedPercent = Math.min(100, Math.round((totalVerified / TOTAL_TARGET) * 100));
   const overallFilledPercent = Math.min(100, Math.round((totalFilled / TOTAL_TARGET) * 100));
 
-  // Dynamic 24-Hour Rule Alert Box from MoM
+  // Dynamic 24-Hour Rule Alert Box from MoM: periksa apakah MoM terbaru memiliki entri logbook kelompok untuk minggu tersebut
   const momLogbookStatus = useMemo(() => {
     if (!meetingLogs || meetingLogs.length === 0) {
       return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
     }
-    const latestMom = meetingLogs[0];
-    const momDateKey = (latestMom.dayText || latestMom.weekLabel || '').trim().toLowerCase();
-    const hasMatchingLogbook = logbooks.some(
-      (l) => l.date.trim().toLowerCase() === momDateKey || logbooks.length >= meetingLogs.length
-    );
+    const sortedMoms = [...meetingLogs].sort((a, b) => (b.week || 0) - (a.week || 0));
+    const latestMom = sortedMoms[0];
+    if (!latestMom) {
+      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
+    }
+    const hasMatchingLogbook = logbooks.some((l) => {
+      const isTeam =
+        l.authorId === 'team-area-1' ||
+        l.authorId === 'kelompok' ||
+        l.authorId === 'area-1' ||
+        l.category === 'kelompok';
+      return isTeam && l.weekNumber === latestMom.week;
+    });
     return {
       hasUnloggedMom: !hasMatchingLogbook,
       latestMomLabel: latestMom.dayText || latestMom.weekLabel || `W${latestMom.week}`,
@@ -222,6 +238,19 @@ export const LogbookView: React.FC = () => {
     setShowAddModal(true);
   };
 
+  // Close modal on Escape
+  useEffect(() => {
+    if (!showAddModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowAddModal(false);
+        setEditingLog(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showAddModal]);
+
   // Open Edit modal
   const handleOpenEdit = (log: LogbookItem) => {
     setEditingLog(log);
@@ -240,11 +269,17 @@ export const LogbookView: React.FC = () => {
     setFormDesc(log.workDescription || '');
 
     // Parse issue and solution
-    const parts = (log.issueSolution || '').split(';');
-    const rawIssue = parts[0] || '';
-    const rawSol = parts[1] || '';
-    setFormIssue(rawIssue.replace(/^Kendala:\s*/i, '').trim());
-    setFormSolution(rawSol.replace(/^Solusi:\s*/i, '').replace(/\.$/, '').trim());
+    const match = (log.issueSolution || '').match(/^Kendala:\s*([\s\S]*?);\s*Solusi:\s*([\s\S]*?)\.?$/i);
+    if (match) {
+      setFormIssue(match[1].trim());
+      setFormSolution(match[2].trim());
+    } else {
+      const parts = (log.issueSolution || '').split(';');
+      const rawIssue = parts[0] || '';
+      const rawSol = parts.slice(1).join(';') || '';
+      setFormIssue(rawIssue.replace(/^Kendala:\s*/i, '').trim());
+      setFormSolution(rawSol.replace(/^Solusi:\s*/i, '').replace(/\.$/, '').trim());
+    }
     setFormVerified(Boolean(log.verifiedByLecturer));
     setShowAddModal(true);
   };
@@ -258,9 +293,32 @@ export const LogbookView: React.FC = () => {
     const finalAuthorId = isTeam ? 'team-area-1' : (getUser(formAuthorId)?.id || formAuthorId);
     const finalCategory: 'kelompok' | 'anggota' = isTeam ? 'kelompok' : 'anggota';
 
+    // Konfirmasi jika minggu ini sudah ada entri untuk entitas tersebut
+    if (!editingLog) {
+      const alreadyHasWeek = logbooks.some((l) => {
+        const isTeamLog =
+          l.authorId === 'team-area-1' ||
+          l.authorId === 'kelompok' ||
+          l.authorId === 'area-1' ||
+          l.category === 'kelompok';
+        const target = isTeamLog ? 'team-area-1' : (getUser(l.authorId || l.authorName || l.authorCode)?.id || l.authorId);
+        return target === finalAuthorId && l.weekNumber === formWeekNumber;
+      });
+      if (alreadyHasWeek) {
+        if (!window.confirm(`Entri logbook untuk Minggu ke-${formWeekNumber} sudah ada pada entitas ini. Buat entri tambahan untuk minggu yang sama?`)) {
+          return;
+        }
+      }
+    }
+
     const formattedIssueSolution = `Kendala: ${
       formIssue.trim() || 'Tidak ada kendala kritis'
     }; Solusi: ${formSolution.trim() || 'Melanjutkan sesuai jadwal'}.`;
+
+    const nextVerified = isPM ? formVerified : Boolean(editingLog?.verifiedByLecturer);
+    const nextVerifiedDate = nextVerified
+      ? (editingLog?.verifiedDate || (isPM && formVerified ? formDate.trim() : undefined))
+      : undefined;
 
     if (editingLog) {
       updateLogbook(editingLog.id, {
@@ -270,8 +328,8 @@ export const LogbookView: React.FC = () => {
         date: formDate.trim(),
         workDescription: formDesc.trim(),
         issueSolution: formattedIssueSolution,
-        verifiedByLecturer: isPM ? formVerified : editingLog.verifiedByLecturer,
-        verifiedDate: isPM && formVerified ? (editingLog.verifiedDate || formDate.trim()) : undefined,
+        verifiedByLecturer: nextVerified,
+        verifiedDate: nextVerifiedDate,
       });
     } else {
       addLogbook({
@@ -305,12 +363,12 @@ export const LogbookView: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
-            {totalFilled < TOTAL_TARGET && (
+            {isPM && totalFilled < TOTAL_TARGET && (
               <button
                 onClick={() => {
                   if (
                     window.confirm(
-                      `Apakah Anda ingin menyinkronkan data logbook ke kuota lengkap ${TOTAL_TARGET} entri (12 Kelompok + 12 per anggota)?`
+                      `Apakah Anda ingin melengkapi data logbook ke kuota ${TOTAL_TARGET} entri (12 Kelompok + 12 per anggota)? Seluruh catatan yang sudah dibuat tetap aman.`
                     )
                   ) {
                     resetLogbooksToDefault();
@@ -631,12 +689,13 @@ export const LogbookView: React.FC = () => {
 
                   const authorRef = isTeam ? 'team-area-1' : (log.authorId || log.authorName || log.authorCode);
                   const resolvedAuthor = getUser(authorRef);
-                  const canManage = isPM || isTeam || resolvedAuthor?.id === currentUser.id;
+                  const canEdit = isPM || isTeam || resolvedAuthor?.id === currentUser.id;
+                  const canDelete = isPM || (!isTeam && resolvedAuthor?.id === currentUser.id);
 
                   // Parse issue and solution
-                  const parts = (log.issueSolution || '').split(';');
-                  const issueText = parts[0] || '';
-                  const solutionText = parts.slice(1).join(';') || '';
+                  const match = (log.issueSolution || '').match(/^Kendala:\s*([\s\S]*?);\s*Solusi:\s*([\s\S]*?)\.?$/i);
+                  const issueText = match ? match[1].trim() : ((log.issueSolution || '').split(';')[0] || '');
+                  const solutionText = match ? match[2].trim() : ((log.issueSolution || '').split(';').slice(1).join(';') || '');
 
                   return (
                     <tr key={log.id} className="hover:bg-white/70 transition-colors">
@@ -725,6 +784,8 @@ export const LogbookView: React.FC = () => {
                           {isPM && (
                             <button
                               type="button"
+                              role="switch"
+                              aria-checked={Boolean(log.verifiedByLecturer)}
                               onClick={() => toggleLogbookVerification(log.id)}
                               className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
                                 log.verifiedByLecturer ? 'bg-[#0062CC]' : 'bg-[#C9DCEB]'
@@ -744,23 +805,23 @@ export const LogbookView: React.FC = () => {
                       {/* Action buttons (Edit & Delete) */}
                       <td className="p-3.5 text-center whitespace-nowrap">
                         <div className="flex items-center justify-center gap-2">
-                          {canManage && (
+                          {canEdit && (
                             <button
                               onClick={() => handleOpenEdit(log)}
-                              className="text-[#4A5A72] hover:text-[#0062CC] transition-colors p-1"
+                              className="text-[#4A5A72] hover:text-[#0062CC] transition-colors p-1.5 rounded-lg hover:bg-[#EAF6FD]"
                               title="Edit Entri"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
                           )}
-                          {canManage && (
+                          {canDelete && (
                             <button
                               onClick={() => {
                                 if (window.confirm('Hapus entri logbook ini?')) {
                                   deleteLogbook(log.id);
                                 }
                               }}
-                              className="text-[#4A5A72] hover:text-[#B91C1C] transition-colors p-1"
+                              className="text-[#4A5A72] hover:text-[#B91C1C] transition-colors p-1.5 rounded-lg hover:bg-[#FEE2E2]"
                               title="Hapus Entri"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -792,10 +853,15 @@ export const LogbookView: React.FC = () => {
       {/* MODAL: ADD / EDIT LOGBOOK */}
       {/* ========================================================================= */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-150">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="logbook-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-150"
+        >
           <div className="w-full max-w-lg bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
-              <h3 className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
+              <h3 id="logbook-modal-title" className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-[#0062CC]" />
                 {editingLog ? 'Edit Entri Logbook' : 'Tambah Entri Logbook Baru'}
               </h3>
@@ -804,7 +870,8 @@ export const LogbookView: React.FC = () => {
                   setShowAddModal(false);
                   setEditingLog(null);
                 }}
-                className="text-[#6B7F99] hover:text-[#0B1B33]"
+                className="text-[#6B7F99] hover:text-[#0B1B33] p-1 rounded-lg"
+                aria-label="Tutup modal"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -822,11 +889,15 @@ export const LogbookView: React.FC = () => {
                   className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
                   required
                 >
-                  {entities.map((ent) => (
-                    <option key={ent.id} value={ent.id}>
-                      {ent.category === 'kelompok' ? `🏢 ${ent.name} (Kuota 12)` : `👤 ${ent.name} (${ent.roleTitle})`}
-                    </option>
-                  ))}
+                  {entities
+                    .filter((ent) => isPM || ent.id === 'team-area-1' || ent.id === currentUser.id)
+                    .map((ent) => (
+                      <option key={ent.id} value={ent.id}>
+                        {ent.category === 'kelompok'
+                          ? `[Kelompok] ${ent.name} (Kuota 12)`
+                          : `[Anggota] ${ent.name} (${ent.roleTitle})`}
+                      </option>
+                    ))}
                 </select>
               </div>
 

@@ -250,7 +250,7 @@ export const UserChip: React.FC<UserChipProps> = ({
       return (
         <span
           title="Belum ditugaskan"
-          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#94A3B8] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#475569] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
         >
           -
         </span>
@@ -262,7 +262,7 @@ export const UserChip: React.FC<UserChipProps> = ({
         className={`inline-flex items-center ${dimensions.gap} text-[#4A5A72] ${className}`}
       >
         <span
-          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#94A3B8] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
+          className={`inline-flex items-center justify-center font-bold font-mono shrink-0 bg-slate-100 text-[#475569] border border-slate-200 ${dimensions.avatar} ${avatarClassName}`}
         >
           -
         </span>

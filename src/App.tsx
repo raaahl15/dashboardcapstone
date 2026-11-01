@@ -36,6 +36,52 @@ const StageGateView = React.lazy(() =>
   import('./components/views/StageGateView').then((m) => ({ default: m.StageGateView }))
 );
 
+interface ChunkErrorBoundaryProps {
+  children: React.ReactNode;
+}
+
+interface ChunkErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ChunkErrorBoundary extends React.Component<ChunkErrorBoundaryProps, ChunkErrorBoundaryState> {
+  constructor(props: ChunkErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ChunkErrorBoundaryState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Galat pemuatan modul view dinamis:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center bg-white/80 rounded-3xl border border-white space-y-3 shadow-cockpit-card my-4">
+          <h3 className="font-heading font-bold text-base text-[#0B1B33]">
+            Pembaruan Versi Terdeteksi atau Modul Gagal Dimuat
+          </h3>
+          <p className="text-xs text-[#4A5A72] max-w-md">
+            Aplikasi mendeteksi aset versi baru atau koneksi terputus saat memuat tampilan tab. Silakan muat ulang halaman untuk menggunakan versi teranyar.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold shadow-xs transition-all"
+          >
+            Muat Ulang Halaman
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const MainApp: React.FC = () => {
   const { isLoggedIn, isLoading, isDataLoaded, authError, syncError, logout, activeTab } = useApp();
   const [showExportImport, setShowExportImport] = useState(false);
@@ -100,23 +146,25 @@ const MainApp: React.FC = () => {
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-6">
-        <React.Suspense
-          fallback={
-            <div className="min-h-[400px] flex items-center justify-center text-xs font-semibold text-[#4A5A72]">
-              Memuat tampilan modul...
-            </div>
-          }
-        >
-          {activeTab === 'homepage' && <HomepageView />}
-          {activeTab === 'work-orders' && <WorkOrdersView />}
-          {activeTab === 'schedule' && <ScheduleView />}
-          {activeTab === 'team-raci' && <TeamRaciView />}
-          {activeTab === 'weekly-mom' && <WeeklyMoMView />}
-          {activeTab === 'standards' && <StandardsView />}
-          {activeTab === 'workspaces' && <WorkspacesView />}
-          {activeTab === 'logbook' && <LogbookView />}
-          {activeTab === 'stage-gate' && <StageGateView />}
-        </React.Suspense>
+        <ChunkErrorBoundary>
+          <React.Suspense
+            fallback={
+              <div className="min-h-[400px] flex items-center justify-center text-xs font-semibold text-[#4A5A72]">
+                Memuat tampilan modul...
+              </div>
+            }
+          >
+            {activeTab === 'homepage' && <HomepageView />}
+            {activeTab === 'work-orders' && <WorkOrdersView />}
+            {activeTab === 'schedule' && <ScheduleView />}
+            {activeTab === 'team-raci' && <TeamRaciView />}
+            {activeTab === 'weekly-mom' && <WeeklyMoMView />}
+            {activeTab === 'standards' && <StandardsView />}
+            {activeTab === 'workspaces' && <WorkspacesView />}
+            {activeTab === 'logbook' && <LogbookView />}
+            {activeTab === 'stage-gate' && <StageGateView />}
+          </React.Suspense>
+        </ChunkErrorBoundary>
       </main>
 
       {/* Footer */}

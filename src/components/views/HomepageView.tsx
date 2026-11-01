@@ -669,7 +669,7 @@ export const HomepageView: React.FC = () => {
                     onClick={() => setWoWidgetScope('mine')}
                     className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
                       woWidgetScope === 'mine'
-                        ? 'bg-[#007BFF] text-white shadow-xs'
+                        ? 'bg-[#0062CC] text-white shadow-xs'
                         : 'text-[#9FB3C8] hover:text-white'
                     }`}
                   >
@@ -680,7 +680,7 @@ export const HomepageView: React.FC = () => {
                     onClick={() => setWoWidgetScope('team')}
                     className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
                       woWidgetScope === 'team'
-                        ? 'bg-[#007BFF] text-white shadow-xs'
+                        ? 'bg-[#0062CC] text-white shadow-xs'
                         : 'text-[#9FB3C8] hover:text-white'
                     }`}
                   >
@@ -851,7 +851,7 @@ export const HomepageView: React.FC = () => {
                               type="button"
                               disabled={isRowBusy}
                               onClick={(e) => void handleQuickWoAction(e, wo, 'start')}
-                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#007BFF] hover:bg-[#0062CC] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
                             >
                               <Play className="w-2.5 h-2.5" />
                               Mulai

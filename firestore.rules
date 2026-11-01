@@ -210,8 +210,9 @@ service cloud.firestore {
     // Helper: Bagian dokumen projectData/area1 yang hanya boleh diubah oleh Admin (PM)
     function isAllowedProjectUpdate() {
       return isAdmin()
-        || !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        || (!request.resource.data.diff(resource.data).affectedKeys().hasAny([
           'config',
+          'tasks',
           'deliverables',
           'weeklyPlans',
           'ganttTasks',
@@ -223,7 +224,17 @@ service cloud.firestore {
           'standards',
           'physicalChecklist',
           'users'
-        ]);
+        ])
+        && (!resource.data.config.readinessLocked
+            || !request.resource.data.diff(resource.data).affectedKeys().hasAny(['rubricParameters']))
+        );
+    }
+
+    // Helper: Batas wajar ukuran array seksi kolaboratif dokumen projectData/area1
+    function hasValidProjectArrayBounds(data) {
+      return (!('logbooks' in data) || (data.logbooks is list && data.logbooks.size() <= 300))
+        && (!('notifications' in data) || (data.notifications is list && data.notifications.size() <= 150))
+        && (!('trackerActions' in data) || (data.trackerActions is list && data.trackerActions.size() <= 200));
     }
 
     // =========================================================================
@@ -260,9 +271,11 @@ service cloud.firestore {
     match /projectData/area1 {
       allow read: if isAreaOneTeamMember();
       allow create: if isAreaOneTeamMember()
-        && hasOnlyAllowedProjectKeys(request.resource.data);
+        && hasOnlyAllowedProjectKeys(request.resource.data)
+        && hasValidProjectArrayBounds(request.resource.data);
       allow update: if isAreaOneTeamMember()
         && hasOnlyAllowedProjectKeys(request.resource.data)
+        && hasValidProjectArrayBounds(request.resource.data)
         && isAllowedProjectUpdate();
       allow delete: if isAdmin();
     }
@@ -373,6 +386,7 @@ service cloud.firestore {
           'updatedBy',
           'history'
         ])
+        && (!('history' in next.diff(prev).affectedKeys()) || next.history.size() >= prev.history.size())
         && (
           next.status == prev.status
           || (prev.status == 'Ditugaskan' && next.status == 'Dikerjakan')

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import {
@@ -15,6 +15,90 @@ import {
   Edit2,
 } from 'lucide-react';
 import { DefenseQuestion } from '../../types';
+
+interface RubricInputsProps {
+  paramId: string;
+  initialScore: number;
+  initialMitigation: string;
+  disabled: boolean;
+  onSaveScore: (id: string, score: number) => void;
+  onSaveMitigation: (id: string, mitigation: string) => void;
+}
+
+const RubricInputs: React.FC<RubricInputsProps> = ({
+  paramId,
+  initialScore,
+  initialMitigation,
+  disabled,
+  onSaveScore,
+  onSaveMitigation,
+}) => {
+  const [score, setScore] = useState(initialScore);
+  const [mitigation, setMitigation] = useState(initialMitigation);
+
+  useEffect(() => {
+    setScore(initialScore);
+  }, [initialScore]);
+
+  useEffect(() => {
+    setMitigation(initialMitigation);
+  }, [initialMitigation]);
+
+  const handleScoreBlur = () => {
+    if (score !== initialScore) {
+      onSaveScore(paramId, score);
+    }
+  };
+
+  const handleMitigationBlur = () => {
+    if (mitigation.trim() !== (initialMitigation || '').trim()) {
+      onSaveMitigation(paramId, mitigation.trim());
+    }
+  };
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+      <div className="sm:col-span-1">
+        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
+          Skor Mandiri (0 - 100)
+        </label>
+        <input
+          type="number"
+          min="0"
+          max="100"
+          disabled={disabled}
+          value={score}
+          onChange={(e) => setScore(Number(e.target.value))}
+          onBlur={handleScoreBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
+          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs font-bold outline-none disabled:opacity-60 disabled:bg-gray-100 focus:border-[#0062CC]"
+        />
+      </div>
+      <div className="sm:col-span-3">
+        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
+          Catatan Mitigasi
+        </label>
+        <input
+          type="text"
+          disabled={disabled}
+          value={mitigation}
+          onChange={(e) => setMitigation(e.target.value)}
+          onBlur={handleMitigationBlur}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              (e.target as HTMLInputElement).blur();
+            }
+          }}
+          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none disabled:opacity-60 disabled:bg-gray-100 focus:border-[#0062CC]"
+        />
+      </div>
+    </div>
+  );
+};
 
 export const StageGateView: React.FC = () => {
   const {
@@ -434,34 +518,14 @@ export const StageGateView: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
-                      <div className="sm:col-span-1">
-                        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
-                          Skor Mandiri (0 - 100)
-                        </label>
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          disabled={config.readinessLocked}
-                          value={param.score}
-                          onChange={(e) => updateRubricScore(param.id, Number(e.target.value))}
-                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs font-bold outline-none disabled:opacity-60 disabled:bg-gray-100"
-                        />
-                      </div>
-                      <div className="sm:col-span-3">
-                        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
-                          Catatan Mitigasi
-                        </label>
-                        <input
-                          type="text"
-                          disabled={config.readinessLocked}
-                          value={param.mitigation}
-                          onChange={(e) => updateRubricMitigation(param.id, e.target.value)}
-                          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none disabled:opacity-60 disabled:bg-gray-100"
-                        />
-                      </div>
-                    </div>
+                    <RubricInputs
+                      paramId={param.id}
+                      initialScore={param.score}
+                      initialMitigation={param.mitigation}
+                      disabled={Boolean(config.readinessLocked)}
+                      onSaveScore={updateRubricScore}
+                      onSaveMitigation={updateRubricMitigation}
+                    />
                   </div>
                 )}
               </div>

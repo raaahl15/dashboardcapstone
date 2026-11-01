@@ -24,10 +24,9 @@ export const LoginGateway: React.FC = () => {
   };
 
   const handleQuickLogin = (nickname: string) => {
-    // Hanya isi kolom email dengan petunjuk nickname — pengguna tetap harus
-    // mengetik alamat email lengkap mereka sendiri agar email asli tidak
-    // tertanam di memori atau di-log oleh browser.
-    setEmail(nickname + '@mail.ugm.ac.id');
+    // Isi kolom username/email dengan nickname terdaftar.
+    // resolveUserFromRef akan secara otomatis memetakan nama ini ke email resmi UGM anggota di balik layar.
+    setEmail(nickname);
     setErrorMsg(null);
   };
 
