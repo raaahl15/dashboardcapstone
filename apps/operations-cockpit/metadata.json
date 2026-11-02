@@ -1,0 +1,6 @@
+{
+  "name": "Area 1-DME Engineering Operations Cockpit",
+  "description": "Engineering Operations & Management Dashboard for Area 1 Methanol Dehydration to Di-Methyl Ether (DME) Unit - Capstone PSTF DTNTF UGM.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

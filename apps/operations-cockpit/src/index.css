@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --ink: #0B1B33;
+    --ink-muted: #4A5A72;
+    --on-dark: #FFFFFF;
+    --on-dark-muted: #9FB3C8;
+    --primary: #0062CC;
+    --primary-hover: #0057B8;
+    --primary-active: #004A9E;
+    --primary-brand: #007BFF;
+    --accent: #4CBAF5;
+    --surface: #FFFFFF;
+    --surface-tint: #EAF6FD;
+    --surface-dark: #0B1B33;
+    --track: #DCEBF7;
+    --divider: #C9DCEB;
+    --border-input: #6B7F99;
+    --placeholder: #5F6F86;
+    --danger: #B91C1C;
+
+    --ok-bg: #D1FAE5;
+    --ok-fg: #065F46;
+    --ok-solid: #047857;
+    --warn-bg: #FEF3C7;
+    --warn-fg: #92400E;
+    --warn-solid: #B45309;
+    --crit-bg: #FEE2E2;
+    --crit-fg: #991B1B;
+    --crit-solid: #B91C1C;
+    --neutral-bg: #E2E8F0;
+    --neutral-fg: #334155;
+    --neutral-solid: #64748B;
+    --acct-bg: #DBEAFE;
+    --acct-fg: #1E3A8A;
+    --acct-solid: #1D4ED8;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--ink);
+  }
+
+  h1, h2, h3, h4, .font-heading {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Atmospheric EPC Sexy Blue Gradient */
+.bg-sexy-blue {
+  background: radial-gradient(circle at 50% 45%, #FFFFFF 0%, #B0E0E6 28%, #4CBAF5 62%, #007BFF 100%);
+  background-attachment: fixed;
+}
+
+.bg-cockpit-canvas {
+  background: radial-gradient(60% 50% at 20% 10%, rgba(255, 255, 255, 0.55), transparent 70%),
+              linear-gradient(135deg, #B0E0E6 0%, #79CDEF 55%, #4CBAF5 100%);
+  background-attachment: fixed;
+}
+
+/* Subtle 8% technical engineering grid */
+.bg-tech-grid {
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+
+.shadow-cockpit-pop {
+  box-shadow: 0 20px 40px -20px rgba(11, 27, 51, 0.35);
+}
+
+.shadow-cockpit-card {
+  box-shadow: 0 10px 30px -16px rgba(11, 27, 51, 0.28);
+}
+
+/* Reusable Glass Surfaces */
+.glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.85) 100%);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 12px 32px -18px rgba(11, 27, 51, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  border-radius: 28px;
+}
+
+.glass-faint {
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card,
+  .glass-faint {
+    background: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* Progress Hatch Bar Pattern */
+.bg-hatch-pattern {
+  background-image: repeating-linear-gradient(135deg, #007BFF 0 8px, #4CBAF5 8px 16px);
+}
+
+/* 3D Flip Card support */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(220, 235, 247, 0.5);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 127, 153, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 75, 159, 0.8);
+}
+
+/* Accessibility: Hormati prefers-reduced-motion pengguna */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
