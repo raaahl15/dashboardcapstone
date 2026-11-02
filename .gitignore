@@ -1,0 +1,26 @@
+# Node & Build artifacts
+node_modules/
+dist/
+build/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# WhatsApp Bot Sessions (contains QR auth tokens - DO NOT COMMIT)
+tools/whatsapp-bot/auth_info/
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+.idea/
+
+# Temporary unpack folders
+temp_unpacked/
+temp_model.zip
+*.tmp

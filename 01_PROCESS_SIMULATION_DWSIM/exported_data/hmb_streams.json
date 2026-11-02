@@ -1,0 +1,121 @@
+{
+  "meta": {
+    "source_file": "DME.dwxmz",
+    "extracted_at": "2026-11-02T16:53:05.178Z",
+    "status": "Converged",
+    "property_package": "NRTL",
+    "compounds": [
+      "Methanol",
+      "Water",
+      "Dimethyl ether"
+    ]
+  },
+  "material_streams": [
+    {
+      "tag": "S-01",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-02",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-03",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-04",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-05",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-06",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-07",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-08",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-09",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-10",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-11",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-14",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-12",
+      "type": "MaterialStream"
+    },
+    {
+      "tag": "S-13",
+      "type": "MaterialStream"
+    }
+  ],
+  "unit_operations": [
+    {
+      "tag": "PUMP-01",
+      "type": "Adiabatic Pump"
+    },
+    {
+      "tag": "MIX-01",
+      "type": "Material Stream Mixer"
+    },
+    {
+      "tag": "HEAT-01",
+      "type": "Material Stream Heater"
+    },
+    {
+      "tag": "RC-01",
+      "type": "Conversion Reactor"
+    },
+    {
+      "tag": "COOL-01",
+      "type": "Material Stream Cooler"
+    },
+    {
+      "tag": "CSCOL-01",
+      "type": "CAPE-OPEN Unit Operation Block"
+    },
+    {
+      "tag": "CSCOL-02",
+      "type": "CAPE-OPEN Unit Operation Block"
+    },
+    {
+      "tag": "",
+      "type": ""
+    },
+    {
+      "tag": "REC-01",
+      "type": "Recycle Logical Op"
+    },
+    {
+      "tag": "COOL-02",
+      "type": "Material Stream Cooler"
+    },
+    {
+      "tag": "PUMP-02",
+      "type": "Adiabatic Pump"
+    }
+  ],
+  "summary": {
+    "total_streams": 14,
+    "total_units": 11
+  }
+}

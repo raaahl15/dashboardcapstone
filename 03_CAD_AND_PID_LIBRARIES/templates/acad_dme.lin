@@ -1,0 +1,112 @@
+;; ==============================================================================
+;; ACAD_DME.LIN - Master AutoCAD Linetypes Definition
+;; Standar Acuan: ISA-5.1 (Instrumentation Symbols & Identification)
+;;               ISO 10628 (Flow Diagrams for Process Plants)
+;;               IEC 61511 (Functional Safety & Safety Instrumented Systems)
+;; Proyek: Pabrik Dimethyl Ether (DME) Berbasis Dehidrasi Metanol
+;; Klien: Departemen Teknik Nuklir dan Teknik Fisika (DTNTF) - FT UGM
+;; Dokumen: KAK-IC-DME-2026-001
+;; ==============================================================================
+
+;; ==============================================================================
+;; 1. ISA-5.1 INSTRUMENT SIGNAL LINES (JALUR KONEKSI & SINYAL INSTRUMEN)
+;; ==============================================================================
+
+*ISA_PNEUMATIC,ISA 5.1 Pneumatic Signal Line (3-15 psi) ---- // ---- // ----
+A,10.0,-2.5,["//",STANDARD,S=2.2,R=0.0,X=-1.25,Y=-1.1],-2.5
+
+*ISA_ELECTRIC,ISA 5.1 Electric / Analog Signal (4-20mA, HART) ----  ----  ----
+A,6.0,-3.0
+
+*ISA_ELECTRIC_BINARY,ISA 5.1 Discrete / Binary Interlock Signal ---- || ---- || ----
+A,10.0,-2.5,["||",STANDARD,S=2.2,R=0.0,X=-1.25,Y=-1.1],-2.5
+
+*ISA_FIELDBUS,ISA 5.1 Digital Data Bus / Fieldbus Link ---- (o) ---- (o) ----
+A,12.0,-2.5,["o",STANDARD,S=2.0,R=0.0,X=-1.0,Y=-1.0],-2.5
+
+*ISA_SOFTWARE,ISA 5.1 Internal System Link / Software DCS Bus ---- [S] ---- [S] ----
+A,14.0,-2.5,["S",STANDARD,S=2.2,R=0.0,X=-1.1,Y=-1.1],-2.5
+
+*ISA_CAPILLARY,ISA 5.1 Capillary Tube (Filled System / Diaphragm Seal) ---- X ---- X ----
+A,10.0,-2.5,["X",STANDARD,S=2.2,R=0.0,X=-1.1,Y=-1.1],-2.5
+
+*ISA_HYDRAULIC,ISA 5.1 Hydraulic Signal Line ---- L ---- L ----
+A,10.0,-2.5,["L",STANDARD,S=2.2,R=0.0,X=-1.1,Y=-1.1],-2.5
+
+*ISA_GUIDED_WAVE,ISA 5.1 Guided Electromagnetic / Sonic Wave ---- ~ ---- ~ ----
+A,10.0,-2.5,["~",STANDARD,S=2.5,R=0.0,X=-1.25,Y=-1.2],-2.5
+
+*ISA_OPTICAL,ISA 5.1 Optical Fiber / Light Link ---- [OPT] ---- [OPT] ----
+A,16.0,-3.5,["OPT",STANDARD,S=2.0,R=0.0,X=-1.8,Y=-1.0],-3.5
+
+*ISA_WIRELESS,ISA 5.1 Wireless / Radio Wave Signal ---- [W] ---- [W] ----
+A,14.0,-2.5,["W",STANDARD,S=2.2,R=0.0,X=-1.1,Y=-1.1],-2.5
+
+
+;; ==============================================================================
+;; 2. SAFETY INSTRUMENTED SYSTEMS & INTERLOCKS (IEC 61511 / ISA-84)
+;; ==============================================================================
+
+*ISA_SIS_TRIP,Safety Instrumented System (ESD) Trip Signal ---- [ESD] ---- [ESD] ----
+A,16.0,-3.5,["ESD",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*ISA_FGS_LINK,Fire & Gas Detection System (FGS) Signal ---- [FGS] ---- [FGS] ----
+A,16.0,-3.5,["FGS",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+
+;; ==============================================================================
+;; 3. PIPING & UTILITY SERVICE LINES (ISO 10628 & PETROCHEMICAL PLANT STANDARDS)
+;; ==============================================================================
+
+*UTIL_IA,Instrument Air Header (Clean Dry Air) ---- IA ---- IA ----
+A,16.0,-2.8,["IA",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*UTIL_PA,Plant / Service Air Line ---- PA ---- PA ----
+A,16.0,-2.8,["PA",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*UTIL_N2,Nitrogen Purging & Blanketing Gas ---- N2 ---- N2 ----
+A,16.0,-2.8,["N2",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*UTIL_MPS,Medium Pressure Steam (Reboiler / Heater) ---- MPS ---- MPS ----
+A,18.0,-3.5,["MPS",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_LPS,Low Pressure Steam ---- LPS ---- LPS ----
+A,18.0,-3.5,["LPS",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_SC,Steam Condensate Return ---- SC ---- SC ----
+A,16.0,-2.8,["SC",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*UTIL_CWS,Cooling Water Supply Line ---- CWS ---- CWS ----
+A,18.0,-3.5,["CWS",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_CWR,Cooling Water Return Line ---- CWR ---- CWR ----
+A,18.0,-3.5,["CWR",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_FLR,Safety Relief & Flare Header ---- FLR ---- FLR ----
+A,18.0,-3.5,["FLR",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_DRN,Closed Chemical / Oily Water Drain ---- DRN ---- DRN ----
+A,18.0,-3.5,["DRN",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_VNT,Atmospheric Safe Vent Line ---- VNT ---- VNT ----
+A,18.0,-3.5,["VNT",STANDARD,S=2.2,R=0.0,X=-1.8,Y=-1.1],-3.5
+
+*UTIL_FG,Fuel Gas Supply Header ---- FG ---- FG ----
+A,16.0,-2.8,["FG",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*UTIL_PW,Process Raw Water / Potable Water ---- PW ---- PW ----
+A,16.0,-2.8,["PW",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+
+;; ==============================================================================
+;; 4. PIPING HEAT TRACING & JACKETING (THERMAL PROTECTION)
+;; ==============================================================================
+
+*TRACE_STEAM,Steam Traced Process Pipe ---- ST ---- ST ----
+A,16.0,-2.8,["ST",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*TRACE_ELECTRIC,Electric Heat Traced Process Pipe ---- ET ---- ET ----
+A,16.0,-2.8,["ET",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8
+
+*TRACE_JACKETED,Jacketed Fluid Piping Line ---- JP ---- JP ----
+A,16.0,-2.8,["JP",STANDARD,S=2.2,R=0.0,X=-1.4,Y=-1.1],-2.8

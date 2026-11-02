@@ -1,0 +1,11 @@
+METRIC,VALUE,UNIT,BENCHMARK_TARGET,KETERANGAN
+Total Capital Expenditure (CAPEX),4850000,USD,AACE Class 2/3,Mencakup Sistem DCS/SIS/FGS & Instrumentasi Lapangan
+Biaya Hardware DCS & Controller,1250000,USD,-,Redundant Controller + Power + Safety PLC
+Biaya Instrumen Lapangan & Katup,1820000,USD,-,Transmitter Presisi + Control Valves + ESDV + PSV
+Biaya Kabel & Tray & Hook-up,580000,USD,-,Kabel STP + Tray + JB + Manifold API RP 551
+Biaya Rekayasa & Jasa Engineering,1200000,USD,-,FEED & DED Consultant Services
+Biaya Operasional Tahunan (OPEX),285000,USD/Tahun,-,Kalibrasi berkala + lisensi software + spare parts
+Annual Revenue Savings (Otomasi),1450000,USD/Tahun,-,Peningkatan Yield DME & Pengurangan Konsumsi Energi
+Net Present Value (NPV @ 10%),3742500,USD,Harus Positif (> 0),Kelayakan Investasi Sangat Tinggi
+Internal Rate of Return (IRR),24.8,%,Harus > WACC (12%),Proyek Sangat Menguntungkan
+Payback Period,3.8,Tahun,Target < 5 Tahun,Modal Investasi Pulih Cepat
