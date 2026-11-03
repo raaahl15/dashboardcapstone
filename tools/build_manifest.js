@@ -29,7 +29,10 @@ const SRC = {
 const ARTIFACT_DIR_RE = /^0[0-7]_/;
 const MAX_BODY_CHARS = 60000; // batas isi per dokumen di manifest (menjaga ukuran bundel)
 
-const sha = (file) => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+// Hash isi teks dengan akhir baris dinormalisasi (CRLF -> LF): Git di Windows dapat mengubah akhir baris
+// saat checkout (core.autocrlf), dan itu tidak boleh membuat data cockpit dianggap basi.
+const sha = (file) =>
+  crypto.createHash('sha256').update(fs.readFileSync(file, 'utf8').replace(/\r\n/g, '\n')).digest('hex');
 const rel = (file) => path.relative(ROOT, file).split(path.sep).join('/');
 
 function gitFiles() {
