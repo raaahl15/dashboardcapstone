@@ -42,11 +42,11 @@ Daftar objek berikut diambil dari ekstraksi otomatis `hmb_streams.json` (2026-11
 | Reaktor | `RC-01` (Conversion Reactor) |
 | Kolom distilasi | `CSCOL-01`, `CSCOL-02` (CAPE-OPEN Unit Operation) |
 | Recycle | `REC-01` |
-| Objek tanpa tag | 1 objek (tag & tipe kosong) — *[PERLU DIPERIKSA di DWSIM]* |
+| Objek tanpa tag | 1 objek: `GO_MasterTable` (tabel tampilan DWSIM, bukan unit operasi; diperiksa 2026-11-03, LOG-014) |
 
-Alur ringkas (draf awal, *[PERLU DIKONFIRMASI]*): umpan metanol `S-01` → `PUMP-01` → `MIX-01` (bertemu recycle) → `HEAT-01` → `RC-01` → `COOL-01` → `CSCOL-01` (produk DME di puncak) → bawah ke `CSCOL-02` (pemisahan air, metanol di-recycle lewat `REC-01`).
+Alur (diverifikasi dari konektor objek di XML model, LOG-014): umpan metanol `S-01` → `PUMP-01` → `S-02` → `MIX-01` (bertemu recycle `S-14`) → `S-03` → `HEAT-01` → `S-04` → `RC-01` → `S-05` (+ outlet cair `S-06`) → `COOL-01` → `S-07` → `CSCOL-01` (puncak `S-08` produk DME; bawah `S-09`) → `CSCOL-02` (`S-10` metanol → `PUMP-02` → `COOL-02` → `REC-01` → `S-14`; `S-11` air).
 
-Pemetaan ke tag pabrik (`R-101`, `T-201`, dst.) akan ditetapkan di `01_PROCESS_SIMULATION_DWSIM/tag_map.csv` (Fase 3).
+**Lingkup Area 1** (keputusan PM 2026-11-03): `S-01`…`S-07` + `S-14`. Kolom dan loop recycle setelah `S-07` adalah lingkup konsorsium Area 2. Pemetaan ke tag pabrik ada di [`../tag_map.csv`](../tag_map.csv) (status USULAN; companion `tag_map.md`).
 
 ## 3. SOP Pembaruan & Ekstraksi Data
 1. Buka `DME.dwxmz` di DWSIM, jalankan solver, pastikan seluruh objek konvergen.

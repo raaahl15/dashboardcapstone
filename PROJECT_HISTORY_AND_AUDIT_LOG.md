@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 12:40 WIB  
+**Terakhir Diperbarui:** 2026-11-03 13:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -111,6 +111,13 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - **Claude Code** → kelola **isi** Google Sheets, Docs, Slides, dan sejenisnya (Master Instrument Index, IO List, FDS, laporan), termasuk sinkronisasi Sheets → CSV dan `google_workspace_registry.json`.
   - Prasyarat Claude Code: konektor Google Drive diaktifkan di claude.ai.
   - **Akun Google pribadi PM** (bukan UGM) dipakai sebagai pemilik Drive/Docs/Sheets dan untuk konektor, karena folder proyek sudah diunggah ke Drive pribadi. Tim dan dosen diberi akses lewat Share ke email UGM (LOG-009).
+
+### 11. Batas Lingkup Area 1 & Konvensi Tag Pabrik (2026-11-03)
+* **Konteks**: Saat menyusun `tag_map.csv`, ditemukan dua gambaran lingkup yang bertentangan. Data kerja tim di cockpit menyebut S-07 sebagai battery limit ke konsorsium Area 2, sedangkan model DWSIM, Instrument Index, FDS, dan blueprint §2.3 (2xx = pemurnian) memperlakukan kolom distilasi sebagai bagian Area 1.
+* **Keputusan PM**:
+  - **Lingkup firma Area 1 = S-01…S-07 ditambah S-14** (recycle metanol yang masuk dari Area 2). Kolom CSCOL-01/02 dan loop recycle (PUMP-02, COOL-02) adalah lingkup Area 2.
+  - **Penomoran tag pabrik** mengikuti nomor objek DWSIM dengan gaya ISA/ISO area 100 (`S-01 → S-101`, `PUMP-01 → P-101`, `RC-01 → R-101`). Heat exchanger: `HEAT-01 → E-101`, `COOL-01 → E-102`, diurutkan menurut arah aliran karena keduanya bernomor 01 di DWSIM.
+* **Konsekuensi**: area 2xx tidak dipakai firma Area 1; loop kolom di index & FDS harus dikeluarkan atau diubah menjadi sinyal antarmuka; logbook yang menyebut "kondensor E-101" dikoreksi menjadi E-102 (LOG-014).
 
 ---
 
@@ -225,6 +232,33 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-014] 2026-11-03 13:00 WIB — Batas lingkup Area 1 & draf `tag_map.csv` dari topologi DWSIM
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"untuk akses drive terakhiran saja, lanjutkan setelahnya apa"*; keputusan lingkup & penomoran oleh PM.
+* **Fase**: 3 (bagian yang tidak membutuhkan Python)
+* **Tujuan**: Menyiapkan master pemetaan tag (Blueprint §1.2, §2.3), yang menjadi akar inkonsistensi tag di index/FDS/C&E dan dasar penomoran PFD Bab 3.
+* **Perubahan**:
+  - **Baru**: `01_PROCESS_SIMULATION_DWSIM/tag_map.csv` (34 baris = seluruh objek model kecuali tabel; 13 tag pabrik usulan: S-101…S-107, S-114, P-101, M-101, E-101, R-101, E-102) + companion `tag_map.md` (status Draft, PIC IH, reviewer JN): lingkup, aturan penomoran, 8 temuan dampak ke dokumen lain, SOP.
+  - `DME.md`: objek tanpa tag = `GO_MasterTable`; alur aliran lengkap hasil verifikasi; lingkup Area 1.
+  - Blueprint §2.3: catatan keputusan lingkup & penomoran; pohon folder (`tag_map` ADA).
+  - Google Sheets `Catatan` baris 5–6, Google Docs FDS: butir inkonsistensi 5 + petunjuk Bab 1 disesuaikan dengan lingkup. **Baris index dan isi FDS tidak diubah** (keputusan teknis JN/AL).
+  - Kronologi #11 (BAB I).
+* **Bukti / Verifikasi**:
+  - `Get-Command python/py/python3` → hanya alias Microsoft Store ("Python was not found") → Python **belum** terpasang; Fase 3 berbasis Python tetap terblokir.
+  - Salinan `DME.dwxmz` diekstrak ke scratchpad (`tmp1118.xml`, 945.554 byte); file master tidak diubah. 35 GraphicObject: 14 aliran material, 10 aliran energi, 10 unit operasi, 1 `GO_MasterTable`.
+  - Topologi (konektor `ConIn`/`ConOut`): PUMP-01 S-01→S-02; MIX-01 S-02+S-14→S-03; HEAT-01 S-03→S-04; RC-01 S-04→S-05+S-06; COOL-01 S-05→S-07; CSCOL-01 S-07→S-08+S-09; CSCOL-02 S-09→S-10+S-11; PUMP-02 S-10→S-12; COOL-02 S-12→S-13; REC-01 S-13→S-14. Arah energi: E-01/E-02/E-03 masuk ke PUMP-01/HEAT-01/RC-01; E-04/E-10 keluar dari cooler; E-05…E-08 keluar dari kolom. Satu salah tulis arah E-03 di draf pertama ditemukan dan diperbaiki sebelum verifikasi.
+  - Skrip uji silang `tag_map.csv` vs model → `objek model: 34, baris CSV: 34, plant_tag terisi: 13`, **SEMUA COCOK** (tiap objek tepat 1×, `from`/`to` unit = konektor model, tidak ada plant_tag ganda).
+  - `npm run check` → `Draft=11, WIP=6`, **PASS**.
+* **Keputusan**: lihat Kronologi #11. Tag berstatus **USULAN** sampai dikonfirmasi IH + JN.
+* **Tindak Lanjut**:
+  - [ ] **IH + JN**: tinjau `tag_map.csv`, putuskan M-101 dan S-106 (temuan 7–8 di `tag_map.md`), lalu ubah status menjadi `FINAL`.
+  - [ ] **JN**: keluarkan/tandai loop kolom (PIC-201, PCV-201, LIC-202, AIC-201) di Sheets index; ganti REAC-01 → R-101 setelah FINAL.
+  - [ ] **AL**: FDS Bab 4 (kolom C-01) dikeluarkan atau diubah menjadi deskripsi antarmuka; HEATER-01 → E-101.
+  - [ ] **PM**: koreksi "kondensor parsial E-101" → E-102 di logbook/MoM cockpit (Firestore, lewat UI); sepakati spesifikasi S-107/S-114 dengan PM Area 2.
+  - [ ] **PM**: pasang Python 3.12+ (prasyarat Fase 3: `export_hmb.py`, kalkulator, `validate_tags.py`).
+  - [ ] Masih terbuka dari LOG-013: reviewer per bagian, uji laptop, dan akses Drive per email UGM (sesuai keputusan PM, dikerjakan **terakhir**).
 
 ---
 
