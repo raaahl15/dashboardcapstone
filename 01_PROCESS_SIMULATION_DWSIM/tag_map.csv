@@ -6,7 +6,7 @@ S-04,S-104,MaterialStream,Umpan reaktor setelah pemanasan,100,AREA_1,HEAT-01,RC-
 S-05,S-105,MaterialStream,Efluen uap reaktor,100,AREA_1,RC-01,COOL-01,USULAN
 S-06,S-106,MaterialStream,Outlet cair reaktor konversi (outlet ke-2 di DWSIM; tidak tersambung ke unit lain),100,AREA_1,RC-01,-,USULAN
 S-07,S-107,MaterialStream,Efluen reaktor setelah pendingin; keluar battery limit ke Area 2,100,INTERFACE_OUT,COOL-01,Area 2 (CSCOL-01),USULAN
-S-14,S-114,MaterialStream,Recycle metanol dari Area 2; masuk battery limit,100,INTERFACE_IN,Area 2 (REC-01),MIX-01,USULAN
+S-14,S-114,MaterialStream,Recycle metanol dari Area 3; masuk battery limit,100,INTERFACE_IN,Area 3 (REC-01),MIX-01,USULAN
 PUMP-01,P-101,Pump,Pompa umpan metanol,100,AREA_1,S-01,S-02,USULAN
 MIX-01,M-101,Mixer,Titik pencampuran umpan segar dan recycle (di P&ID kemungkinan hanya sambungan pipa),100,AREA_1,S-02; S-14,S-03,USULAN
 HEAT-01,E-101,Heater,Pemanas umpan reaktor,100,AREA_1,S-03,S-04,USULAN
@@ -16,20 +16,20 @@ E-01,,EnergyStream,Daya pompa P-101,100,AREA_1_ENERGY,-,PUMP-01,USULAN
 E-02,,EnergyStream,Duty pemanas E-101,100,AREA_1_ENERGY,-,HEAT-01,USULAN
 E-03,,EnergyStream,Duty reaktor R-101 (konektor energi masuk di DWSIM; tanda nilai menentukan arah fisik),100,AREA_1_ENERGY,-,RC-01,USULAN
 E-04,,EnergyStream,Duty pendingin E-102,100,AREA_1_ENERGY,COOL-01,-,USULAN
-S-08,,MaterialStream,Produk DME (puncak kolom 1),,AREA_2,CSCOL-01,-,-
-S-09,,MaterialStream,Bawah kolom 1 ke kolom 2,,AREA_2,CSCOL-01,CSCOL-02,-
-S-10,,MaterialStream,Distilat kolom 2 (metanol recycle),,AREA_2,CSCOL-02,PUMP-02,-
-S-11,,MaterialStream,Bawah kolom 2 (air),,AREA_2,CSCOL-02,-,-
-S-12,,MaterialStream,Keluaran pompa recycle,,AREA_2,PUMP-02,COOL-02,-
-S-13,,MaterialStream,Recycle setelah pendingin,,AREA_2,COOL-02,REC-01,-
-CSCOL-01,,DistillationColumn,Kolom pemurnian DME,,AREA_2,S-07,S-08; S-09,-
-CSCOL-02,,DistillationColumn,Kolom pemulihan metanol,,AREA_2,S-09,S-10; S-11,-
-PUMP-02,,Pump,Pompa recycle metanol,,AREA_2,S-10,S-12,-
-COOL-02,,Cooler,Pendingin recycle metanol,,AREA_2,S-12,S-13,-
-REC-01,,RecycleLogicalOp,Blok logika recycle DWSIM (bukan peralatan fisik),,AREA_2,S-13,S-14,-
-E-05,,EnergyStream,Duty kolom CSCOL-01,,AREA_2,CSCOL-01,-,-
-E-06,,EnergyStream,Duty kolom CSCOL-01,,AREA_2,CSCOL-01,-,-
-E-07,,EnergyStream,Duty kolom CSCOL-02,,AREA_2,CSCOL-02,-,-
-E-08,,EnergyStream,Duty kolom CSCOL-02,,AREA_2,CSCOL-02,-,-
-E-09,,EnergyStream,Daya pompa recycle,,AREA_2,-,PUMP-02,-
-E-10,,EnergyStream,Duty pendingin recycle,,AREA_2,COOL-02,-,-
+S-08,,MaterialStream,Produk DME (puncak kolom distilasi 1),200,AREA_2,CSCOL-01,-,-
+S-09,,MaterialStream,Bawah kolom distilasi 1; antarmuka Area 2 ke Area 3,200,AREA_2,CSCOL-01,CSCOL-02,-
+CSCOL-01,,DistillationColumn,Kolom distilasi 1 (pemurnian DME),200,AREA_2,S-07,S-08; S-09,-
+E-05,,EnergyStream,Duty kolom CSCOL-01,200,AREA_2,CSCOL-01,-,-
+E-06,,EnergyStream,Duty kolom CSCOL-01,200,AREA_2,CSCOL-01,-,-
+S-10,,MaterialStream,Distilat kolom distilasi 2 (metanol recycle),300,AREA_3,CSCOL-02,PUMP-02,-
+S-11,,MaterialStream,Bawah kolom distilasi 2 (air),300,AREA_3,CSCOL-02,-,-
+S-12,,MaterialStream,Keluaran pompa recycle (area sementara; perlu konfirmasi),300,AREA_3,PUMP-02,COOL-02,-
+S-13,,MaterialStream,Recycle setelah pendingin (area sementara; perlu konfirmasi),300,AREA_3,COOL-02,REC-01,-
+CSCOL-02,,DistillationColumn,Kolom distilasi 2 (pemulihan metanol),300,AREA_3,S-09,S-10; S-11,-
+PUMP-02,,Pump,Pompa recycle metanol (area sementara; perlu konfirmasi),300,AREA_3,S-10,S-12,-
+COOL-02,,Cooler,Pendingin recycle metanol (area sementara; perlu konfirmasi),300,AREA_3,S-12,S-13,-
+REC-01,,RecycleLogicalOp,Blok logika recycle DWSIM (bukan peralatan fisik),300,AREA_3,S-13,S-14,-
+E-07,,EnergyStream,Duty kolom CSCOL-02,300,AREA_3,CSCOL-02,-,-
+E-08,,EnergyStream,Duty kolom CSCOL-02,300,AREA_3,CSCOL-02,-,-
+E-09,,EnergyStream,Daya pompa recycle,300,AREA_3,-,PUMP-02,-
+E-10,,EnergyStream,Duty pendingin recycle,300,AREA_3,COOL-02,-,-

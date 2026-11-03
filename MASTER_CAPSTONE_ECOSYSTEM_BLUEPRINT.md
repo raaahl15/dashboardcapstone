@@ -297,7 +297,7 @@ Batas praktis: **tidak ada file > 5 MB di Git.** Git LFS tidak dipakai karena ku
    ```
    *(Nilai di atas contoh format; isi final ditetapkan oleh IH dan JN.)*
 
-   **Pembaruan LOG-014 (keputusan PM 2026-11-03):** lingkup firma Area 1 = `S-101`…`S-107` + recycle masuk `S-114`; kolom pemurnian dan loop recycle adalah lingkup **konsorsium Area 2**, sehingga firma Area 1 hanya memakai **area 100** (contoh di atas yang memakai `T-201` tidak berlaku untuk Area 1). Penomoran mengikuti nomor objek DWSIM dengan gaya tag pabrik; dua heat exchanger bernomor sama diurutkan menurut arah aliran (`HEAT-01 → E-101`, `COOL-01 → E-102`). Kolom CSV final: `dwsim_tag, plant_tag, object_type, description, area, scope, from, to, status` (lihat `01_PROCESS_SIMULATION_DWSIM/tag_map.md`).
+   **Pembaruan LOG-014/015 (keputusan PM 2026-11-03):** pabrik DME dibagi **3 area**, masing-masing satu kelompok: **Area 1 reaktor** (firma ini, kode tag **1xx**), **Area 2 distilasi 1** (`CSCOL-01`, kode **2xx**), **Area 3 distilasi 2** (`CSCOL-02` + loop recycle, kode **3xx**; penempatan loop recycle sementara). Lingkup firma Area 1 = `S-101`…`S-107` + recycle masuk `S-114` dari Area 3, sehingga firma Area 1 hanya menerbitkan tag **1xx** (contoh di atas yang memakai `T-201` tidak berlaku untuk Area 1). Penomoran mengikuti nomor objek DWSIM dengan gaya tag pabrik; dua heat exchanger bernomor sama diurutkan menurut arah aliran (`HEAT-01 → E-101`, `COOL-01 → E-102`). Kolom CSV final: `dwsim_tag, plant_tag, object_type, description, area, scope, from, to, status` (lihat `01_PROCESS_SIMULATION_DWSIM/tag_map.md`).
 3. Variasi tag liar seperti `REAC-01`, `R-01`, dan `RC-01` untuk objek yang sama **tidak diperbolehkan**. `validate_tags.py` akan menandainya.
 
 ---

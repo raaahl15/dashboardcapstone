@@ -27,7 +27,7 @@ tags: ["Instrument Index", "IO List", "ISA-5.1"]
 
 ## 1. Aturan Penomoran Tag (lihat juga Blueprint §2.3)
 - Format instrumen: `<huruf fungsi ISA-5.1>-<area><nomor loop>`, contoh `FT-101`, `TIC-102`.
-- Digit pertama nomor loop = area: **1xx** Reaksi (Area 100), **2xx** Pemurnian DME (Area 200), **3xx** Utilitas (Area 300).
+- Digit pertama nomor loop = area pabrik: **1xx** Area 1 reaktor (firma ini), **2xx** Area 2 distilasi 1, **3xx** Area 3 distilasi 2 (LOG-015). Index firma Area 1 hanya berisi tag **1xx**; tag 2xx/3xx hanya boleh muncul sebagai sinyal antarmuka.
 - Huruf pertama = variabel terukur (`T`, `P`, `F`, `L`, `A`); huruf berikutnya = fungsi (`I` indikator, `C` kontroler, `T` transmitter, `V` katup, `S` switch, `A` alarm).
 - Tag peralatan di kolom lokasi wajib memakai **tag pabrik** dari `tag_map.csv`, bukan tag DWSIM.
 

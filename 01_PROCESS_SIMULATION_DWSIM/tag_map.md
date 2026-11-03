@@ -24,16 +24,22 @@ tags: ["Tag Map", "DWSIM", "Plant Tag", "Battery Limit", "Area-100"]
 
 `tag_map.csv` adalah **master** pemetaan tag (Blueprint §1.2). Tag DWSIM hanya dipakai di dalam simulasi; P&ID, PFD, FDS, Instrument Index, C&E, alarm database, dan laporan memakai `plant_tag`.
 
-## 1. Lingkup Area 1 (keputusan PM, 2026-11-03)
-Area 1 = **umpan metanol sampai pendingin efluen reaktor** (S-01…S-07), ditambah **S-14** (recycle metanol yang masuk dari Area 2 ke mixer).
+## 1. Pembagian Area Pabrik & Lingkup Area 1 (keputusan PM, 2026-11-03)
+Pabrik DME dibagi menjadi **3 area**, masing-masing dikerjakan satu kelompok/firma:
 
-| Aliran | Arah di battery limit |
+| Area | Isi (objek DWSIM) | Kode area tag |
+| :--- | :--- | :--- |
+| **Area 1 (firma ini)** | Reaktor: S-01…S-07, PUMP-01, MIX-01, HEAT-01, RC-01, COOL-01 + recycle masuk S-14 | 100 |
+| Area 2 | Distilasi 1: CSCOL-01, S-08, S-09 | 200 |
+| Area 3 | Distilasi 2: CSCOL-02, S-10, S-11 + loop recycle PUMP-02, COOL-02, S-12, S-13, REC-01 *(loop recycle ditempatkan di Area 3 sementara, perlu konfirmasi)* | 300 |
+
+| Aliran antarmuka Area 1 | Arah |
 | :--- | :--- |
 | S-101 (DWSIM S-01) | Masuk: umpan metanol segar |
-| S-107 (DWSIM S-07) | **Keluar ke Area 2** (umpan kolom pemurnian) |
-| S-114 (DWSIM S-14) | **Masuk dari Area 2** (recycle metanol) |
+| S-107 (DWSIM S-07) | **Keluar ke Area 2** (umpan kolom distilasi 1) |
+| S-114 (DWSIM S-14) | **Masuk dari Area 3** (recycle metanol) |
 
-Kolom CSCOL-01/02, PUMP-02, COOL-02, REC-01, dan aliran S-08…S-13 adalah **lingkup konsorsium Area 2**. Objek itu tetap dicantumkan (`scope = AREA_2`, `plant_tag` kosong) agar seluruh isi model DWSIM tertelusur; tag pabriknya ditetapkan Area 2.
+Objek Area 2 dan Area 3 tetap dicantumkan (`plant_tag` kosong) agar seluruh isi model DWSIM tertelusur; tag pabriknya ditetapkan kelompok area masing-masing.
 
 Alur Area 1: `S-101 → P-101 → S-102 → M-101 (+ S-114) → S-103 → E-101 → S-104 → R-101 → S-105 → E-102 → S-107 → [Area 2]`. R-101 juga punya outlet cair S-106.
 
@@ -41,16 +47,17 @@ Alur Area 1: `S-101 → P-101 → S-102 → M-101 (+ S-114) → S-103 → E-101 
 1. Nomor mengikuti **nomor objek DWSIM**, ditulis dengan gaya tag pabrik area 100: `S-0n → S-10n`, `S-14 → S-114`, `PUMP-01 → P-101`, `RC-01 → R-101`, `MIX-01 → M-101`.
 2. Heat exchanger memakai kode `E`. Karena HEAT-01 dan COOL-01 sama-sama bernomor 01 di DWSIM, urutan mengikuti **arah aliran**: `HEAT-01 → E-101` (pemanas umpan), `COOL-01 → E-102` (pendingin efluen).
 3. Aliran energi DWSIM (`E-01`…`E-10`) **bukan** heat exchanger dan tidak diberi tag pabrik. Formatnya mirip `E-101`, jadi jangan tertukar: `E-01` = daya P-101, `E-02` = duty E-101, `E-03` = duty R-101, `E-04` = duty E-102.
-4. Kolom CSV: `dwsim_tag, plant_tag, object_type, description, area, scope, from, to, status`. `scope`: `AREA_1`, `INTERFACE_OUT`, `INTERFACE_IN`, `AREA_1_ENERGY`, `AREA_2`. `status`: `USULAN` → `FINAL` setelah dikonfirmasi IH + JN.
+4. Kolom CSV: `dwsim_tag, plant_tag, object_type, description, area, scope, from, to, status`. `scope`: `AREA_1`, `INTERFACE_OUT`, `INTERFACE_IN`, `AREA_1_ENERGY`, `AREA_2`, `AREA_3`. Kolom `area` = kode area tag (100/200/300). `status`: `USULAN` → `FINAL` setelah dikonfirmasi IH + JN.
 
 ## 3. Dampak ke Dokumen Lain (perlu ditindaklanjuti PIC masing-masing)
 | No | Temuan | Dokumen | PIC |
 | :---: | :--- | :--- | :--- |
-| 1 | Loop kolom distilasi (`PIC-201`, `PCV-201`, `LIC-202`, `AIC-201`) berada di **lingkup Area 2**. Perlu dikeluarkan dari index Area 1, atau ditandai sebagai sinyal antarmuka bila memang dipertukarkan. | Master Instrument Index (Sheets) | JN |
+| 1 | Loop kolom distilasi 1 (`PIC-201`, `PCV-201`, `LIC-202`, `AIC-201`) berada di **lingkup Area 2**. Perlu dikeluarkan dari index Area 1, atau ditandai sebagai sinyal antarmuka bila memang dipertukarkan. | Master Instrument Index (Sheets) | JN |
 | 2 | FDS §4 (loop tekanan & refluks kolom C-01) berada di luar lingkup Area 1. | FDS (Docs) | AL |
 | 3 | Tag liar `REAC-01`, `C-01`, `HEATER-01` di index/FDS/C&E harus diganti `R-101`, `E-101`; `C-01` milik Area 2. | Index, FDS, C&E, alarm database | JN, AL |
 | 4 | Logbook/MoM di cockpit menyebut **"kondensor parsial E-101"** untuk pendingin efluen reaktor. Menurut aturan §2.2 tag itu menjadi **E-102**. Data live ada di Firestore, jadi perlu dikoreksi lewat UI cockpit. | Cockpit (Firestore) | RG |
-| 5 | Blueprint §2.3 menyebut 2xx = Pemurnian DME. Karena pemurnian milik Area 2, area 2xx tidak dipakai oleh firma Area 1. | Blueprint | RG |
+| 5 | Kode area tag dikoreksi: **1xx = Area 1 reaktor, 2xx = Area 2 distilasi 1, 3xx = Area 3 distilasi 2** (sebelumnya 3xx = utilitas). Firma Area 1 hanya menerbitkan tag 1xx. | Blueprint §2.3, companion index | RG |
+| 9 | Penempatan loop recycle (PUMP-02, COOL-02) di Area 3 masih sementara; sepakati dengan kelompok Area 3, termasuk spesifikasi S-114 di battery limit. | tag_map.csv | RG, IH |
 | 6 | Re-audit (LOG-002) mencatat "1 unit bertag kosong". Objek itu adalah `GO_MasterTable` (tabel tampilan DWSIM), bukan unit operasi; jumlah unit sebenarnya 10. | `hmb_streams.json` (diperbaiki di Fase 3) | IH |
 | 7 | Outlet cair reaktor S-06/S-106 tidak tersambung ke unit lain. Perlu dikonfirmasi apakah laju alirnya nol (reaktor fase gas) atau ada aliran yang belum dimodelkan. | DME.dwxmz | IH |
 | 8 | M-101 di P&ID kemungkinan hanya sambungan pipa (tee). Putuskan apakah tetap diberi tag peralatan. | P&ID, PFD | IH, JN |
@@ -68,3 +75,4 @@ Topologi dibaca dari XML di dalam `DME.dwxmz` (salinan di folder sementara; file
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Draf awal dari topologi DWSIM + keputusan lingkup PM (LOG-014). |
+| 0.2 | 2026-11-03 | Claude Code (AI) | Pabrik 3 area (Area 2 distilasi 1, Area 3 distilasi 2); S-114 masuk dari Area 3; kode area 100/200/300 (LOG-015). |

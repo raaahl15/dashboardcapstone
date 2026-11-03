@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 13:00 WIB  
+**Terakhir Diperbarui:** 2026-11-03 13:10 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -118,6 +118,7 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - **Lingkup firma Area 1 = S-01…S-07 ditambah S-14** (recycle metanol yang masuk dari Area 2). Kolom CSCOL-01/02 dan loop recycle (PUMP-02, COOL-02) adalah lingkup Area 2.
   - **Penomoran tag pabrik** mengikuti nomor objek DWSIM dengan gaya ISA/ISO area 100 (`S-01 → S-101`, `PUMP-01 → P-101`, `RC-01 → R-101`). Heat exchanger: `HEAT-01 → E-101`, `COOL-01 → E-102`, diurutkan menurut arah aliran karena keduanya bernomor 01 di DWSIM.
 * **Konsekuensi**: area 2xx tidak dipakai firma Area 1; loop kolom di index & FDS harus dikeluarkan atau diubah menjadi sinyal antarmuka; logbook yang menyebut "kondensor E-101" dikoreksi menjadi E-102 (LOG-014).
+* **Penyempurnaan (LOG-015)**: pabrik DME dibagi **3 area**, masing-masing satu kelompok: **Area 1 reaktor** (firma ini, 1xx), **Area 2 distilasi 1** (CSCOL-01, 2xx), **Area 3 distilasi 2** (CSCOL-02, 3xx). S-14 masuk dari **Area 3** (bukan Area 2). Kode 3xx tidak lagi berarti utilitas. Loop recycle (PUMP-02, COOL-02) ditempatkan di Area 3 sementara.
 
 ---
 
@@ -232,6 +233,29 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-015] 2026-11-03 13:10 WIB — Koreksi pembagian area: pabrik 3 area (mengoreksi sebagian LOG-014)
+* **Pelaksana**: Claude Code (AI agent), atas informasi PM (Rahul): *"pabrik dme itu dibagi menjadi 3 area, area 1 reaktor, area 2 distilasi 1 dan area 3 distilasi 3. kelompok ku area 1"*
+* **Fase**: 3
+* **Tujuan**: Menyesuaikan `tag_map.csv` dan dokumen terkait dengan pembagian 3 area. LOG-014 menganggap semua objek setelah S-07 milik satu "Area 2".
+* **Perubahan**:
+  - `tag_map.csv`: S-08, S-09, CSCOL-01, E-05, E-06 → `AREA_2` (area 200); S-10…S-13, CSCOL-02, PUMP-02, COOL-02, REC-01, E-07…E-10 → `AREA_3` (area 300; loop recycle ditandai "area sementara"); S-14/S-114 → masuk dari **Area 3**. Tag Area 1 tidak berubah.
+  - `tag_map.md` Rev 0.2: tabel 3 area, antarmuka, scope `AREA_3`, temuan 5 dikoreksi, temuan 9 baru (konfirmasi penempatan loop recycle & spesifikasi S-114 dengan Area 3).
+  - `DME.md`, `Master_Instrument_Index_DME.md` (aturan kode area: 1xx/2xx/3xx = Area 1/2/3; 3xx bukan utilitas lagi), Blueprint §2.3.
+  - Google Sheets `Catatan` B13 (penomoran tag) dan B20 (lingkup); Google Docs FDS: butir 5 dan petunjuk Bab 1 (S-114 dari Area 3).
+  - Kronologi #11: butir penyempurnaan.
+* **Bukti / Verifikasi**:
+  - Uji silang `tag_map.csv` vs topologi DWSIM → `34 objek / 34 baris / 13 plant_tag`, **SEMUA COCOK**.
+  - Grep sisa rujukan (`3xx`, `Utilitas`, `dari Area 2`, `AREA_2`) di repo → hanya entri log lama dan baris Area 2 yang memang benar.
+  - Google Docs `replaceAllText` → 1 + 1 penggantian; Sheets `update_values` → B13, B20.
+  - `npm run check` → PASS (dijalankan oleh `sync:push`).
+* **Keputusan**: "distilasi 3" dari PM ditafsirkan sebagai **kolom distilasi kedua** (CSCOL-02), karena model DWSIM hanya punya dua kolom. Loop recycle ditempatkan di Area 3 karena berada setelah CSCOL-02; **perlu konfirmasi PM/kelompok Area 3**.
+* **Tindak Lanjut**:
+  - [ ] **PM**: konfirmasi pemilik loop recycle (PUMP-02, COOL-02) dan sepakati spesifikasi S-114 dengan PM Area 3, serta S-107 dengan PM Area 2.
+  - [ ] Data cockpit menyebut "konsorsium Area 2" sebagai satu-satunya mitra; pertimbangkan menambah Area 3 di modul antarmuka/MoM (Fase 4).
+  - [ ] Tindak lanjut LOG-014 lainnya tetap berlaku.
 
 ---
 
