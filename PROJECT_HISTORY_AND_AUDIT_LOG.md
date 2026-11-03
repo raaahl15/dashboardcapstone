@@ -241,6 +241,47 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-022] 2026-11-03 16:40 WIB — Pemberian peran Editor Google Drive untuk 4 email UGM anggota tim
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"atur izin berbagi folder Google Drive proyek DME Capstone untuk anggota tim"*
+* **Fase**: 2
+* **Tujuan**: Menutup tindak lanjut LOG-017 (pemberian akses Editor kepada anggota tim pada Google Drive via CLI gdrive akun PM agar anggota tim dapat mengedit Sheets/Docs).
+* **Perubahan**:
+  - **Google Drive Root Folder** `CAPSTONE_DME_AREA1` (`1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod`):
+    - Diberikan izin peran **writer (Editor)** kepada 4 email UGM anggota tim:
+      - `ihsaanzauhairtsaqifprawira@mail.ugm.ac.id` (Ihsaan)
+      - `altaframadhanparvez@mail.ugm.ac.id` (Altaf)
+      - `jonathanpangihutanms@mail.ugm.ac.id` (Jonathan)
+      - `heidifalinabrilian@mail.ugm.ac.id` (Heidi)
+    - Akses `anyoneWithLink` (reader) dan `rahulghulam15@gmail.com` (owner) dipertahankan tanpa perubahan.
+    - Akses email dosen tidak ditambahkan (ditunda sesuai keputusan PM di LOG-017).
+* **Bukti / Verifikasi**:
+  - **Izin Folder Root Sebelum**:
+    - `anyoneWithLink` → `reader`
+    - `rahulghulam15@gmail.com` → `owner`
+  - **Perintah Eksekusi**:
+    - `gdrive mutate share 1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod --email ihsaanzauhairtsaqifprawira@mail.ugm.ac.id --role writer` → `Shared as writer` (PASS)
+    - `gdrive mutate share 1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod --email altaframadhanparvez@mail.ugm.ac.id --role writer` → `Shared as writer` (PASS)
+    - `gdrive mutate share 1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod --email jonathanpangihutanms@mail.ugm.ac.id --role writer` → `Shared as writer` (PASS)
+    - `gdrive mutate share 1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod --email heidifalinabrilian@mail.ugm.ac.id --role writer` → `Shared as writer` (PASS)
+  - **Izin Folder Root Sesudah**:
+    - `anyoneWithLink`: reader
+    - `rahulghulam15@gmail.com`: owner
+    - Keempat email UGM terdaftar sebagai **writer** (user).
+  - **Verifikasi Pewarisan Izin (Inheritance Check)** pada 3 dokumen kerja:
+    - Sheets `1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM` (Master Instrument Index & IO List): keempat email UGM terdaftar sebagai **writer**.
+    - Docs `1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg` (FDS): keempat email UGM terdaftar sebagai **writer**.
+    - Docs `1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w` (Laporan PSTF 1): keempat email UGM terdaftar sebagai **writer**.
+  - `npm run check` → **18 / 18 PASS**.
+* **Keputusan**:
+  - Berbagi folder root secara langsung mewariskan izin ke seluruh subfolder (`00_CORE_GUIDELINES`, `03_CAD_DWG`, `04_INSTRUMENT_INDEX_SHEETS`, `06_LIVING_REPORTS_GDOCS`, `07_FINAL_DELIVERABLES_PDF`, `08_WORK_ORDERS_EVIDENCE`, `09_STAGE_GATES_SUBMISSIONS`) dan seluruh dokumen di dalamnya secara otomatis tanpa perlu menetapkan izin per-berkas.
+  - `google_workspace_registry.json` tidak diubah (tetap dikelola oleh Claude Code).
+* **Tindak Lanjut**:
+  - [ ] **Anggota Tim**: minta salah satu anggota tim membuka URL Sheets dan Docs untuk verifikasi akses buka/edit langsung di peramban mereka (DoD Fase 2 butir 3).
+  - [ ] **Kelompok**: uji laptop saat kerja kelompok bersama (DoD Fase 2 butir 1).
+  - [ ] **PM**: jadwalkan penambahan email dosen (Commenter) saat berkas siap ditinjau.
+
+---
+
 ### [LOG-021] 2026-11-03 15:50 WIB — `validate_tags.py` lintas dokumen + mirror FDS; CSV thermowell dibersihkan
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"lanjutkan"* (opsi: validate_tags dulu, lalu rapikan CSV thermowell)
 * **Fase**: 3
@@ -364,7 +405,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - **Uji laptop (DoD Fase 2 butir 1) ditunda** sampai sesi kerja kelompok bersama; prosedur tetap sesuai README "Setup Perangkat Baru". Fase 2 tetap BERJALAN sampai butir ini dan butir 3 (akses tim) terverifikasi.
   - Berbagi Drive diserahkan ke **Antigravity** (pengelola file & folder, LOG-008).
 * **Tindak Lanjut**:
-  - [ ] **Antigravity**: berbagi folder ke 4 email UGM (Editor) + entri LOG.
+  - [x] **Antigravity**: berbagi folder ke 4 email UGM (Editor) + entri LOG (selesai di LOG-022).
   - [ ] **Claude Code**: setelah itu, verifikasi izin lewat konektor (`get_file_permissions`) → DoD Fase 2 butir 3 bisa dicentang setelah satu anggota membuka ketiga URL.
   - [ ] **Kelompok**: uji laptop saat kerja kelompok.
   - [ ] **PM**: email dosen (Commenter) saat sudah siap.
