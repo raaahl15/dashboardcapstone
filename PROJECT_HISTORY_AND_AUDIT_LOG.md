@@ -1,11 +1,11 @@
-# CATATAN SEJARAH PROYEK & LAPORAN AUDIT SISTEM
+﻿# CATATAN SEJARAH PROYEK & LAPORAN AUDIT SISTEM
 **Proyek Capstone:** Front-End Engineering Design (FEED) Pabrik Dimethyl Ether (DME) Area 1  
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
-**Versi Blueprint Berlaku:** v2.2 (pemetaan Stage-Gate G1–G4, tim tetap 5 orang)  
-**Terakhir Diperbarui:** 2026-11-03 11:20 WIB  
+**Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
+**Terakhir Diperbarui:** 2026-11-03 11:35 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -95,6 +95,14 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   3. **Tim tetap 5 orang**, walaupun panduan menyebut firma 3–4 orang. Pemetaan Stage-Gate diserahkan ke rekomendasi agent.
   4. `ISO10628_Equipment_recover.dwg` isinya sama dengan `ISO10628_Equipment.dxf` → **hapus file DWG**.
 * **Rekomendasi agent yang ditetapkan — pemetaan Stage-Gate** (Blueprint §1.7): nama G1–G4 dipertahankan dan diikat ke empat titik kontrol panduan, yaitu **G1** ACC Pembimbing draf PSTF 1 → **G2** Evaluasi PSTF 1 (15 Des 2026) → **G3** ACC final Pembimbing PSTF 2 → **G4** Evaluasi Akhir PSTF 2. Alasannya: panduan hanya punya dua evaluasi formal, tetapi ACC Pembimbing adalah syarat wajib untuk maju ke masing-masing evaluasi, jadi keduanya layak menjadi gerbang. Sidang tunggal yang sudah ada di cockpit (15 Des 2026) otomatis menjadi G2, sehingga tidak ada data yang perlu dibuang.
+
+### 9. Hosting Vercel & Repo GitHub `dashboardcapstone` (2026-11-03)
+* **Konteks**: PM mengusulkan memakai repo GitHub yang sudah ada, `raaahl15/dashboardcapstone`, yang selama ini mendeploy website cockpit ke Vercel, supaya monorepo dan website terkelola dari satu repo.
+* **Keputusan**:
+  - **Hosting resmi = Vercel**, membatalkan keputusan "hosting tunggal Firebase" (Kronologi #6). Alasannya: website sudah live di Vercel. Firebase tetap dipakai untuk Auth + Firestore (+ deploy `firestore.rules`).
+  - `vercel.json` **dikembalikan**. Alasan penghapusan di LOG-004 ("header identik dengan `firebase.json`") hanya berlaku jika hosting-nya Firebase; di Vercel, file ini satu-satunya sumber header keamanan.
+  - Remote monorepo = `raaahl15/dashboardcapstone`; Root Directory Vercel = `apps/operations-cockpit`.
+  - Riwayat 12 commit repo website **dipertahankan** (merge `-s ours`), bukan ditimpa dengan force push.
 
 ---
 
@@ -209,6 +217,32 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-007] 2026-11-03 11:35 WIB — Remote GitHub `dashboardcapstone` + hosting Vercel; push pertama
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul); setelan Vercel diubah oleh PM
+* **Fase**: 2
+* **Tujuan**: Menjadikan repo `raaahl15/dashboardcapstone` (sumber deploy Vercel) sebagai remote monorepo tanpa kehilangan riwayat website dan tanpa merusak website live.
+* **Perubahan**:
+  - **Pemeriksaan awal (read-only)**: tanpa kredensial, GitHub meminta login → repo **privat**. `git fetch` ke namespace terpisah → 12 commit (31ae96b … 5cf0c38, 2026-10-12 s.d. 2026-11-01). `git diff dashboard/main HEAD:apps/operations-cockpit` → **identik**, kecuali `vercel.json` (yang dihapus di LOG-004). Jadi tidak ada perubahan website yang tertinggal di monorepo.
+  - **`apps/operations-cockpit/vercel.json` dikembalikan** dari commit `580a643`; hash blob = versi di remote.
+  - Blueprint **v2.3**: §3.6 hosting Vercel (root dir, skip deploy, env vars, `firebase.json` hanya untuk rules); Fase 1.5 butir 9 diberi catatan pembatalan; Fase 2 repo GitHub ✅ + catatan build; Fase 5 rilis via Vercel; diagram BAB VIII; tabel biaya + Vercel Hobby; risiko **R-11** (push = deploy produksi).
+  - Commit `389f819` (perubahan di atas), lalu `git merge -s ours --allow-unrelated-histories dashboard/main` → commit `fa70e69`. Merge ini **tidak mengubah isi file** (tree identik), hanya menyambung riwayat.
+  - PM mengubah **Root Directory Vercel → `apps/operations-cockpit`**.
+  - `git remote add origin https://github.com/raaahl15/dashboardcapstone.git` lalu `git push -u origin main`.
+* **Bukti / Verifikasi**:
+  - Pemindaian kredensial di seluruh riwayat (pola API key Google/GitHub, private key, token Slack/OpenAI, `client_secret`, password hardcoded) → **0 temuan**. Hanya `.env.example` (berisi placeholder) yang ter-track.
+  - `git merge-base --is-ancestor dashboard/main HEAD` → ya; tree `HEAD` = tree `HEAD~1`.
+  - Push: `5cf0c38..fa70e69  main -> main` (**fast-forward**, tanpa force push). `git ls-remote origin` = `git rev-parse HEAD` = `fa70e69…` → **MATCH**. Total 22 commit (10 monorepo + 12 website).
+  - **Build cockpit**: `node node_modules/vite/bin/vite.js build` → `✓ built in 34.29s`, exit 0. **Penyebab build "macet" sejak re-audit ditemukan**: `npx vite build` hanya menjalankan proses `npx` (CPU 1,3 s) dan tidak pernah memanggil Vite. Kodenya tidak bermasalah. Tindak lanjut LOG-004 butir terakhir **ditutup**.
+  - **Belum diverifikasi agent**: status deploy di dashboard Vercel (agent tidak punya akses Vercel).
+* **Keputusan**: lihat Kronologi #9 (BAB I).
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek Vercel → *Deployments*: deploy dari commit terbaru berstatus **Ready**, lalu buka website dan pastikan login + data Firestore tampil. Jika gagal: *Instant Rollback* ke deployment sebelumnya.
+  - [ ] **PM**: simpan bundle backup sampai akhir Fase 2, lalu boleh dihapus.
+  - [ ] **Antigravity**: integrasi Google Drive. Jika bekerja di laptop: `git clone https://github.com/raaahl15/dashboardcapstone.git`, salin `.env.example` → `.env.local`.
+  - [ ] Fase 2 sisa: Google Sheets Master Instrument Index, Google Docs FDS & laporan, `google_workspace_registry.json`.
 
 ---
 

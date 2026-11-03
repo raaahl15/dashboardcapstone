@@ -551,7 +551,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 
 #### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: BERJALAN
 * **Sudah:** isi folder staging diunggah ke Google Drive (2026-11-03, via `tools/upload_to_gdrive.js` + CLI `gdrive`; belum ada Google Drive for Desktop di PC ini).
-* **Repo GitHub:** memakai repo yang sudah ada, **`raaahl15/dashboardcapstone`** (privat, terhubung ke Vercel). Riwayat 12 commit cockpit dipertahankan lewat merge, jadi push pertama berupa fast-forward tanpa force push (LOG-007).
+* **Repo GitHub:** ✅ memakai repo yang sudah ada, **`raaahl15/dashboardcapstone`** (privat, terhubung ke Vercel). Riwayat 12 commit cockpit dipertahankan lewat merge, dan push pertama berupa fast-forward tanpa force push (`5cf0c38..fa70e69`, LOG-007). Root Directory Vercel sudah diubah PM ke `apps/operations-cockpit`.
+* **Catatan build:** di shell agent, `npx vite build` macet karena `npx` tidak pernah memanggil Vite. Gunakan `npm run build` atau `node node_modules/vite/bin/vite.js build` (build ±35 detik).
 * **Pembagian kerja:** integrasi Google Drive (sinkronisasi, struktur folder, registry) dikerjakan oleh **Antigravity** (keputusan PM, 2026-11-03). Agent lain tidak mengubah isi Drive.
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
