@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
+**Status Audit Terakhir:** FASE 2 DITUTUP DENGAN CATATAN (2026-11-03, LOG-018) — Fase 3 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 13:50 WIB  
+**Terakhir Diperbarui:** 2026-11-03 14:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -120,6 +120,11 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
 * **Konsekuensi**: area 2xx tidak dipakai firma Area 1; loop kolom di index & FDS harus dikeluarkan atau diubah menjadi sinyal antarmuka; logbook yang menyebut "kondensor E-101" dikoreksi menjadi E-102 (LOG-014).
 * **Penyempurnaan (LOG-015)**: pabrik DME dibagi **3 area**, masing-masing satu kelompok: **Area 1 reaktor** (firma ini, 1xx), **Area 2 distilasi 1** (CSCOL-01, 2xx), **Area 3 distilasi 2** (CSCOL-02, 3xx). S-14 masuk dari **Area 3** (bukan Area 2). Kode 3xx tidak lagi berarti utilitas. Loop recycle (PUMP-02, COOL-02) ditempatkan di Area 3 sementara.
 
+### 12. Penutupan Fase 2 dengan Catatan (2026-11-03)
+* **Konteks**: Seluruh aktivitas Fase 2 selesai kecuali dua butir DoD yang bergantung pada kegiatan di luar sesi agent: uji clone di laptop (menunggu kerja kelompok) dan konfirmasi akses tim ke Drive (didelegasikan ke Antigravity).
+* **Keputusan PM**: Fase 2 **ditutup dengan catatan**. Kedua butir ditangguhkan, bukan dianggap lulus, dan masing-masing punya syarat penutupan (Blueprint Fase 2). Fase 3 dimulai.
+* **Aturan baru (Blueprint BAB VI)**: pengecualian atas DoD hanya boleh diputuskan PM, wajib menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -233,6 +238,32 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-018] 2026-11-03 14:00 WIB — Penutupan Fase 2 dengan catatan; Fase 3 dimulai
+* **Pelaksana**: Claude Code (AI agent), atas keputusan PM (Rahul): *"fase 2 nyatakan ditutup dengan catatan uji laptop dan konfirmasi akses tim"*
+* **Fase**: 2 (penutupan) → 3
+* **Perubahan**:
+  - Blueprint Fase 2: status **DITUTUP DENGAN CATATAN**; paragraf penutupan; DoD butir 1 (uji laptop) dan 3 (akses tim) ditandai **DITANGGUHKAN** dengan syarat penutupan masing-masing; butir 2 tetap ✅.
+  - Blueprint tabel roadmap BAB VI: Fase 1 "via 1.5", Fase 1.5 SELESAI, Fase 2 DITUTUP*, Fase 3 BERJALAN, + catatan kaki; aturan pengecualian DoD.
+  - Blueprint Fase 3: status BERJALAN.
+  - Header dokumen ini: status audit terakhir; Kronologi #12.
+* **Rekap DoD Fase 2 saat penutupan**:
+
+  | Butir DoD | Status | Bukti / syarat |
+  | :--- | :--- | :--- |
+  | Clone + install + build di laptop | DITANGGUHKAN | Simulasi clone bersih di PC lulus (LOG-013). Syarat: uji di laptop anggota saat kerja kelompok. |
+  | `pull_sheets` → CSV sama kolomnya dengan Sheets | ✅ | LOG-012 (15 kolom), LOG-016 (sinkron ulang R-101) |
+  | URL registry bisa dibuka seluruh tim | DITANGGUHKAN | Izin saat ini: `anyone: reader` + owner. Syarat: Antigravity berbagi ke 4 email (Editor) → verifikasi Claude Code → satu anggota membuka 3 URL. |
+
+  Aktivitas Fase 2 yang tuntas: repo GitHub + Vercel (LOG-007), unggah Drive (LOG-005/006), konektor Drive (LOG-010), Sheets index + IO list, Docs FDS, kerangka laporan PSTF 1, registry (LOG-010/012), 7 folder Drive (LOG-011), `pull_sheets.js` (LOG-012), `postinstall` setup perangkat baru (LOG-013).
+* **Bukti / Verifikasi**: `npm run sync:pull` → sudah terbaru (belum ada entri Antigravity soal berbagi Drive); `npm run check` → PASS (via `sync:push`).
+* **Keputusan**: lihat Kronologi #12.
+* **Tindak Lanjut**:
+  - [ ] Butir ditangguhkan 1: uji laptop saat kerja kelompok.
+  - [ ] Butir ditangguhkan 3: berbagi Drive (Antigravity) → verifikasi (Claude Code) → buka 3 URL (anggota).
+  - [ ] Fase 3: `tools/dwsim/export_hmb.py` (skema §3.1) untuk HMB Area 1.
 
 ---
 

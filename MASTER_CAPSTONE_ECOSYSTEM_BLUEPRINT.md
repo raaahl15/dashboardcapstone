@@ -519,16 +519,17 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 
 ```text
 ┌───────────────┬────────────────────────────────────────────────────────┬──────────────┐
-│ FASE 1        │ Konsolidasi Monorepo & Companion .md                   │ PARSIAL      │
-│ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ BERIKUTNYA   │
-│ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ Rencana      │
-│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ Rencana      │
+│ FASE 1        │ Konsolidasi Monorepo & Companion .md                   │ via 1.5      │
+│ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
+│ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
+│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ BERJALAN     │
 │ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ Rencana      │
 │ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ Rencana      │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
 ```
+\* Fase 2 ditutup dengan catatan: 2 butir DoD ditangguhkan atas keputusan PM (uji laptop, konfirmasi akses tim). Lihat Fase 2 dan LOG-018.
 
-Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX).
+Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX). Pengecualian hanya boleh diputuskan PM, harus menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
 #### FASE 1: Konsolidasi Monorepo & Companion `.md` — Status: PARSIAL → dituntaskan lewat Fase 1.5
 * **Sudah tercapai:** struktur folder, pemindahan aset CAD/simulasi/kalkulator, integrasi source cockpit ke monorepo, `tsc --noEmit` 0 error.
@@ -554,7 +555,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] Entri log riwayat Fase 1.5 lengkap dengan bukti (LOG-004).
 * **Sign-off:** ✅ disetujui PM pada 2026-11-03 (LOG-005). Tindak lanjut sudah ditutup: folder staging diunggah ke Google Drive oleh PM; `ISO10628_Equipment_recover.dwg` dihapus (isinya sama dengan `.dxf`); ukuran tim **tetap 5 orang** (keputusan PM).
 
-#### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: BERJALAN
+#### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: DITUTUP DENGAN CATATAN (2026-11-03, LOG-018)
+* **Penutupan (keputusan PM, 2026-11-03):** Fase 2 ditutup dengan **dua butir DoD ditangguhkan**, sebagai pengecualian atas aturan BAB VI ("fase selesai hanya jika semua DoD terpenuhi"). Kedua butir **tidak** dianggap lulus; masing-masing punya syarat penutupan sendiri (lihat DoD di bawah) dan wajib dicentang lewat entri log tersendiri. Fase 3 boleh berjalan karena tidak bergantung pada kedua butir tersebut.
 * **Sudah:** isi folder staging diunggah ke Google Drive (2026-11-03, via `tools/upload_to_gdrive.js` + CLI `gdrive`; belum ada Google Drive for Desktop di PC ini).
 * **Repo GitHub:** ✅ memakai repo yang sudah ada, **`raaahl15/dashboardcapstone`** (privat, terhubung ke Vercel). Riwayat 12 commit cockpit dipertahankan lewat merge, dan push pertama berupa fast-forward tanpa force push (`5cf0c38..fa70e69`, LOG-007). Root Directory Vercel sudah diubah PM ke `apps/operations-cockpit`.
 * **Catatan build:** di shell agent, `npx vite build` macet karena `npx` tidak pernah memanggil Vite. Gunakan `npm run build` atau `node node_modules/vite/bin/vite.js build` (build ±35 detik).
@@ -570,11 +572,11 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets` (versi Node `pull_sheets.js`).
 * **DoD:**
-  - [ ] `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus. Tinggal diuji di laptop sungguhan dengan Node 24 LTS, langkah di README.)*
+  - [ ] **DITANGGUHKAN:** `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus.)* **Syarat penutupan:** uji di laptop anggota saat kerja kelompok (Node 24 LTS, README "Setup Perangkat Baru"), ketiga perintah exit 0 dan `npm run check` PASS, dicatat di log.
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
-  - [ ] Semua URL di registry bisa dibuka oleh seluruh anggota tim.
+  - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-017); (b) Claude Code memverifikasi izin lewat konektor; (c) minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
 
-#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari
+#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: BERJALAN (mulai 2026-11-03)
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
 * **Aktivitas:** `tools/dwsim/export_hmb.py` (skema §3.1); `tag_map.csv`; mesin kalkulator `tools/calc/` + input YAML; uji verifikasi per kalkulator; `validate_tags.py`.
 * **DoD:**
