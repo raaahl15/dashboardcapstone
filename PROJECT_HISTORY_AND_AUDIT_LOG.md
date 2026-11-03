@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** FASE 1 PARSIAL (re-audit independen 2026-11-03) — sign-off v1.0 dicabut, lanjut ke Fase 1.5 Remediasi  
-**Versi Blueprint Berlaku:** v2.0 (Draft, menunggu persetujuan PM)  
-**Terakhir Diperbarui:** 2026-11-03 10:15 WIB  
+**Status Audit Terakhir:** FASE 1.5 REMEDIASI SELESAI (DoD terpenuhi, LOG-004) — menunggu sign-off PM; berikutnya Fase 2  
+**Versi Blueprint Berlaku:** v2.1 (disetujui PM 2026-11-03; penyesuaian v2.1 dari eksekusi Fase 1.5)  
+**Terakhir Diperbarui:** 2026-11-03 10:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -76,6 +76,16 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - **Konvensi tag pabrik** + `tag_map.csv` untuk memetakan tag DWSIM ke tag pabrik.
   - **Fase 1.5 Remediasi** ditambahkan; setiap fase punya Definition of Done terukur.
   - **Pencatatan riwayat wajib** untuk setiap sesi kerja (BAB IX blueprint, BAB VI dokumen ini).
+* **Status**: blueprint v2.0 **disetujui PM** pada 2026-11-03, bersama instruksi untuk langsung mengeksekusi Fase 1.5 (termasuk pembersihan riwayat Git).
+
+### 7. Eksekusi Fase 1.5 & Penyesuaian Blueprint v2.1 (2026-11-03)
+* **Konteks**: Fase 1.5 dieksekusi atas persetujuan PM. Selama eksekusi ditemukan fakta yang mengubah sebagian konsep.
+* **Temuan → Keputusan**:
+  - `generate_libraries.js` ternyata hanya menghasilkan DXF sederhana, menulis ke path struktur lama, dan **juga membuat semua CSV kalkulator/index/C&E** (data contoh). DXF 3–4 MB di repo adalah file AutoCAD hasil kerja manual. → Library simbol diperlakukan sebagai **file CAD manual di Drive**; skrip bootstrap **dihapus**; seluruh CSV dari skrip itu ditandai **PLACEHOLDER**.
+  - **Python belum terpasang** di PC. → Pemeriksa repo ditulis dalam **Node.js** (`tools/check_companions.js`); Python tetap untuk pipeline data dan menjadi prasyarat Fase 3.
+  - **Panduan Capstone mewajibkan sizing manual**; rubrik menilai kalkulator tanpa rumusan standar hanya *Cukup*. → Skrip kalkulator diposisikan sebagai **verifikasi silang**, sedangkan perhitungan manual lengkap tetap ditulis di laporan.
+  - Panduan mendefinisikan **2 evaluasi formal** (bukan "Stage-Gate 1–4") dan **firma 3–4 orang** (tim tercatat 5 orang). → Dicatat sebagai hal yang perlu dikonfirmasi.
+  - `vercel.json` disebut sebagai "target produksi" di dokumen audit lama cockpit, tetapi header keamanannya identik dengan `firebase.json`. → Dihapus sesuai keputusan hosting tunggal Firebase.
 
 ---
 
@@ -190,6 +200,51 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-004] 2026-11-03 10:40 WIB — Eksekusi Fase 1.5 Remediasi Fondasi
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"aku sudah setuju, bisa langsung kamu eksekusi fase 1.5"*
+* **Fase**: 1.5
+* **Tujuan**: Menuntaskan sisa Fase 1 sesuai Blueprint v2.0 BAB VI (10 aktivitas + DoD).
+* **Perubahan**:
+  - **Pengaman sebelum perubahan destruktif**: backup penuh riwayat Git → `D:\rahul\dme-capstone-master_BACKUP_2026-11-03_pre-phase1.5.bundle` (4,5 MB, `git bundle verify` OK). Biner disalin ke folder staging Drive `D:\rahul\CAPSTONE_DME_AREA1\` (13 file, hash SHA-256 sumber = salinan).
+  - **Riwayat Git ditulis ulang** (`git filter-branch --index-filter`) untuk membuang `*.dxf`, `*.dwg`, `*.dwt`, dan `Panduan_Capstone_DTNTF_2026.pdf` dari seluruh commit, lalu `reflog expire` + `gc --prune=now --aggressive`. **Hash commit berubah**:
+
+    | Commit lama | Commit baru | Pesan |
+    | :--- | :--- | :--- |
+    | `741240a` | `ce654b8` | feat(init): initialize DME capstone master monorepo |
+    | `cb55914` | `580a643` | feat(cockpit): integrate full operations-cockpit source tree |
+    | `3a5b6f9` | `85bae5b` | docs(audit): add living project history and phase 1 audit log |
+    | `551ecca` | `86b7134` | docs(blueprint): revise system concept to v2.0 |
+
+  - **Dipindah ke Drive staging** (`03_CAD_DWG/`, `00_CORE_GUIDELINES/`): 8 library simbol `.dxf`, `ISO10628_Equipment_recover.dwg`, `DME_Master_Template.dwt/.dxf`, `plot.log`, PDF panduan.
+  - **Dihapus (duplikat byte-identik)**: `DME_Master_Template.dwg`, `Engineering_Drawing_Template.dwg`, `Engineering_Drawing_Template.dxf`.
+  - **Dihapus**: `03_CAD_AND_PID_LIBRARIES/scripts/generate_libraries.js` (skrip bootstrap; tersimpan di commit `ce654b8`), `apps/operations-cockpit/vercel.json`, folder kosong `01_PROCESS_SIMULATION_DWSIM/scripts/`.
+  - **Status dokumen**: 11 × `ACC Final` → 10 × `Draft` (data contoh) + 5 × `WIP` (hasil kerja riil: `DME.md`, `DME_Master_Template.md`, `acad_dme.md`, `SYMBOL_LIBRARIES.md`, `Panduan_Capstone_DTNTF_2026.md`). Semua frontmatter dimigrasi ke format v2.0 (`target_files`, `external_files`, `review_evidence`).
+  - **CSV kalkulator** (5 file): kolom baru `DATA_STATUS` (`PLACEHOLDER`/`ASUMSI`); **nilai tidak diubah**.
+  - **Companion diperbarui** dengan peringatan placeholder + catatan inkonsistensi hasil hitung ulang: orifice (q_m ≈ 9.600 vs 12.500 kg/h; Re_D ≈ 1,7×10⁶ vs 385.400), PSV-101 **undersized** (830 < 845,2 mm²), NPV (≈ 5,07 jt vs 3,74 jt USD), payback (≈ 4,2 vs 3,8 th), satuan TCV-102, serta tag & setpoint yang bertentangan antara index, C&E, alarm, dan FDS.
+  - **File baru**: `00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md` (ringkasan 30 halaman PDF), `exported_data/hmb_streams.md`, `symbol_libraries/SYMBOL_LIBRARIES.md`, `tools/check_companions.js`, `tools/sync/sync.js`, `.env.example`. Rename: `acad_dme_lin.md` → `acad_dme.md`.
+  - **Diganti**: `.gitignore` (biner CAD/PDF + file sementara AutoCAD/DWSIM/Python), `package.json` (`check`, `sync:push`, `sync:pull` aman; `gen:cad` tidak dibuat), `README.md` (orientasi singkat).
+  - **Blueprint → v2.1**: penyesuaian dari temuan eksekusi (Kronologi #7) dan status Fase 1.5 SELESAI.
+* **Bukti / Verifikasi**:
+  - `npm run check` → `Artefak teknis berpasangan companion: 11 / 11`, `Sebaran status: WIP=5, Draft=10`, `HASIL: PASS`.
+  - Uji negatif pemeriksa (file sementara): artefak tanpa companion, file duplikat, status `ACC Final`, `ACC Pembimbing` tanpa bukti, dan `target_files` hilang → semuanya terdeteksi, `exit=1`. Bug yang ditemukan saat uji (frontmatter dengan BOM UTF-8 tidak terbaca) **sudah diperbaiki** dan diuji ulang.
+  - `git rev-list --objects --all | git cat-file --batch-check` → **0 blob > 1 MB**; blob terbesar 119 KB (`public/images/rahul.png`). Ukuran pack: 502 KiB.
+  - `git check-ignore` → `*_recover.dwg`, `*.bak`, `*.dwl`, `*.dwl2`, `plot.log`, `*.dxf`, `*.pdf` semuanya `IGNORED`. `git ls-files -ci --exclude-standard` → kosong (tidak ada file ter-track yang kini di-ignore).
+  - `npx tsc --noEmit` (cockpit) → exit 0.
+  - Uji `sync.js push`: menolak saat ada file untracked (exit 1); berhasil membuat commit `e31df04` setelah file baru di-stage eksplisit, lalu memberi info "belum ada remote".
+  - **Tidak diuji**: `npm run build` cockpit (pada re-audit, build tidak selesai dalam 5 menit di sesi agent; tidak terkait perubahan sesi ini).
+  - Commit: `e31df04` (perubahan Fase 1.5) + commit log ini.
+* **Keputusan**: lihat Kronologi #7 (BAB I).
+* **Tindak Lanjut**:
+  - [ ] **PM**: sign-off gerbang Fase 1.5 → Fase 2.
+  - [ ] **PM**: unggah/sinkronkan `D:\rahul\CAPSTONE_DME_AREA1\` ke Google Drive (awal Fase 2), lalu salin `.env.example` → `.env.local` dan isi `DRIVE_ROOT`.
+  - [ ] **PM**: hapus bundle backup setelah repo GitHub dibuat dan terverifikasi (simpan minimal sampai akhir Fase 2).
+  - [ ] **JN**: periksa `ISO10628_Equipment_recover.dwg` (gabungkan ke library atau hapus).
+  - [ ] **PM**: konfirmasi ke Dosen Koordinator soal ukuran tim (5 orang vs 3–4 di panduan) dan pemetaan "Stage-Gate 1–4" di cockpit.
+  - [ ] **PM**: pasang Python 3.12+ sebelum Fase 3.
+  - [ ] Selidiki kenapa `vite build` tidak selesai dalam sesi agent (Fase 4 atau lebih awal).
 
 ---
 
