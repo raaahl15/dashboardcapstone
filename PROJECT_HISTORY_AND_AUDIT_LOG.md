@@ -125,6 +125,13 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
 * **Keputusan PM**: Fase 2 **ditutup dengan catatan**. Kedua butir ditangguhkan, bukan dianggap lulus, dan masing-masing punya syarat penutupan (Blueprint Fase 2). Fase 3 dimulai.
 * **Aturan baru (Blueprint BAB VI)**: pengecualian atas DoD hanya boleh diputuskan PM, wajib menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
+### 13. Alur Rilis Website lewat Branch & Data Statis Publik (2026-11-03)
+* **Konteks**: PM meminta seluruh fase diselesaikan. Fase 4 mengubah kode website, padahal push ke `main` langsung menjadi deploy produksi (R-11), dan agent tidak punya browser untuk DoD "12 modul tanpa error console".
+* **Keputusan**:
+  - Perubahan kode cockpit dikerjakan di **branch** (`fase-4-cockpit`) → **preview Vercel** → diuji PM di browser → merge ke `main`. Dokumen/log tetap langsung di `main`.
+  - Data rekayasa dibundel sebagai file statis `public/data/*.json` (sesuai §3.6), dengan pemeriksaan kesegaran di `npm run check`.
+  - **Risiko baru R-13**: file statis dapat diunduh tanpa login. Syarat merge: akses umum folder Drive diubah ke **Dibatasi**.
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -238,6 +245,40 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-023] 2026-11-03 17:30 WIB — Fase 4 (cockpit) & perangkat lunak Fase 5 di branch `fase-4-cockpit`; verifikasi akses Drive
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"selesaikan semua fase terlebih dahulu"* / *"lanjutkan"*
+* **Fase**: 4–5 (+ verifikasi Fase 2)
+* **Perubahan** (semua kode di branch **`fase-4-cockpit`**, commit `a44c6ac`, `4d88a2e`, `5cfd628`; **belum** di `main`):
+  - **Baru** `tools/build_manifest.js`: membundel `hmb_streams.json`, `tag_validation_report.json`, `google_workspace_registry.json`, `calc_results.json` (dari `CALC_*.csv`), `library_manifest.json` (semua companion `.md` folder `0x_`), `health.json` (ringkasan + hash sumber) ke `apps/operations-cockpit/public/data/`. Mode `--check` mendeteksi data basi (hash isi dengan akhir baris dinormalisasi). `check_companions.js` memanggilnya (butir 6), sehingga `npm run check`/`sync:push` menolak data basi. Root `npm run build` = `build_manifest` + build cockpit; skrip baru `data:cockpit`.
+  - **Modul baru**: `DwsimStreamView` (6), `MasterLibraryView` (9; tab dokumen, hasil kalkulator, validasi tag), `GoogleWorkspaceView` (10); navigasi `DWSIM`, `Library`, `G-Workspace`.
+  - **Homepage**: `DataHealthPanel` (umur & neraca HMB, kalkulator PASS/FAIL/PLACEHOLDER, error tag, companion, **perkiraan ukuran `projectData/area1`** vs 500 KB).
+  - **WhatsApp `wa.me`** (§3.5): tombol bagikan di detail WO, header Tracker Action (action item aktif), dan setiap kartu Meeting Log.
+  - **Stage-Gate**: `StageGateTimeline` G1–G4 (§1.7; G1 = akhir minggu 13 dari `config.projectStartDate`, G2 = `config.tenderDeadline`, G3/G4 menunggu jadwal PSTF 2); pill header "G2 Evaluasi PSTF 1".
+  - **Logbook**: ekspor CSV (kolom Lampiran 2 Panduan, UTF-8 BOM, mengikuti filter).
+  - Blueprint (branch): tabel 12 modul, status & DoD Fase 4–5, risiko **R-13**, pohon tools, DoD Fase 2 butir 3. README (branch): perintah baru + "Rilis Produksi & Serah Terima" (8 langkah).
+* **Bukti / Verifikasi**:
+  - `tsc --noEmit` → exit 0. `npm run build` → `✓ 1710 modules transformed`, built in 0,96–1,60 s (total 4–8 s), 3 modul baru jadi chunk terpisah, `dist/data/` berisi 6 JSON (±140 KB).
+  - `vite preview` lokal: keenam `/data/*.json` → HTTP 200 `application/json`, JSON valid; `/` → 200.
+  - Uji kesegaran: menambah 1 baris ke `tag_map.md` → `npm run check` **FAIL** "data cockpit basi"; dikembalikan → PASS. Mengubah akhir baris ke CRLF → tetap PASS (bug hash byte mentah ditemukan & diperbaiki di `4d88a2e`).
+  - `npm run test:py` → 30 passed; `npm run check` → PASS.
+  - `git push -u origin fase-4-cockpit` → branch baru di GitHub (Vercel membuat preview deployment; status belum dicek agent).
+  - **Akses Drive** (tindak lanjut LOG-017/022): `get_file_permissions CAPSTONE_DME_AREA1` → 4 email UGM **writer**, owner PM, `anyone: reader`. Cocok dengan laporan Antigravity LOG-022.
+  - **Catatan penomoran**: pesan commit `a44c6ac`/`4d88a2e` menyebut "LOG-022" karena ditulis sebelum entri Antigravity LOG-022 terlihat; rujukan di file sudah dikoreksi ke LOG-023 (`5cfd628`). Riwayat Git tidak ditulis ulang.
+* **Keputusan**: lihat Kronologi #13. Ekspor logbook berupa CSV umum karena format unggah Simaster tidak terdokumentasi. Pembaca rumus KaTeX di Master Library belum dibuat (isi `.md` ditampilkan sebagai teks).
+* **Status DoD**:
+  - Fase 4: tsc & build ✅; data HMB segar ✅; **12 modul tanpa error console ⏳ (uji browser PM di preview)**.
+  - Fase 5: perangkat lunak siap; ⏳ 0 phantom pada P&ID `Diajukan` (butuh P&ID JN), ⏳ login + WO percobaan tiap anggota, ⏳ catat ukuran `projectData/area1`, ⏳ re-audit akhir oleh pihak selain pelaksana.
+  - Fase 2 butir 3: (a) ✅ (b) ✅ (c) ⏳ satu anggota membuka 3 URL.
+* **Tindak Lanjut**:
+  - [ ] **PM**: ubah akses umum Drive `CAPSTONE_DME_AREA1` ke **Dibatasi** (syarat merge, R-13).
+  - [ ] **PM**: buka preview Vercel branch `fase-4-cockpit`, cek 12 modul + Console; bila bersih → merge ke `main` (README "Rilis Produksi & Serah Terima").
+  - [ ] **PM**: `firebase deploy --only firestore:rules`; tambah milestone G1 di Schedule; catat ukuran `projectData/area1`.
+  - [ ] **Tim**: login produksi + WO percobaan; satu anggota membuka 3 URL dokumen (Fase 2 butir 3); uji laptop (Fase 2 butir 1).
+  - [ ] **JN**: P&ID DXF (Fase 3 butir 4, Fase 5 butir 1) dan ASME PTC 19.3 TW (Fase 3 butir 3).
+  - [ ] **Re-audit akhir** oleh Antigravity atau reviewer lain (bukan Claude Code), dicatat di log.
 
 ---
 
