@@ -1,7 +1,27 @@
+---
+id: "FDS-IC-DME-2026-001"
+title: "Functional Design Specification (FDS) & Control Narrative"
+category: "Control Philosophy"
+standard: "ISA-5.06.01 / NAMUR NA 35"
+target_files: []
+generated_by: ""
+source_data:
+  - "PLACEHOLDER — master akan dipindah ke Google Docs (Fase 2)"
+author: "Altaf Ramadhan Parvez (PIC)"
+reviewer: ""
+status: "Draft"
+review_evidence: ""
+google_ref: ""
+last_updated: "2026-11-03"
+tags: ["FDS", "Control Narrative", "ISA-5.06"]
+---
+
 # Functional Design Specification (FDS) & Control Narrative
-**Standar Acuan:** ISA 5.06.01 / NAMUR NA 35  
+**Standar Acuan:** ISA-5.06.01 / NAMUR NA 35  
 **Proyek:** Pabrik Dimethyl Ether (DME) Berbasis Dehidrasi Metanol  
-**No. Dokumen:** FDS-IC-DME-2026-001  
+**No. Dokumen:** FDS-IC-DME-2026-001
+
+> ⚠️ **DRAF KERANGKA (PLACEHOLDER).** Isi di bawah adalah contoh awal, belum diturunkan dari URS dan Draf P&ID. Mulai **Fase 2**, master FDS ditulis di **Google Docs**. Panduan Capstone (BAB III §3.1, Lampiran 3A Bab 2) mewajibkan FDS menjelaskan urutan **start-up, operasi normal, dan shutdown otomatis** secara sekuensial; bagian start-up/shutdown belum ada.
 
 ---
 
@@ -18,3 +38,16 @@
 ## 3. Loop Kontrol Tekanan & Refluks Kolom Distilasi DME (C-01)
 * **Pressure Control (`PIC-201`):** Mengatur bukaan katup `PCV-201` pada saluran gas atas menuju condenser untuk menjaga tekanan stabil pada $11.2\text{ bar(a)}$.
 * **Purity Control (`AIC-201`):** Gas Chromatograph online memantau fraksi mol DME. Jika kemurnian turun di bawah $99.99\%$, sistem secara otomatis menaikkan rasio refluks pompa puncak.
+
+---
+
+## Catatan Inkonsistensi (Re-audit 2026-11-03)
+1. Batas kemurnian 99,99% (§3) berbeda dengan alarm `AAL-201` = 99,90% dan `DME.md` (> 99,9%).
+2. Satu kontroler `TIC-101` disebut memantau dua titik (keluaran heater dan bed reaktor); kaskade perlu didefinisikan dengan tag terpisah.
+3. Tag peralatan belum mengikuti `tag_map.csv`.
+
+## Log Revisi
+| Rev | Tanggal | Penulis | Deskripsi |
+| :--- | :--- | :--- | :--- |
+| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |
+| 0.2 | 2026-11-03 | Claude Code (AI) | Tambah frontmatter (status Draft) & catatan inkonsistensi (LOG-004). |

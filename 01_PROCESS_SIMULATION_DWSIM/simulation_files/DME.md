@@ -2,32 +2,60 @@
 id: "SIM-DWSIM-DME-001"
 title: "Model Simulasi Proses Dehidrasi Metanol Menjadi Dimethyl Ether (DME)"
 category: "Process Simulation"
-standard: "ISO 10628 / CAPE-OPEN Standards"
-simulation_software: "DWSIM v10.2 (Open-Source Core Edition)"
-property_package: "NRTL (Non-Random Two-Liquid) with Ideal/RK Vapor Phase"
+standard: "ISO 10628 (PFD) / CAPE-OPEN"
+target_files:
+  - "DME.dwxmz"
+generated_by: ""
+source_data: []
+simulation_software: "DWSIM (versi dicatat oleh PIC)"
+property_package: "NRTL (perlu dikonfirmasi PIC dari file simulasi)"
 compounds: ["Methanol", "Water", "Dimethyl ether"]
-author: "Ihsaan Zauhair Tsaqif Prawira (Lead Process)"
-reviewer: "Rahul Ghulam Hidayatulloh (PM)"
-status: "ACC Final"
-last_updated: "2026-11-02"
-target_file: "DME.dwxmz"
+author: "Ihsaan Zauhair Tsaqif Prawira (PIC)"
+reviewer: ""
+status: "WIP"
+review_evidence: ""
+google_ref: ""
+last_updated: "2026-11-03"
+tags: ["DWSIM", "HMB", "Area-100", "Area-200"]
 ---
 
 # Panduan Model Simulasi: DME.dwxmz
 
+> ℹ️ **Status WIP.** File simulasi adalah hasil kerja riil, tetapi konvergensi, nilai kondisi operasi, dan basis desain di bawah **belum diverifikasi** terhadap isi file maupun literatur. PIC wajib melengkapi bagian bertanda *[PERLU DIKONFIRMASI]*.
+
 ## 1. Tujuan & Basis Desain
-File simulasi ini memodelkan proses konversi metanol kemurnian tinggi menjadi Dimethyl Ether (DME) bahan bakar ramah lingkungan melalui reaksi dehidrasi katalitik fase gas:
-$$2 \text{CH}_3\text{OH} \xrightarrow{\text{Katalis } \gamma-\text{Al}_2\text{O}_3} \text{CH}_3\text{OCH}_3 + \text{H}_2\text{O} \quad (\Delta H_r = -23.4\text{ kJ/mol})$$
+Memodelkan konversi metanol menjadi DME melalui dehidrasi katalitik fase gas:
+$$2\,\text{CH}_3\text{OH} \rightarrow \text{CH}_3\text{OCH}_3 + \text{H}_2\text{O} \qquad (\Delta H_r \approx -23{,}4\ \text{kJ/mol})$$
 
-Reaksi berlangsung secara eksotermik pada suhu $250 - 320^\circ\text{C}$ dan tekanan $12 - 15\text{ bar(a)}$.
+- Kondisi reaktor yang tercantum di draf awal: 250–320 °C, 12–15 bar(a). *[PERLU DIKONFIRMASI dari file simulasi + rujukan literatur]*
+- Kapasitas produksi, kemurnian produk, dan konversi: *[PERLU DIKONFIRMASI — menjadi basis URS]*
 
-## 2. Struktur Aliran Proses & Peralatan
-- **Inlet & Preheating**: Umpan metanol cair (S-01) dipompa oleh `PUMP-01` menuju `MIX-01` (bertemu aliran recycle S-13). Campuran dipanaskan dan diuapkan di `HEAT-01` hingga mencapai $250^\circ\text{C}$ (S-04).
-- **Reaction Stage**: Reaktor konversi `RC-01` menghasilkan efluen DME, air, dan sisa metanol unreacted (S-05 & S-06).
-- **Separation & Purification**: Efluen didinginkan oleh `COOL-01` menuju kolom distilasi pertama `CSCOL-01` untuk memisahkan produk puncak DME murni (> 99.9% mol). Bagian bawah dialirkan ke `CSCOL-02` untuk memisahkan air buangan dan mendaur ulang metanol via `REC-01`.
+## 2. Struktur Flowsheet (tag DWSIM)
+Daftar objek berikut diambil dari ekstraksi otomatis `hmb_streams.json` (2026-11-02):
 
-## 3. SOP Pembaharuan & Ekstraksi Data
-1. Buka DWSIM desktop dan load file `DME.dwxmz`.
-2. Lakukan pengecekan konvergensi flowsheet (seluruh stream berwarna biru/kalkulasi sukses).
-3. Jalankan script otomasi `tools/export_dwsim_hmb.py` untuk mengekstrak stream table ke `exported_data/hmb_streams.json`.
-4. Pastikan laju alir dan sifat fluida pada kalkulator rekayasa sinkron dengan hasil run terbaru.
+| Kelompok | Objek DWSIM |
+| :--- | :--- |
+| Material stream | `S-01` s.d. `S-14` (14 stream) |
+| Pompa | `PUMP-01`, `PUMP-02` |
+| Mixer | `MIX-01` |
+| Heater / Cooler | `HEAT-01`, `COOL-01`, `COOL-02` |
+| Reaktor | `RC-01` (Conversion Reactor) |
+| Kolom distilasi | `CSCOL-01`, `CSCOL-02` (CAPE-OPEN Unit Operation) |
+| Recycle | `REC-01` |
+| Objek tanpa tag | 1 objek (tag & tipe kosong) — *[PERLU DIPERIKSA di DWSIM]* |
+
+Alur ringkas (draf awal, *[PERLU DIKONFIRMASI]*): umpan metanol `S-01` → `PUMP-01` → `MIX-01` (bertemu recycle) → `HEAT-01` → `RC-01` → `COOL-01` → `CSCOL-01` (produk DME di puncak) → bawah ke `CSCOL-02` (pemisahan air, metanol di-recycle lewat `REC-01`).
+
+Pemetaan ke tag pabrik (`R-101`, `T-201`, dst.) akan ditetapkan di `01_PROCESS_SIMULATION_DWSIM/tag_map.csv` (Fase 3).
+
+## 3. SOP Pembaruan & Ekstraksi Data
+1. Buka `DME.dwxmz` di DWSIM, jalankan solver, pastikan seluruh objek konvergen.
+2. Simpan file.
+3. Jalankan `npm run sync:dwsim` (saat ini `tools/export_dwsim_hmb.js`, hanya mengekstrak daftar objek; akan diganti `tools/dwsim/export_hmb.py` di Fase 3 yang mengekstrak T, P, laju alir, komposisi, dan properti).
+4. Commit `DME.dwxmz` bersama `hmb_streams.json` dalam satu commit.
+
+## 4. Log Revisi
+| Rev | Tanggal | Penulis | Deskripsi |
+| :--- | :--- | :--- | :--- |
+| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal companion. |
+| 0.2 | 2026-11-03 | Claude Code (AI) | Status → WIP; perbaiki rujukan skrip; daftar objek dari hasil ekstraksi; tandai bagian yang perlu dikonfirmasi PIC (LOG-004). |

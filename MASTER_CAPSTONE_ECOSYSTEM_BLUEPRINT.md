@@ -4,7 +4,7 @@
 **Tahun Akademik:** 2026/2027  
 **Dokumen Kontrol:** DOC-CAPSTONE-DME-2026-MASTER-001  
 **Status Anggaran:** Bebas biaya (Rp 0), berbasis FOSS, free tier, dan akun UGM — lihat batasan di BAB VII  
-**Versi:** 2.0 (Revisi Konsep pasca Re-Audit Fase 1)  
+**Versi:** 2.1 (Revisi Konsep pasca Re-Audit Fase 1 + penyesuaian Fase 1.5)  
 **Status Dokumen:** Disetujui PM (2026-11-03)  
 **Catatan Riwayat Pengerjaan:** [`PROJECT_HISTORY_AND_AUDIT_LOG.md`](PROJECT_HISTORY_AND_AUDIT_LOG.md)
 
@@ -16,6 +16,7 @@
 | :--- | :--- | :--- | :--- |
 | 1.0 | 2026-11-02 | Antigravity (AI agent) + PM | Konsep awal 8 bab, 5 pilar, roadmap 5 fase. |
 | 2.0 | 2026-11-03 | Claude Code (AI agent) + PM | Revisi konsep berdasarkan re-audit Fase 1: matriks kepemilikan data (SSOT), siklus status dokumen, aturan companion `.md` yang bisa diaudit, mesin kalkulator berbasis skrip, kebijakan penyimpanan Git vs Drive, pemisahan folder Git dan Drive, WhatsApp gateway dijadikan opsional, Fase 1.5 Remediasi, dan Definition of Done per fase. |
+| 2.1 | 2026-11-03 | Claude Code (AI agent) | Penyesuaian dari eksekusi Fase 1.5 (LOG-004): library simbol CAD ternyata file AutoCAD manual (bukan hasil generate) → disimpan di Drive; `generate_libraries.js` dihapus; pemeriksa repo ditulis di Node.js (`check_companions.js`) karena Python belum terpasang; panduan mewajibkan sizing manual → skrip kalkulator menjadi verifikasi silang; catatan Stage-Gate vs panduan; status Fase 1.5 SELESAI. |
 
 ### Ringkasan Perubahan v1.0 → v2.0
 
@@ -113,7 +114,7 @@ Setiap jenis data memiliki **tepat satu master**. Semua salinan lain bersifat tu
 | Master Instrument Index & IO List | Google Sheets | `Master_Instrument_Index_DME.csv` | Sheets → CSV (satu arah) | JN |
 | Narasi FDS & laporan bab 1–4 | Google Docs | Mirror PDF/MD di `06_.../mirrors/` | Docs → mirror | Per bab (RACI) |
 | Gambar P&ID & template | `.dwg` di Google Drive | `.dxf` ekspor, `.pdf` plot | DWG → DXF/PDF | JN |
-| Library simbol CAD | `generate_libraries.js` | `.dxf` hasil generate (tidak di-commit) | Skrip → DXF | JN |
+| Library simbol CAD | `.dxf` di Google Drive (diedit di AutoCAD) | — (companion `SYMBOL_LIBRARIES.md` di Git) | — | JN |
 | Work Order, MoM, logbook | Cloud Firestore | Ekspor/backup JSON | — | RG |
 | Kode web & skrip | Git (GitHub private) | — | — | RG |
 
@@ -155,7 +156,9 @@ Setiap klaim "selesai" atau "PASS" harus disertai **perintah yang dijalankan, ou
 
 ### 1.7 Prinsip 6 — Kesiapan Audit Akademik (DTNTF FT UGM)
 
-Seluruh artefak terikat pada rubrik Capstone DTNTF 2026 dan dapat dikompilasi ke bundel sidang Stage-Gate 1–4. Hanya artefak berstatus `Diajukan` atau `ACC Pembimbing` yang masuk bundel.
+Seluruh artefak terikat pada rubrik Capstone DTNTF 2026 dan dapat dikompilasi ke bundel sidang. Hanya artefak berstatus `Diajukan` atau `ACC Pembimbing` yang masuk bundel.
+
+> **Catatan (v2.1):** Panduan resmi mendefinisikan **dua evaluasi formal**: Evaluasi PSTF 1 (minggu 14–16 semester ganjil) dan Evaluasi Akhir PSTF 2 (minggu 14–16 semester genap), dengan 5 tahap SOP di Lampiran 1. Istilah "Stage-Gate 1–4" di cockpit harus dipetakan ke tahap-tahap tersebut sebelum Fase 4. Ringkasan lengkap: [`00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md`](00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md).
 
 ---
 
@@ -170,8 +173,8 @@ Legenda: `[ADA]` sudah ada · `[BARU]` belum dibuat · `[GEN]` hasil generate, t
 ```text
 dme-capstone-master/
 ├── 00_CORE_GUIDELINES/
-│   ├── Panduan_Capstone_DTNTF_2026.pdf          [ADA] [DRIVE*] rujukan eksternal
-│   ├── Panduan_Capstone_DTNTF_2026.md           [BARU] ringkasan tahapan, rubrik, matriks nilai
+│   ├── Panduan_Capstone_DTNTF_2026.pdf          [DRIVE] rujukan eksternal
+│   ├── Panduan_Capstone_DTNTF_2026.md           [ADA] ringkasan tahapan, rubrik, matriks nilai
 │   └── standards/                               [BARU] ringkasan ISA 5.1, ISO 10628, API 520, ASME PTC 19.3, IEC 60534
 │
 ├── 01_PROCESS_SIMULATION_DWSIM/
@@ -180,7 +183,7 @@ dme-capstone-master/
 │   │   └── DME.md                               [ADA]
 │   ├── exported_data/
 │   │   ├── hmb_streams.json                     [ADA→REVISI] skema baru §3.1
-│   │   └── hmb_streams.md                       [BARU] kamus skema & satuan
+│   │   └── hmb_streams.md                       [ADA] kamus skema & satuan
 │   ├── tag_map.csv                              [BARU] tag DWSIM ↔ tag pabrik
 │   └── tag_map.md                               [BARU]
 │
@@ -196,15 +199,13 @@ dme-capstone-master/
 │
 ├── 03_CAD_AND_PID_LIBRARIES/
 │   ├── templates/
-│   │   ├── DME_Master_Template.dwt              [ADA] [DRIVE] satu-satunya template (duplikat dihapus)
+│   │   ├── DME_Master_Template.dwt / .dxf       [DRIVE] satu-satunya template (duplikat dihapus)
 │   │   ├── DME_Master_Template.md               [ADA]
 │   │   ├── acad_dme.lin                         [ADA]
-│   │   └── acad_dme.md                          [ADA→RENAME] dari acad_dme_lin.md
-│   ├── symbol_libraries/
-│   │   ├── *.dxf                                [GEN] dibuat ulang oleh generate_libraries.js
-│   │   └── SYMBOL_LIBRARIES.md                  [BARU] satu companion untuk seluruh library
-│   └── scripts/
-│       └── generate_libraries.js                [ADA]
+│   │   └── acad_dme.md                          [ADA] (dulu acad_dme_lin.md)
+│   └── symbol_libraries/
+│       ├── *.dxf                                [DRIVE] file AutoCAD manual, bukan hasil generate
+│       └── SYMBOL_LIBRARIES.md                  [ADA] satu companion untuk seluruh library
 │
 ├── 04_INSTRUMENTATION_ISA20/
 │   ├── Master_Instrument_Index_DME.csv / .md    [ADA] snapshot dari Google Sheets
@@ -231,20 +232,23 @@ dme-capstone-master/
 │   ├── calc/                                    [BARU] mesin kalkulator Python
 │   ├── sync/pull_sheets.py                      [BARU] Sheets → CSV
 │   ├── validate_tags.py                         [BARU]
-│   ├── check_companions.py                      [BARU] pengecek aturan companion & status
+│   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
+│   ├── check_companions.js                      [ADA] pengecek companion, status, ukuran & duplikat (`npm run check`)
+│   ├── export_dwsim_hmb.js                      [ADA] ekstraktor v0 (hanya daftar objek), diganti di Fase 3
 │   ├── build_manifest.js                        [BARU] indeks .md untuk modul Master Library
 │   ├── requirements.txt                         [BARU] fluids, ezdxf, pyyaml, numpy-financial
 │   └── whatsapp-bot/                            [OPSIONAL] lihat §3.5
 │
-├── .env.example                                 [BARU] DRIVE_ROOT, dll.
-├── README.md                                    [ADA→REVISI] orientasi singkat (bukan salinan blueprint)
+├── .env.example                                 [ADA] DRIVE_ROOT, dll.
+├── README.md                                    [ADA] orientasi singkat (bukan salinan blueprint)
 ├── MASTER_CAPSTONE_ECOSYSTEM_BLUEPRINT.md       [ADA] dokumen ini
 └── PROJECT_HISTORY_AND_AUDIT_LOG.md             [ADA] riwayat pengerjaan & audit
 ```
 
 **Keputusan struktur v2.0:**
 - **Semua skrip otomasi berada di `tools/`.** Folder `01_.../scripts/` yang kosong dihapus agar tidak ada dua lokasi skrip.
-- **Bahasa pipeline data rekayasa: Python.** Alasannya: tersedia library teknik gratis yang sudah tervalidasi (`fluids` untuk ISO 5167, IEC 60534/ISA-75, API 520; `ezdxf` untuk membaca DXF), dan lebih familiar bagi tim teknik. Node.js tetap dipakai untuk web cockpit, `generate_libraries.js`, dan gateway WhatsApp.
+- **Bahasa pipeline data rekayasa: Python.** Alasannya: tersedia library teknik gratis yang sudah tervalidasi (`fluids` untuk ISO 5167, IEC 60534/ISA-75, API 520; `ezdxf` untuk membaca DXF), dan lebih familiar bagi tim teknik. Node.js tetap dipakai untuk web cockpit, tool kebersihan repo (`check_companions.js`, `sync.js`, `build_manifest.js`), dan gateway WhatsApp.
+- **Prasyarat Python:** per 2026-11-03 Python **belum terpasang** di PC desktop. Pasang Python 3.12+ (python.org atau `winget install Python.Python.3.12`) sebelum Fase 3.
 
 ### 2.2 Kebijakan Penyimpanan (Git vs Google Drive)
 
@@ -253,8 +257,8 @@ dme-capstone-master/
 | Kode (`.ts`, `.tsx`, `.js`, `.py`), konfigurasi, `.md` | **Git** | Teks kecil, perlu riwayat & review |
 | Data teks kecil (`.csv`, `.json`, `.yaml`, `.lin`) | **Git** | Bisa di-diff, ukuran kecil |
 | `DME.dwxmz` (±110 KB) | **Git** | Master HMB; versinya harus terikat dengan hasil ekstraksi |
-| Hasil generate (`symbol_libraries/*.dxf`, `dist/`) | **Tidak disimpan** (`.gitignore`) | Dibuat ulang dari skrip |
-| `.dwg`, `.dwt`, `.dxf` hasil gambar manual | **Drive** | Biner besar, tidak bisa di-diff |
+| Hasil build (`dist/`, `node_modules/`) | **Tidak disimpan** (`.gitignore`) | Dibuat ulang dari kode |
+| `.dwg`, `.dwt`, `.dxf` (template, library simbol, P&ID) | **Drive** (`03_CAD_DWG/`) | Biner besar, tidak bisa di-diff; di-ignore Git |
 | PDF plot, PDF panduan, FEED book | **Drive** | Biner besar |
 | Bukti Work Order (foto, scan, lampiran) | **Drive** (`08_WORK_ORDERS_EVIDENCE/`) | Biner, sering bertambah |
 | File sementara AutoCAD (`*_recover.dwg`, `*.bak`, `*.dwl`, `*.dwl2`, `plot.log`) | **Diabaikan** (`.gitignore`) | Sampah kerja |
@@ -332,6 +336,8 @@ Batas praktis: **tidak ada file > 5 MB di Git.** Git LFS tidak dipakai karena ku
 
 File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteksi. Pada v2.0, kalkulator menjadi **skrip** dan CSV menjadi **laporan hasil**.
 
+> **Posisi terhadap Panduan Capstone (v2.1):** panduan mewajibkan sizing **dihitung manual** (Lampiran 1 Tahap 4), dan rubriknya menilai "sizing via kalkulator web tanpa rumusan standar" hanya *Cukup (60–69)*. Nilai *Sangat Baik* diberikan untuk "sizing manual **&** software presisi tinggi". Karena itu, **perhitungan manual lengkap (rumus, substitusi, iterasi) tetap ditulis di laporan PSTF 2 Bab 2**, sedangkan skrip berfungsi sebagai **verifikasi silang** (selisih hasil manual vs skrip < 0,5%) dan penjaga konsistensi data.
+
 | Kalkulator | Standar | Implementasi (Python, gratis) | Input dari HMB |
 | :--- | :--- | :--- | :--- |
 | Orifice plate | ISO 5167-1/2 | `fluids.flow_meter` (Reader-Harris/Gallagher, faktor ekspansi) | q_m, P, T, ρ, μ, κ |
@@ -367,7 +373,7 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 
 ### 3.4 Pilar 4 — AutoCAD Drafting & Validasi Tag
 
-* **Library simbol:** dibuat oleh `generate_libraries.js` → `.dxf` tidak di-commit. Perintah: `npm run gen:cad`.
+* **Library simbol:** file AutoCAD manual di Drive (`DRIVE_ROOT/03_CAD_DWG/symbol_libraries/`), didokumentasikan oleh `SYMBOL_LIBRARIES.md` beserta hash SHA-256 tiap file. (Skrip bootstrap `generate_libraries.js` dihapus di Fase 1.5 karena hanya menghasilkan DXF sederhana dan juga menimpa CSV kalkulator dengan data contoh.)
 * **Gambar P&ID:** master `.dwg` di Drive. Untuk validasi dan web, gambar diekspor:
   - ke **DXF** (perintah `SAVEAS` di AutoCAD, atau ODA File Converter yang gratis) untuk dibaca skrip;
   - ke **PDF** (A1/A3) untuk dibaca dosen dan cockpit.
@@ -441,9 +447,10 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 1. **Satu companion per artefak, bukan per format.** Artefak yang punya beberapa format (contoh `DME_Master_Template.dwt/.dwg/.dxf/.pdf`) cukup punya **satu** `DME_Master_Template.md`. Semua formatnya didaftarkan di `target_files`.
 2. **Nama companion = nama dasar artefak + `.md`.** Ekstensi tidak ikut nama (`acad_dme.lin` → `acad_dme.md`).
 3. **Wajib companion:** simulasi (`.dwxmz`), input & hasil kalkulator, index & datasheet instrumen, C&E, alarm database, template & gambar CAD, data ekspor (`hmb_streams.json`), dan dokumen rujukan PDF.
-4. **Satu companion kolektif boleh dipakai** untuk sekumpulan file sejenis yang dibuat oleh satu skrip (contoh: seluruh `symbol_libraries/*.dxf` → `SYMBOL_LIBRARIES.md`).
+4. **Satu companion kolektif boleh dipakai** untuk sekumpulan file sejenis (contoh: seluruh `symbol_libraries/*.dxf` → `SYMBOL_LIBRARIES.md`).
+4a. **File yang disimpan di Drive** didaftarkan di field `external_files` (path relatif `DRIVE_ROOT`, prefix SHA-256, ukuran). Field `target_files` hanya untuk file yang ada di repo, dan keberadaannya diperiksa otomatis.
 5. **Tidak wajib companion:** kode sumber (dokumentasi lewat komentar & README), file konfigurasi, file sementara.
-6. **Pengecekan otomatis:** `tools/check_companions.py` melaporkan artefak tanpa companion, `target_files` yang tidak ada, status di luar daftar §1.4, dan status `ACC Pembimbing` tanpa `review_evidence`. Laporan ini menjadi angka resmi kepatuhan (bukan hitungan manual).
+6. **Pengecekan otomatis:** `tools/check_companions.js` (`npm run check`) melaporkan artefak tanpa companion, `target_files` yang tidak ada, status di luar daftar §1.4, dan status `ACC Pembimbing` tanpa `review_evidence`. Laporan ini menjadi angka resmi kepatuhan (bukan hitungan manual).
 
 ### 5.2 Format Header YAML
 
@@ -498,28 +505,29 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 
 Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX).
 
-#### FASE 1: Konsolidasi Monorepo & Companion `.md` — Status: PARSIAL
+#### FASE 1: Konsolidasi Monorepo & Companion `.md` — Status: PARSIAL → dituntaskan lewat Fase 1.5
 * **Sudah tercapai:** struktur folder, pemindahan aset CAD/simulasi/kalkulator, integrasi source cockpit ke monorepo, `tsc --noEmit` 0 error.
-* **Belum tercapai:** ekstraksi HMB berisi data proses, kepatuhan companion penuh, repo bersih dari file besar. Semua sisa pekerjaan dipindah ke Fase 1.5.
+* **Belum tercapai (dipindah ke Fase 3):** ekstraksi HMB berisi data proses.
 
-#### FASE 1.5: Remediasi Fondasi (BARU) — Estimasi 1–2 hari
+#### FASE 1.5: Remediasi Fondasi (BARU) — Status: SELESAI (2026-11-03, LOG-004)
 * **Aktivitas:**
-  1. Ubah semua `status: "ACC Final"` menjadi `Draft` atau `WIP` sesuai kondisi riil.
-  2. Tandai nilai kalkulator yang belum punya sumber sebagai `PLACEHOLDER`.
-  3. Hapus file duplikat (`Engineering_Drawing_Template.*`, `DME_Master_Template.dwg/.dxf` jika identik dengan `.dwt`); pindahkan biner CAD ke Drive.
-  4. Keluarkan `symbol_libraries/*.dxf` dari Git (`.gitignore` + `npm run gen:cad`).
-  5. Tambahkan pola file sementara AutoCAD ke `.gitignore` (`*_recover.dwg`, `*.bak`, `*.dwl`, `*.dwl2`).
-  6. **Bersihkan riwayat Git dari file besar sebelum push pertama ke GitHub** (saat ini belum ada remote, jadi ini momen termurah). Tindakan ini menulis ulang riwayat dan **wajib persetujuan PM**.
-  7. Ganti nama `acad_dme_lin.md` → `acad_dme.md`; buat `SYMBOL_LIBRARIES.md`, `hmb_streams.md`, `Panduan_Capstone_DTNTF_2026.md`.
-  8. Ganti `README.md` dengan orientasi singkat (bukan salinan blueprint).
-  9. Hapus `vercel.json`; perbaiki skrip `sync:push` sesuai §8.3.
-  10. Buat `tools/check_companions.py` versi awal.
+  1. ✅ Semua `status: "ACC Final"` diubah menjadi `Draft` (data contoh) atau `WIP` (hasil kerja riil).
+  2. ✅ Kolom `DATA_STATUS` (`PLACEHOLDER` / `ASUMSI`) ditambahkan di semua CSV kalkulator.
+  3. ✅ File duplikat dihapus; biner CAD & PDF dipindah ke folder staging Drive `D:\rahul\CAPSTONE_DME_AREA1`.
+  4. ✅ `symbol_libraries/*.dxf` dikeluarkan dari Git (file AutoCAD manual → Drive; bukan hasil generate).
+  5. ✅ Pola file sementara AutoCAD & biner CAD/PDF ditambahkan ke `.gitignore`.
+  6. ✅ Riwayat Git dibersihkan dari file besar (disetujui PM; backup bundle dibuat lebih dulu).
+  7. ✅ `acad_dme_lin.md` → `acad_dme.md`; dibuat `SYMBOL_LIBRARIES.md`, `hmb_streams.md`, `Panduan_Capstone_DTNTF_2026.md`.
+  8. ✅ `README.md` diganti orientasi singkat.
+  9. ✅ `vercel.json` dihapus (header keamanannya identik dengan `firebase.json`); `sync:push`/`sync:pull` diganti `tools/sync/sync.js`.
+  10. ✅ `tools/check_companions.js` dibuat (Node.js, karena Python belum terpasang).
 * **DoD:**
-  - [ ] `check_companions.py` melaporkan 0 artefak wajib tanpa companion dan 0 status tidak valid.
-  - [ ] Tidak ada file > 5 MB di riwayat Git (`git rev-list --objects --all` + cek ukuran).
-  - [ ] `git status` bersih setelah sesi kerja AutoCAD (file sementara ter-ignore).
-  - [ ] Tidak ada file duplikat (hash identik) di repo.
-  - [ ] Entri log riwayat Fase 1.5 lengkap dengan bukti.
+  - [x] `npm run check` melaporkan 0 artefak wajib tanpa companion dan 0 status tidak valid.
+  - [x] Tidak ada blob > 1 MB di riwayat Git (`git rev-list --objects --all` + `git cat-file`).
+  - [x] File sementara AutoCAD ter-ignore (`git check-ignore` pada contoh nama file).
+  - [x] Tidak ada file duplikat (hash identik) di repo.
+  - [x] Entri log riwayat Fase 1.5 lengkap dengan bukti (LOG-004).
+* **Sisa yang butuh tindakan manusia:** unggah folder staging ke Google Drive (Fase 2); PIC JN memeriksa `ISO10628_Equipment_recover.dwg`; konfirmasi ukuran tim 5 orang vs panduan 3–4 orang.
 
 #### FASE 2: Cloud Backbone — Estimasi 2 hari
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
@@ -529,6 +537,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [ ] Semua URL di registry bisa dibuka oleh seluruh anggota tim.
 
 #### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari
+* **Prasyarat:** Python 3.12+ terpasang; `pip install -r tools/requirements.txt`.
 * **Aktivitas:** `tools/dwsim/export_hmb.py` (skema §3.1); `tag_map.csv`; mesin kalkulator `tools/calc/` + input YAML; uji verifikasi per kalkulator; `validate_tags.py`.
 * **DoD:**
   - [ ] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file.
@@ -675,7 +684,7 @@ flowchart TD
 | ID | Risiko | Dampak | Kemungkinan | Mitigasi | PIC |
 | :--- | :--- | :---: | :---: | :--- | :---: |
 | R-01 | Angka kalkulator salah dan masuk laporan/sidang | Tinggi | Tinggi (sudah terjadi) | Mesin kalkulator skrip + uji verifikasi (§3.2) | AL/HD |
-| R-02 | Status dokumen menyesatkan (ACC tanpa review) | Tinggi | Tinggi (sudah terjadi) | Siklus status baku + `check_companions.py` (§1.4, §5.1) | RG |
+| R-02 | Status dokumen menyesatkan (ACC tanpa review) | Tinggi | Tinggi (sudah terjadi) | Siklus status baku + `check_companions.js` (§1.4, §5.1) | RG |
 | R-03 | Tag tidak konsisten antar dokumen | Tinggi | Sedang | `tag_map.csv` + `validate_tags.py` (§2.3, §3.4) | JN |
 | R-04 | Riwayat Git membengkak / korup | Sedang | Tinggi (sudah terjadi) | Kebijakan penyimpanan + pemisahan folder Drive (§2.2, §8.2) | RG |
 | R-05 | Nomor WhatsApp diblokir | Sedang | Sedang | `wa.me` sebagai jalur utama; Baileys hanya dengan nomor cadangan (§3.5) | RG |

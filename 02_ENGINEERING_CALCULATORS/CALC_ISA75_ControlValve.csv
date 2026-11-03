@@ -1,5 +1,5 @@
-TAG_NUMBER,VALVE_FUNCTION,SERVICE_STREAM,FLOW_M3_H,P1_BAR_A,P2_BAR_A,DELTA_P_BAR,TEMP_DEGC,DENSITY_KG_M3,CALCULATED_CV,SELECTED_CV,VALVE_SIZE_INCH,TRIM_CHARACTERISTIC,FAIL_ACTION,BODY_MATERIAL
-FCV-101,Feed Flow Control,Methanol Liquid,15.8,16.5,13.0,3.5,65.0,792.0,24.6,35.0,2.0 inch,Equal Percentage (EQ%),Fail Closed (FC),SS316 / CF8M
-PCV-201,DME Column Overhead Pressure,DME Vapor,28.5,11.2,7.5,3.7,45.0,22.4,52.4,75.0,3.0 inch,Linear,Fail Open (FO),SS316 / CF8M
-LCV-202,DME Column Bottom Level,Methanol & Water,8.2,12.0,5.0,7.0,115.0,880.0,12.8,20.0,1.5 inch,Equal Percentage (EQ%),Fail Closed (FC),Hastelloy C-276
-TCV-102,Preheater Steam Temp Control,Medium Pressure Steam,450 kg/h,10.0,7.0,3.0,185.0,5.12,18.4,28.0,1.5 inch,Linear,Fail Closed (FC),WCB / Carbon Steel
+TAG_NUMBER,VALVE_FUNCTION,SERVICE_STREAM,FLOW_M3_H,P1_BAR_A,P2_BAR_A,DELTA_P_BAR,TEMP_DEGC,DENSITY_KG_M3,CALCULATED_CV,SELECTED_CV,VALVE_SIZE_INCH,TRIM_CHARACTERISTIC,FAIL_ACTION,BODY_MATERIAL,DATA_STATUS
+FCV-101,Feed Flow Control,Methanol Liquid,15.8,16.5,13.0,3.5,65.0,792.0,24.6,35.0,2.0 inch,Equal Percentage (EQ%),Fail Closed (FC),SS316 / CF8M,PLACEHOLDER
+PCV-201,DME Column Overhead Pressure,DME Vapor,28.5,11.2,7.5,3.7,45.0,22.4,52.4,75.0,3.0 inch,Linear,Fail Open (FO),SS316 / CF8M,PLACEHOLDER
+LCV-202,DME Column Bottom Level,Methanol & Water,8.2,12.0,5.0,7.0,115.0,880.0,12.8,20.0,1.5 inch,Equal Percentage (EQ%),Fail Closed (FC),Hastelloy C-276,PLACEHOLDER
+TCV-102,Preheater Steam Temp Control,Medium Pressure Steam,450 kg/h,10.0,7.0,3.0,185.0,5.12,18.4,28.0,1.5 inch,Linear,Fail Closed (FC),WCB / Carbon Steel,PLACEHOLDER

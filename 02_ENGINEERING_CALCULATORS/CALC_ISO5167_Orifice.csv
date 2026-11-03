@@ -1,16 +1,16 @@
-PARAMETER,SYMBOL,VALUE,UNIT,REFERENCE_STANDARD,NOTE
-Fluid Name,Fluida,Methanol Vapor,-,-,Stream S-01 Inlet REAC-01
-Mass Flowrate,qm,12500,kg/h,DWSIM Mass Balance,Kondisi Desain Normal
-Upstream Pressure,P1,12.5,bar(a),DWSIM Thermo,Tekanan Operasi
-Upstream Temperature,T1,250,degC,DWSIM Thermo,Suhu Pemanasan Awal
-Operating Density,rho1,11.24,kg/m3,DWSIM Peng-Robinson,Massa Jenis Uap
-Dynamic Viscosity,mu,0.0165,cP,DWSIM Thermo,Viskositas Dinamis
-Isentropic Exponent,kappa,1.24,-,ISO 5167-2,Ratio Cp/Cv
-Pipe Internal Diameter,D,154.08,mm,ASME B36.10M,Pipa 6 inch Sch 40
-Orifice Bore Diameter,d,85.20,mm,ISO 5167-2 Calc,Bukaan Orifice Terhitung
-Diameter Ratio,beta,0.553,-,ISO 5167-2 Limit (0.1 <= beta <= 0.75),Sesuai Standar
-Differential Pressure at Max Flow,deltaP_max,25.0,kPa,ISO 5167 Standard,Rentang Standar DP Cell
-Expansion Factor,epsilon,0.985,-,ISO 5167-2 Formula,Faktor Ekspansi Gas
-Discharge Coefficient,C,0.6012,-,Reader-Harris/Gallagher (1998),Formula ISO 5167-2
-Reynolds Number,ReD,385400,-,ISO 5167 Limit (> 5000),Aliran Turbulen Mantap
-Permanent Pressure Loss,delta_w,12.8,kPa,ISO 5167-2 Eq 4,Rugi Tekanan Permanen
+PARAMETER,SYMBOL,VALUE,UNIT,REFERENCE_STANDARD,NOTE,DATA_STATUS
+Fluid Name,Fluida,Methanol Vapor,-,-,Stream S-01 Inlet REAC-01,PLACEHOLDER
+Mass Flowrate,qm,12500,kg/h,DWSIM Mass Balance,Kondisi Desain Normal,PLACEHOLDER
+Upstream Pressure,P1,12.5,bar(a),DWSIM Thermo,Tekanan Operasi,PLACEHOLDER
+Upstream Temperature,T1,250,degC,DWSIM Thermo,Suhu Pemanasan Awal,PLACEHOLDER
+Operating Density,rho1,11.24,kg/m3,DWSIM Peng-Robinson,Massa Jenis Uap,PLACEHOLDER
+Dynamic Viscosity,mu,0.0165,cP,DWSIM Thermo,Viskositas Dinamis,PLACEHOLDER
+Isentropic Exponent,kappa,1.24,-,ISO 5167-2,Ratio Cp/Cv,PLACEHOLDER
+Pipe Internal Diameter,D,154.08,mm,ASME B36.10M,Pipa 6 inch Sch 40,ASUMSI
+Orifice Bore Diameter,d,85.20,mm,ISO 5167-2 Calc,Bukaan Orifice Terhitung,PLACEHOLDER
+Diameter Ratio,beta,0.553,-,ISO 5167-2 Limit (0.1 <= beta <= 0.75),Sesuai Standar,PLACEHOLDER
+Differential Pressure at Max Flow,deltaP_max,25.0,kPa,ISO 5167 Standard,Rentang Standar DP Cell,ASUMSI
+Expansion Factor,epsilon,0.985,-,ISO 5167-2 Formula,Faktor Ekspansi Gas,PLACEHOLDER
+Discharge Coefficient,C,0.6012,-,Reader-Harris/Gallagher (1998),Formula ISO 5167-2,PLACEHOLDER
+Reynolds Number,ReD,385400,-,ISO 5167 Limit (> 5000),Aliran Turbulen Mantap,PLACEHOLDER
+Permanent Pressure Loss,delta_w,12.8,kPa,ISO 5167-2 Eq 4,Rugi Tekanan Permanen,PLACEHOLDER

@@ -1,13 +1,15 @@
 {
   "name": "dme-capstone-master",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Master Database & Operations Ecosystem for DME Plant Capstone FEED (Teknik Fisika UGM)",
+  "private": true,
   "scripts": {
     "dev": "npm run dev --prefix apps/operations-cockpit",
     "build": "npm run build --prefix apps/operations-cockpit",
+    "check": "node tools/check_companions.js",
     "sync:dwsim": "node tools/export_dwsim_hmb.js",
-    "sync:push": "git add . && git commit -m \"sync: automatic update\" && git push",
-    "sync:pull": "git pull origin main"
+    "sync:push": "node tools/sync/sync.js push",
+    "sync:pull": "node tools/sync/sync.js pull"
   },
   "keywords": [
     "capstone",

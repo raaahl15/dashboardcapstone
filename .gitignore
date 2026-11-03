@@ -1,10 +1,16 @@
+# =====================================================================
+# Kebijakan penyimpanan: lihat Blueprint v2.0 §2.2
+# Biner CAD, PDF, dan bukti kerja disimpan di Google Drive (DRIVE_ROOT),
+# bukan di Git. Batas praktis: tidak ada file > 5 MB di Git.
+# =====================================================================
+
 # Node & Build artifacts
 node_modules/
 dist/
 build/
 *.log
 
-# Environment variables
+# Environment variables (berisi DRIVE_ROOT, kredensial Firebase, dll.)
 .env
 .env.local
 .env.*.local
@@ -12,9 +18,36 @@ build/
 # WhatsApp Bot Sessions (contains QR auth tokens - DO NOT COMMIT)
 tools/whatsapp-bot/auth_info/
 
+# ---- Biner CAD & dokumen besar → Google Drive (03_CAD_DWG/, 07_.../) ----
+*.dwg
+*.dwt
+*.dxf
+*.pdf
+
+# ---- File sementara / recovery AutoCAD ----
+*_recover.dwg
+*.bak
+*.dwl
+*.dwl2
+*.sv$
+*.ac$
+*.err
+plot.log
+
+# ---- File sementara DWSIM ----
+*.dwxmz.bak
+*.dwxml.bak
+
+# ---- Python (pipeline data, Fase 3) ----
+__pycache__/
+*.pyc
+.venv/
+venv/
+
 # OS and Editor files
 .DS_Store
 Thumbs.db
+desktop.ini
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -24,3 +57,4 @@ Thumbs.db
 temp_unpacked/
 temp_model.zip
 *.tmp
+~$*
