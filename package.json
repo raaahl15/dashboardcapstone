@@ -4,6 +4,7 @@
   "description": "Master Database & Operations Ecosystem for DME Plant Capstone FEED (Teknik Fisika UGM)",
   "private": true,
   "scripts": {
+    "postinstall": "npm ci --prefix apps/operations-cockpit",
     "dev": "npm run dev --prefix apps/operations-cockpit",
     "build": "npm run build --prefix apps/operations-cockpit",
     "check": "node tools/check_companions.js",
@@ -21,5 +22,8 @@
     "ugm"
   ],
   "author": "Rahul Ghulam Hidayatulloh & Area-1 Team",
-  "license": "ISC"
+  "license": "ISC",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
 }
