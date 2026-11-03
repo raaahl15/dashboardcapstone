@@ -3,21 +3,26 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** FASE 1 VERIFIED PASS (100% Lulus Uji)  
-**Terakhir Diperbarui:** 2026-11-03 00:05 WIB  
+**Status Audit Terakhir:** FASE 1 PARSIAL (re-audit independen 2026-11-03) — sign-off v1.0 dicabut, lanjut ke Fase 1.5 Remediasi  
+**Versi Blueprint Berlaku:** v2.0 (Draft, menunggu persetujuan PM)  
+**Terakhir Diperbarui:** 2026-11-03 10:15 WIB  
+
+> **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
 ---
 
 ## DAFTAR ISI
 1. [BAB I: Kronologi Sejarah & Keputusan Perancangan Sistem](#bab-i-kronologi-sejarah--keputusan-perancangan-sistem)
-2. [BAB II: Laporan Audit Komprehensif Fase 1 (Verification & QA)](#bab-ii-laporan-audit-komprehensif-fase-1-verification--qa)
+2. [BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity](#bab-ii-arsip-laporan-audit-fase-1-v10-oleh-antigravity)
    - [2.1 Audit Struktur Direktori Monorepo](#21-audit-struktur-direktori-monorepo)
    - [2.2 Audit Kepatuhan Dokumen Kembar (Twin File Rule)](#22-audit-kepatuhan-dokumen-kembar-twin-file-rule)
    - [2.3 Audit Pipeline Termodinamika DWSIM](#23-audit-pipeline-termodinamika-dwsim)
    - [2.4 Audit Aplikasi Web Operations Cockpit](#24-audit-aplikasi-web-operations-cockpit)
    - [2.5 Audit Kontrol Versi Git Monorepo](#25-audit-kontrol-versi-git-monorepo)
-3. [BAB III: Matriks Evaluasi & Sign-off Gerbang Fase 1 Menuju Fase 2](#bab-iii-matriks-evaluasi--sign-off-gerbang-fase-1-menuju-fase-2)
-4. [BAB IV: Log Riwayat Pembaruan Berkala (Living Changelog)](#bab-iv-log-riwayat-pembaruan-berkala-living-changelog)
+3. [BAB III: [ARSIP] Matriks Evaluasi & Sign-off Fase 1 v1.0 (DICABUT)](#bab-iii-arsip-matriks-evaluasi--sign-off-fase-1-v10-dicabut)
+4. [BAB IV: Log Riwayat Pengerjaan (Living Changelog)](#bab-iv-log-riwayat-pengerjaan-living-changelog)
+5. [BAB V: Re-Audit Independen Fase 1 (2026-11-03)](#bab-v-re-audit-independen-fase-1-2026-11-03)
+6. [BAB VI: Format Baku Entri Riwayat](#bab-vi-format-baku-entri-riwayat)
 
 ---
 
@@ -52,9 +57,31 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Menetapkan strategi tandem: **Antigravity** sebagai *Hands-on Execution Agent* di PC lokal, dan **Claude Pro** sebagai *External Senior Reviewer* (via Claude Projects) untuk mengaudit bab laporan FEED dan simulasi tanya-jawab sidang.
   - Merumuskan **BAB VIII** pada Master Blueprint: Arsitektur sinkronisasi multi-perangkat (Desktop PC $\leftrightarrow$ Laptop portabel kampus) menggunakan Git, Google Drive for Desktop, path relatif, dan Firebase Cloud Firestore.
 
+### 5. Re-Audit Independen Fase 1 (2026-11-03)
+* **Konteks**: PM meminta analisis independen atas hasil Fase 1 kepada Claude Code, dengan membandingkan blueprint v1.0 dan audit v1.0 terhadap isi repo yang sebenarnya.
+* **Temuan Kunci**: beberapa klaim audit v1.0 tidak sesuai kondisi repo. Ekstraksi HMB hanya berisi nama tag, angka kalkulator tidak konsisten, status `ACC Final` tanpa review, kepatuhan companion sekitar 50%, dan repo membengkak oleh DXF hasil generate. Rincian lengkap di BAB V.
+* **Keputusan Kunci**: sign-off Fase 1 v1.0 **dicabut**; status Fase 1 menjadi **PARSIAL**; sisa pekerjaan dipindah ke **Fase 1.5 Remediasi**.
+
+### 6. Revisi Konsep Sistem → Blueprint v2.0 (2026-11-03)
+* **Konteks**: PM meminta revisi konsep sistem berdasarkan hasil re-audit, serta meminta agar riwayat pengerjaan selalu dicatat di dokumen ini.
+* **Keputusan Kunci** (status: usulan, menunggu persetujuan PM):
+  - **Matriks kepemilikan data (SSOT)**: setiap jenis data punya tepat satu master. Google Sheets menjadi master Instrument Index, sedangkan CSV di repo menjadi snapshot read-only (arah satu arah Sheets → CSV).
+  - **Siklus status baku** `Draft → WIP → Review Internal → Diajukan → ACC Pembimbing`; status `ACC` wajib disertai bukti (MoM/WO); AI agent maksimal menetapkan `Review Internal`.
+  - **Kalkulator menjadi skrip Python** (library `fluids` untuk ISO 5167, IEC 60534/ISA-75, API 520), dengan input YAML; CSV menjadi hasil generate.
+  - **Bahasa pipeline data rekayasa: Python**, untuk konsistensi dengan library teknik dan `ezdxf`. Node.js tetap dipakai untuk web dan generator library CAD.
+  - **Kebijakan penyimpanan**: tidak ada file > 5 MB di Git; DXF hasil generate tidak di-commit; DWG/PDF di Drive; `.dwxmz` tetap di Git.
+  - **Folder monorepo Git dipisah dari folder Google Drive** (dihubungkan lewat `DRIVE_ROOT`), untuk mencegah korupsi `.git`.
+  - **WhatsApp**: `wa.me` menjadi jalur utama; Baileys menjadi opsional di Fase 5 karena risiko blokir nomor.
+  - **Hosting tunggal Firebase**; `vercel.json` akan dihapus.
+  - **Konvensi tag pabrik** + `tag_map.csv` untuk memetakan tag DWSIM ke tag pabrik.
+  - **Fase 1.5 Remediasi** ditambahkan; setiap fase punya Definition of Done terukur.
+  - **Pencatatan riwayat wajib** untuk setiap sesi kerja (BAB IX blueprint, BAB VI dokumen ini).
+
 ---
 
-## BAB II: Laporan Audit Komprehensif Fase 1 (Verification & QA)
+## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
+
+> ⚠️ **ARSIP — DIKOREKSI.** Bagian ini dipertahankan apa adanya sebagai catatan sejarah. Beberapa klaimnya terbukti tidak akurat pada re-audit 2026-11-03. Lihat **BAB V** untuk hasil yang berlaku.
 
 Audit otomatis dan manual telah dijalankan pada direktori monorepo `D:\rahul\dme-capstone-master` pada **03 November 2026, 00:05 WIB**. Berikut hasil pengujian seluruh parameter:
 
@@ -140,7 +167,9 @@ Audit otomatis dan manual telah dijalankan pada direktori monorepo `D:\rahul\dme
 
 ---
 
-## BAB III: Matriks Evaluasi & Sign-off Gerbang Fase 1 Menuju Fase 2
+## BAB III: [ARSIP] Matriks Evaluasi & Sign-off Fase 1 v1.0 (DICABUT)
+
+> ⚠️ **SIGN-OFF DICABUT pada 2026-11-03.** Matriks di bawah tidak berlaku lagi. Matriks yang berlaku ada di **§5.3**.
 
 Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi sebagai berikut:
 
@@ -158,12 +187,118 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 
 ---
 
-## BAB IV: Log Riwayat Pembaruan Berkala (Living Changelog)
+## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
-Dokumen ini akan terus diperbarui secara otomatis pada setiap fase berikutnya:
+Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
 
-* **[2026-11-03 00:05 WIB] — Rilis v1.0**:
+---
+
+### [LOG-003] 2026-11-03 10:15 WIB — Revisi konsep sistem: Blueprint v2.0
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: Lintas fase (konsep)
+* **Tujuan**: Merevisi konsep sistem berdasarkan temuan re-audit (LOG-002), dan menetapkan kewajiban pencatatan riwayat.
+* **Perubahan**:
+  - `MASTER_CAPSTONE_ECOSYSTEM_BLUEPRINT.md` ditulis ulang menjadi **v2.0**. Penambahan utama: tabel riwayat revisi & ringkasan perubahan; matriks kepemilikan data (§1.2); prinsip provenance (§1.3); siklus status (§1.4); kebijakan penyimpanan (§2.2); konvensi tag (§2.3); spesifikasi skema `hmb_streams.json` (§3.1); mesin kalkulator Python (§3.2); risiko Firestore 1 MiB (§3.6); tabel status 12 modul (BAB IV); aturan companion per artefak (BAB V); Fase 1.5 + DoD per fase (BAB VI); peran AI agent (§7.2); pemisahan folder Git/Drive (§8.2); BAB IX tata kelola pencatatan & audit; Lampiran A register risiko.
+  - `PROJECT_HISTORY_AND_AUDIT_LOG.md`: status header diperbarui; audit v1.0 diberi penanda arsip; kronologi #5–#6; BAB V re-audit; BAB VI format entri.
+* **Bukti / Verifikasi**: hanya perubahan dokumen; tidak ada kode, data teknis, atau riwayat Git yang diubah. Belum di-commit.
+* **Keputusan**: lihat Kronologi #6 (BAB I). Seluruhnya berstatus **usulan** sampai disetujui PM.
+* **Tindak Lanjut**:
+  - [ ] PM meninjau dan menyetujui/mengoreksi blueprint v2.0, lalu mengubah status dokumen dari `Draft`.
+  - [ ] PM memutuskan pembersihan riwayat Git dari file DXF besar sebelum push pertama ke GitHub (Fase 1.5 butir 6).
+  - [ ] Mulai Fase 1.5 Remediasi.
+
+---
+
+### [LOG-002] 2026-11-03 09:45 WIB — Re-audit independen Fase 1
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM
+* **Fase**: 1 (audit)
+* **Tujuan**: Memverifikasi klaim audit v1.0 terhadap isi repo yang sebenarnya.
+* **Perubahan**: tidak ada (audit read-only).
+* **Bukti / Verifikasi**: lihat BAB V (perintah dan hasil).
+* **Keputusan**: status Fase 1 diturunkan menjadi **PARSIAL**; sign-off v1.0 dicabut.
+* **Tindak Lanjut**: revisi konsep (LOG-003) dan Fase 1.5 Remediasi.
+
+---
+
+### [LOG-001] 2026-11-03 00:05 WIB — Rilis v1.0 dokumen riwayat & audit Fase 1
+* **Pelaksana**: Antigravity (AI agent)
+* **Fase**: 1
+* **Perubahan**:
   - Penulisan dokumen awal sejarah proyek.
-  - Pelaksanaan audit menyeluruh 5 pilar Fase 1 (Direktori, Companion MD, DWSIM, Web Cockpit, Git).
-  - Penerbitan sertifikasi lulus audit Fase 1.
-* *(Pembaruan berikutnya akan dicatat saat penyelesaian Fase 2)*.
+  - Pelaksanaan audit 5 pilar Fase 1 (Direktori, Companion MD, DWSIM, Web Cockpit, Git).
+  - Penerbitan sertifikasi lulus audit Fase 1 (**dicabut** oleh LOG-002).
+* **Commit terkait**: `741240a`, `cb55914`, `3a5b6f9`.
+
+---
+
+## BAB V: Re-Audit Independen Fase 1 (2026-11-03)
+
+* **Auditor**: Claude Code (AI agent), bukan agen pelaksana Fase 1.
+* **Waktu**: 2026-11-03, ±09:30–09:50 WIB.
+* **Lingkup**: seluruh isi monorepo pada commit `3a5b6f9` + working tree.
+
+### 5.1 Hasil per Klaim Audit v1.0
+
+| No | Klaim v1.0 | Metode Verifikasi | Temuan Aktual | Status |
+| :---: | :--- | :--- | :--- | :---: |
+| 1 | 15/15 direktori terbentuk | `Test-Path` per direktori | Semua ada; 6 masih kosong (`01/scripts`, `04/datasheets`, `06/mirrors`, `07/drawings`, `07/reports`, `tools/whatsapp-bot`) | **PASS** |
+| 2 | Companion `.md` 11/11 = 100% | Daftar semua file teknis vs `.md` | Denominator dipilih sepihak. Tanpa companion: 8 `symbol_libraries/*.dxf`, `Engineering_Drawing_Template.dwg/.dxf`, `Panduan_Capstone_DTNTF_2026.pdf`, `hmb_streams.json`. `acad_dme_lin.md` melanggar aturan "nama sama persis". Kepatuhan riil ±11 dari ±22 artefak (≈50%) | **PARSIAL** |
+| 3 | Ekstraksi DWSIM: T, P, flow (sesuai blueprint) | Baca `hmb_streams.json` & `tools/export_dwsim_hmb.js` | JSON hanya berisi `tag` dan `type`; **tidak ada** T, P, flow, komposisi. `"status": "Converged"` dan `"property_package": "NRTL"` ditulis hardcoded (baris 57–58). Satu unit operasi bertag & bertipe kosong, sehingga "11 unit" sebenarnya 10. Skrip berbahasa JS, padahal blueprint & `DME.md` menyebut `.py` | **FAIL** |
+| 4 | Build cockpit sukses 0 error (Vite + tsc) | `npx tsc --noEmit`; `npx vite build` | `tsc` **0 error (PASS)**. Script `build` hanya `vite build` (tanpa tsc). Folder `dist/` bertanggal 2026-11-02 23:53 membuktikan build pernah berhasil; build ulang di sesi audit tidak selesai dalam 5 menit dan dihentikan (penyebab belum diselidiki) | **PARSIAL** |
+| 5 | Git working tree bersih, tanpa submodul yatim | `git status`, `git log --stat`, `git remote -v` | Ada file untracked `ISO10628_Equipment_recover.dwg` (file recovery AutoCAD). Belum ada remote GitHub. Commit awal +6,9 juta baris, hampir seluruhnya DXF 3–4 MB/file. Submodul di commit 1 sudah diperbaiki di commit 2 | **PARSIAL** |
+
+### 5.2 Temuan Tambahan (di luar klaim v1.0)
+
+| No | Temuan | Bukti | Dampak |
+| :---: | :--- | :--- | :--- |
+| T-1 | **11 dari 11 companion berstatus `ACC Final`** tanpa bukti review dosen/tim | `Select-String '^status:'` | Menyesatkan pembimbing & dashboard |
+| T-2 | **Angka kalkulator orifice tidak konsisten.** Dari input CSV (d = 85,2 mm, β = 0,553, ΔP = 25 kPa, ρ = 11,24 kg/m³, C = 0,6012, ε = 0,985) persamaan ISO 5167 menghasilkan q_m ≈ 9.600 kg/h, bukan 12.500 kg/h. Re_D dari data CSV ≈ 1,7×10⁶, bukan 385.400 | Hitung ulang manual | Angka placeholder bisa masuk laporan |
+| T-3 | Sumber data kalkulator tidak sesuai model: tertulis "DWSIM Peng-Robinson" (model memakai NRTL); tag `REAC-01` (DWSIM: `RC-01`; blueprint: `R-01`) | `CALC_ISO5167_Orifice.csv` | Inkonsistensi tag & ketertelusuran |
+| T-4 | **File duplikat (hash SHA-256 identik)**: `DME_Master_Template.dwg` = `.dwt` = `Engineering_Drawing_Template.dwg`; `DME_Master_Template.dxf` = `Engineering_Drawing_Template.dxf` | `Get-FileHash` | Pemborosan ruang, kebingungan versi |
+| T-5 | `README.md` identik dengan blueprint | Perbandingan hash | Dua salinan dokumen yang sama, rawan tidak sinkron |
+| T-6 | Library DXF di-commit padahal dibuat oleh `generate_libraries.js` | `git log --stat` | Repo membengkak, bertentangan dengan BAB VIII lapisan 2 |
+| T-7 | `sync:push` menjalankan `git add .` tanpa pemeriksaan | `package.json` | File sementara AutoCAD ikut ter-commit |
+| T-8 | `vercel.json` ada, padahal hosting yang direncanakan Firebase | `apps/operations-cockpit/vercel.json` | Dua jalur deploy |
+| T-9 | Konsep v1.0 meletakkan monorepo Git di dalam folder sinkron Drive | Blueprint v1.0 BAB VIII | Risiko korupsi `.git` |
+| T-10 | `projectData/area1` disimpan sebagai satu dokumen Firestore | `appContextTypes.ts:270` | Risiko melewati batas 1 MiB seiring waktu |
+
+**Hal positif yang terverifikasi:** `.env.local` cockpit ter-ignore dengan benar; path skrip ekspor relatif; tidak ada `.git` bersarang di `apps/operations-cockpit`; typecheck TypeScript bersih.
+
+### 5.3 Matriks Gerbang Fase 1 yang Berlaku
+
+| Kriteria Gerbang | Standar Minimum | Hasil Aktual | Status |
+| :--- | :---: | :---: | :---: |
+| Penyatuan folder monorepo | 100% aset terpindah | Terpindah, ada duplikat & file sementara | **PARSIAL** |
+| Kepatuhan companion `.md` | ≥ 90% artefak teknis | ≈ 50%, status tidak valid | **FAIL** |
+| Ekstraksi otomatis DWSIM | JSON berisi data aliran valid | Hanya daftar tag | **FAIL** |
+| Kesiapan build cockpit | Build sukses 0 error | tsc 0 error; build pernah sukses, belum bisa diulang | **PARSIAL** |
+| Kerapian kontrol versi | Clean working tree, repo sehat | File untracked, repo membengkak, belum ada remote | **PARSIAL** |
+
+**Kesimpulan:** Fase 1 **PARSIAL (±60–70%)**. Sign-off menunggu penyelesaian Fase 1.5 dan keputusan PM.
+
+---
+
+## BAB VI: Format Baku Entri Riwayat
+
+Salin templat ini ke **bagian atas BAB IV** untuk setiap sesi kerja. Nomor `LOG-xxx` berurutan dan tidak boleh dipakai ulang.
+
+```markdown
+### [LOG-xxx] YYYY-MM-DD HH:MM WIB — <judul singkat pekerjaan>
+* **Pelaksana**: <nama anggota / AI agent>, atas instruksi <siapa>
+* **Fase**: <1 / 1.5 / 2 / ... / lintas fase>
+* **Tujuan**: <apa yang ingin dicapai>
+* **Perubahan**:
+  - <file/folder yang dibuat, diubah, dihapus — sebutkan path>
+* **Bukti / Verifikasi**:
+  - <perintah yang dijalankan> → <output ringkas / hasil>
+  - <commit hash, jika sudah di-commit>
+* **Keputusan**: <keputusan teknis yang diambil + alasannya; tulis "usulan" jika belum disetujui PM>
+* **Tindak Lanjut**:
+  - [ ] <pekerjaan berikutnya / hal yang butuh keputusan>
+```
+
+**Aturan:**
+1. Entri ditulis **di akhir setiap sesi kerja**, termasuk sesi yang hanya mengubah dokumen.
+2. Klaim "selesai" atau "PASS" wajib disertai bukti sesuai Blueprint §9.2.
+3. Jika sesi menghasilkan keputusan arsitektur, tambahkan juga butir ke **BAB I (Kronologi)**.
+4. Koreksi atas entri lama ditulis sebagai entri baru yang merujuk nomor LOG lama. Entri lama tidak diedit, kecuali penambahan penanda "dikoreksi oleh LOG-xxx".
