@@ -29,9 +29,6 @@ external_files:
   - path: "DRIVE_ROOT/03_CAD_DWG/symbol_libraries/DME_PID_Master_Legend.dxf"
     sha256_prefix: "bfeec58dd8355ff4"
     size_kb: 4230
-  - path: "DRIVE_ROOT/03_CAD_DWG/symbol_libraries/ISO10628_Equipment_recover.dwg"
-    sha256_prefix: "0b88eb2af89ac562"
-    size_kb: 1348
 generated_by: ""
 source_data: []
 author: "Jonathan Pangihutan Michael Siahaan (PIC)"
@@ -59,7 +56,8 @@ tags: ["AutoCAD", "Symbol Library", "Block"]
 | `ISA101_HMI.dxf` | ISA-101.01 | Elemen grafis HMI |
 | `ISA62443_Security.dxf` | ISA/IEC 62443 | Diagram zona & conduit keamanan siber |
 | `DME_PID_Master_Legend.dxf` | ISA-5.1 / ISO 10628 | Lembar legenda P&ID |
-| `ISO10628_Equipment_recover.dwg` | — | **File recovery AutoCAD** (crash/autosave). PIC perlu memeriksa apakah berisi perubahan yang belum tersimpan di `ISO10628_Equipment.dxf`, lalu menggabungkan atau menghapusnya. |
+
+> File recovery AutoCAD `ISO10628_Equipment_recover.dwg` (sha256 `0b88eb2af89ac562…`) **dihapus** pada 2026-11-03 atas keputusan PM, karena isinya sama dengan `ISO10628_Equipment.dxf` (LOG-005).
 
 ## 2. Asal-usul File (penting)
 - Skrip bootstrap `generate_libraries.js` (dihapus di Fase 1.5) hanya menghasilkan 4 library pertama dalam bentuk DXF sederhana (puluhan entitas, tanpa header `$ACADVER`). File di Drive berukuran 3–4 MB dengan header AutoCAD (`AC1009`), dan `plot.log` mencatat file tersebut dibuka & di-plot di AutoCAD pada 2026-11-01.
@@ -78,3 +76,4 @@ tags: ["AutoCAD", "Symbol Library", "Block"]
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Companion kolektif dibuat; file dipindah ke Drive; hash dicatat (LOG-004). |
+| 0.2 | 2026-11-03 | Claude Code (AI) | `ISO10628_Equipment_recover.dwg` dihapus atas keputusan PM (LOG-005). |

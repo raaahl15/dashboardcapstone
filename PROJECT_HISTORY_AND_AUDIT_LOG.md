@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** FASE 1.5 REMEDIASI SELESAI (DoD terpenuhi, LOG-004) — menunggu sign-off PM; berikutnya Fase 2  
-**Versi Blueprint Berlaku:** v2.1 (disetujui PM 2026-11-03; penyesuaian v2.1 dari eksekusi Fase 1.5)  
-**Terakhir Diperbarui:** 2026-11-03 10:40 WIB  
+**Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
+**Versi Blueprint Berlaku:** v2.2 (pemetaan Stage-Gate G1–G4, tim tetap 5 orang)  
+**Terakhir Diperbarui:** 2026-11-03 11:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -86,6 +86,15 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - **Panduan Capstone mewajibkan sizing manual**; rubrik menilai kalkulator tanpa rumusan standar hanya *Cukup*. → Skrip kalkulator diposisikan sebagai **verifikasi silang**, sedangkan perhitungan manual lengkap tetap ditulis di laporan.
   - Panduan mendefinisikan **2 evaluasi formal** (bukan "Stage-Gate 1–4") dan **firma 3–4 orang** (tim tercatat 5 orang). → Dicatat sebagai hal yang perlu dikonfirmasi.
   - `vercel.json` disebut sebagai "target produksi" di dokumen audit lama cockpit, tetapi header keamanannya identik dengan `firebase.json`. → Dihapus sesuai keputusan hosting tunggal Firebase.
+
+### 8. Sign-off Fase 1.5 & Keputusan Tata Kelola (2026-11-03)
+* **Konteks**: PM meninjau hasil Fase 1.5 (LOG-004) dan menjawab empat tindak lanjut.
+* **Keputusan PM**:
+  1. **Fase 1.5 di-sign-off.** Gerbang menuju Fase 2 dibuka.
+  2. Isi folder staging **sudah diunggah ke Google Drive** oleh PM (lewat web).
+  3. **Tim tetap 5 orang**, walaupun panduan menyebut firma 3–4 orang. Pemetaan Stage-Gate diserahkan ke rekomendasi agent.
+  4. `ISO10628_Equipment_recover.dwg` isinya sama dengan `ISO10628_Equipment.dxf` → **hapus file DWG**.
+* **Rekomendasi agent yang ditetapkan — pemetaan Stage-Gate** (Blueprint §1.7): nama G1–G4 dipertahankan dan diikat ke empat titik kontrol panduan, yaitu **G1** ACC Pembimbing draf PSTF 1 → **G2** Evaluasi PSTF 1 (15 Des 2026) → **G3** ACC final Pembimbing PSTF 2 → **G4** Evaluasi Akhir PSTF 2. Alasannya: panduan hanya punya dua evaluasi formal, tetapi ACC Pembimbing adalah syarat wajib untuk maju ke masing-masing evaluasi, jadi keduanya layak menjadi gerbang. Sidang tunggal yang sudah ada di cockpit (15 Des 2026) otomatis menjadi G2, sehingga tidak ada data yang perlu dibuang.
 
 ---
 
@@ -200,6 +209,28 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-005] 2026-11-03 11:00 WIB — Sign-off Fase 1.5, pemetaan Stage-Gate, hapus file recovery DWG
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: 1.5 (penutupan) → 2
+* **Tujuan**: Mencatat sign-off PM, menerapkan keputusan PM atas tindak lanjut LOG-004, dan menetapkan pemetaan Stage-Gate.
+* **Perubahan**:
+  - **Dihapus**: `D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\symbol_libraries\ISO10628_Equipment_recover.dwg` (salinan lokal; file ini tidak pernah ter-track di Git sehingga tidak ada di backup bundle). Folder library kini berisi 8 file `.dxf`.
+  - `SYMBOL_LIBRARIES.md`: entri file recovery dihapus dari `external_files` dan tabel, diganti catatan penghapusan + hash.
+  - Blueprint **v2.2**: §1.7 tabel pemetaan G1–G4 (titik kontrol, waktu, penentu, bukti, isi bundel); BAB IV modul 12 mengikuti G1–G4; Fase 1.5 ditandai sign-off; Fase 2 berstatus BERJALAN + catatan sinkronisasi Drive; Fase 4 ditambah tugas penerapan G1–G4 di `StageGateView`/Gantt; risiko **R-09** (tim 5 orang) dan **R-10** (Drive web vs folder lokal).
+  - `Panduan_Capstone_DTNTF_2026.md` §10: keputusan tim 5 orang + pemetaan G1–G4.
+* **Bukti / Verifikasi**:
+  - `Test-Path` file DWG recovery: sebelum `True`, sesudah `False`; isi folder `symbol_libraries` staging: 8 file.
+  - Pemeriksaan kode cockpit: `StageGateView.tsx` dan `initialData.ts` hanya punya **satu** sidang (task `4.4 Sidang Stage-Gate`, 15 Des 2026, `isStageGateMilestone: true`); istilah "Gate 1–4" hanya ada di blueprint. Jadi pemetaan ini **tidak mengubah kode** sekarang; penerapannya dijadwalkan di Fase 4.
+  - `Get-PSDrive`: tidak ada drive Google Drive for Desktop (hanya C, D, E), jadi unggahan dilakukan lewat web.
+  - `npm run check` → PASS (dijalankan sebelum commit).
+* **Keputusan**: lihat Kronologi #8 (BAB I).
+* **Tindak Lanjut**:
+  - [ ] **PM**: hapus juga `ISO10628_Equipment_recover.dwg` dari **Google Drive (web)**. Agent hanya menghapus salinan lokal karena Drive tidak ter-mount di PC ini.
+  - [ ] **PM**: pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke folder Drive (mitigasi R-10).
+  - [ ] Lanjut Fase 2: buat repo GitHub private + push pertama, Google Sheets Master Instrument Index, Google Docs FDS & laporan, `google_workspace_registry.json`.
 
 ---
 

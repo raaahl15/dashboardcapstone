@@ -92,8 +92,8 @@ tags: ["Panduan", "Rubrik", "PSTF 1", "PSTF 2", "Stage-Gate"]
 - **PSTF 2** (template: `http://ugm.id/TemplatePSTF2`): Bab 1 Review FEED · Bab 2 Sizing & Safety · Bab 3 DED (ISA-20, spec break, BoM) · Bab 4 Kendali, HMI & SIS · Bab 5 Virtual FAT · Bab 6 SOP · Lampiran A–D (P&ID Final, Loop & Logic, Hook-up, Datasheet + BoM).
 
 ## 10. Implikasi untuk Sistem Proyek Ini
-1. **Ukuran tim**: panduan menyebut firma **3–4 orang**, sedangkan tim tercatat **5 orang**. Perlu dikonfirmasi ke Dosen Koordinator.
-2. **Stage-Gate**: panduan mendefinisikan **2 evaluasi formal** (akhir PSTF 1 dan akhir PSTF 2). Istilah "Gate 1–4" di cockpit perlu dipetakan ke tahap Lampiran 1.
+1. **Ukuran tim**: panduan menyebut firma **3–4 orang**; **keputusan PM (2026-11-03): tim tetap 5 orang.** Konsekuensinya, RACI dan logbook tiap anggota harus menunjukkan kontribusi individu yang jelas (Blueprint risiko R-09).
+2. **Stage-Gate**: panduan mendefinisikan **2 evaluasi formal**. Pemetaan proyek (Blueprint §1.7): **G1** = ACC Pembimbing draf PSTF 1 · **G2** = Evaluasi PSTF 1 · **G3** = ACC final Pembimbing PSTF 2 · **G4** = Evaluasi Akhir PSTF 2.
 3. **Sizing manual wajib**: pipeline kalkulator otomatis hanya sebagai verifikasi silang (Blueprint §3.2).
 4. **Logbook**: modul Logbook cockpit perlu menegakkan aturan 1×24 jam, 12 baris, dan paraf mingguan.
 5. **HMB**: PFD wajib terintegrasi neraca massa & panas, jadi skema v1 `hmb_streams.json` (Fase 3) termasuk jalur kritis untuk Evaluasi PSTF 1.

@@ -4,7 +4,7 @@
 **Tahun Akademik:** 2026/2027  
 **Dokumen Kontrol:** DOC-CAPSTONE-DME-2026-MASTER-001  
 **Status Anggaran:** Bebas biaya (Rp 0), berbasis FOSS, free tier, dan akun UGM — lihat batasan di BAB VII  
-**Versi:** 2.1 (Revisi Konsep pasca Re-Audit Fase 1 + penyesuaian Fase 1.5)  
+**Versi:** 2.2 (Revisi Konsep pasca Re-Audit Fase 1 + Fase 1.5 + pemetaan Stage-Gate)  
 **Status Dokumen:** Disetujui PM (2026-11-03)  
 **Catatan Riwayat Pengerjaan:** [`PROJECT_HISTORY_AND_AUDIT_LOG.md`](PROJECT_HISTORY_AND_AUDIT_LOG.md)
 
@@ -16,6 +16,7 @@
 | :--- | :--- | :--- | :--- |
 | 1.0 | 2026-11-02 | Antigravity (AI agent) + PM | Konsep awal 8 bab, 5 pilar, roadmap 5 fase. |
 | 2.0 | 2026-11-03 | Claude Code (AI agent) + PM | Revisi konsep berdasarkan re-audit Fase 1: matriks kepemilikan data (SSOT), siklus status dokumen, aturan companion `.md` yang bisa diaudit, mesin kalkulator berbasis skrip, kebijakan penyimpanan Git vs Drive, pemisahan folder Git dan Drive, WhatsApp gateway dijadikan opsional, Fase 1.5 Remediasi, dan Definition of Done per fase. |
+| 2.2 | 2026-11-03 | Claude Code (AI agent) + PM | Sign-off Fase 1.5; pemetaan Stage-Gate G1–G4 ke panduan (§1.7); keputusan tim tetap 5 orang (R-09); status Fase 2 berjalan (Drive diunggah via web, R-10). |
 | 2.1 | 2026-11-03 | Claude Code (AI agent) | Penyesuaian dari eksekusi Fase 1.5 (LOG-004): library simbol CAD ternyata file AutoCAD manual (bukan hasil generate) → disimpan di Drive; `generate_libraries.js` dihapus; pemeriksa repo ditulis di Node.js (`check_companions.js`) karena Python belum terpasang; panduan mewajibkan sizing manual → skrip kalkulator menjadi verifikasi silang; catatan Stage-Gate vs panduan; status Fase 1.5 SELESAI. |
 
 ### Ringkasan Perubahan v1.0 → v2.0
@@ -158,7 +159,18 @@ Setiap klaim "selesai" atau "PASS" harus disertai **perintah yang dijalankan, ou
 
 Seluruh artefak terikat pada rubrik Capstone DTNTF 2026 dan dapat dikompilasi ke bundel sidang. Hanya artefak berstatus `Diajukan` atau `ACC Pembimbing` yang masuk bundel.
 
-> **Catatan (v2.1):** Panduan resmi mendefinisikan **dua evaluasi formal**: Evaluasi PSTF 1 (minggu 14–16 semester ganjil) dan Evaluasi Akhir PSTF 2 (minggu 14–16 semester genap), dengan 5 tahap SOP di Lampiran 1. Istilah "Stage-Gate 1–4" di cockpit harus dipetakan ke tahap-tahap tersebut sebelum Fase 4. Ringkasan lengkap: [`00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md`](00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md).
+#### Pemetaan Stage-Gate ke Panduan Capstone (ditetapkan PM 2026-11-03, v2.2)
+
+Panduan resmi hanya mendefinisikan **dua evaluasi formal**, tetapi juga mewajibkan **ACC Dosen Pembimbing sebagai syarat maju** ke tiap evaluasi (Lampiran 1). Keempat gate proyek diikat ke keempat titik kontrol tersebut:
+
+| Gate | Titik Kontrol di Panduan | Waktu | Penentu Lolos | Bukti Wajib | Isi Bundel Minimum |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| **G1** | ACC Pembimbing atas draf Laporan PSTF 1 (Lampiran 1, Tahap 2, syarat maju presentasi) | Akhir minggu 13 PSTF 1 | Dosen Pembimbing | Paraf/ACC tercatat di MoM | Laporan PSTF 1 Bab 1–4, PFD + neraca massa & panas, Draf P&ID A3, tekno-ekonomi, logbook |
+| **G2** | **Evaluasi PSTF 1** — panel Koordinator + Pembimbing + Praktisi (Tahap 3) | Minggu 14–16 PSTF 1 (jadwal cockpit: **15 Des 2026**) | Panel evaluasi: *Layak* / *Revisi Mayor* | Berita acara / nilai Lampiran 4A–4B | Bundel G1 versi final + slide presentasi tender |
+| **G3** | ACC final Pembimbing atas kalkulasi sizing & DED (Lampiran 1, Tahap 4) | Akhir minggu 13 PSTF 2 | Dosen Pembimbing | Paraf/ACC tercatat di MoM | Laporan PSTF 2 Bab 1–6, P&ID Final, ISA-20, loop & logic, hook-up, BoM, Virtual FAT |
+| **G4** | **Evaluasi Akhir PSTF 2** (Tahap 5) | Minggu 14–16 PSTF 2 | Panel evaluasi | Nilai Lampiran 5A–5B | Bundel G3 final + cetak biru A3 |
+
+Aturan: gate berikutnya tidak bisa dibuka sebelum gate sebelumnya lolos (sesuai sifat prasyarat PSTF 1 → PSTF 2). Ringkasan panduan: [`00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md`](00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md).
 
 ---
 
@@ -434,7 +446,7 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 | 9 | Master Library (`MasterLibraryView.tsx`) | **Baru** | `public/data/library_manifest.json` (dari `build_manifest.js`) | Penjelajah artefak + pembaca `.md` (KaTeX) + indikator status & kepatuhan companion. |
 | 10 | Google Workspace Hub (`GoogleWorkspaceView.tsx`) | **Baru** | `google_workspace_registry.json` | Tautan ke Docs, Sheets, Drive. |
 | 11 | Logbook Presensi (`LogbookView.tsx`) | Ada | Firestore | Logbook harian/mingguan + ekspor rekap untuk Simaster. |
-| 12 | Stage-Gate (`StageGateView.tsx`) | Ada | Firestore + manifest | Evaluasi kesiapan Gate 1–4 terhadap rubrik DTNTF; hanya artefak berstatus `Diajukan`/`ACC Pembimbing` yang dihitung. |
+| 12 | Stage-Gate (`StageGateView.tsx`) | Ada | Firestore + manifest | Evaluasi kesiapan G1–G4 sesuai pemetaan §1.7 terhadap rubrik DTNTF; hanya artefak berstatus `Diajukan`/`ACC Pembimbing` yang dihitung. Saat ini view baru mencakup satu sidang (= G2); dilengkapi di Fase 4. |
 
 **Tambahan v2.0:** panel **"Kesehatan Data"** di Homepage menampilkan umur `hmb_streams.json`, jumlah `FAIL` kalkulator, jumlah inkonsistensi tag, dan jumlah artefak tanpa companion.
 
@@ -527,9 +539,11 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] File sementara AutoCAD ter-ignore (`git check-ignore` pada contoh nama file).
   - [x] Tidak ada file duplikat (hash identik) di repo.
   - [x] Entri log riwayat Fase 1.5 lengkap dengan bukti (LOG-004).
-* **Sisa yang butuh tindakan manusia:** unggah folder staging ke Google Drive (Fase 2); PIC JN memeriksa `ISO10628_Equipment_recover.dwg`; konfirmasi ukuran tim 5 orang vs panduan 3–4 orang.
+* **Sign-off:** ✅ disetujui PM pada 2026-11-03 (LOG-005). Tindak lanjut sudah ditutup: folder staging diunggah ke Google Drive oleh PM; `ISO10628_Equipment_recover.dwg` dihapus (isinya sama dengan `.dxf`); ukuran tim **tetap 5 orang** (keputusan PM).
 
-#### FASE 2: Cloud Backbone — Estimasi 2 hari
+#### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: BERJALAN
+* **Sudah:** isi folder staging diunggah PM ke Google Drive (2026-11-03, lewat web; belum ada Google Drive for Desktop di PC ini).
+* **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
 * **DoD:**
   - [ ] `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan.
@@ -547,7 +561,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [ ] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar.
 
 #### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari
-* **Aktivitas:** `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
+* **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
 * **DoD:**
   - [ ] `tsc --noEmit` 0 error dan `npm run build` sukses (waktu build dicatat).
   - [ ] 12 modul dapat dibuka tanpa error di console browser.
@@ -691,3 +705,5 @@ flowchart TD
 | R-06 | Dokumen Firestore `projectData/area1` melewati 1 MiB | Tinggi | Sedang | Pantau ukuran; pecah ke koleksi saat > 500 KB (§3.6) | RG |
 | R-07 | Konflik file `.dwg` di dua perangkat | Sedang | Sedang | SOP §8.4 (satu perangkat per file) | JN |
 | R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Sedang | Fallback unduh CSV manual (§3.3) | JN |
+| R-09 | Tim 5 orang, sedangkan panduan menyebut firma 3–4 orang; penilaian individu memakai logbook (anti *free-rider*) | Sedang | Sedang | Keputusan PM: tetap 5 orang. RACI per deliverable dibuat tegas, dan logbook tiap anggota wajib spesifik & lengkap 12 baris agar kontribusi individu terbukti | RG |
+| R-10 | Salinan Drive di web dan folder lokal `CAPSTONE_DME_AREA1` tidak sinkron | Sedang | Sedang | Pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke sana (Fase 2) | RG |
