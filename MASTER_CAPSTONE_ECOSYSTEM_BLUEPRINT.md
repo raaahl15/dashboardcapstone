@@ -201,7 +201,7 @@ dme-capstone-master/
 │   └── tag_map.md                               [ADA]
 │
 ├── 02_ENGINEERING_CALCULATORS/
-│   ├── inputs/                                  [BARU] master asumsi desain (YAML)
+│   ├── inputs/                                  [ADA, LOG-020] master asumsi desain (YAML): FE-101, FCV-101, PSV-101, NPV-001
 │   │   ├── orifice_FE-101.yaml
 │   │   └── ...
 │   ├── CALC_ISO5167_Orifice.csv / .md           [ADA→GEN] CSV menjadi hasil generate
@@ -242,7 +242,7 @@ dme-capstone-master/
 │
 ├── tools/
 │   ├── dwsim/export_hmb.py                      [ADA, LOG-019] HMB skema v1 + test_export_hmb.py
-│   ├── calc/                                    [BARU] mesin kalkulator Python
+│   ├── calc/                                    [ADA, LOG-020] orifice, control_valve, psv, npv, run_all + test_verification
 │   ├── sync/pull_sheets.js                      [ADA, LOG-012] Sheets → CSV (Node)
 │   ├── validate_tags.py                         [BARU]
 │   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
@@ -582,7 +582,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **DoD:**
   - [x] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file. *(LOG-019: 14 stream; status diturunkan dari `Calculated`/`ErrorMessage` per objek karena DWSIM tidak menyimpan status global.)*
   - [x] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi. *(LOG-019: 10 unit, galat maks 0,027 % di M-101; divalidasi otomatis setiap ekstraksi.)*
-  - [ ] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi.
+  - [ ] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: 4 dari 5 selesai (orifice, control valve, PSV, NPV) dengan uji ISO 5167-2 independen, IEC 60534-2-1 contoh 1–2, API 520 contoh 1–2, dan contoh NPV. **Thermowell ASME PTC 19.3 TW belum**: menunggu salinan standar + contoh soal.)*
   - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan.
   - [ ] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar.
 

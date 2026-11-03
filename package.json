@@ -9,7 +9,8 @@
     "build": "npm run build --prefix apps/operations-cockpit",
     "check": "node tools/check_companions.js",
     "sync:dwsim": "python tools/dwsim/export_hmb.py",
-    "test:py": ".venv\\Scripts\\python -m pytest tools/dwsim -q -p no:cacheprovider",
+    "calc": ".venv\\Scripts\\python tools/calc/run_all.py",
+    "test:py": ".venv\\Scripts\\python -m pytest tools/dwsim tools/calc -q -p no:cacheprovider",
     "sync:push": "node tools/sync/sync.js push",
     "sync:pull": "node tools/sync/sync.js pull",
     "pull:sheets": "node tools/sync/pull_sheets.js"

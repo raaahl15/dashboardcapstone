@@ -1,5 +1,34 @@
-TAG_NUMBER,VALVE_FUNCTION,SERVICE_STREAM,FLOW_M3_H,P1_BAR_A,P2_BAR_A,DELTA_P_BAR,TEMP_DEGC,DENSITY_KG_M3,CALCULATED_CV,SELECTED_CV,VALVE_SIZE_INCH,TRIM_CHARACTERISTIC,FAIL_ACTION,BODY_MATERIAL,DATA_STATUS
-FCV-101,Feed Flow Control,Methanol Liquid,15.8,16.5,13.0,3.5,65.0,792.0,24.6,35.0,2.0 inch,Equal Percentage (EQ%),Fail Closed (FC),SS316 / CF8M,PLACEHOLDER
-PCV-201,DME Column Overhead Pressure,DME Vapor,28.5,11.2,7.5,3.7,45.0,22.4,52.4,75.0,3.0 inch,Linear,Fail Open (FO),SS316 / CF8M,PLACEHOLDER
-LCV-202,DME Column Bottom Level,Methanol & Water,8.2,12.0,5.0,7.0,115.0,880.0,12.8,20.0,1.5 inch,Equal Percentage (EQ%),Fail Closed (FC),Hastelloy C-276,PLACEHOLDER
-TCV-102,Preheater Steam Temp Control,Medium Pressure Steam,450 kg/h,10.0,7.0,3.0,185.0,5.12,18.4,28.0,1.5 inch,Linear,Fail Closed (FC),WCB / Carbon Steel,PLACEHOLDER
+TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
+FCV-101,INFO,Deskripsi,,"Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6""-PL-101)",,IEC 60534-2-1 / ISA-75.01.01,PLACEHOLDER
+FCV-101,INPUT,Laju alir massa normal,q_m,8321.27,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",HMB
+FCV-101,INPUT,Densitas cairan,rho,791.72,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.rho",HMB
+FCV-101,INPUT,Viskositas cairan,mu,0.55065,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.mu",HMB
+FCV-101,INPUT,Suhu,T1,25.3345,degC,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.T",HMB
+FCV-101,INPUT,Tekanan hulu (discharge P-101),P1,15.5,bar(a),"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.P",HMB
+FCV-101,INPUT,Beda tekanan desain katup,dP,1,bar,"Belum ada di model DWSIM (tidak ada katup); diambil 1,0 bar sebagai porsi rugi tekanan sistem untuk kendali yang baik; tetapkan dari hidrolik jalur",ASUMSI
+FCV-101,INPUT,Faktor laju desain maksimum terhadap normal,,1.25,-,"Margin desain umum 1,1-1,3 x normal; tetapkan dari URS (turndown/kapasitas maksimum)",ASUMSI
+FCV-101,INPUT,Antoine A metanol,,5.20409,-,"NIST Chemistry WebBook, methanol, log10(P/bar)=A-B/(T+C), 288-357 K; dipakai sebagai pendekatan Pv campuran (x MeOH 0,983)",LITERATUR
+FCV-101,INPUT,Antoine B metanol,,1581.34,K,"NIST Chemistry WebBook, methanol",LITERATUR
+FCV-101,INPUT,Antoine C metanol,,-33.5,K,"NIST Chemistry WebBook, methanol",LITERATUR
+FCV-101,INPUT,Tekanan kritis metanol,Pc,81,bar,"NIST Chemistry WebBook, methanol (Pc ~ 81 bar)",LITERATUR
+FCV-101,INPUT,Faktor pemulihan tekanan cairan,FL,0.9,-,"IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",ASUMSI
+FCV-101,INPUT,Valve style modifier,Fd,0.46,-,"IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",ASUMSI
+FCV-101,INPUT,Diameter dalam pipa,D,154.08,mm,"ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6""-PL-101 di Master Instrument Index (data contoh)",PLACEHOLDER
+FCV-101,INPUT,Ukuran katup,d,154.08,mm,"Sementara sama dengan pipa (tanpa reducer, Fp = 1); setelah Kv diketahui pilih ukuran katup lalu hitung ulang",ASUMSI
+FCV-101,HASIL,Tekanan uap pada T1,Pv,17.2352,kPa,Persamaan Antoine (input LITERATUR),PLACEHOLDER
+FCV-101,HASIL,Laju volumetrik (normal),Q,10.5104,m3/h,q_m / rho,PLACEHOLDER
+FCV-101,HASIL,Koefisien aliran Kv (normal),Kv,9.35618,m3/h,IEC 60534-2-1 / ISA-75.01.01 pers. (1),PLACEHOLDER
+FCV-101,HASIL,Koefisien aliran Cv (normal),Cv,10.8157,US gpm/psi^0.5,"Cv = 1,156 Kv",PLACEHOLDER
+FCV-101,HASIL,Faktor rasio tekanan kritis (normal),FF,0.947084,-,IEC 60534-2-1 / ISA-75.01.01 pers. (8),PLACEHOLDER
+FCV-101,HASIL,Reynolds katup (normal),Re_v,169367,-,IEC 60534-2-1 / ISA-75.01.01 pers. (23),PLACEHOLDER
+FCV-101,CEK,Tidak choked (normal),,PASS,,dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01],PLACEHOLDER
+FCV-101,CEK,Aliran turbulen (normal),,PASS,,Re_v = 1.69e+05 [IEC 60534-2-1 / ISA-75.01.01],PLACEHOLDER
+FCV-101,HASIL,Laju volumetrik (maksimum),Q,13.138,m3/h,q_m / rho,PLACEHOLDER
+FCV-101,HASIL,Koefisien aliran Kv (maksimum),Kv,11.6952,m3/h,IEC 60534-2-1 / ISA-75.01.01 pers. (1),PLACEHOLDER
+FCV-101,HASIL,Koefisien aliran Cv (maksimum),Cv,13.5197,US gpm/psi^0.5,"Cv = 1,156 Kv",PLACEHOLDER
+FCV-101,HASIL,Faktor rasio tekanan kritis (maksimum),FF,0.947084,-,IEC 60534-2-1 / ISA-75.01.01 pers. (8),PLACEHOLDER
+FCV-101,HASIL,Reynolds katup (maksimum),Re_v,189360,-,IEC 60534-2-1 / ISA-75.01.01 pers. (23),PLACEHOLDER
+FCV-101,CEK,Tidak choked (maksimum),,PASS,,dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01],PLACEHOLDER
+FCV-101,CEK,Aliran turbulen (maksimum),,PASS,,Re_v = 1.89e+05 [IEC 60534-2-1 / ISA-75.01.01],PLACEHOLDER
+FCV-101,CEK,Tidak flashing (P2 > Pv),,PASS,,"P2 = 14.500 bar(a), Pv = 0.1724 bar(a) [IEC 60534-2-1 / ISA-75.01.01]",PLACEHOLDER
+FCV-101,KESIMPULAN,Hasil,,PASS,,Kv dipakai memilih ukuran katup dari katalog vendor (bukan bagian skrip),PLACEHOLDER

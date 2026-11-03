@@ -1,16 +1,25 @@
-PARAMETER,SYMBOL,VALUE,UNIT,REFERENCE_STANDARD,NOTE,DATA_STATUS
-Fluid Name,Fluida,Methanol Vapor,-,-,Stream S-01 Inlet REAC-01,PLACEHOLDER
-Mass Flowrate,qm,12500,kg/h,DWSIM Mass Balance,Kondisi Desain Normal,PLACEHOLDER
-Upstream Pressure,P1,12.5,bar(a),DWSIM Thermo,Tekanan Operasi,PLACEHOLDER
-Upstream Temperature,T1,250,degC,DWSIM Thermo,Suhu Pemanasan Awal,PLACEHOLDER
-Operating Density,rho1,11.24,kg/m3,DWSIM Peng-Robinson,Massa Jenis Uap,PLACEHOLDER
-Dynamic Viscosity,mu,0.0165,cP,DWSIM Thermo,Viskositas Dinamis,PLACEHOLDER
-Isentropic Exponent,kappa,1.24,-,ISO 5167-2,Ratio Cp/Cv,PLACEHOLDER
-Pipe Internal Diameter,D,154.08,mm,ASME B36.10M,Pipa 6 inch Sch 40,ASUMSI
-Orifice Bore Diameter,d,85.20,mm,ISO 5167-2 Calc,Bukaan Orifice Terhitung,PLACEHOLDER
-Diameter Ratio,beta,0.553,-,ISO 5167-2 Limit (0.1 <= beta <= 0.75),Sesuai Standar,PLACEHOLDER
-Differential Pressure at Max Flow,deltaP_max,25.0,kPa,ISO 5167 Standard,Rentang Standar DP Cell,ASUMSI
-Expansion Factor,epsilon,0.985,-,ISO 5167-2 Formula,Faktor Ekspansi Gas,PLACEHOLDER
-Discharge Coefficient,C,0.6012,-,Reader-Harris/Gallagher (1998),Formula ISO 5167-2,PLACEHOLDER
-Reynolds Number,ReD,385400,-,ISO 5167 Limit (> 5000),Aliran Turbulen Mantap,PLACEHOLDER
-Permanent Pressure Loss,delta_w,12.8,kPa,ISO 5167-2 Eq 4,Rugi Tekanan Permanen,PLACEHOLDER
+TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
+FE-101,INFO,Deskripsi,,"Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6""-PL-101)",,ISO 5167-2:2022,PLACEHOLDER
+FE-101,INPUT,Laju alir massa normal,q_m,8321.27,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",HMB
+FE-101,INPUT,Tekanan hulu,P1,15.5,bar(a),"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.P",HMB
+FE-101,INPUT,Suhu hulu,T1,25.3345,degC,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.T",HMB
+FE-101,INPUT,Densitas cairan,rho,791.72,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.rho",HMB
+FE-101,INPUT,Viskositas cairan,mu,0.55065,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.mu",HMB
+FE-101,INPUT,Fase fluida,,liquid,-,hmb_streams.json S-102 vapor_fraction = 0,HMB
+FE-101,INPUT,Diameter dalam pipa,D,154.08,mm,"ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6""-PL-101 di Master Instrument Index (data contoh, belum dari line sizing)",PLACEHOLDER
+FE-101,INPUT,Beda tekanan desain pada laju normal,dP,25,kPa,"Pilihan rentang DP transmitter (0-25 kPa), dipertahankan dari CSV lama; perlu ditetapkan PIC",ASUMSI
+FE-101,INPUT,Jenis pengambilan tekanan,,flange,-,ISO 5167-2 §5.2.1 (flange taps umum di industri); konfirmasi dengan spesifikasi orifice flange,ASUMSI
+FE-101,HASIL,Diameter bore orifice,d,27.9509,mm,"ISO 5167-2:2022 pers. (1), diselesaikan iteratif",PLACEHOLDER
+FE-101,HASIL,Rasio diameter,beta,0.181405,-,d/D,PLACEHOLDER
+FE-101,HASIL,Koefisien discharge,C,0.59841,-,"Reader-Harris/Gallagher, ISO 5167-2:2022 pers. (4)",PLACEHOLDER
+FE-101,HASIL,Faktor ekspansibilitas,epsilon,1,-,1 untuk cairan,PLACEHOLDER
+FE-101,HASIL,Bilangan Reynolds pipa,Re_D,34687.7,-,4 q_m / (pi D mu),PLACEHOLDER
+FE-101,HASIL,Kecepatan di pipa,v,0.156579,m/s,q_m / (rho A),PLACEHOLDER
+FE-101,HASIL,Rugi tekanan permanen,dw,24.0341,kPa,ISO 5167-2:2022 pers. (7),PLACEHOLDER
+FE-101,HASIL,Cek balik laju alir,q_m,8321.27,kg/h,"ISO 5167-1 pers. (1) dengan d, C, epsilon hasil",PLACEHOLDER
+FE-101,CEK,"d >= 12,5 mm",,PASS,,d = 27.95 mm [ISO 5167-2:2022 §5.3.1],PLACEHOLDER
+FE-101,CEK,50 <= D <= 1000 mm,,PASS,,D = 154.08 mm [ISO 5167-2:2022 §5.3.1],PLACEHOLDER
+FE-101,CEK,"0,10 <= beta <= 0,75",,PASS,,beta = 0.1814 [ISO 5167-2:2022 §5.3.1],PLACEHOLDER
+FE-101,CEK,Re_D minimum,,PASS,,Re_D = 34688 >= 5000 [ISO 5167-2:2022 §5.3.1 (flange taps)],PLACEHOLDER
+FE-101,CEK,Cek balik laju alir,,PASS,,selisih 1.92e-14 % [konsistensi],PLACEHOLDER
+FE-101,KESIMPULAN,Hasil,,PASS,,Semua cek batas standar,PLACEHOLDER

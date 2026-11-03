@@ -1,4 +1,25 @@
-TAG_NUMBER,PROTECTED_EQUIPMENT,RELIEF_CASE,RELIEVING_RATE_KG_H,SET_PRESSURE_BARG,OVERPRESSURE_PCT,RELIEVING_P_BARA,RELIEVING_T_DEGC,Z_COMPRESSIBILITY,CALCULATED_AREA_MM2,API_ORIFICE_LETTER,SELECTED_AREA_MM2,VALVE_SIZE_INLET_OUTLET,DATA_STATUS
-PSV-101,REAC-01 (Reactor),Blocked Discharge / Runaway,14500,16.0,10%,18.81,285.0,0.92,845.2,J,830.0 (K preferred: 1186),3" x 4" Flanged RF,PLACEHOLDER
-PSV-201,C-01 (DME Distillation),Reflux Failure / Overpressure,18200,14.0,10%,16.61,65.0,0.88,1120.4,K,1186.0,3" x 4" Flanged RF,PLACEHOLDER
-PSV-202,C-02 (Methanol Recovery),Overheating / Reboiler Tube Rupture,11000,6.0,10%,7.81,130.0,0.94,1420.5,L,1841.0,4" x 6" Flanged RF,PLACEHOLDER
+TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
+PSV-101,INFO,Deskripsi,,"PSV-101 proteksi tekanan lebih reaktor R-101, skenario blocked outlet (fase uap)",,API 520 Part I / API 526 / API 521,PLACEHOLDER
+PSV-101,INPUT,Skenario relief,,Blocked outlet R-101: laju relief = laju masuk normal (S-104),-,"API 521 §4.4.2 (closed outlet); skenario lain (kebakaran, kegagalan pendingin, runaway) belum dikaji",ASUMSI
+PSV-101,INPUT,Laju relief,W,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.mass_flow",HMB
+PSV-101,INPUT,Suhu relief (diambil = suhu operasi),T,250,degC,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.T",HMB
+PSV-101,INPUT,Berat molekul uap,M,31.8957,kg/kmol,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.mw",HMB
+PSV-101,INPUT,Faktor kompresibilitas,Z,0.93452,-,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.z",HMB
+PSV-101,INPUT,Rasio kalor spesifik Cp/Cv,k,1.21469,-,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.k",HMB
+PSV-101,INPUT,Set pressure,P_set,16,bar(g),"Master Instrument Index PSV-101 'Set: 16.0 bar(g)' (data contoh); set pressure = tekanan desain R-101, belum ditetapkan",PLACEHOLDER
+PSV-101,INPUT,Overpressure yang diizinkan,,10,%,"API 520 Part I: 10 % untuk satu katup, kasus non-kebakaran",STANDAR
+PSV-101,INPUT,Tekanan atmosfer,,1.01325,bar(a),Tekanan atmosfer standar,STANDAR
+PSV-101,INPUT,Tekanan balik total,,1.01325,bar(a),"Sementara buang ke atmosfer; bila ke flare header, ganti dengan tekanan balik flare",ASUMSI
+PSV-101,INPUT,Koefisien discharge efektif,Kd,0.975,-,"API 520 Part I, nilai untuk sizing awal gas",STANDAR
+PSV-101,INPUT,Faktor koreksi backpressure,Kb,1,-,"Katup konvensional, backpressure diabaikan",ASUMSI
+PSV-101,INPUT,Faktor kombinasi rupture disk,Kc,1,-,Tanpa rupture disk di hulu,ASUMSI
+PSV-101,HASIL,Tekanan relief,P1,18.6133,bar(a),P_set (1 + overpressure) + P_atm,PLACEHOLDER
+PSV-101,HASIL,Tekanan aliran kritis,P_cf,10.4538,bar(a),API 520 Part I pers. (1),PLACEHOLDER
+PSV-101,HASIL,Rezim aliran,,kritis,,P_back vs P_cf,PLACEHOLDER
+PSV-101,HASIL,Luas efektif dibutuhkan,A,885.31,mm2,API 520 Part I pers. (3) kritis,PLACEHOLDER
+PSV-101,HASIL,Huruf orifice API 526,,K,,API 526 Tabel 1,PLACEHOLDER
+PSV-101,HASIL,Luas orifice terpilih,A_sel,1185.8,mm2,API 526 Tabel 1,PLACEHOLDER
+PSV-101,HASIL,Margin luas,,33.9423,%,A_sel / A - 1,PLACEHOLDER
+PSV-101,CEK,Orifice API 526 tersedia (satu katup),,PASS,,A = 885.3 mm2 [API 526],PLACEHOLDER
+PSV-101,CEK,k fisik (1 < k < 2),,PASS,,k = 1.2147 [konsistensi data],PLACEHOLDER
+PSV-101,KESIMPULAN,Hasil,,PASS,,Skenario relief wajib dikaji ulang (API 521),PLACEHOLDER

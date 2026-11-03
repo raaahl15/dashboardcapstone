@@ -1,0 +1,25 @@
+# Input kalkulator PSV-101 (proteksi tekanan lebih reaktor R-101), fase uap.
+tag: PSV-101
+calculator: psv_gas
+description: PSV-101 proteksi tekanan lebih reaktor R-101, skenario blocked outlet (fase uap)
+standard: API 520 Part I / API 526 / API 521
+inputs:
+  relief_case: {value: "Blocked outlet R-101: laju relief = laju masuk normal (S-104)", unit: "-", label: Skenario relief,
+        source: "API 521 §4.4.2 (closed outlet); skenario lain (kebakaran, kegagalan pendingin, runaway) belum dikaji",
+        status: ASUMSI}
+  W:  {stream: S-104, field: mass_flow, symbol: W, label: Laju relief}
+  T:  {stream: S-104, field: T, symbol: T, label: Suhu relief (diambil = suhu operasi)}
+  MW: {stream: S-104, field: props_by_phase.vapor.mw, unit: kg/kmol, symbol: M, label: Berat molekul uap}
+  Z:  {stream: S-104, field: props_by_phase.vapor.z, unit: "-", symbol: Z, label: Faktor kompresibilitas}
+  k:  {stream: S-104, field: props_by_phase.vapor.k, unit: "-", symbol: k, label: Rasio kalor spesifik Cp/Cv}
+  P_set: {value: 16.0, unit: bar(g), symbol: P_set, label: Set pressure,
+        source: "Master Instrument Index PSV-101 'Set: 16.0 bar(g)' (data contoh); set pressure = tekanan desain R-101, belum ditetapkan",
+        status: PLACEHOLDER}
+  overpressure: {value: 10.0, unit: "%", label: Overpressure yang diizinkan,
+        source: "API 520 Part I: 10 % untuk satu katup, kasus non-kebakaran", status: STANDAR}
+  P_atm: {value: 1.01325, unit: bar(a), label: Tekanan atmosfer, source: "Tekanan atmosfer standar", status: STANDAR}
+  P_back: {value: 1.01325, unit: bar(a), label: Tekanan balik total,
+        source: "Sementara buang ke atmosfer; bila ke flare header, ganti dengan tekanan balik flare", status: ASUMSI}
+  Kd: {value: 0.975, unit: "-", symbol: Kd, label: Koefisien discharge efektif, source: "API 520 Part I, nilai untuk sizing awal gas", status: STANDAR}
+  Kb: {value: 1.0, unit: "-", symbol: Kb, label: Faktor koreksi backpressure, source: "Katup konvensional, backpressure diabaikan", status: ASUMSI}
+  Kc: {value: 1.0, unit: "-", symbol: Kc, label: Faktor kombinasi rupture disk, source: "Tanpa rupture disk di hulu", status: ASUMSI}

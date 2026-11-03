@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 2 DITUTUP DENGAN CATATAN (2026-11-03, LOG-018) — Fase 3 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 14:30 WIB  
+**Terakhir Diperbarui:** 2026-11-03 15:15 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -238,6 +238,38 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-020] 2026-11-03 15:15 WIB — Mesin kalkulator `tools/calc/` (orifice, control valve, PSV, NPV) + uji verifikasi
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"okeey lanjut ke mesin kalkulator"*
+* **Fase**: 3
+* **Tujuan**: Mengganti CSV kalkulator statis (data contoh bootstrap) dengan skrip yang membaca HMB + input YAML bersumber, lengkap dengan uji verifikasi terhadap contoh standar (Blueprint §3.2).
+* **Perubahan**:
+  - **Baru** `tools/calc/`: `common.py` (input YAML: rujukan stream HMB atau nilai + sumber + status; status hasil = status input terlemah; input tanpa sumber ditolak), `orifice.py` (ISO 5167-2, flange taps, cek §5.3.1), `control_valve.py` (IEC 60534-2-1 cair; Kv/Cv normal & maks, choked/laminar/flashing; Pv Antoine), `psv.py` (API 520 Part I gas, rezim kritis/subkritis, huruf API 526), `npv.py` (NPV, IRR, payback sederhana & terdiskonto), `run_all.py` (semua-atau-tidak-sama-sekali), `test_verification.py` (14 uji), `conftest.py`.
+  - **Baru** `02_ENGINEERING_CALCULATORS/inputs/`: `FE-101.yaml`, `FCV-101.yaml` (S-102 cair), `PSV-101.yaml` (S-104 uap, blocked outlet), `NPV-001.yaml` (data contoh lama, PLACEHOLDER).
+  - **Dibuat ulang** `CALC_ISO5167_Orifice.csv`, `CALC_ISA75_ControlValve.csv`, `CALC_API520_PSV.csv`, `CALC_TeknoEkonomi_NPV.csv` (format panjang: TAG, SECTION, PARAMETER, SYMBOL, VALUE, UNIT, SOURCE, DATA_STATUS). Tag Area 2/3 (PCV-201, LCV-202, PSV-201/202) dikeluarkan; TCV-102 belum (utilitas steam tidak ada di model). `CALC_ASME_Thermowell.csv` **tidak diubah**.
+  - `export_hmb.py` 1.1.0: `props_by_phase` + `cv`, `k`, `z` (Z cair → null); HMB dibuat ulang.
+  - Companion 5 kalkulator diperbarui (target_files + YAML, generated_by, tabel input bersumber, hasil, uji verifikasi, SOP); thermowell: alasan belum diotomasi. `hmb_streams.md`, Blueprint (pohon folder, DoD Fase 3 butir 3 progres), README, `package.json` (`calc`, `test:py` mencakup `tools/calc`).
+* **Bukti / Verifikasi**:
+  - Rujukan pustaka diperiksa dulu: `size_control_valve_l` → IEC 60534-2-1 contoh 1 = 164,995 & contoh 2 = 238,058 m³/h; `API520_A_g` → API 520 contoh 1 = 3.699,0 mm² (dipublikasikan 3.698) & contoh 2 = 4.248,4 mm².
+  - Masalah yang ditemukan & diperbaiki saat pengembangan: `differential_pressure_meter_C_epsilon` tetap menghitung ekspansibilitas gas walau ε ditentukan → untuk cairan C dihitung langsung dengan `C_Reader_Harris_Gallagher`, ε = 1; `API520_A_g` di fluids 1.3.1 selalu butuh P2 → P2 selalu diberikan, rezim ditentukan pustaka dan dilaporkan skrip (konsisten, diuji).
+  - `npm run test:py` → **24 passed** (10 HMB + 14 kalkulator: IEC ×2, Antoine, API 520 ×2 end-to-end, RHG independen ×3, β di luar batas → FAIL, NPV buku teks, propagasi status, input tanpa sumber ditolak, run_all atomik, input proyek valid).
+  - `npm run calc` → FE-101, FCV-101, PSV-101, NPV-001 semua **PASS**, status data **PLACEHOLDER** (benar: masing-masing masih bergantung pada ≥ 1 input contoh).
+  - Hasil: FE-101 d = 27,95 mm, β = 0,181, C = 0,5984, Re_D = 34.688, v = 0,157 m/s; FCV-101 Kv = 9,36 (normal) / 11,70 (maks) m³/h, tidak choked/flashing; PSV-101 A = 885,3 mm² → **K** (CSV lama memilih J 830 mm², kekecilan); NPV 5,07 jt USD, IRR 23,7 %, payback 4,16 th (cocok cek ulang LOG-004).
+  - `npm run check` → `17 / 17`, **PASS**.
+* **Keputusan**:
+  - Thermowell ASME PTC 19.3 TW **tidak** diimplementasikan: tidak ada pustaka terbuka dan belum ada salinan standar + contoh soal untuk verifikasi (Blueprint §3.2 butir 5). Diserahkan ke JN.
+  - Nilai di luar HMB yang dipilih agent (ΔP katup 1,0 bar, faktor maks 1,25, FL/Fd tipikal, tekanan balik atmosfer, skenario blocked outlet) diberi status **ASUMSI** dengan alasan tertulis; wajib dikonfirmasi PIC (AL untuk FE/FCV/PSV, HD untuk NPV).
+* **Temuan untuk tim**:
+  1. Pipa 6" (6"-PL-101, data contoh index) untuk 10,5 m³/h metanol cair memberi kecepatan 0,16 m/s, terlalu besar; line sizing perlu dilakukan (≈ 2" untuk 1–2 m/s).
+  2. PSV-101 butuh orifice K (bukan J); hasil final menunggu set pressure (tekanan desain R-101) dan kajian skenario API 521.
+* **Tindak Lanjut**:
+  - [ ] **AL**: tetapkan ΔP desain DP transmitter, ΔP & tipe katup FCV-101, set pressure & skenario relief PSV-101 (API 521); perbarui YAML.
+  - [ ] **JN / IH**: line sizing jalur 6"-PL-101 (dan jalur Area 1 lain) → ganti `D` di YAML.
+  - [ ] **HD**: ganti `NPV-001.yaml` dengan estimasi CAPEX/OPEX/pendapatan bersumber + suku bunga acuan.
+  - [ ] **JN**: sediakan ASME PTC 19.3 TW-2016 → thermowell.
+  - [ ] Hitung manual tiap kalkulator untuk laporan PSTF 2 Bab 2; skrip sebagai verifikasi silang (< 0,5 %).
 
 ---
 

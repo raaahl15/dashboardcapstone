@@ -29,7 +29,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-EXTRACTOR_VERSION = "1.0.0"
+EXTRACTOR_VERSION = "1.1.0"  # 1.1.0: + cv, k, z per fase (untuk API 520)
 MASS_BALANCE_LIMIT_PCT = 0.5
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MODEL = ROOT / "01_PROCESS_SIMULATION_DWSIM" / "simulation_files" / "DME.dwxmz"
@@ -101,10 +101,14 @@ def read_stream(obj: ET.Element, compounds: list[str]) -> dict:
         if p is None or (_num(p, "massflow") or 0.0) <= 0.0:
             return None
         mu = _num(p, "viscosity")
+        cp, cv = _num(p, "heatCapacityCp"), _num(p, "heatCapacityCv")
         return {
             "rho": _num(p, "density"),
             "mu": None if mu is None else mu * 1000.0,  # Pa.s -> cP
-            "cp": _num(p, "heatCapacityCp"),
+            "cp": cp,
+            "cv": cv,
+            "k": cp / cv if cp and cv else None,  # rasio kalor spesifik (dipakai API 520 / ISO 5167 gas)
+            "z": _num(p, "compressibilityFactor") or None,  # DWSIM menulis 0 untuk fase cair (tak bermakna)
             "mw": _num(p, "molecularWeight"),
         }
 

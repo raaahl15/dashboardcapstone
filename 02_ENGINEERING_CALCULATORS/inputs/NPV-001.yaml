@@ -1,0 +1,14 @@
+# Input tekno-ekonomi. SEMUA nilai masih data contoh dari CSV lama (LOG-004) -> PLACEHOLDER.
+# Ganti oleh Cost Engineer (HD) dengan estimasi berbasis Draf P&ID beserta sumbernya.
+tag: NPV-001
+calculator: npv
+description: Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh
+standard: Analisis arus kas terdiskonto
+inputs:
+  capex:   {value: 4850000, unit: USD, label: CAPEX total, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
+  opex:    {value: 285000, unit: USD, label: OPEX per tahun, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
+  revenue: {value: 1450000, unit: USD, label: Pendapatan/penghematan per tahun, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
+  rate:    {value: 10.0, unit: "%", label: Suku bunga diskonto, source: "CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan)", status: PLACEHOLDER}
+  life:    {value: 20, unit: tahun, label: Umur ekonomi, source: "Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)", status: PLACEHOLDER}
+  hurdle:  {value: 12.0, unit: "%", label: Batas IRR minimum (WACC), source: "CSV lama ('Harus > WACC (12%)')", status: PLACEHOLDER}
+  payback_target: {value: 5.0, unit: tahun, label: Target payback, source: "CSV lama ('Target < 5 Tahun')", status: PLACEHOLDER}

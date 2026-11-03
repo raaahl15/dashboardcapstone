@@ -38,7 +38,7 @@ tags: ["DWSIM", "HMB", "JSON", "Generated", "Area-100"]
 | `streams[].vapor_fraction` | Fraksi mol uap | 0–1 |
 | `streams[].mole_fractions` | Komposisi mol keseluruhan | jumlah = 1 (kecuali stream tanpa aliran) |
 | `streams[].props` | ρ, μ, Cp, MW campuran | kg/m3, cP, kJ/(kg.K), kg/kmol; μ hanya diisi bila satu fase |
-| `streams[].props_by_phase` | Properti fase `vapor` / `liquid` | `null` bila fase tidak ada |
+| `streams[].props_by_phase` | Properti fase `vapor` / `liquid`: ρ, μ, Cp, Cv, k = Cp/Cv, Z, MW | `null` bila fase tidak ada; Z hanya bermakna untuk uap (cair → `null`). Ditambahkan di extractor 1.1.0 untuk API 520 (LOG-020) |
 | `unit_operations[]` | Tag, tipe, `duty_kW`, inlet/outlet | `duty_kW` = `DeltaQ` DWSIM; kosong untuk mixer, kolom CAPE-OPEN, recycle |
 | `validation.mass_balance[]` | Neraca massa per unit | Batas galat 0,5%; skrip **gagal** bila terlampaui |
 | `validation.warnings[]` | Hal yang perlu diperhatikan | Contoh: stream tanpa aliran |

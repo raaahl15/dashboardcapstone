@@ -1,0 +1,35 @@
+# Input kalkulator control valve FCV-101 (loop FIC-101, umpan metanol cair di discharge P-101).
+tag: FCV-101
+calculator: control_valve_liquid
+description: Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6"-PL-101)
+standard: IEC 60534-2-1 / ISA-75.01.01
+inputs:
+  q_m: {stream: S-102, field: mass_flow, symbol: q_m, label: Laju alir massa normal}
+  rho: {stream: S-102, field: props_by_phase.liquid.rho, unit: kg/m3, symbol: rho, label: Densitas cairan}
+  mu:  {stream: S-102, field: props_by_phase.liquid.mu, unit: cP, symbol: mu, label: Viskositas cairan}
+  T1:  {stream: S-102, field: T, symbol: T1, label: Suhu}
+  P1:  {stream: S-102, field: P, symbol: P1, label: Tekanan hulu (discharge P-101)}
+  dP:  {value: 1.0, unit: bar, symbol: dP, label: Beda tekanan desain katup,
+        source: "Belum ada di model DWSIM (tidak ada katup); diambil 1,0 bar sebagai porsi rugi tekanan sistem untuk kendali yang baik; tetapkan dari hidrolik jalur",
+        status: ASUMSI}
+  flow_factor_max: {value: 1.25, unit: "-", label: Faktor laju desain maksimum terhadap normal,
+        source: "Margin desain umum 1,1-1,3 x normal; tetapkan dari URS (turndown/kapasitas maksimum)",
+        status: ASUMSI}
+  antoine_A: {value: 5.20409, unit: "-", label: Antoine A metanol,
+        source: "NIST Chemistry WebBook, methanol, log10(P/bar)=A-B/(T+C), 288-357 K; dipakai sebagai pendekatan Pv campuran (x MeOH 0,983)",
+        status: LITERATUR}
+  antoine_B: {value: 1581.341, unit: K, label: Antoine B metanol, source: "NIST Chemistry WebBook, methanol", status: LITERATUR}
+  antoine_C: {value: -33.50, unit: K, label: Antoine C metanol, source: "NIST Chemistry WebBook, methanol", status: LITERATUR}
+  Pc:  {value: 81.0, unit: bar, symbol: Pc, label: Tekanan kritis metanol, source: "NIST Chemistry WebBook, methanol (Pc ~ 81 bar)", status: LITERATUR}
+  FL:  {value: 0.90, unit: "-", symbol: FL, label: Faktor pemulihan tekanan cairan,
+        source: "IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",
+        status: ASUMSI}
+  Fd:  {value: 0.46, unit: "-", symbol: Fd, label: Valve style modifier,
+        source: "IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",
+        status: ASUMSI}
+  D:   {value: 154.08, unit: mm, symbol: D, label: Diameter dalam pipa,
+        source: "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh)",
+        status: PLACEHOLDER}
+  d_valve: {value: 154.08, unit: mm, symbol: d, label: Ukuran katup,
+        source: "Sementara sama dengan pipa (tanpa reducer, Fp = 1); setelah Kv diketahui pilih ukuran katup lalu hitung ulang",
+        status: ASUMSI}

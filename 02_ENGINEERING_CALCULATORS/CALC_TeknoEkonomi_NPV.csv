@@ -1,11 +1,18 @@
-METRIC,VALUE,UNIT,BENCHMARK_TARGET,KETERANGAN,DATA_STATUS
-Total Capital Expenditure (CAPEX),4850000,USD,AACE Class 2/3,Mencakup Sistem DCS/SIS/FGS & Instrumentasi Lapangan,PLACEHOLDER
-Biaya Hardware DCS & Controller,1250000,USD,-,Redundant Controller + Power + Safety PLC,PLACEHOLDER
-Biaya Instrumen Lapangan & Katup,1820000,USD,-,Transmitter Presisi + Control Valves + ESDV + PSV,PLACEHOLDER
-Biaya Kabel & Tray & Hook-up,580000,USD,-,Kabel STP + Tray + JB + Manifold API RP 551,PLACEHOLDER
-Biaya Rekayasa & Jasa Engineering,1200000,USD,-,FEED & DED Consultant Services,PLACEHOLDER
-Biaya Operasional Tahunan (OPEX),285000,USD/Tahun,-,Kalibrasi berkala + lisensi software + spare parts,PLACEHOLDER
-Annual Revenue Savings (Otomasi),1450000,USD/Tahun,-,Peningkatan Yield DME & Pengurangan Konsumsi Energi,PLACEHOLDER
-Net Present Value (NPV @ 10%),3742500,USD,Harus Positif (> 0),Kelayakan Investasi Sangat Tinggi,PLACEHOLDER
-Internal Rate of Return (IRR),24.8,%,Harus > WACC (12%),Proyek Sangat Menguntungkan,PLACEHOLDER
-Payback Period,3.8,Tahun,Target < 5 Tahun,Modal Investasi Pulih Cepat,PLACEHOLDER
+TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
+NPV-001,INFO,Deskripsi,,"Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",,Analisis arus kas terdiskonto,PLACEHOLDER
+NPV-001,INPUT,CAPEX total,,4850000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
+NPV-001,INPUT,OPEX per tahun,,285000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
+NPV-001,INPUT,Pendapatan/penghematan per tahun,,1450000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
+NPV-001,INPUT,Suku bunga diskonto,,10,%,CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan),PLACEHOLDER
+NPV-001,INPUT,Umur ekonomi,,20,tahun,"Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)",PLACEHOLDER
+NPV-001,INPUT,Batas IRR minimum (WACC),,12,%,CSV lama ('Harus > WACC (12%)'),PLACEHOLDER
+NPV-001,INPUT,Target payback,,5,tahun,CSV lama ('Target < 5 Tahun'),PLACEHOLDER
+NPV-001,HASIL,Arus kas bersih tahunan,CF,1165000,USD/tahun,pendapatan - OPEX,PLACEHOLDER
+NPV-001,HASIL,Net Present Value,NPV,5068302,USD,"sum CF_t/(1+i)^t, t=0..20",PLACEHOLDER
+NPV-001,HASIL,Internal Rate of Return,IRR,23.6781,%,NPV(IRR) = 0,PLACEHOLDER
+NPV-001,HASIL,Payback sederhana,PBP,4.16309,tahun,CAPEX / CF,PLACEHOLDER
+NPV-001,HASIL,Payback terdiskonto,DPBP,5.65956,tahun,kumulatif PV = 0,PLACEHOLDER
+NPV-001,CEK,NPV > 0,,PASS,,"NPV = 5,068,302 [kriteria kelayakan]",PLACEHOLDER
+NPV-001,CEK,IRR > batas minimum,,PASS,,IRR = 23.68 % vs 12.0 % [kriteria kelayakan],PLACEHOLDER
+NPV-001,CEK,Payback < target,,PASS,,PBP = 4.16 vs 5.0 tahun [kriteria kelayakan],PLACEHOLDER
+NPV-001,KESIMPULAN,Hasil,,PASS,,Kelayakan bergantung pada status input,PLACEHOLDER

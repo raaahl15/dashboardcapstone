@@ -20,7 +20,9 @@ tags: ["Temperature", "Thermowell", "Vibration", "Area-100", "Area-200"]
 # Panduan Penggunaan: CALC_ASME_Thermowell.csv
 
 > ⚠️ **DATA PLACEHOLDER — JANGAN DIKUTIP KE LAPORAN.**
-> Seluruh nilai berasal dari skrip bootstrap (LOG-004). Frekuensi alami dan frekuensi wake belum dihitung. Nilai akan diganti di **Fase 3**.
+> Seluruh nilai berasal dari skrip bootstrap (LOG-004). Frekuensi alami dan frekuensi wake belum dihitung.
+>
+> **Belum diotomasi (LOG-020).** Berbeda dengan tiga kalkulator lain, tidak ada pustaka terbuka yang mengimplementasikan ASME PTC 19.3 TW-2016, dan proyek belum memegang salinan standar beserta contoh soalnya. Mengimplementasikan persamaan dari ingatan tanpa contoh verifikasi akan melanggar Blueprint §3.2 butir 5. Langkah: (1) PIC (JN) menyediakan salinan ASME PTC 19.3 TW-2016 (cek perpustakaan/akses standar UGM); (2) implementasi `tools/calc/thermowell.py` + uji terhadap contoh di standar. Baris TW-201/202 di CSV adalah lingkup Area 2 dan akan dikeluarkan saat CSV dibuat ulang. Kecepatan uap di sekitar R-101 sudah bisa diturunkan dari HMB S-104 (0,272 m³/s) begitu diameter pipa/nozzle ditetapkan.
 
 ## 1. Cakupan
 Memverifikasi thermowell terhadap resonansi akibat *vortex shedding* (frekuensi wake), tegangan statik dan dinamik, serta tekanan hidrostatik eksternal sesuai ASME PTC 19.3 TW-2016.
