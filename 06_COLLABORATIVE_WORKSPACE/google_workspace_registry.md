@@ -34,7 +34,9 @@ Daftar ID dan URL folder Drive serta dokumen Google (Sheets/Docs) proyek. File i
 | `fds` | Docs | FDS-IC-DME-2026-001 | `06_LIVING_REPORTS_GDOCS` | Draft, isi PLACEHOLDER |
 | `laporan_pstf1` | Docs | Laporan PSTF 1 FEED (Draf) | `06_LIVING_REPORTS_GDOCS` | Draft, kerangka |
 
-Ketiga dokumen sementara berada di root `CAPSTONE_DME_AREA1` karena folder target belum dibuat.
+Ketiga dokumen sudah berada di folder targetnya (dipindah Antigravity, LOG-011). Seluruh 7 folder Blueprint §3.3 tercatat di `drive.folders`; `folders_pending` kosong.
+
+Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `required_columns`, yang dipakai `tools/sync/pull_sheets.js` untuk validasi.
 
 ## 3. Skema
 - `drive.root`, `drive.folders[]`: `{key, title, id, url}`.
@@ -50,3 +52,4 @@ Ketiga dokumen sementara berada di root `CAPSTONE_DME_AREA1` karena folder targe
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Registry awal: root + 2 folder Drive, 1 Sheets, 2 Docs (LOG-010). |
+| 0.2 | 2026-11-03 | Claude Code (AI) | + 5 folder dari LOG-011; field sinkronisasi untuk `pull_sheets` (LOG-012). |

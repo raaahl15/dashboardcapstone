@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-03T11:55:00+07:00",
-  "updated_by": "Claude Code (LOG-010)",
+  "updated_at": "2026-11-03T12:15:00+07:00",
+  "updated_by": "Claude Code (LOG-012)",
   "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
   "drive": {
     "root": {
@@ -21,15 +21,39 @@
         "title": "03_CAD_DWG",
         "id": "1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo",
         "url": "https://drive.google.com/drive/folders/1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo"
+      },
+      {
+        "key": "instrument_index_sheets",
+        "title": "04_INSTRUMENT_INDEX_SHEETS",
+        "id": "1uXARjW3nBoODCgDgHC_1VdKedFdl6S69",
+        "url": "https://drive.google.com/drive/folders/1uXARjW3nBoODCgDgHC_1VdKedFdl6S69"
+      },
+      {
+        "key": "living_reports_gdocs",
+        "title": "06_LIVING_REPORTS_GDOCS",
+        "id": "1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16",
+        "url": "https://drive.google.com/drive/folders/1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16"
+      },
+      {
+        "key": "final_deliverables_pdf",
+        "title": "07_FINAL_DELIVERABLES_PDF",
+        "id": "1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF",
+        "url": "https://drive.google.com/drive/folders/1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF"
+      },
+      {
+        "key": "work_orders_evidence",
+        "title": "08_WORK_ORDERS_EVIDENCE",
+        "id": "1358fFhWSzj3rdswxzz3njcibp_dKppoA",
+        "url": "https://drive.google.com/drive/folders/1358fFhWSzj3rdswxzz3njcibp_dKppoA"
+      },
+      {
+        "key": "stage_gates_submissions",
+        "title": "09_STAGE_GATES_SUBMISSIONS",
+        "id": "1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf",
+        "url": "https://drive.google.com/drive/folders/1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf"
       }
     ],
-    "folders_pending": [
-      "04_INSTRUMENT_INDEX_SHEETS",
-      "06_LIVING_REPORTS_GDOCS",
-      "07_FINAL_DELIVERABLES_PDF",
-      "08_WORK_ORDERS_EVIDENCE",
-      "09_STAGE_GATES_SUBMISSIONS"
-    ]
+    "folders_pending": []
   },
   "documents": [
     {
@@ -42,6 +66,9 @@
       "tabs": ["Instrument_Index", "IO_List", "Catatan"],
       "repo_snapshot": "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.csv",
       "sync_direction": "sheets_to_repo",
+      "sync_tab": "Instrument_Index",
+      "key_column": "TAG_NUMBER",
+      "required_columns": ["TAG_NUMBER", "P_AND_ID_NO", "SERVICE_DESCRIPTION", "LOCATION", "LINE_EQUIPMENT_NO", "SIGNAL_TYPE", "IO_TYPE", "RANGE_MIN", "RANGE_MAX", "ENG_UNIT", "SETPOINT_ALARM", "FAIL_MODE", "CONTROLLER_TYPE", "SAFETY_CRITICAL", "DATA_STATUS"],
       "target_folder": "04_INSTRUMENT_INDEX_SHEETS",
       "pic": "Jonathan Pangihutan Michael Siahaan",
       "status": "Draft",

@@ -9,7 +9,8 @@
     "check": "node tools/check_companions.js",
     "sync:dwsim": "node tools/export_dwsim_hmb.js",
     "sync:push": "node tools/sync/sync.js push",
-    "sync:pull": "node tools/sync/sync.js pull"
+    "sync:pull": "node tools/sync/sync.js pull",
+    "pull:sheets": "node tools/sync/pull_sheets.js"
   },
   "keywords": [
     "capstone",

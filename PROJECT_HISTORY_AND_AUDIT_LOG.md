@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 12:00 WIB  
+**Terakhir Diperbarui:** 2026-11-03 12:20 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -225,6 +225,33 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-012] 2026-11-03 12:20 WIB — Verifikasi LOG-011, registry folder lengkap, `pull_sheets.js` + sinkronisasi pertama index
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"antigravity sudah mengerjakannya, terus apa"*
+* **Fase**: 2
+* **Tujuan**: Memverifikasi hasil Antigravity (LOG-011), mencatat ID folder ke registry, dan menutup DoD Fase 2 butir 2 (Sheets → CSV).
+* **Perubahan**:
+  - `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json`: + 5 folder (04, 06, 07, 08, 09) dengan ID dari LOG-011; `folders_pending` dikosongkan; entri `instrument_index` + `sync_tab`, `key_column`, `required_columns` (15 kolom). Companion `.md` Rev 0.2.
+  - **Baru**: `tools/sync/pull_sheets.js` (Node, tanpa dependensi): validasi CSV dari Sheets (kolom wajib, header kosong/ganda, jumlah sel per baris, `TAG_NUMBER` kosong/ganda), ringkasan perbedaan terhadap snapshot lama, tulis CSV RFC 4180 berakhiran LF. Mode `--dry-run`. `package.json`: script `pull:sheets`.
+  - `04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.csv`: **disinkron dari Sheets** → + kolom `DATA_STATUS` (= `PLACEHOLDER` semua baris). Sel yang berisi tanda kutip (`6"-PL-101` dst.) kini ditulis sesuai RFC 4180 (`"6""-PL-101"`); `FAIL_MODE` "- "/" - " menjadi "-". Nilai lain tidak berubah.
+  - `Master_Instrument_Index_DME.md` Rev 0.4: `generated_by`, SOP pembaruan CSV, arti nilai `DATA_STATUS`, rujukan `.py` → `.js`.
+  - Blueprint: §3.3 alur Sheets → CSV memakai `pull_sheets.js` (jalur aktif = unduh CSV manual; service account opsional), diagram & pohon tools, Fase 2 progres, DoD Fase 2 butir 2 ✅.
+* **Bukti / Verifikasi**:
+  - Konektor Drive (independen dari laporan Antigravity): root berisi 7 folder dengan ID sama persis dengan LOG-011; `parentId` Sheets = `1uXARjW3…` (04), kedua Docs = `1nl1e3H4…` (06); ID ketiga file tidak berubah; `modifiedTime` sama dengan saat dibuat di LOG-010 (isi tidak tersentuh).
+  - Sumber CSV: `get_values Instrument_Index!A:O` (konektor Sheets) → ditulis ke scratchpad sebagai CSV RFC 4180 (setara *File → Download → CSV*).
+  - Uji negatif `pull_sheets.js`: tanpa kolom `DATA_STATUS` → `Kolom wajib tidak ada`, exit 1; tag ganda → `TAG_NUMBER 'TIC-101' ganda`, exit 1; key `fds` → `tidak dikonfigurasi untuk sinkronisasi`, exit 1. Snapshot tidak berubah pada ketiganya.
+  - `--dry-run` → `15 kolom, 9 baris`, `Kolom +[DATA_STATUS]`, `Baris +0 -0`, `Berubah: -`. Jalankan sungguhan, lalu dry-run ulang → `Kolom +[] -[]`, `Berubah: -` (idempoten).
+  - `npm run check` → `12 / 12`, **PASS**.
+* **Keputusan**:
+  - `pull_sheets` ditulis dalam **Node** (bukan Python), alasannya sama dengan `check_companions.js` (Python belum terpasang). Jalur unduh otomatis lewat service account ditunda; unduh CSV manual cukup untuk tim 5 orang dan tidak butuh kredensial di repo.
+  - Validasi kolom dibaca dari registry (`required_columns`), sehingga satu skrip bisa dipakai untuk Sheets lain (mis. C&E, alarm database) cukup dengan menambah entri registry.
+* **Tindak Lanjut**:
+  - [ ] **PM**: Share folder `CAPSTONE_DME_AREA1` ke email UGM tim (Editor) dan dosen (Commenter); minta satu anggota membuka ketiga URL → DoD Fase 2 butir 3. *(Satu-satunya pengerjaan Google Workspace Fase 2 yang tersisa di sisi PM.)*
+  - [ ] **PM**: tetapkan PIC laporan PSTF 1 dan reviewer FDS.
+  - [ ] **Tim / laptop**: DoD Fase 2 butir 1, yaitu `git clone` + `npm install` + `npm run build` di laptop tanpa langkah manual tambahan.
+  - [ ] **Opsional**: pindahkan C&E Matrix dan Alarm Database ke Google Sheets dengan pola yang sama (registry + `pull_sheets`).
 
 ---
 

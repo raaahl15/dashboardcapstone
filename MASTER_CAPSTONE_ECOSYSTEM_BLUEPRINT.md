@@ -78,7 +78,7 @@ flowchart TD
     subgraph Inst["3. Instrumentasi (Master: Google Sheets)"]
         SHEET["Sheets: Master Instrument Index"]
         IDXCSV["Master_Instrument_Index_DME.csv<br/>(snapshot read-only)"]
-        SHEET -->|tools/sync/pull_sheets.py| IDXCSV
+        SHEET -->|tools/sync/pull_sheets.js| IDXCSV
     end
 
     subgraph CAD["4. Drawing (Master: DWG di Drive)"]
@@ -243,7 +243,7 @@ dme-capstone-master/
 ├── tools/
 │   ├── dwsim/export_hmb.py                      [BARU] menggantikan tools/export_dwsim_hmb.js
 │   ├── calc/                                    [BARU] mesin kalkulator Python
-│   ├── sync/pull_sheets.py                      [BARU] Sheets → CSV
+│   ├── sync/pull_sheets.js                      [ADA, LOG-012] Sheets → CSV (Node)
 │   ├── validate_tags.py                         [BARU]
 │   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
 │   ├── check_companions.js                      [ADA] pengecek companion, status, ukuran & duplikat (`npm run check`)
@@ -382,9 +382,9 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
   - `07_FINAL_DELIVERABLES_PDF/` — PDF plot & FEED book
   - `08_WORK_ORDERS_EVIDENCE/WO-XXX/` — bukti Work Order
   - `09_STAGE_GATES_SUBMISSIONS/` — bundel sidang
-* **Google Sheets → CSV (satu arah):** `tools/sync/pull_sheets.py` mengunduh sheet sebagai CSV ke `04_INSTRUMENTATION_ISA20/`. Metode, berurutan dari yang dicoba lebih dulu:
-  1. Service account Google Cloud (gratis), jika akun UGM mengizinkan pembuatan project GCP.
-  2. Fallback manual: *File → Download → CSV*, lalu jalankan `pull_sheets.py --from-file <csv>` untuk validasi kolom.
+* **Google Sheets → CSV (satu arah):** **`tools/sync/pull_sheets.js`** (`npm run pull:sheets`, Node, LOG-012; menggantikan rencana `pull_sheets.py` selama Python belum terpasang) memvalidasi CSV dari Sheets terhadap `required_columns`/`key_column` di `google_workspace_registry.json`, lalu menulis snapshot ke repo. Sumber CSV, berurutan dari yang dipakai sekarang:
+  1. **Jalur aktif:** *File → Download → CSV* dari tab `sync_tab`, lalu `npm run pull:sheets -- --key <key> --from-file <csv>`. Claude Code juga bisa membuat CSV ini dari konektor Google Sheets.
+  2. Opsional nanti: unduh otomatis lewat service account Google Cloud (akun pemilik kini akun pribadi PM, jadi pembuatan project GCP tidak bergantung pada izin UGM).
   CSV di repo **tidak pernah diedit langsung**; perubahan selalu lewat Sheets.
 * **Google Docs:** master narasi laporan dan FDS. Cockpit menyimpan tautannya di `google_workspace_registry.json`.
 * **Google Calendar & Meet:** jadwal bimbingan dosen.
@@ -564,12 +564,12 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   | **Isi dokumen Google** — membuat & mengisi Google Sheets/Docs/Slides, menyelaraskan Sheets ↔ CSV repo, mengisi `google_workspace_registry.json` | **Claude Code** | Master Instrument Index & IO List (Sheets), FDS & laporan Bab 1–4 (Docs) |
 
   Aturan batas: Claude Code tidak mengunggah/menghapus file biner di Drive; Antigravity tidak mengubah isi Sheets/Docs. Prasyarat untuk Claude Code: **konektor Google Drive diaktifkan di claude.ai → Settings → Connectors** dengan akun Google pribadi PM (✅ sudah dihubungkan 2026-11-03; aktif mulai sesi Claude Code berikutnya).
-* **Google Workspace (Claude Code, LOG-010):** ✅ konektor terverifikasi (folder `CAPSTONE_DME_AREA1` terbaca, pemilik akun pribadi PM). ✅ Google Sheets **Master Instrument Index & IO List** (tab `Instrument_Index`, `IO_List` berbasis formula, `Catatan`). ✅ Google Docs **FDS-IC-DME-2026-001** (master FDS; companion repo menjadi arsip Rev 0.2). ✅ Google Docs **kerangka Laporan PSTF 1** (Lampiran 3A). ✅ `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` + companion. Ketiga dokumen sementara di root folder Drive, menunggu folder `04_INSTRUMENT_INDEX_SHEETS/` dan `06_LIVING_REPORTS_GDOCS/` dari Antigravity. Data tetap PLACEHOLDER/Draft.
+* **Google Workspace (Claude Code, LOG-010):** ✅ konektor terverifikasi (folder `CAPSTONE_DME_AREA1` terbaca, pemilik akun pribadi PM). ✅ Google Sheets **Master Instrument Index & IO List** (tab `Instrument_Index`, `IO_List` berbasis formula, `Catatan`). ✅ Google Docs **FDS-IC-DME-2026-001** (master FDS; companion repo menjadi arsip Rev 0.2). ✅ Google Docs **kerangka Laporan PSTF 1** (Lampiran 3A). ✅ `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` + companion. ✅ 7 folder Drive §3.3 lengkap dan dokumen sudah di foldernya (Antigravity, LOG-011). ✅ `pull_sheets.js` + sinkronisasi pertama index → CSV (LOG-012). Data tetap PLACEHOLDER/Draft.
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
-* **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
+* **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets` (versi Node `pull_sheets.js`).
 * **DoD:**
   - [ ] `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan.
-  - [ ] `pull_sheets.py` menghasilkan CSV yang sama kolomnya dengan Sheets.
+  - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
   - [ ] Semua URL di registry bisa dibuka oleh seluruh anggota tim.
 
 #### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari
