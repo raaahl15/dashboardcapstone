@@ -9,7 +9,7 @@ generated_by: "tools/sync/pull_sheets.js (npm run pull:sheets -- --key instrumen
 source_data:
   - "PLACEHOLDER — master sekarang di Google Sheets (registry key: instrument_index, LOG-010); CSV menjadi snapshot read-only"
 author: "Jonathan Pangihutan Michael Siahaan (PIC)"
-reviewer: ""
+reviewer: "Altaf Ramadhan Parvez"
 status: "Draft"
 review_evidence: ""
 google_ref: "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit"
@@ -48,3 +48,4 @@ tags: ["Instrument Index", "IO List", "ISA-5.1"]
 | 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; catatan inkonsistensi tag (LOG-004). |
 | 0.3 | 2026-11-03 | Claude Code (AI) | Master dipindah ke Google Sheets; `google_ref` diisi (LOG-010). |
 | 0.4 | 2026-11-03 | Claude Code (AI) | CSV disinkron dari Sheets via `pull_sheets.js`: + kolom `DATA_STATUS` (LOG-012). |
+| 0.5 | 2026-11-03 | Claude Code (AI) | `REAC-01` → `R-101` (tag_map FINAL) di Sheets lalu disinkron; reviewer Altaf (LOG-016). |

@@ -39,6 +39,13 @@ Untuk **menjalankan** cockpit (bukan sekadar build), dua file lokal perlu dibuat
 1. `apps/operations-cockpit/.env.local`: salin dari `.env.example` di folder itu, isi nilai Firebase dari Vercel → Project → Settings → Environment Variables (atau salin file yang sama dari PC Desktop).
 2. `.env.local` di root: salin dari `.env.example`, isi `DRIVE_ROOT` (hanya perlu jika memakai skrip Drive).
 
+Untuk **pipeline rekayasa Python** (Fase 3, opsional di laptop): pasang Python 3.12+ (PC Desktop memakai 3.13), lalu dari root repo:
+
+```bash
+python -m venv .venv
+.venv\Scripts\python -m pip install -r tools/requirements.txt
+```
+
 Lalu `npm run dev` → http://localhost:3000.
 
 ## Mulai Kerja Harian

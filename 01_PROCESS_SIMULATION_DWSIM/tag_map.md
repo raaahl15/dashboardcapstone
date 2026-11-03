@@ -11,8 +11,8 @@ source_data:
   - "Keputusan PM 2026-11-03: lingkup Area 1 = S-01…S-07 + S-14; penomoran ikut nomor objek DWSIM dengan gaya tag pabrik"
 author: "Ihsaan Zauhair Tsaqif Prawira (PIC); draf disusun Claude Code (AI)"
 reviewer: "Jonathan Pangihutan Michael Siahaan"
-status: "Draft"
-review_evidence: ""
+status: "Review Internal"
+review_evidence: "Konfirmasi IH (PIC) + JN (reviewer) disampaikan PM, 2026-11-03 (LOG-016)"
 google_ref: ""
 last_updated: "2026-11-03"
 tags: ["Tag Map", "DWSIM", "Plant Tag", "Battery Limit", "Area-100"]
@@ -20,7 +20,7 @@ tags: ["Tag Map", "DWSIM", "Plant Tag", "Battery Limit", "Area-100"]
 
 # Peta Tag DWSIM ke Tag Pabrik (`tag_map.csv`)
 
-> ⚠️ **USULAN (Draft).** Pemetaan diturunkan otomatis dari topologi model DWSIM dan keputusan PM soal lingkup. Tag pabrik baru final setelah dikonfirmasi PIC (IH) dan reviewer (JN). Selama kolom `status` masih `USULAN`, tag ini belum boleh dipakai di gambar P&ID final.
+> ✅ **FINAL (2026-11-03, LOG-016).** Tag pabrik Area 1 sudah dikonfirmasi PIC (IH) dan reviewer (JN), sehingga semua baris berstatus `FINAL` dan wajib dipakai di PFD, P&ID, index, FDS, C&E, dan alarm database. Status dokumen `Review Internal`; pengajuan ke pembimbing (`Diajukan`) ditetapkan PM. Temuan 7 (S-106) dan 8 (M-101) diterima apa adanya: S-106 dan M-101 tetap tercatat dengan tag.
 
 `tag_map.csv` adalah **master** pemetaan tag (Blueprint §1.2). Tag DWSIM hanya dipakai di dalam simulasi; P&ID, PFD, FDS, Instrument Index, C&E, alarm database, dan laporan memakai `plant_tag`.
 
@@ -76,3 +76,4 @@ Topologi dibaca dari XML di dalam `DME.dwxmz` (salinan di folder sementara; file
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Draf awal dari topologi DWSIM + keputusan lingkup PM (LOG-014). |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Pabrik 3 area (Area 2 distilasi 1, Area 3 distilasi 2); S-114 masuk dari Area 3; kode area 100/200/300 (LOG-015). |
+| 1.0 | 2026-11-03 | Ihsaan Z. T. Prawira / Jonathan P. M. Siahaan | Dikonfirmasi; status baris `FINAL`, dokumen `Review Internal` (LOG-016). |

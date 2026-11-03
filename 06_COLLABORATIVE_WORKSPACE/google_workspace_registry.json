@@ -109,6 +109,19 @@
         "Lampiran A Draf P&ID": "Jonathan Pangihutan Michael Siahaan",
         "Lampiran B Logbook": "semua anggota; rekap Rahul Ghulam Hidayatulloh"
       },
+      "section_reviewers": {
+        "1.1 TOR dan lingkup proyek": "Heidi Falina Brilian",
+        "1.2 Pemodelan first-principle": "Altaf Ramadhan Parvez",
+        "1.3 URS": "Jonathan Pangihutan Michael Siahaan",
+        "Bab 2 FDS": "Jonathan Pangihutan Michael Siahaan",
+        "3.1 PFD": "Jonathan Pangihutan Michael Siahaan",
+        "3.2 Neraca massa dan panas": "Altaf Ramadhan Parvez",
+        "3.3 Draf P&ID": "Ihsaan Zauhair Tsaqif Prawira",
+        "Bab 4 Tekno-ekonomi": "Ihsaan Zauhair Tsaqif Prawira",
+        "Lampiran A Draf P&ID": "Ihsaan Zauhair Tsaqif Prawira",
+        "Lampiran B Logbook": "Heidi Falina Brilian"
+      },
+      "final_check_before_submission": "Rahul Ghulam Hidayatulloh (PM)",
       "status": "Draft",
       "data_status": "KERANGKA"
     }

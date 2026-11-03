@@ -1,21 +1,21 @@
 dwsim_tag,plant_tag,object_type,description,area,scope,from,to,status
-S-01,S-101,MaterialStream,Umpan metanol segar masuk battery limit,100,AREA_1,BL (umpan),PUMP-01,USULAN
-S-02,S-102,MaterialStream,Keluaran pompa umpan metanol,100,AREA_1,PUMP-01,MIX-01,USULAN
-S-03,S-103,MaterialStream,Umpan gabungan (segar + recycle),100,AREA_1,MIX-01,HEAT-01,USULAN
-S-04,S-104,MaterialStream,Umpan reaktor setelah pemanasan,100,AREA_1,HEAT-01,RC-01,USULAN
-S-05,S-105,MaterialStream,Efluen uap reaktor,100,AREA_1,RC-01,COOL-01,USULAN
-S-06,S-106,MaterialStream,Outlet cair reaktor konversi (outlet ke-2 di DWSIM; tidak tersambung ke unit lain),100,AREA_1,RC-01,-,USULAN
-S-07,S-107,MaterialStream,Efluen reaktor setelah pendingin; keluar battery limit ke Area 2,100,INTERFACE_OUT,COOL-01,Area 2 (CSCOL-01),USULAN
-S-14,S-114,MaterialStream,Recycle metanol dari Area 3; masuk battery limit,100,INTERFACE_IN,Area 3 (REC-01),MIX-01,USULAN
-PUMP-01,P-101,Pump,Pompa umpan metanol,100,AREA_1,S-01,S-02,USULAN
-MIX-01,M-101,Mixer,Titik pencampuran umpan segar dan recycle (di P&ID kemungkinan hanya sambungan pipa),100,AREA_1,S-02; S-14,S-03,USULAN
-HEAT-01,E-101,Heater,Pemanas umpan reaktor,100,AREA_1,S-03,S-04,USULAN
-RC-01,R-101,ConversionReactor,Reaktor dehidrasi metanol,100,AREA_1,S-04,S-05; S-06,USULAN
-COOL-01,E-102,Cooler,Pendingin efluen reaktor (kondensor parsial),100,AREA_1,S-05,S-07,USULAN
-E-01,,EnergyStream,Daya pompa P-101,100,AREA_1_ENERGY,-,PUMP-01,USULAN
-E-02,,EnergyStream,Duty pemanas E-101,100,AREA_1_ENERGY,-,HEAT-01,USULAN
-E-03,,EnergyStream,Duty reaktor R-101 (konektor energi masuk di DWSIM; tanda nilai menentukan arah fisik),100,AREA_1_ENERGY,-,RC-01,USULAN
-E-04,,EnergyStream,Duty pendingin E-102,100,AREA_1_ENERGY,COOL-01,-,USULAN
+S-01,S-101,MaterialStream,Umpan metanol segar masuk battery limit,100,AREA_1,BL (umpan),PUMP-01,FINAL
+S-02,S-102,MaterialStream,Keluaran pompa umpan metanol,100,AREA_1,PUMP-01,MIX-01,FINAL
+S-03,S-103,MaterialStream,Umpan gabungan (segar + recycle),100,AREA_1,MIX-01,HEAT-01,FINAL
+S-04,S-104,MaterialStream,Umpan reaktor setelah pemanasan,100,AREA_1,HEAT-01,RC-01,FINAL
+S-05,S-105,MaterialStream,Efluen uap reaktor,100,AREA_1,RC-01,COOL-01,FINAL
+S-06,S-106,MaterialStream,Outlet cair reaktor konversi (outlet ke-2 di DWSIM; tidak tersambung ke unit lain),100,AREA_1,RC-01,-,FINAL
+S-07,S-107,MaterialStream,Efluen reaktor setelah pendingin; keluar battery limit ke Area 2,100,INTERFACE_OUT,COOL-01,Area 2 (CSCOL-01),FINAL
+S-14,S-114,MaterialStream,Recycle metanol dari Area 3; masuk battery limit,100,INTERFACE_IN,Area 3 (REC-01),MIX-01,FINAL
+PUMP-01,P-101,Pump,Pompa umpan metanol,100,AREA_1,S-01,S-02,FINAL
+MIX-01,M-101,Mixer,Titik pencampuran umpan segar dan recycle (di P&ID kemungkinan hanya sambungan pipa),100,AREA_1,S-02; S-14,S-03,FINAL
+HEAT-01,E-101,Heater,Pemanas umpan reaktor,100,AREA_1,S-03,S-04,FINAL
+RC-01,R-101,ConversionReactor,Reaktor dehidrasi metanol,100,AREA_1,S-04,S-05; S-06,FINAL
+COOL-01,E-102,Cooler,Pendingin efluen reaktor (kondensor parsial),100,AREA_1,S-05,S-07,FINAL
+E-01,,EnergyStream,Daya pompa P-101,100,AREA_1_ENERGY,-,PUMP-01,FINAL
+E-02,,EnergyStream,Duty pemanas E-101,100,AREA_1_ENERGY,-,HEAT-01,FINAL
+E-03,,EnergyStream,Duty reaktor R-101 (konektor energi masuk di DWSIM; tanda nilai menentukan arah fisik),100,AREA_1_ENERGY,-,RC-01,FINAL
+E-04,,EnergyStream,Duty pendingin E-102,100,AREA_1_ENERGY,COOL-01,-,FINAL
 S-08,,MaterialStream,Produk DME (puncak kolom distilasi 1),200,AREA_2,CSCOL-01,-,-
 S-09,,MaterialStream,Bawah kolom distilasi 1; antarmuka Area 2 ke Area 3,200,AREA_2,CSCOL-01,CSCOL-02,-
 CSCOL-01,,DistillationColumn,Kolom distilasi 1 (pemurnian DME),200,AREA_2,S-07,S-08; S-09,-

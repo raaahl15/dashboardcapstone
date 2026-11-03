@@ -1,0 +1,12 @@
+# Dependensi Python pipeline rekayasa (Fase 3, Blueprint §3.1–§3.4).
+# Pemasangan (dari root repo):
+#   python -m venv .venv
+#   .venv\Scripts\python -m pip install -r tools/requirements.txt
+# Versi yang terpasang dan teruji dicatat di log riwayat (LOG-016).
+
+numpy>=2.1            # dasar numerik
+fluids>=1.1           # ISO 5167 (orifice), IEC 60534 (control valve), API 520 (PSV)
+numpy-financial>=1.0  # NPV, IRR untuk tekno-ekonomi
+ezdxf>=1.3            # membaca atribut blok P&ID DXF (validate_tags.py)
+PyYAML>=6.0           # input asumsi kalkulator (inputs/*.yaml)
+pytest>=8.0           # uji verifikasi kalkulator terhadap contoh standar

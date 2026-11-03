@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 13:10 WIB  
+**Terakhir Diperbarui:** 2026-11-03 13:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -233,6 +233,45 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-016] 2026-11-03 13:40 WIB — tag_map FINAL, Python 3.13 + venv, reviewer per bagian; berbagi Drive gagal lewat konektor
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"untuk reviewer tag_map.csv dari mereka udah final. lanjutkan ke pasang python, penentuan reviewer perbagian ditentukan oleh kamu pembagiannya siapa aja, lalu uji laptop dan akses drive"*
+* **Fase**: 2–3
+* **Perubahan**:
+  - **tag_map**: semua baris `status = FINAL`; `tag_map.md` → status `Review Internal` (batas AI agent, §1.4), `review_evidence` = konfirmasi IH + JN via PM, Rev 1.0. Temuan 7 (S-106) dan 8 (M-101) diterima apa adanya.
+  - **Penerapan tag FINAL** (penggantian mekanis): Sheets `Instrument_Index` `REAC-01` → `R-101` (3 sel di TIC-101, PSV-101) lalu CSV disinkron via `pull:sheets`; FDS Docs `REAC-01` → `R-101`, `HEATER-01` → `E-101`, `PUMP-01` → `P-101` di Bab 2–3 + butir catatan 5 diperbarui. `C-01` (milik Area 2) dan loop kolom tidak diubah (keputusan JN/AL).
+  - **Python**: `winget install Python.Python.3.13 --scope user` (3.13.17, PATH user di depan alias WindowsApps); **baru** `tools/requirements.txt`; `.venv` (di-ignore) berisi numpy 2.5.4, fluids 1.3.1, numpy-financial 1.1.0, ezdxf 1.4.5, PyYAML 6.0.3, pytest 9.2.0 (+ scipy 1.18.1 sebagai dependensi fluids). README + Blueprint Fase 3 prasyarat ✅.
+  - **Reviewer per bagian** (ditetapkan agent atas delegasi PM). Prinsip: reviewer bukan pengerja bagian itu, berasal dari disiplin yang bersinggungan, beban merata (JN 3, IH 3, AL 2, HD 2), PM cek akhir semua bagian sebelum `Diajukan`.
+
+    | Bagian | Pengerja | Reviewer |
+    | :--- | :--- | :--- |
+    | 1.1 TOR | RG | HD |
+    | 1.2 First-principle | IH | AL |
+    | 1.3 URS | IH (+AL) | JN |
+    | Bab 2 FDS | AL | JN |
+    | 3.1 PFD | IH | JN |
+    | 3.2 Neraca massa & panas | IH | AL |
+    | 3.3 Draf P&ID | JN (+AL SIS) | IH |
+    | Bab 4 Tekno-ekonomi | HD | IH |
+    | Lampiran A P&ID | JN | IH |
+    | Lampiran B Logbook | semua (rekap RG) | HD |
+
+    Dicatat di: tabel laporan PSTF 1 (kolom ke-4 + kalimat alur review), registry (`section_reviewers`, `final_check_before_submission`), FDS Docs (Reviewer: JN), companion `FDS…md` (JN), `Master_Instrument_Index_DME.md` (AL, Rev 0.5), `google_workspace_registry.md` (RG).
+* **Bukti / Verifikasi**:
+  - `findReplace REAC-01` → 3 sel, 2 baris; `pull:sheets` → `Berubah: TIC-101 (LOCATION, LINE_EQUIPMENT_NO); PSV-101 (LOCATION)`, tidak ada perubahan lain.
+  - FDS `replaceAllText`: `HEATER-01` mengenai 3 kemunculan, termasuk kalimat catatan butir 5 ("bukan E-101") → kalimat itu langsung diperbaiki dan dibaca ulang.
+  - `python --version` (path penuh) → `Python 3.13.17`. Uji asap `.venv\Scripts\python -I smoke.py` → IRR [-100, 60, 60] = 13,0662 %; C Reader-Harris/Gallagher = 0,6037; DXF tulis/baca OK; **PASS** (baris `'name' table stringOffset` = peringatan font dari fontTools, tidak berpengaruh).
+  - Laporan PSTF 1 dibaca ulang: tabel 11×4, header tebal, reviewer sesuai tabel di atas.
+  - **Akses Drive gagal**: `share_file` ke 4 email UGM → 2 diblokir pengaman izin Claude Code ("Permission Grant"), 2 ditolak Google ("The caller does not have permission"). `get_file_permissions` setelahnya → tetap `anyone: reader` + owner (tidak ada perubahan sebagian).
+  - **Uji laptop belum dilakukan** (harus di perangkat laptop).
+* **Keputusan**: pembagian reviewer di atas (delegasi PM). Penggantian tag lama → tag FINAL dilakukan agent karena bersifat mekanis; keputusan lingkup loop kolom tetap di JN/AL.
+* **Tindak Lanjut**:
+  - [ ] **PM (manual)**: Drive → `CAPSTONE_DME_AREA1` → Bagikan: 4 email UGM anggota sebagai Editor; email dosen sebagai Commenter; ubah "Akses umum" ke Dibatasi bila tidak diperlukan.
+  - [ ] **PM / anggota**: uji laptop sesuai README → laporkan hasil `npm run build` & `npm run check`.
+  - [ ] **JN / AL**: putuskan loop kolom (PIC-201, PCV-201, LIC-202, AIC-201) dan FDS Bab 4 (lingkup Area 2).
+  - [ ] **Claude Code (berikutnya)**: `tools/dwsim/export_hmb.py` (skema §3.1) memakai `.venv`.
 
 ---
 

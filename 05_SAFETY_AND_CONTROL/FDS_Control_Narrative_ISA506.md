@@ -8,7 +8,7 @@ generated_by: ""
 source_data:
   - "PLACEHOLDER — master sekarang di Google Docs (registry key: fds, LOG-010)"
 author: "Altaf Ramadhan Parvez (PIC)"
-reviewer: ""
+reviewer: "Jonathan Pangihutan Michael Siahaan"
 status: "Draft"
 review_evidence: ""
 google_ref: "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit"
