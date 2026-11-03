@@ -370,7 +370,10 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 
 ### 3.3 Pilar 3 — Google Workspace (Drive, Docs, Sheets, Calendar)
 
-* **Akun:** akun mahasiswa UGM (`@mail.ugm.ac.id`).
+* **Akun pemilik Drive & dokumen:** **akun Google pribadi PM** (keputusan PM 2026-11-03, LOG-009), karena folder `CAPSTONE_DME_AREA1` sudah diunggah ke Drive pribadi. Konektor Google Drive di claude.ai juga terhubung ke akun ini.
+  - Anggota tim dan dosen diberi akses lewat **Share** ke email UGM masing-masing (Editor untuk tim, Commenter/Viewer untuk dosen).
+  - Akun UGM tetap dipakai untuk login cockpit, Calendar/Meet bimbingan, dan identitas resmi.
+  - Kuota: Drive pribadi gratis 15 GB (dibagi dengan Gmail & Photos). Isi proyek saat ini ±40 MB, jadi masih aman; pantau saat bukti WO bertambah.
 * **Folder Drive `CAPSTONE_DME_AREA1/` adalah folder terpisah dari monorepo Git** (lihat §8.2). Isinya biner dan dokumen kolaborasi:
   - `00_CORE_GUIDELINES/` — PDF panduan & standar
   - `03_CAD_DWG/` — `.dwg`/`.dwt` master gambar & template
@@ -560,7 +563,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   | **File & folder di Drive** — unggah, struktur folder, pindah/hapus file biner, sinkronisasi `DRIVE_ROOT` | **Antigravity** | CAD `.dwg/.dxf`, PDF, bukti WO, folder `08_WORK_ORDERS_EVIDENCE/WO-xxx/` |
   | **Isi dokumen Google** — membuat & mengisi Google Sheets/Docs/Slides, menyelaraskan Sheets ↔ CSV repo, mengisi `google_workspace_registry.json` | **Claude Code** | Master Instrument Index & IO List (Sheets), FDS & laporan Bab 1–4 (Docs) |
 
-  Aturan batas: Claude Code tidak mengunggah/menghapus file biner di Drive; Antigravity tidak mengubah isi Sheets/Docs. Prasyarat untuk Claude Code: **konektor Google Drive diaktifkan di claude.ai → Settings → Connectors** dengan akun UGM.
+  Aturan batas: Claude Code tidak mengunggah/menghapus file biner di Drive; Antigravity tidak mengubah isi Sheets/Docs. Prasyarat untuk Claude Code: **konektor Google Drive diaktifkan di claude.ai → Settings → Connectors** dengan akun Google pribadi PM (✅ sudah dihubungkan 2026-11-03; aktif mulai sesi Claude Code berikutnya).
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
 * **DoD:**
@@ -621,7 +624,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 | :--- | :--- | :--- |
 | DWSIM | Open source (GPL-3) | — |
 | Python + `fluids`, `ezdxf`, `numpy-financial` | Open source (MIT) | — |
-| Google Workspace | Akun `@mail.ugm.ac.id` | Kebijakan admin UGM dapat membatasi berbagi eksternal atau pembuatan project GCP |
+| Google Drive/Docs/Sheets | Akun Google pribadi PM (15 GB gratis) | Kuota dibagi dengan Gmail/Photos; dokumen bergantung pada satu akun pribadi (R-12) |
+| Google Calendar/Meet | Akun `@mail.ugm.ac.id` | Kebijakan admin UGM dapat membatasi berbagi eksternal |
 | Firebase | Spark Plan, tanpa kartu kredit | Kuota harian (§3.6); tidak ada Cloud Functions di Spark |
 | Vercel | Paket Hobby (gratis) | Untuk penggunaan non-komersial; batas build & bandwidth bulanan paket Hobby |
 | GitHub | Repo private gratis | Batas file 100 MB; LFS tidak dipakai |
@@ -722,7 +726,8 @@ flowchart TD
 | R-05 | Nomor WhatsApp diblokir | Sedang | Sedang | `wa.me` sebagai jalur utama; Baileys hanya dengan nomor cadangan (§3.5) | RG |
 | R-06 | Dokumen Firestore `projectData/area1` melewati 1 MiB | Tinggi | Sedang | Pantau ukuran; pecah ke koleksi saat > 500 KB (§3.6) | RG |
 | R-07 | Konflik file `.dwg` di dua perangkat | Sedang | Sedang | SOP §8.4 (satu perangkat per file) | JN |
-| R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Sedang | Fallback unduh CSV manual (§3.3) | JN |
+| R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Rendah (Drive kini di akun pribadi) | Fallback unduh CSV manual (§3.3) | JN |
+| R-12 | Seluruh Drive/Docs/Sheets dimiliki satu akun pribadi PM; jika akun bermasalah atau akses tim terlewat dibagikan, dokumen tidak bisa diakses | Sedang | Rendah | Bagikan folder induk `CAPSTONE_DME_AREA1` ke email UGM seluruh anggota (Editor); salinan teks penting tetap di Git (CSV snapshot, mirror Docs di `06_.../mirrors/`) | RG |
 | R-09 | Tim 5 orang, sedangkan panduan menyebut firma 3–4 orang; penilaian individu memakai logbook (anti *free-rider*) | Sedang | Sedang | Keputusan PM: tetap 5 orang. RACI per deliverable dibuat tegas, dan logbook tiap anggota wajib spesifik & lengkap 12 baris agar kontribusi individu terbukti | RG |
 | R-11 | Setiap push ke `main` memicu deploy produksi Vercel; deploy gagal/rusak memengaruhi website live | Tinggi | Sedang | Root Directory `apps/operations-cockpit` + skip deploy tanpa perubahan; `npm run build` lokal sebelum push perubahan web; rollback lewat *Instant Rollback* Vercel ke deployment sebelumnya | RG |
 | R-10 | Salinan Drive di web dan folder lokal `CAPSTONE_DME_AREA1` tidak sinkron | Sedang | Sedang | Integrasi Drive oleh Antigravity (Fase 2); opsi: pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke sana. Jangan menjalankan ulang `upload_to_gdrive.js` ke folder yang sudah terisi | RG |

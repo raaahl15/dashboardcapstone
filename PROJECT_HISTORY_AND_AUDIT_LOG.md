@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 11:40 WIB  
+**Terakhir Diperbarui:** 2026-11-03 11:50 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -110,6 +110,7 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - **Antigravity** → unggah dan kelola **file & folder** di Google Drive (biner CAD, PDF, bukti WO, struktur folder).
   - **Claude Code** → kelola **isi** Google Sheets, Docs, Slides, dan sejenisnya (Master Instrument Index, IO List, FDS, laporan), termasuk sinkronisasi Sheets → CSV dan `google_workspace_registry.json`.
   - Prasyarat Claude Code: konektor Google Drive diaktifkan di claude.ai.
+  - **Akun Google pribadi PM** (bukan UGM) dipakai sebagai pemilik Drive/Docs/Sheets dan untuk konektor, karena folder proyek sudah diunggah ke Drive pribadi. Tim dan dosen diberi akses lewat Share ke email UGM (LOG-009).
 
 ---
 
@@ -224,6 +225,24 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-009] 2026-11-03 11:50 WIB — Konektor Google Drive (akun pribadi PM)
+* **Pelaksana**: Claude Code (AI agent), atas informasi PM (Rahul)
+* **Fase**: 2
+* **Tujuan**: Mencatat bahwa konektor Google Drive sudah dihubungkan memakai akun Google **pribadi** PM, dan menyesuaikan konsep.
+* **Perubahan**:
+  - Blueprint §3.3: pemilik Drive/Docs/Sheets = akun pribadi PM; akses tim/dosen lewat Share ke email UGM; akun UGM tetap untuk login cockpit & Calendar/Meet; catatan kuota 15 GB.
+  - Blueprint Fase 2: prasyarat konektor ✅. §7.3: baris biaya Google dipisah (Drive pribadi vs Calendar/Meet UGM). Risiko R-08 diturunkan; risiko baru **R-12** (ketergantungan pada satu akun pribadi).
+  - Kronologi #10 ditambah butir akun pribadi.
+* **Bukti / Verifikasi**:
+  - `ToolSearch "google drive sheets docs"` di sesi ini → hanya alat Claude Docs & WebSearch; **alat Google Drive belum tersedia di sesi berjalan**. Konektor baru aktif di sesi Claude Code berikutnya. Akses belum bisa diuji.
+* **Keputusan**: akun pribadi PM sebagai pemilik dokumen Google (Kronologi #10).
+* **Tindak Lanjut**:
+  - [ ] **PM**: buka sesi Claude Code baru, lalu minta Claude Code memverifikasi konektor (cari folder `CAPSTONE_DME_AREA1`).
+  - [ ] **PM**: Share folder `CAPSTONE_DME_AREA1` ke email UGM keempat anggota (Editor) — mitigasi R-12.
+  - [ ] **Claude Code** (sesi baru): Sheets Master Instrument Index & IO List, Docs FDS + kerangka laporan PSTF 1, `google_workspace_registry.json` (lihat LOG-008).
 
 ---
 
