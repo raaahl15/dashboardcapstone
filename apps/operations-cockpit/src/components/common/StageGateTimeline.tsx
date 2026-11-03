@@ -52,6 +52,15 @@ const GATES: Gate[] = [
   },
 ];
 
+/** RFP KAK-IC-DME-2026-001: batas penawaran FEED 15-12-2026 (= G2) dan DED 30-06-2027 (acuan G4). */
+export const RFP_DED_DEADLINE = new Date(2027, 5, 30);
+const DATE_NOTE: Record<Gate['id'], string> = {
+  G1: 'akhir minggu 13 PSTF 1',
+  G2: 'tenggat FEED (RFP)',
+  G3: 'jadwal PSTF 2 belum dirilis',
+  G4: 'tenggat DED (RFP)',
+};
+
 const MONTHS: Record<string, number> = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, Mei: 4, Jun: 5, Jul: 6, Agu: 7, Agt: 7, Sep: 8, Okt: 9, Nov: 10, Des: 11 };
 
 /** "15 Des 2026, 23:59 WIB" -> Date (lokal); null bila tidak terbaca. */
@@ -69,7 +78,7 @@ export const endOfProjectWeek = (startYmd: string, week: number): Date | null =>
 };
 
 const fmt = (d: Date | null) =>
-  d ? d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Jadwal PSTF 2 belum dirilis';
+  d ? d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '–';
 
 export const StageGateTimeline: React.FC = () => {
   const { config } = useApp();
@@ -80,7 +89,7 @@ export const StageGateTimeline: React.FC = () => {
       G1: endOfProjectWeek(config.projectStartDate, 13),
       G2: parseIndoDate(config.tenderDeadline),
       G3: null,
-      G4: null,
+      G4: RFP_DED_DEADLINE,
     }),
     [config.projectStartDate, config.tenderDeadline]
   );
@@ -126,7 +135,10 @@ export const StageGateTimeline: React.FC = () => {
                   )}
                   {g.id}
                 </span>
-                <span className="text-[11px] font-semibold text-[#4A5A72]">{fmt(date)}</span>
+                <span className="text-[11px] font-semibold text-[#4A5A72] text-right leading-tight">
+                  {fmt(date)}
+                  <span className="block text-[10px] font-normal">{DATE_NOTE[g.id]}</span>
+                </span>
               </div>
               <p className="text-xs font-bold text-[#0B1B33] leading-snug">{g.title}</p>
               <p className="text-[11px] text-[#4A5A72]">{g.control}</p>

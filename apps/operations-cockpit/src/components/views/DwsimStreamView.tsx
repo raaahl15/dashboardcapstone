@@ -106,8 +106,9 @@ export const DwsimStreamView: React.FC = () => {
         <div className="glass-faint px-4 py-2.5 flex items-start gap-2 text-xs text-[#92400E]">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>
-            Model terakhir disimpan {data.meta.model_saved_on} (DWSIM {data.meta.dwsim_build}). Asal-usul model belum
-            dikonfirmasi PIC; angka belum boleh dikutip ke laporan sebelum dikonfirmasi (LOG-019).
+            Model referensi klien dari RFP KAK-IC-DME-2026-001 (fraksi mol Tabel 1 RFP identik; disimpan{' '}
+            {data.meta.model_saved_on}, DWSIM {data.meta.dwsim_build}). Saat mengutip angka di laporan, sitasi RFP sebagai
+            sumber model dan cantumkan tanggal ekstraksi.
           </span>
         </div>
       </div>
