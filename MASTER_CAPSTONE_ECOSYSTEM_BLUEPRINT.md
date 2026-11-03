@@ -4,7 +4,7 @@
 **Tahun Akademik:** 2026/2027  
 **Dokumen Kontrol:** DOC-CAPSTONE-DME-2026-MASTER-001  
 **Status Anggaran:** Bebas biaya (Rp 0), berbasis FOSS, free tier, dan akun UGM — lihat batasan di BAB VII  
-**Versi:** 2.2 (Revisi Konsep pasca Re-Audit Fase 1 + Fase 1.5 + pemetaan Stage-Gate)  
+**Versi:** 2.3 (Revisi Konsep pasca Re-Audit Fase 1 + Fase 1.5 + pemetaan Stage-Gate + hosting Vercel)  
 **Status Dokumen:** Disetujui PM (2026-11-03)  
 **Catatan Riwayat Pengerjaan:** [`PROJECT_HISTORY_AND_AUDIT_LOG.md`](PROJECT_HISTORY_AND_AUDIT_LOG.md)
 
@@ -16,6 +16,7 @@
 | :--- | :--- | :--- | :--- |
 | 1.0 | 2026-11-02 | Antigravity (AI agent) + PM | Konsep awal 8 bab, 5 pilar, roadmap 5 fase. |
 | 2.0 | 2026-11-03 | Claude Code (AI agent) + PM | Revisi konsep berdasarkan re-audit Fase 1: matriks kepemilikan data (SSOT), siklus status dokumen, aturan companion `.md` yang bisa diaudit, mesin kalkulator berbasis skrip, kebijakan penyimpanan Git vs Drive, pemisahan folder Git dan Drive, WhatsApp gateway dijadikan opsional, Fase 1.5 Remediasi, dan Definition of Done per fase. |
+| 2.3 | 2026-11-03 | Claude Code (AI agent) + PM | Hosting resmi pindah ke **Vercel** (website sudah live); remote GitHub = `raaahl15/dashboardcapstone`; `vercel.json` dikembalikan; risiko R-11 (push = deploy produksi). |
 | 2.2 | 2026-11-03 | Claude Code (AI agent) + PM | Sign-off Fase 1.5; pemetaan Stage-Gate G1–G4 ke panduan (§1.7); keputusan tim tetap 5 orang (R-09); status Fase 2 berjalan (Drive diunggah via web, R-10). |
 | 2.1 | 2026-11-03 | Claude Code (AI agent) | Penyesuaian dari eksekusi Fase 1.5 (LOG-004): library simbol CAD ternyata file AutoCAD manual (bukan hasil generate) → disimpan di Drive; `generate_libraries.js` dihapus; pemeriksa repo ditulis di Node.js (`check_companions.js`) karena Python belum terpasang; panduan mewajibkan sizing manual → skrip kalkulator menjadi verifikasi silang; catatan Stage-Gate vs panduan; status Fase 1.5 SELESAI. |
 
@@ -408,8 +409,13 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 
 ### 3.6 Pilar 6 — Cloud & Database (Firebase Spark Plan)
 
-* **Paket:** Firebase Spark (gratis, tanpa kartu kredit). Kuota: Firestore 50.000 baca & 20.000 tulis per hari; Hosting 10 GB penyimpanan & 360 MB transfer per hari.
-* **Hosting tunggal: Firebase Hosting** (project `area1-dme-cockpit`). `vercel.json` dihapus di Fase 1.5 agar tidak ada dua jalur deploy.
+* **Paket:** Firebase Spark (gratis, tanpa kartu kredit) untuk **Authentication + Firestore**. Kuota Firestore: 50.000 baca & 20.000 tulis per hari.
+* **Hosting tunggal: Vercel** (keputusan PM 2026-11-03, v2.3), karena website sudah live di Vercel. Alurnya:
+  - Repo GitHub **`raaahl15/dashboardcapstone`** (privat) adalah remote monorepo ini. Setiap push ke `main` memicu deploy otomatis Vercel.
+  - Setelan Vercel: **Root Directory = `apps/operations-cockpit`**, dan aktifkan *Skip deployments when there are no changes to the root directory*, supaya commit yang hanya mengubah dokumen/CAD tidak memicu deploy.
+  - `apps/operations-cockpit/vercel.json` berisi SPA rewrite + header keamanan (HSTS, X-Frame-Options, nosniff, dll.) dan **wajib dipertahankan**.
+  - Variabel `VITE_FIREBASE_*` disimpan di *Environment Variables* Vercel, bukan di repo.
+  - `firebase.json` tetap dipakai untuk deploy `firestore.rules` (`firebase deploy --only firestore:rules`); bagian `hosting`-nya tidak dipakai.
 * **Model data Firestore (kondisi saat ini):**
   - koleksi `users`
   - koleksi `workOrders` (satu dokumen per WO)
@@ -533,7 +539,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   6. ✅ Riwayat Git dibersihkan dari file besar (disetujui PM; backup bundle dibuat lebih dulu).
   7. ✅ `acad_dme_lin.md` → `acad_dme.md`; dibuat `SYMBOL_LIBRARIES.md`, `hmb_streams.md`, `Panduan_Capstone_DTNTF_2026.md`.
   8. ✅ `README.md` diganti orientasi singkat.
-  9. ✅ `vercel.json` dihapus (header keamanannya identik dengan `firebase.json`); `sync:push`/`sync:pull` diganti `tools/sync/sync.js`.
+  9. ✅ `sync:push`/`sync:pull` diganti `tools/sync/sync.js`. *(Penghapusan `vercel.json` di butir ini **dibatalkan** pada v2.3 setelah PM menetapkan Vercel sebagai hosting; file dikembalikan, LOG-007.)*
   10. ✅ `tools/check_companions.js` dibuat (Node.js, karena Python belum terpasang).
 * **DoD:**
   - [x] `npm run check` melaporkan 0 artefak wajib tanpa companion dan 0 status tidak valid.
@@ -545,6 +551,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 
 #### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: BERJALAN
 * **Sudah:** isi folder staging diunggah ke Google Drive (2026-11-03, via `tools/upload_to_gdrive.js` + CLI `gdrive`; belum ada Google Drive for Desktop di PC ini).
+* **Repo GitHub:** memakai repo yang sudah ada, **`raaahl15/dashboardcapstone`** (privat, terhubung ke Vercel). Riwayat 12 commit cockpit dipertahankan lewat merge, jadi push pertama berupa fast-forward tanpa force push (LOG-007).
 * **Pembagian kerja:** integrasi Google Drive (sinkronisasi, struktur folder, registry) dikerjakan oleh **Antigravity** (keputusan PM, 2026-11-03). Agent lain tidak mengubah isi Drive.
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
@@ -571,7 +578,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [ ] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya).
 
 #### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari
-* **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; deploy ke Firebase Hosting; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
+* **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; rilis produksi di Vercel (push ke `main`) + deploy `firestore.rules`; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
 * **DoD:**
   - [ ] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`.
   - [ ] Seluruh anggota tim berhasil login dan membuat WO percobaan di versi produksi.
@@ -608,6 +615,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 | Python + `fluids`, `ezdxf`, `numpy-financial` | Open source (MIT) | — |
 | Google Workspace | Akun `@mail.ugm.ac.id` | Kebijakan admin UGM dapat membatasi berbagi eksternal atau pembuatan project GCP |
 | Firebase | Spark Plan, tanpa kartu kredit | Kuota harian (§3.6); tidak ada Cloud Functions di Spark |
+| Vercel | Paket Hobby (gratis) | Untuk penggunaan non-komersial; batas build & bandwidth bulanan paket Hobby |
 | GitHub | Repo private gratis | Batas file 100 MB; LFS tidak dipakai |
 | WhatsApp | `wa.me` (utama); Baileys (opsional) | Baileys tidak resmi → risiko blokir nomor |
 | AutoCAD | Lisensi Autodesk Education | Hanya untuk keperluan pendidikan, non-komersial |
@@ -631,10 +639,10 @@ flowchart TD
     end
 
     subgraph Hub["Cloud (gratis)"]
-        GitHub["GitHub private<br/>(kode, .md, CSV, JSON, .dwxmz)"]
+        GitHub["GitHub private<br/>raaahl15/dashboardcapstone<br/>(kode, .md, CSV, JSON, .dwxmz)"]
         GDrive["Google Drive<br/>(.dwg, PDF, bukti WO)"]
         Firestore["Firestore<br/>(WO, MoM, logbook)"]
-        Hosting["Firebase Hosting"]
+        Hosting["Vercel<br/>(root: apps/operations-cockpit)"]
     end
 
     subgraph Laptop["Laptop"]
@@ -647,8 +655,7 @@ flowchart TD
     GitHub <-->|pull / push| Lap_Repo
     PC_Drive <-->|Drive for Desktop| GDrive
     GDrive <-->|Drive for Desktop| Lap_Drive
-    PC_Repo -->|firebase deploy| Hosting
-    Lap_Repo -->|firebase deploy| Hosting
+    GitHub -->|auto-deploy saat push ke main| Hosting
     Browser <--> Firestore
 ```
 
@@ -709,4 +716,5 @@ flowchart TD
 | R-07 | Konflik file `.dwg` di dua perangkat | Sedang | Sedang | SOP §8.4 (satu perangkat per file) | JN |
 | R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Sedang | Fallback unduh CSV manual (§3.3) | JN |
 | R-09 | Tim 5 orang, sedangkan panduan menyebut firma 3–4 orang; penilaian individu memakai logbook (anti *free-rider*) | Sedang | Sedang | Keputusan PM: tetap 5 orang. RACI per deliverable dibuat tegas, dan logbook tiap anggota wajib spesifik & lengkap 12 baris agar kontribusi individu terbukti | RG |
+| R-11 | Setiap push ke `main` memicu deploy produksi Vercel; deploy gagal/rusak memengaruhi website live | Tinggi | Sedang | Root Directory `apps/operations-cockpit` + skip deploy tanpa perubahan; `npm run build` lokal sebelum push perubahan web; rollback lewat *Instant Rollback* Vercel ke deployment sebelumnya | RG |
 | R-10 | Salinan Drive di web dan folder lokal `CAPSTONE_DME_AREA1` tidak sinkron | Sedang | Sedang | Integrasi Drive oleh Antigravity (Fase 2); opsi: pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke sana. Jangan menjalankan ulang `upload_to_gdrive.js` ke folder yang sudah terisi | RG |
