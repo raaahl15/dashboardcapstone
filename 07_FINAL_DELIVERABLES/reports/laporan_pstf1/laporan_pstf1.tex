@@ -1,0 +1,279 @@
+
+% =====================================================================
+% LAPORAN KERJA PSTF 1 — FEED Pabrik DME Area 1
+% Salinan dari 00_CORE_GUIDELINES/templates/PSTF1_LaTeX/laporan_pstf1.tex
+% (template resmi DTNTF, jangan ubah aslinya). Perubahan terhadap template:
+%   1. Makro anggota ke-5 (\namaE, \nimE) dan barisnya di sampul,
+%      lembar pengesahan, pakta integritas, dan ringkasan eksekutif.
+%   2. Isi bab mengikuti Panduan PSTF 1 Lampiran 3A (4 bab), bukan contoh
+%      template (5 bab). Teks contoh "Proses ZXY / Plant XYZ" dihapus.
+% Master narasi = Google Docs "Laporan PSTF 1 FEED Pabrik DME Area 1 (Draf)"
+% (registry key laporan_pstf1). Isi dipindah ke sini saat finalisasi.
+% =====================================================================
+\documentclass[12pt, a4paper]{report}
+
+% --- UNIVERSAL PREAMBLE BLOCK ---
+\usepackage[a4paper, top=3cm, bottom=3cm, left=4cm, right=3cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[indonesian]{babel}
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+% Logo diambil dari folder template (repo melarang file duplikat).
+% Di Overleaf: unggah logoUGM.png ke folder yang sama dengan file ini.
+\graphicspath{{./}{../../../00_CORE_GUIDELINES/templates/PSTF1_LaTeX/}}
+
+
+% Pengaturan format Judul Bab
+\titleformat{\chapter}[display]
+  {\normalfont\large\bfseries\centering}{\MakeUppercase{\chaptertitlename} \thechapter}{5pt}{\large}
+\titlespacing*{\chapter}{0pt}{-20pt}{20pt}
+
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+
+% --------------------------------------------------------
+% DEKLARASI MAKRO UNTUK FORMAT HALAMAN AWAL
+% --------------------------------------------------------
+\makeatletter
+\newcommand{\judul}[1]{\gdef\@judul{#1}}
+\newcommand{\jenisTA}[1]{\gdef\@jenisTA{#1}}
+\newcommand{\thselesai}[1]{\gdef\@thselesai{#1}}
+\newcommand{\tglpenulisan}[1]{\gdef\@tglpenulisan{#1}}
+\newcommand{\tglujian}[1]{\gdef\@tglujian{#1}}
+\newcommand{\namaA}[1]{\gdef\@namaA{#1}}
+\newcommand{\nimA}[1]{\gdef\@nimA{#1}}
+\newcommand{\namaB}[1]{\gdef\@namaB{#1}}
+\newcommand{\nimB}[1]{\gdef\@nimB{#1}}
+\newcommand{\namaC}[1]{\gdef\@namaC{#1}}
+\newcommand{\nimC}[1]{\gdef\@nimC{#1}}
+\newcommand{\namaD}[1]{\gdef\@namaD{#1}}
+\newcommand{\nimD}[1]{\gdef\@nimD{#1}}
+\newcommand{\namaE}[1]{\gdef\@namaE{#1}}
+\newcommand{\nimE}[1]{\gdef\@nimE{#1}}
+\newcommand{\koordinator}[1]{\gdef\@koordinator{#1}}
+\newcommand{\nipkoordinator}[1]{\gdef\@nipkoordinator{#1}}
+\newcommand{\praktisiA}[1]{\gdef\@praktisiA{#1}}
+\newcommand{\praktisiB}[1]{\gdef\@praktisiB{#1}}
+\newcommand{\kajur}[1]{\gdef\@kajur{#1}}
+\newcommand{\nipkajur}[1]{\gdef\@nipkajur{#1}}
+
+\def\halamansampul{%
+  \thispagestyle{empty}%
+  \begin{center}
+    {\normalfont\bfseries \@jenisTA}\par\nobreak\vspace{1.0cm}
+    {\normalfont\large\bfseries\MakeUppercase{\@judul}}\par\nobreak\vspace{1.5cm}
+    {\normalfont
+        untuk memenuhi sebagian persyaratan\\
+        untuk memperoleh derajat Sarjana S1\\
+        Program Studi Teknik Fisika \space}
+    \vfill
+    \includegraphics[width=5cm]{logoUGM.png}
+    \vfill\vspace{1.0cm}
+    {\normalfont Disusun oleh Kelompok:}\\[0.5cm]
+    \begin{tabular}{ll}
+      1. \@namaA & (\@nimA)\\
+      2. \@namaB & (\@nimB)\\
+      3. \@namaC & (\@nimC)\\
+      4. \@namaD & (\@nimD)\\
+      5. \@namaE & (\@nimE)
+    \end{tabular}\\
+    \vspace{1.5cm}
+    \begin{onehalfspace}
+    {\normalfont\bfseries DEPARTEMEN TEKNIK NUKLIR DAN TEKNIK FISIKA\\FAKULTAS TEKNIK\\UNIVERSITAS GADJAH MADA\\YOGYAKARTA\\\@thselesai}
+    \end{onehalfspace}
+  \end{center}\clearpage
+}
+
+\def\halamanpengesahan{%
+  \clearpage\thispagestyle{empty}%
+  \addcontentsline{toc}{chapter}{LEMBAR PENGESAHAN}
+  \begin{onehalfspace}
+    \begin{center}
+      {\normalfont\large\bfseries LEMBAR PENGESAHAN}\par\nobreak\vspace{0.5cm}
+      {\normalfont \@jenisTA}\par\nobreak\vspace{0.5cm}
+      {\normalfont\bfseries\MakeUppercase{\@judul}}\par\nobreak\vspace{0.5cm}
+    \end{center}
+    \noindent Disusun oleh Kelompok:\\[0.2cm]
+    \begin{tabularx}{\textwidth}{l L l}
+      1. & \@namaA & (\@nimA) \\
+      2. & \@namaB & (\@nimB) \\
+      3. & \@namaC & (\@nimC) \\
+      4. & \@namaD & (\@nimD) \\
+      5. & \@namaE & (\@nimE) \\
+    \end{tabularx}
+    \vspace{0.5cm}
+    \begin{center} Telah diperiksa dan disetujui pada tanggal \@tglujian \end{center}
+    \vspace{0.5cm}
+
+    \begin{center}
+      \textbf{Tim Penilai:}\\[0.5cm]
+       \begin{tabularx}{\textwidth}{l l l}
+      1. & Dosen Koordinator: & \@koordinator \\
+      2. & Praktisi Industri: & \@praktisiA \\
+      3. & Praktisi Industri: & \@praktisiB  \\
+    \end{tabularx}
+    \end{center}
+
+    \vspace{1.0cm}
+    \begin{center}
+      Mengetahui, \\
+      Ketua Departemen Teknik Nuklir dan Teknik Fisika \\ Fakultas Teknik UGM \\[2.2cm]
+      \uline{\@kajur} \\ NIP. \@nipkajur
+    \end{center}
+  \end{onehalfspace}\clearpage
+}
+
+\def\paktaintegritas{%
+  \clearpage\thispagestyle{empty}%
+  \addcontentsline{toc}{chapter}{PAKTA INTEGRITAS}
+  \begin{onehalfspace}
+  \begin{center} {\normalfont\large\bfseries PAKTA INTEGRITAS}\par\nobreak \end{center}
+  \vspace{1cm}
+  \noindent Kami yang bertanda tangan di bawah ini (Tim Penyusun PSTF 1):
+  \par\nobreak\vspace{0.5cm}
+
+  \noindent
+  \begin{tabularx}{\textwidth}{l L l}
+    1. & \@namaA & (\@nimA) \\
+    2. & \@namaB & (\@nimB) \\
+    3. & \@namaC & (\@nimC) \\
+    4. & \@namaD & (\@nimD) \\
+    5. & \@namaE & (\@nimE) \\
+  \end{tabularx}
+
+  \vspace{0.5cm}
+  \noindent menyatakan dengan sesungguhnya bahwa Laporan Perancangan Sistem Teknik Fisika 1 (PSTF 1) ini adalah murni hasil karya rancangan tim kami sendiri dan tidak mengandung unsur plagiasi. Seluruh data, referensi dokumen lelang (TOR), kode dan standar, dan parameter desain yang digunakan telah disitasi dengan benar. Apabila di kemudian hari terbukti ada pelanggaran akademik, kami bersedia menerima sanksi yang berlaku.
+
+  \vspace{0.5cm}
+  \noindent\hfill Yogyakarta, \@tglpenulisan
+
+  \vspace{0.5cm}
+  \noindent
+  \begin{tabularx}{\textwidth}{C C}
+     Anggota 1 & Anggota 2 \\[1.5cm]
+     \uline{\@namaA} & \uline{\@namaB} \\ \@nimA & \@nimB
+  \end{tabularx}
+
+  \vspace{0.5cm}
+  \noindent
+  \begin{tabularx}{\textwidth}{C C}
+     Anggota 3 & Anggota 4 \\[1.5cm]
+     \uline{\@namaC} & \uline{\@namaD} \\ \@nimC & \@nimD
+  \end{tabularx}
+
+  \vspace{0.5cm}
+  \noindent
+  \begin{tabularx}{\textwidth}{C}
+     Anggota 5 \\[1.5cm]
+     \uline{\@namaE} \\ \@nimE
+  \end{tabularx}
+
+  \vspace{1cm}
+  \begin{center}
+    \fbox{\begin{minipage}{0.25\textwidth} \centering \vspace{0.5cm} \textit{Materai ASLI (e-Meterai)}\par \par \textbf{Rp. 10.000} \vspace{0.5cm} \end{minipage}}
+  \end{center}
+  \end{onehalfspace}\clearpage
+}
+
+\def\ringkasaneksekutif{%
+    \clearpage\thispagestyle{empty}\addcontentsline{toc}{chapter}{RINGKASAN EKSEKUTIF}
+    \begin{center} {\large\bfseries\MakeUppercase{\@judul}}\par\nobreak\vskip 6\p@ {\normalsize oleh kelompok:}\par\nobreak\vskip 6\p@
+        \begin{singlespace} {\normalsize \@namaA \ (\@nimA) \\ \@namaB \ (\@nimB) \\ \@namaC \ (\@nimC) \\ \@namaD \ (\@nimD) \\ \@namaE \ (\@nimE)}\vskip 10\p@ \end{singlespace}
+    \end{center} \vspace{1cm} {\parindent \z@ \centering \normalfont {\normalsize\bfseries RINGKASAN EKSEKUTIF}\par\nobreak } \vspace{0.5cm} \begin{onehalfspace}
+}
+\def\endringkasaneksekutif{\end{onehalfspace}\clearpage}
+\makeatother
+
+% ==========================================
+% DATA IDENTITAS  ([isi] = belum diisi)
+% ==========================================
+\judul{PERANCANGAN SISTEM INSTRUMENTASI DAN KONTROL AREA REAKTOR (AREA 1) PABRIK DIMETHYL ETHER}
+\jenisTA{LAPORAN PERANCANGAN SISTEM TEKNIK FISIKA 1}
+
+\namaA{Rahul Ghulam Hidayatulloh}          \nimA{[isi NIM]}
+\namaB{Ihsaan Zauhair Tsaqif Prawira}      \nimB{[isi NIM]}
+\namaC{Altaf Ramadhan Parvez}              \nimC{[isi NIM]}
+\namaD{Jonathan Pangihutan Michael Siahaan} \nimD{[isi NIM]}
+\namaE{Heidi Falina Brilian}               \nimE{[isi NIM]}
+
+\thselesai{2026}
+\tglpenulisan{[isi tanggal]}
+\tglujian{[isi tanggal]}
+
+\koordinator{[isi nama Dosen Koordinator]} \nipkoordinator{[isi NIP]}
+\praktisiA{[isi nama Praktisi Industri 1]} \praktisiB{[isi nama Praktisi Industri 2]}
+\kajur{Prof. Dr. Ir. Faridah, S.T., M.Sc., IPU. ASEAN Eng} \nipkajur{197602142002122001}
+
+% ==========================================
+% MULAI ISI DOKUMEN
+% Struktur bab: Panduan PSTF 1 Lampiran 3A (4 bab + Lampiran A-B).
+% Teks bab disalin dari master Google Docs saat finalisasi.
+% ==========================================
+\begin{document}
+\pagenumbering{roman}
+\halamansampul
+\halamanpengesahan
+\paktaintegritas
+
+\ringkasaneksekutif
+[Diisi dari master Google Docs: masalah dari RFP KAK-IC-DME-2026-001, solusi I\&C Area 1, hasil utama (HMB, Draf P\&ID, NPV/IRR), dan kesimpulan kelayakan.]
+\endringkasaneksekutif
+
+\tableofcontents
+\clearpage
+\pagenumbering{arabic}
+
+\chapter{KONSEPTUALISASI}
+\section{Latar Belakang Dokumen Lelang TOR}
+[Isi dari Google Docs 1.1.]
+
+\section{Penurunan Teori Model Sains Sistem}
+[Isi dari Google Docs 1.2: model first-principle dan komputasi numerik yang konvergen.]
+
+\section{Parameter Batas Operasional Teknis (URS)}
+[Isi dari Google Docs 1.3.]
+
+\chapter{FUNCTIONAL DESIGN SPECIFICATION / CONTROL NARRATIVE}
+% ISA-5.06.01: start-up, operasi normal (termasuk tabel CV/MV/DV), shutdown otomatis.
+\section{Start-up}
+[Isi dari Google Docs Bab 2.]
+
+\section{Operasi Normal}
+[Isi dari Google Docs Bab 2, termasuk tabel loop CV, MV, DV.]
+
+\section{Shutdown Otomatis}
+[Isi dari Google Docs Bab 2.]
+
+\chapter{BASIC ENGINEERING}
+\section{Process Flow Diagram (PFD)}
+[Isi dari Google Docs 3.1, ISO 10628.]
+
+\section{Neraca Massa dan Neraca Termal}
+[Isi dari Google Docs 3.2, tabel HMB per aliran.]
+
+\section{Penjelasan Alur Draf P\&ID}
+[Isi dari Google Docs 3.3, ISA-5.1; gambar di Lampiran A.]
+
+\chapter{KAJIAN TEKNO-EKONOMI}
+\section{Capital Expenditure (CAPEX)}
+[Isi dari Google Docs 4.1.]
+
+\section{Operational Expenditure (OPEX)}
+[Isi dari Google Docs 4.2.]
+
+\section{Analisis Kelayakan Finansial}
+[Isi dari Google Docs 4.3: NPV, IRR terhadap suku bunga acuan, payback period.]
+
+\appendix
+\chapter{DRAF P\&ID}
+[Lembar A3 Draf P\&ID dari master .dwg di Drive.]
+
+\chapter{KUMPULAN SALINAN LOGBOOK}
+[Salinan 12 baris logbook yang sudah diparaf Dosen Pembimbing.]
+
+\end{document}

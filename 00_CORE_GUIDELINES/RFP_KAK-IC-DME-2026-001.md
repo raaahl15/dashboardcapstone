@@ -75,9 +75,9 @@ Tabel 1 RFP mengutip fraksi mol "hasil simulasi DWSIM". Dibandingkan dengan `hmb
 | No | Serahan | Format | Padanan di proyek |
 | :---: | :--- | :--- | :--- |
 | 1 | URS I&C | PDF & Word | Laporan Bab 1.3 |
-| 2 | PFD / P&ID I&C overlay | PDF & native DWG | Bab 3.2, 3.5, Lampiran A (P&ID JN) |
+| 2 | PFD / P&ID I&C overlay | PDF & native DWG | Bab 3.1, 3.3, Lampiran A (P&ID JN) |
 | 3 | I&C Design Basis, Control Narrative & Philosophy | PDF & Word | Bab 2 + FDS-IC-DME-2026-001 |
-| 4 | Estimasi CAPEX & OPEX I&C (Class 2) | PDF & Excel | Bab 5 + `inputs/NPV-001.yaml` (§3.3.1: CAPEX = hardware/software kontrol, katup, kabel, panel; OPEX = kalibrasi, AMS, lisensi) |
+| 4 | Estimasi CAPEX & OPEX I&C (Class 2) | PDF & Excel | Bab 4 + `inputs/NPV-001.yaml` (§3.3.1: CAPEX = hardware/software kontrol, katup, kabel, panel; OPEX = kalibrasi, AMS, lisensi) |
 
 Serahan DED (PSTF 2): arsitektur DCS/SIS/FGS, Master Instrument Index & I/O List (Excel), datasheet & sizing, C&E, loop & hook-up, JB wiring & cable schedule, MR & TBE, BoM.
 
@@ -85,13 +85,14 @@ Serahan DED (PSTF 2): arsitektur DCS/SIS/FGS, Master Instrument Index & I/O List
 | No | Temuan | Tindak lanjut | PIC |
 | :---: | :--- | :--- | :--- |
 | 1 | Asal-usul model DWSIM terjawab (§5) | Status `hmb_streams.md` bisa naik setelah IH menulis sitasi | IH |
-| 2 | Template laporan resmi punya **5 bab** (ada Bab 4 Kajian Keselamatan) | Struktur Google Docs laporan disesuaikan (LOG-024) | RG |
-| 3 | SIL wajib lewat **HAZOP + LOPA** | Laporan Bab 4.2 memakai LOPA (bukan risk graph seperti contoh template) | AL |
+| 2 | Contoh template laporan punya 5 bab (ada Bab 4 Kajian Keselamatan) | **Keputusan PM (LOG-025):** isi tetap 4 bab Panduan; template hanya format. Serahan FEED Tabel 3 tidak memuat HAZOP | RG |
+| 3 | SIL wajib lewat **HAZOP + LOPA** | Dikerjakan di PSTF 2 (Panduan BAB IV), memakai LOPA, bukan risk graph seperti contoh template | AL |
 | 4 | Transmitter wajib HART/FF + AMS | Kolom `SIGNAL_TYPE` index (mis. "RTD Pt100", "DP Cell 4-20mA") perlu dinyatakan sebagai transmitter HART | JN |
-| 5 | CAPEX/OPEX I&C **Class 2** | Estimasi biaya Bab 5 mengikuti AACE Class 2 untuk lingkup I&C | HD |
+| 5 | CAPEX/OPEX I&C **Class 2** | Estimasi biaya Bab 4 mengikuti AACE Class 2 untuk lingkup I&C | HD |
 | 6 | Tenggat DED 30-06-2027 | Acuan jadwal G3/G4 di cockpit | RG |
 
 ## 8. Log Revisi
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Ringkasan RFP, padanan tag, verifikasi data DWSIM, dampak ke dokumen (LOG-024). |
+| 0.2 | 2026-11-03 | Claude Code (AI) | Rujukan bab disesuaikan ke struktur 4 bab Panduan; HAZOP/LOPA dipindah ke PSTF 2 (LOG-025). |

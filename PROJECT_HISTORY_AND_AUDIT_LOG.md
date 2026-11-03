@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode siap di branch `fase-4-cockpit` (LOG-023)  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 18:15 WIB  
+**Terakhir Diperbarui:** 2026-11-03 19:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -141,6 +141,13 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Tag di RFP (REAC-01, HEATER-01, PUMP-01, C-01, C-02) adalah nama klien; dokumen firma tetap memakai tag pabrik dengan tabel padanan.
   - Tenggat RFP: FEED 15-12-2026 (= G2), DED 30-06-2027 (acuan G3/G4).
 
+### 15. Struktur Laporan PSTF 1 = 4 Bab Panduan (2026-11-03, koreksi #14)
+* **Konteks**: PM mengoreksi butir #14 tentang struktur: isi laporan mengikuti Panduan, bukan contoh template.
+* **Keputusan PM**:
+  - Isi laporan PSTF 1 = **4 bab Panduan Lampiran 3A** (Konseptualisasi · FDS/Control Narrative · Basic Engineering · Tekno-ekonomi) + Lampiran A Draf P&ID (A3) dan B Logbook. Template LaTeX hanya untuk format dan halaman awal. HAZOP dan SIL (LOPA) dikerjakan di PSTF 2.
+  - Halaman awal memuat **5 anggota** (makro `\namaE`/`\nimE`).
+  - **Alat tulis opsi 1**: draf di Google Docs (master narasi), dipindah ke LaTeX saat finalisasi.
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -254,6 +261,28 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-025] 2026-11-03 19:00 WIB — Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan; anggota ke-5; alat tulis opsi 1
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"untuk struktur template tersebut salah sedikit, isi nya mengikuti panduan ya … laporan PSTF 1 hanya 4 bab saja. lalu tambahkan baris anggota kelima, untuk alat tulis laporan pakai opsi 1."*
+* **Fase**: laporan PSTF 1 (koreksi atas LOG-024)
+* **Perubahan**:
+  - **Google Docs Laporan PSTF 1** (`1sR0IRYj…`): Bab 4 Kajian Keselamatan (4.1 HAZOP, 4.2 SIL) dan subbab 3.1 Matriks Pembobot serta 3.4 Identifikasi Variabel Kendali dihapus; isi CV/MV/DV dipindah ke petunjuk Bab 2 (bagian operasi normal), dan trip HH R-101 ke bagian shutdown. Bab 2 → "Functional Design Specification / Control Narrative"; 3.2→3.1 PFD, 3.3→3.2 Neraca, 3.5→3.3 Alur Draf P&ID; Bab 5→Bab 4 Tekno-Ekonomi (4.1–4.3). Ringkasan eksekutif: "hasil utama (HMB, Draf P&ID, NPV/IRR)". Baris baru **Anggota firma** (5 nama + peran, NIM [isi]). Catatan penyusunan ditulis ulang (4 bab Panduan; template hanya format; HAZOP/SIL di PSTF 2; opsi 1). Tabel pembagian 16 → 11 baris.
+  - **Baru** laporan kerja LaTeX `07_FINAL_DELIVERABLES/reports/laporan_pstf1/laporan_pstf1.tex` (logo dibaca dari folder template lewat `\graphicspath`, karena `npm run check` melarang file duplikat), companion `reports/laporan_pstf1.md`: makro `\namaE`/`\nimE` dan baris anggota ke-5 di sampul, pengesahan, pakta integritas (tanda tangan Anggota 5 baris tersendiri), ringkasan eksekutif; bab mengikuti 4 bab Panduan (Bab 2: Start-up, Operasi Normal, Shutdown Otomatis); teks contoh template dihapus. Template asli di `00_CORE_GUIDELINES/templates/PSTF1_LaTeX/` tidak diubah.
+  - `templates/PSTF1_LaTeX.md` Rev 0.2 (keputusan tertutup), `Panduan_Capstone_DTNTF_2026.md` Rev 0.2 (§9), `RFP_KAK-IC-DME-2026-001.md` Rev 0.2 (rujukan bab, HAZOP/LOPA → PSTF 2).
+  - Registry `laporan_pstf1`: `structure` 4 bab, + `authoring`, `latex_working_copy`, `members`; `section_owners`/`section_reviewers` 11 bagian; companion Rev 0.4.
+* **Bukti / Verifikasi**:
+  - Google Docs: 1 batch 42 request dengan penjaga revisi, tanpa error. `read_file_content` → Ringkasan, Bab 1 (1.1–1.3), Bab 2, Bab 3 (3.1–3.3), Bab 4 (4.1–4.3), Lampiran A–B; tidak ada lagi HAZOP/SIL sebagai bab.
+  - RFP Tabel 3 (serahan FEED) diperiksa ulang: URS, PFD/P&ID, Control Narrative, CAPEX/OPEX; tidak ada HAZOP → struktur 4 bab tidak bertentangan dengan RFP.
+  - LaTeX **belum dikompilasi** (PC ini tidak punya pdflatex).
+  - `npm run check` → percobaan pertama FAIL (logo duplikat), setelah salinan logo dihapus → PASS.
+* **Keputusan**: lihat Kronologi #15. Beban reviewer setelah 11 bagian: HD 3, JN 3, AL 3, IH 2, RG cek akhir.
+* **Tindak Lanjut**:
+  - [ ] **Tim**: isi NIM lima anggota (Google Docs + `\nimA…\nimE`); PM setujui usulan `\judul`.
+  - [ ] **PM**: konfirmasi ke Dosen Koordinator bahwa sampul/pengesahan 5 anggota diterima.
+  - [ ] **Claude Code**: bundel ulang data cockpit di branch `fase-4-cockpit` (registry berubah) sebelum merge.
+  - [ ] Tindak lanjut LOG-024 lain tetap terbuka (unggah PDF RFP oleh Antigravity, `SIGNAL_TYPE` HART/FF oleh JN). Butir "PM putuskan alat tulis & format 5 anggota" **selesai** di entri ini.
 
 ---
 

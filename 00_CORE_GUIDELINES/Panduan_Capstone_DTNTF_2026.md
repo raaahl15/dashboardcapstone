@@ -89,7 +89,7 @@ tags: ["Panduan", "Rubrik", "PSTF 1", "PSTF 2", "Stage-Gate"]
 
 ## 9. Struktur Laporan (Lampiran 3A/3B)
 - **PSTF 1** (template: `http://ugm.id/TemplatePSTF1`): Bab 1 Konseptualisasi (TOR, first-principle, URS) · Bab 2 FDS/Control Narrative · Bab 3 Basic Engineering (PFD + neraca massa & panas) · Bab 4 Tekno-ekonomi · Lampiran A Draf P&ID (A3) · Lampiran B Logbook.
-  - **Koreksi (LOG-024): template LaTeX resmi** (`templates/PSTF1_LaTeX/`, catatan di `templates/PSTF1_LaTeX.md`) memakai **5 bab**: 1 Konseptualisasi · 2 Functional Design · 3 Basic Engineering (3.1 matriks pembobot opsi desain, 3.2 PFD, 3.3 neraca massa & termal, 3.4 identifikasi CV/MV/DV, 3.5 alur draf P&ID) · **4 Kajian Keselamatan (HAZOP, SIL)** · 5 Kajian Tekno-Ekonomi; lampiran A P&ID, B logbook. Struktur template yang berlaku.
+  - **Keputusan PM (LOG-025): struktur 4 bab di atas yang berlaku.** Template LaTeX resmi (`templates/PSTF1_LaTeX/`, catatan di `templates/PSTF1_LaTeX.md`) dipakai hanya untuk format dan halaman awal. Contoh isinya yang 5 bab (Bab 4 Kajian Keselamatan HAZOP/SIL, subbab matriks pembobot dan CV/MV/DV) tidak diikuti; HAZOP/SIL masuk PSTF 2. Koreksi atas LOG-024.
 - **TOR/RFP proyek:** KAK-IC-DME-2026-001 (ringkasan `RFP_KAK-IC-DME-2026-001.md`): FEED 15-12-2026, DED 30-06-2027.
 - **PSTF 2** (template: `http://ugm.id/TemplatePSTF2`): Bab 1 Review FEED · Bab 2 Sizing & Safety · Bab 3 DED (ISA-20, spec break, BoM) · Bab 4 Kendali, HMI & SIS · Bab 5 Virtual FAT · Bab 6 SOP · Lampiran A–D (P&ID Final, Loop & Logic, Hook-up, Datasheet + BoM).
 
@@ -104,3 +104,4 @@ tags: ["Panduan", "Rubrik", "PSTF 1", "PSTF 2", "Stage-Gate"]
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Ringkasan dibuat dari ekstraksi teks PDF 30 halaman (LOG-004). Perlu dicek PM. |
+| 0.2 | 2026-11-03 | Claude Code (AI) | §9: catatan LOG-024 (template 5 bab berlaku) diganti keputusan PM bahwa struktur 4 bab Panduan berlaku (LOG-025). |
