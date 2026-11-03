@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 11:35 WIB  
+**Terakhir Diperbarui:** 2026-11-03 11:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -103,6 +103,13 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - `vercel.json` **dikembalikan**. Alasan penghapusan di LOG-004 ("header identik dengan `firebase.json`") hanya berlaku jika hosting-nya Firebase; di Vercel, file ini satu-satunya sumber header keamanan.
   - Remote monorepo = `raaahl15/dashboardcapstone`; Root Directory Vercel = `apps/operations-cockpit`.
   - Riwayat 12 commit repo website **dipertahankan** (merge `-s ours`), bukan ditimpa dengan force push.
+
+### 10. Pembagian Kerja Google Workspace antar AI Agent (2026-11-03)
+* **Konteks**: Claude Code belum punya akses Google Drive di sesinya (tidak ada konektor; CLI `gdrive` tidak tersedia). PM menanyakan opsi integrasi lalu membagi tugas.
+* **Keputusan PM**:
+  - **Antigravity** → unggah dan kelola **file & folder** di Google Drive (biner CAD, PDF, bukti WO, struktur folder).
+  - **Claude Code** → kelola **isi** Google Sheets, Docs, Slides, dan sejenisnya (Master Instrument Index, IO List, FDS, laporan), termasuk sinkronisasi Sheets → CSV dan `google_workspace_registry.json`.
+  - Prasyarat Claude Code: konektor Google Drive diaktifkan di claude.ai.
 
 ---
 
@@ -217,6 +224,25 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-008] 2026-11-03 11:40 WIB — Pembagian kerja Google Workspace (Antigravity: file/folder · Claude Code: isi Sheets/Docs)
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: 2
+* **Tujuan**: Menetapkan batas tugas antar AI agent untuk integrasi Google Workspace.
+* **Perubahan**:
+  - Blueprint Fase 2: butir "Pembagian kerja" diganti tabel pembagian Google Workspace + aturan batas + prasyarat konektor.
+  - Blueprint §7.2: peran Antigravity (pengelola file & folder Drive) dan Claude Code (pengelola isi Sheets/Docs/Slides).
+  - Kronologi #10 (BAB I).
+* **Bukti / Verifikasi**:
+  - Pencarian alat di sesi Claude Code (`ToolSearch "google drive"`) → tidak ada alat Google Drive. Akses isi Sheets/Docs **belum tersedia** sampai PM mengaktifkan konektor.
+  - `npm run check` → PASS (dijalankan oleh `sync:push`).
+* **Keputusan**: lihat Kronologi #10. Ini menggantikan butir "integrasi Google Drive dikerjakan Antigravity; Claude Code tidak mengubah isi Drive" di LOG-006 untuk bagian isi dokumen.
+* **Tindak Lanjut**:
+  - [ ] **PM**: aktifkan konektor Google Drive di claude.ai → Settings → Connectors (akun UGM), lalu buka sesi Claude Code baru.
+  - [ ] **Claude Code** (setelah konektor aktif): buat Google Sheets Master Instrument Index & IO List dari CSV repo (data tetap berstatus PLACEHOLDER/Draft), Google Docs FDS + kerangka laporan PSTF 1 Bab 1–4 sesuai Lampiran 3A, lalu isi `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json`.
+  - [ ] **Antigravity**: struktur folder Drive (`04_INSTRUMENT_INDEX_SHEETS/`, `06_LIVING_REPORTS_GDOCS/`, dst. sesuai Blueprint §3.3), supaya Sheets/Docs bisa ditempatkan di folder yang benar.
 
 ---
 

@@ -553,7 +553,14 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Sudah:** isi folder staging diunggah ke Google Drive (2026-11-03, via `tools/upload_to_gdrive.js` + CLI `gdrive`; belum ada Google Drive for Desktop di PC ini).
 * **Repo GitHub:** ✅ memakai repo yang sudah ada, **`raaahl15/dashboardcapstone`** (privat, terhubung ke Vercel). Riwayat 12 commit cockpit dipertahankan lewat merge, dan push pertama berupa fast-forward tanpa force push (`5cf0c38..fa70e69`, LOG-007). Root Directory Vercel sudah diubah PM ke `apps/operations-cockpit`.
 * **Catatan build:** di shell agent, `npx vite build` macet karena `npx` tidak pernah memanggil Vite. Gunakan `npm run build` atau `node node_modules/vite/bin/vite.js build` (build ±35 detik).
-* **Pembagian kerja:** integrasi Google Drive (sinkronisasi, struktur folder, registry) dikerjakan oleh **Antigravity** (keputusan PM, 2026-11-03). Agent lain tidak mengubah isi Drive.
+* **Pembagian kerja Google Workspace** (keputusan PM, 2026-11-03, LOG-008):
+
+  | Lingkup | Pelaksana | Contoh |
+  | :--- | :--- | :--- |
+  | **File & folder di Drive** — unggah, struktur folder, pindah/hapus file biner, sinkronisasi `DRIVE_ROOT` | **Antigravity** | CAD `.dwg/.dxf`, PDF, bukti WO, folder `08_WORK_ORDERS_EVIDENCE/WO-xxx/` |
+  | **Isi dokumen Google** — membuat & mengisi Google Sheets/Docs/Slides, menyelaraskan Sheets ↔ CSV repo, mengisi `google_workspace_registry.json` | **Claude Code** | Master Instrument Index & IO List (Sheets), FDS & laporan Bab 1–4 (Docs) |
+
+  Aturan batas: Claude Code tidak mengunggah/menghapus file biner di Drive; Antigravity tidak mengubah isi Sheets/Docs. Prasyarat untuk Claude Code: **konektor Google Drive diaktifkan di claude.ai → Settings → Connectors** dengan akun UGM.
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
 * **DoD:**
@@ -604,8 +611,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 
 | Agent | Peran | Batasan |
 | :--- | :--- | :--- |
-| Antigravity | Agen eksekusi di IDE (kode, skrip, file) | Tidak boleh menetapkan status di atas `Review Internal`; wajib mencatat setiap sesi kerja di log riwayat. |
-| Claude Code | Agen eksekusi & auditor independen di IDE | Sama seperti di atas. Agen yang mengerjakan suatu fase **tidak boleh menjadi satu-satunya auditor** fase tersebut. |
+| Antigravity | Agen eksekusi di IDE (kode, skrip, file); **pengelola file & folder Google Drive** | Tidak boleh menetapkan status di atas `Review Internal`; wajib mencatat setiap sesi kerja di log riwayat. |
+| Claude Code | Agen eksekusi & auditor independen di IDE; **pengelola isi Google Sheets/Docs/Slides** (via konektor claude.ai) | Sama seperti di atas. Agen yang mengerjakan suatu fase **tidak boleh menjadi satu-satunya auditor** fase tersebut. |
 | Claude (Projects / chat) | Reviewer eksternal bab laporan & simulasi tanya-jawab sidang | Tidak mengubah file repo secara langsung. |
 
 ### 7.3 Jaminan Bebas Biaya & Batasannya
