@@ -10,7 +10,8 @@
     "check": "node tools/check_companions.js",
     "sync:dwsim": "python tools/dwsim/export_hmb.py",
     "calc": ".venv\\Scripts\\python tools/calc/run_all.py",
-    "test:py": ".venv\\Scripts\\python -m pytest tools/dwsim tools/calc -q -p no:cacheprovider",
+    "test:py": ".venv\\Scripts\\python -m pytest tools/dwsim tools/calc tools/test_validate_tags.py -q -p no:cacheprovider",
+    "validate:tags": ".venv\\Scripts\\python tools/validate_tags.py",
     "sync:push": "node tools/sync/sync.js push",
     "sync:pull": "node tools/sync/sync.js pull",
     "pull:sheets": "node tools/sync/pull_sheets.js"

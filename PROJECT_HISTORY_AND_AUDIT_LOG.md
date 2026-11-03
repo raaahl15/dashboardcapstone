@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 2 DITUTUP DENGAN CATATAN (2026-11-03, LOG-018) — Fase 3 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 15:15 WIB  
+**Terakhir Diperbarui:** 2026-11-03 15:50 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -238,6 +238,30 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-021] 2026-11-03 15:50 WIB — `validate_tags.py` lintas dokumen + mirror FDS; CSV thermowell dibersihkan
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"lanjutkan"* (opsi: validate_tags dulu, lalu rapikan CSV thermowell)
+* **Fase**: 3
+* **Perubahan**:
+  - **Baru** `tools/validate_tags.py`: mengekstrak tag dari index (kolom non-tag), C&E, alarm DB, mirror Google Docs, dan P&ID DXF (opsional; atribut INSERT, TEXT, MTEXT via ezdxf). Klasifikasi: tag pabrik (tag_map FINAL) → OK; tag DWSIM → `DWSIM_TAG`; tag 2 digit liar → `WILD_TAG`; peralatan tak dikenal; instrumen: persis di index → OK, loop ada → `LOOP_FUNCTION_NOT_LISTED`, loop tidak ada → `PHANTOM_INSTRUMENT`; di P&ID wajib persis di index (`PHANTOM_IN_DRAWING`); index tidak digambar → `NOT_IN_DRAWING`; 2xx/3xx → `AREA_SCOPE`. Nomor jalur, nomor dokumen, SIL, LOG, rujukan standar diabaikan; bagian "Catatan Inkonsistensi"/"Log Revisi" dilewati. Opsi `--dxf`, `--strict`.
+  - **Baru** `tools/test_validate_tags.py` (6 uji, termasuk P&ID DXF sintetis yang dibuat dalam uji).
+  - **Baru** `06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md` (mirror read-only dari Google Docs, Rev 0.3) sesuai matriks data (Docs → mirror).
+  - **Baru** `01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.json` + companion `.md` (status WIP, PIC JN, reviewer IH) berisi daftar perbaikan per PIC.
+  - `CALC_ASME_Thermowell.csv`: angka bootstrap tanpa sumber **dihapus**, TW-201/202 (Area 2) dikeluarkan, REAC-01 → R-101, format kolom disamakan, status `BELUM DIHITUNG`; companion Rev 0.3.
+  - `package.json`: `validate:tags`, `test:py` + validator. Blueprint: DoD Fase 3 butir 4 progres, butir 5 ✅, pohon tools. README.
+* **Bukti / Verifikasi**:
+  - `npm run validate:tags` → **14 ERROR, 33 WARNING** di 4 sumber. ERROR: `PUMP-01` (C&E), `HEATER-01`, `E-01`, `PUMP-02` (alarm), `S-08` (index), `C-01`/`C-02` (index, C&E, alarm, FDS Bab 4), phantom `ESDV-201`, `FCV-202`, `TCV-201` (C&E). Temuan ini cocok dengan inkonsistensi yang dicatat manual pada re-audit LOG-002/004.
+  - `npm run test:py` → **30 passed** (10 HMB + 14 kalkulator + 6 validator).
+  - Uji DXF sintetis: `XYZ-150` → PHANTOM_IN_DRAWING, `PUMP-01` → DWSIM_TAG, `PIC-105` → NOT_IN_DRAWING; `FIC-101`, `TIC-101`, `FCV-101`, `R-101`, `E-101` tanpa temuan; `6"-PL-101` tidak terbaca sebagai tag.
+  - `npm run check` → `18 / 18`, **PASS**.
+* **Keputusan**: aturan loop ISA-5.1. Alarm/switch (`TAH-101`, `TSHH-101`) yang loop-nya ada di index hanya **WARNING**, kecuali bila muncul di gambar P&ID (wajib terdaftar persis → ERROR). Mirror Google Docs disimpan di repo sebagai sumber pemeriksaan otomatis; master tetap Google Docs.
+* **Tindak Lanjut**:
+  - [ ] **AL**: perbaiki C&E & alarm DB (PUMP-01 → P-101, HEATER-01 → E-101, keluarkan tag Area 2/3); putuskan `TSHH-101` sebagai sensor SIS terpisah (independensi IEC 61511) lalu daftarkan di index.
+  - [ ] **JN**: putuskan loop kolom di index (keluarkan/antarmuka); serahkan Draf P&ID DXF → `npm run validate:tags -- --dxf <file>` (DoD Fase 3 butir 4).
+  - [ ] **JN**: ASME PTC 19.3 TW-2016 → kalkulator thermowell (DoD Fase 3 butir 3).
+  - [ ] **Claude Code**: perbarui mirror FDS setiap kali master Google Docs berubah.
 
 ---
 

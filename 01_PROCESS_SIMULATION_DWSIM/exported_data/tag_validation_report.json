@@ -1,0 +1,371 @@
+{
+  "meta": {
+    "generated_at": "2026-11-03T13:21:43+07:00",
+    "validator": "tools/validate_tags.py",
+    "firm_area": "1",
+    "index_instruments": 9,
+    "tag_map_plant_tags": 13,
+    "pid_dxf_checked": [],
+    "sources": [
+      {
+        "source": "Master Instrument Index (kolom lokasi/layanan)",
+        "path": "04_INSTRUMENTATION_ISA20\\Master_Instrument_Index_DME.csv",
+        "sha256": "94185ec2867c",
+        "tags_found": 3
+      },
+      {
+        "source": "Cause_and_Effect_Matrix_ESD",
+        "path": "05_SAFETY_AND_CONTROL\\Cause_and_Effect_Matrix_ESD.csv",
+        "sha256": "99383f82c2c5",
+        "tags_found": 11
+      },
+      {
+        "source": "Master_Alarm_Database_ISA182",
+        "path": "05_SAFETY_AND_CONTROL\\Master_Alarm_Database_ISA182.csv",
+        "sha256": "84f0da3d09b3",
+        "tags_found": 15
+      },
+      {
+        "source": "Mirror FDS-IC-DME-2026-001",
+        "path": "06_COLLABORATIVE_WORKSPACE\\mirrors\\FDS-IC-DME-2026-001.md",
+        "sha256": "8b51d0221995",
+        "tags_found": 15
+      }
+    ]
+  },
+  "summary": {
+    "ERROR": 14,
+    "WARNING": 33
+  },
+  "findings": [
+    {
+      "level": "ERROR",
+      "code": "DWSIM_TAG",
+      "tag": "E-01",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Tag DWSIM dipakai di dokumen; di DWSIM ini aliran energi, bukan peralatan; bila yang dimaksud heat exchanger, pakai tag pabriknya (E-1xx)"
+    },
+    {
+      "level": "ERROR",
+      "code": "DWSIM_TAG",
+      "tag": "PUMP-01",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Tag DWSIM dipakai di dokumen; gunakan tag pabrik P-101"
+    },
+    {
+      "level": "ERROR",
+      "code": "DWSIM_TAG",
+      "tag": "PUMP-02",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Tag DWSIM dipakai di dokumen; objek AREA_3 (tanpa tag pabrik Area 1)"
+    },
+    {
+      "level": "ERROR",
+      "code": "DWSIM_TAG",
+      "tag": "S-08",
+      "source": "Master Instrument Index (kolom lokasi/layanan)",
+      "message": "Tag DWSIM dipakai di dokumen; objek AREA_2 (tanpa tag pabrik Area 1)"
+    },
+    {
+      "level": "ERROR",
+      "code": "PHANTOM_INSTRUMENT",
+      "tag": "ESDV-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen tanpa loop di Master Instrument Index"
+    },
+    {
+      "level": "ERROR",
+      "code": "PHANTOM_INSTRUMENT",
+      "tag": "FCV-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen tanpa loop di Master Instrument Index"
+    },
+    {
+      "level": "ERROR",
+      "code": "PHANTOM_INSTRUMENT",
+      "tag": "TCV-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen tanpa loop di Master Instrument Index"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-01",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-01",
+      "source": "Master Instrument Index (kolom lokasi/layanan)",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-01",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-01",
+      "source": "Mirror FDS-IC-DME-2026-001",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-02",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "C-02",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "ERROR",
+      "code": "WILD_TAG",
+      "tag": "HEATER-01",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Tag liar (format 2 digit, tidak ada di tag_map.csv)"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "AAL-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "AIC-201",
+      "source": "Master Instrument Index",
+      "message": "Instrumen di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "AIC-201",
+      "source": "Mirror FDS-IC-DME-2026-001",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "ESDV-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "FCV-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "LAL-202",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "LALL-202",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "LIC-202",
+      "source": "Master Instrument Index",
+      "message": "Instrumen di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "LSHH-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "LSLL-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PAH-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PAHH-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PCV-201",
+      "source": "Master Instrument Index",
+      "message": "Instrumen di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PCV-201",
+      "source": "Mirror FDS-IC-DME-2026-001",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PIC-201",
+      "source": "Master Instrument Index",
+      "message": "Instrumen di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PIC-201",
+      "source": "Mirror FDS-IC-DME-2026-001",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PSHH-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "PSV-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "AREA_SCOPE",
+      "tag": "TCV-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Instrumen area 2xx, di luar lingkup firma Area 1"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "AAL-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (AIC-201), tetapi AAL-201 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "LAL-202",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (LIC-202), tetapi LAL-202 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "LALL-202",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (LIC-202), tetapi LALL-202 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "LSHH-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Loop ada di index (LIC-202), tetapi LSHH-202 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "LSLL-202",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Loop ada di index (LIC-202), tetapi LSLL-202 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "PAH-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (PCV-201, PIC-201), tetapi PAH-201 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "PAHH-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (PCV-201, PIC-201), tetapi PAHH-201 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "PSHH-201",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Loop ada di index (PCV-201, PIC-201), tetapi PSHH-201 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "PSV-201",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (PCV-201, PIC-201), tetapi PSV-201 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "TAH-101",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (TIC-101), tetapi TAH-101 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "TAHH-101",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (TIC-101), tetapi TAHH-101 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "TAL-101",
+      "source": "Master_Alarm_Database_ISA182",
+      "message": "Loop ada di index (TIC-101), tetapi TAL-101 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "TSHH-101",
+      "source": "Cause_and_Effect_Matrix_ESD",
+      "message": "Loop ada di index (TIC-101), tetapi TSHH-101 tidak terdaftar sebagai tag sendiri"
+    },
+    {
+      "level": "WARNING",
+      "code": "LOOP_FUNCTION_NOT_LISTED",
+      "tag": "TSHH-101",
+      "source": "Mirror FDS-IC-DME-2026-001",
+      "message": "Loop ada di index (TIC-101), tetapi TSHH-101 tidak terdaftar sebagai tag sendiri"
+    }
+  ]
+}

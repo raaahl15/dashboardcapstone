@@ -244,7 +244,7 @@ dme-capstone-master/
 │   ├── dwsim/export_hmb.py                      [ADA, LOG-019] HMB skema v1 + test_export_hmb.py
 │   ├── calc/                                    [ADA, LOG-020] orifice, control_valve, psv, npv, run_all + test_verification
 │   ├── sync/pull_sheets.js                      [ADA, LOG-012] Sheets → CSV (Node)
-│   ├── validate_tags.py                         [BARU]
+│   ├── validate_tags.py                         [ADA, LOG-021] + test_validate_tags.py
 │   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
 │   ├── check_companions.js                      [ADA] pengecek companion, status, ukuran & duplikat (`npm run check`)
 │   ├── export_dwsim_hmb.js                      [DIHAPUS, LOG-019] ekstraktor v0, diganti dwsim/export_hmb.py
@@ -583,8 +583,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file. *(LOG-019: 14 stream; status diturunkan dari `Calculated`/`ErrorMessage` per objek karena DWSIM tidak menyimpan status global.)*
   - [x] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi. *(LOG-019: 10 unit, galat maks 0,027 % di M-101; divalidasi otomatis setiap ekstraksi.)*
   - [ ] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: 4 dari 5 selesai (orifice, control valve, PSV, NPV) dengan uji ISO 5167-2 independen, IEC 60534-2-1 contoh 1–2, API 520 contoh 1–2, dan contoh NPV. **Thermowell ASME PTC 19.3 TW belum**: menunggu salinan standar + contoh soal.)*
-  - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan.
-  - [ ] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar.
+  - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-021: validator selesai, lintas dokumen jalan (14 ERROR, 33 WARNING), pembaca DXF teruji pada P&ID sintetis. Tinggal dijalankan pada Draf P&ID DXF asli dari JN.)*
+  - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 
 #### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari
 * **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
