@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { WhatsAppShareButton } from '../common/WhatsAppShareButton';
 import { sanitizeExternalUrl } from '../../context/appContextHelpers';
 import {
   computeProjectWeekFromDate,
@@ -258,6 +259,19 @@ export const WorkOrderDetailModal: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            <WhatsAppShareButton
+              label={`Bagikan ${wo.code} ke WhatsApp`}
+              text={[
+                `*${wo.code}: ${wo.title}*`,
+                `Status: ${wo.status}${wo.needsRevision ? ' (perlu revisi)' : ''} | Prioritas: ${wo.priority}`,
+                `Tenggat: ${formatYmdToIndonesian(wo.dueDate)}${overdue ? ` (TERLAMBAT ${Math.abs(daysDelta)} hari)` : ''}`,
+                `PIC: ${wo.assigneeIds.map((id) => getUser(id)?.nickname || getUser(id)?.name || id).join(', ')}`,
+                wo.blockedReason && wo.status === 'Blocked' ? `Kendala: ${wo.blockedReason}` : '',
+                `Cek di cockpit Area 1-DME > Work Order.`,
+              ]
+                .filter(Boolean)
+                .join('\n')}
+            />
             {isPM && wo.status !== 'Dibatalkan' && (
               <button
                 type="button"

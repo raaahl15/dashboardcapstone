@@ -2,7 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { LogbookItem } from '../../types';
+import { buildLogbookCsv, downloadText } from '../../utils/logbookExport';
 import {
+  Download,
   Plus,
   AlertTriangle,
   Clock,
@@ -363,6 +365,21 @@ export const LogbookView: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() =>
+                downloadText(
+                  `logbook_area1_${new Date().toISOString().slice(0, 10)}.csv`,
+                  buildLogbookCsv(filteredLogbooks, (id) => getUser(id))
+                )
+              }
+              disabled={filteredLogbooks.length === 0}
+              className="min-h-[40px] px-4 py-2 bg-white/80 hover:bg-white text-[#0B1B33] border border-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
+              title="Unduh entri yang sedang tampil (sesuai filter) sebagai CSV rekap untuk Simaster"
+            >
+              <Download className="w-3.5 h-3.5 text-[#0062CC]" />
+              Ekspor CSV ({filteredLogbooks.length})
+            </button>
             {isPM && totalFilled < TOTAL_TARGET && (
               <button
                 onClick={() => {

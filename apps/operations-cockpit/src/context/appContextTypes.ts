@@ -56,7 +56,10 @@ export type NavTab =
   | 'standards'
   | 'workspaces'
   | 'logbook'
-  | 'stage-gate';
+  | 'stage-gate'
+  | 'dwsim'
+  | 'library'
+  | 'gworkspace';
 
 export type ImportDataResult = 'success' | 'invalid' | 'users-unavailable';
 

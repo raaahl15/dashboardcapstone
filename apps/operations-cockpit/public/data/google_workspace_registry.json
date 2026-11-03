@@ -1,0 +1,149 @@
+{
+ "schema_version": 1,
+ "updated_at": "2026-11-03T12:15:00+07:00",
+ "updated_by": "Claude Code (LOG-012)",
+ "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
+ "drive": {
+  "root": {
+   "title": "CAPSTONE_DME_AREA1",
+   "id": "1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod",
+   "url": "https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod"
+  },
+  "folders": [
+   {
+    "key": "core_guidelines",
+    "title": "00_CORE_GUIDELINES",
+    "id": "1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y",
+    "url": "https://drive.google.com/drive/folders/1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y"
+   },
+   {
+    "key": "cad_dwg",
+    "title": "03_CAD_DWG",
+    "id": "1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo",
+    "url": "https://drive.google.com/drive/folders/1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo"
+   },
+   {
+    "key": "instrument_index_sheets",
+    "title": "04_INSTRUMENT_INDEX_SHEETS",
+    "id": "1uXARjW3nBoODCgDgHC_1VdKedFdl6S69",
+    "url": "https://drive.google.com/drive/folders/1uXARjW3nBoODCgDgHC_1VdKedFdl6S69"
+   },
+   {
+    "key": "living_reports_gdocs",
+    "title": "06_LIVING_REPORTS_GDOCS",
+    "id": "1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16",
+    "url": "https://drive.google.com/drive/folders/1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16"
+   },
+   {
+    "key": "final_deliverables_pdf",
+    "title": "07_FINAL_DELIVERABLES_PDF",
+    "id": "1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF",
+    "url": "https://drive.google.com/drive/folders/1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF"
+   },
+   {
+    "key": "work_orders_evidence",
+    "title": "08_WORK_ORDERS_EVIDENCE",
+    "id": "1358fFhWSzj3rdswxzz3njcibp_dKppoA",
+    "url": "https://drive.google.com/drive/folders/1358fFhWSzj3rdswxzz3njcibp_dKppoA"
+   },
+   {
+    "key": "stage_gates_submissions",
+    "title": "09_STAGE_GATES_SUBMISSIONS",
+    "id": "1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf",
+    "url": "https://drive.google.com/drive/folders/1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf"
+   }
+  ],
+  "folders_pending": []
+ },
+ "documents": [
+  {
+   "key": "instrument_index",
+   "type": "sheets",
+   "title": "Master Instrument Index & IO List DME Area 1",
+   "doc_no": "INST-IDX-DME-001",
+   "id": "1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM",
+   "url": "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit",
+   "tabs": [
+    "Instrument_Index",
+    "IO_List",
+    "Catatan"
+   ],
+   "repo_snapshot": "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.csv",
+   "sync_direction": "sheets_to_repo",
+   "sync_tab": "Instrument_Index",
+   "key_column": "TAG_NUMBER",
+   "required_columns": [
+    "TAG_NUMBER",
+    "P_AND_ID_NO",
+    "SERVICE_DESCRIPTION",
+    "LOCATION",
+    "LINE_EQUIPMENT_NO",
+    "SIGNAL_TYPE",
+    "IO_TYPE",
+    "RANGE_MIN",
+    "RANGE_MAX",
+    "ENG_UNIT",
+    "SETPOINT_ALARM",
+    "FAIL_MODE",
+    "CONTROLLER_TYPE",
+    "SAFETY_CRITICAL",
+    "DATA_STATUS"
+   ],
+   "target_folder": "04_INSTRUMENT_INDEX_SHEETS",
+   "pic": "Jonathan Pangihutan Michael Siahaan",
+   "status": "Draft",
+   "data_status": "PLACEHOLDER"
+  },
+  {
+   "key": "fds",
+   "type": "docs",
+   "title": "FDS-IC-DME-2026-001 Functional Design Specification & Control Narrative",
+   "doc_no": "FDS-IC-DME-2026-001",
+   "id": "1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg",
+   "url": "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit",
+   "repo_companion": "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md",
+   "target_folder": "06_LIVING_REPORTS_GDOCS",
+   "pic": "Altaf Ramadhan Parvez",
+   "status": "Draft",
+   "data_status": "PLACEHOLDER"
+  },
+  {
+   "key": "laporan_pstf1",
+   "type": "docs",
+   "title": "Laporan PSTF 1 FEED Pabrik DME Area 1 (Draf)",
+   "doc_no": "",
+   "id": "1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w",
+   "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit",
+   "structure": "Lampiran 3A Panduan Capstone: Bab 1-4 + Lampiran A-B",
+   "target_folder": "06_LIVING_REPORTS_GDOCS",
+   "pic": "Rahul Ghulam Hidayatulloh (PM)",
+   "section_owners": {
+    "1.1 TOR dan lingkup proyek": "Rahul Ghulam Hidayatulloh",
+    "1.2 Pemodelan first-principle": "Ihsaan Zauhair Tsaqif Prawira",
+    "1.3 URS": "Ihsaan Zauhair Tsaqif Prawira; target kendali Altaf Ramadhan Parvez",
+    "Bab 2 FDS": "Altaf Ramadhan Parvez",
+    "3.1 PFD": "Ihsaan Zauhair Tsaqif Prawira",
+    "3.2 Neraca massa dan panas": "Ihsaan Zauhair Tsaqif Prawira",
+    "3.3 Draf P&ID": "Jonathan Pangihutan Michael Siahaan; logika SIS Altaf Ramadhan Parvez",
+    "Bab 4 Tekno-ekonomi": "Heidi Falina Brilian",
+    "Lampiran A Draf P&ID": "Jonathan Pangihutan Michael Siahaan",
+    "Lampiran B Logbook": "semua anggota; rekap Rahul Ghulam Hidayatulloh"
+   },
+   "section_reviewers": {
+    "1.1 TOR dan lingkup proyek": "Heidi Falina Brilian",
+    "1.2 Pemodelan first-principle": "Altaf Ramadhan Parvez",
+    "1.3 URS": "Jonathan Pangihutan Michael Siahaan",
+    "Bab 2 FDS": "Jonathan Pangihutan Michael Siahaan",
+    "3.1 PFD": "Jonathan Pangihutan Michael Siahaan",
+    "3.2 Neraca massa dan panas": "Altaf Ramadhan Parvez",
+    "3.3 Draf P&ID": "Ihsaan Zauhair Tsaqif Prawira",
+    "Bab 4 Tekno-ekonomi": "Ihsaan Zauhair Tsaqif Prawira",
+    "Lampiran A Draf P&ID": "Ihsaan Zauhair Tsaqif Prawira",
+    "Lampiran B Logbook": "Heidi Falina Brilian"
+   },
+   "final_check_before_submission": "Rahul Ghulam Hidayatulloh (PM)",
+   "status": "Draft",
+   "data_status": "KERANGKA"
+  }
+ ]
+}

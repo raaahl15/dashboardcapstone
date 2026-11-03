@@ -66,7 +66,8 @@ npm run dev                     # jalankan cockpit di http://localhost:3000
 | `npm run test:py` | Uji ekstraktor HMB, kalkulator, dan validator tag (butuh `.venv`) |
 | `npm run sync:push -- "pesan"` | Commit aman + push (menolak file liar) |
 | `npm run sync:pull` | Tarik perubahan terbaru (`pull --rebase`) |
-| `npm run build` | Build produksi cockpit |
+| `npm run build` | Bundel data rekayasa (`build_manifest.js`) lalu build produksi cockpit |
+| `npm run data:cockpit` | Bundel ulang data rekayasa ke `apps/operations-cockpit/public/data/` (wajib setelah mengubah HMB, CSV kalkulator, laporan tag, registry, atau companion `.md`; dicek oleh `npm run check`) |
 | `npm run pull:sheets -- --key <key> --from-file <csv>` | Sinkron Google Sheets → snapshot CSV repo |
 
 ## Aturan Inti (ringkas dari Blueprint)
@@ -75,3 +76,16 @@ npm run dev                     # jalankan cockpit di http://localhost:3000
 3. **Status dokumen:** `Draft → WIP → Review Internal → Diajukan → ACC Pembimbing`. Status ACC wajib ada bukti (MoM/WO).
 4. **Nilai tanpa sumber ditandai `PLACEHOLDER`** dan tidak boleh dikutip ke laporan.
 5. **Catat setiap sesi kerja** di log riwayat.
+
+## Rilis Produksi & Serah Terima (Fase 4–5)
+
+Push ke `main` = deploy produksi Vercel (risiko R-11). Fitur baru dikerjakan di branch lalu dicek di **preview Vercel** sebelum digabung.
+
+1. **Syarat sebelum merge:** akses umum folder Drive `CAPSTONE_DME_AREA1` diubah ke **Dibatasi** dan dibagikan per email (risiko R-13: `public/data/` bisa diunduh tanpa login).
+2. **Uji preview:** buka URL preview branch di dashboard Vercel → login → buka ke-12 modul (Homepage, Work Order, Schedule, Team & RACI, Weekly MoM, Standards, Workspaces, DWSIM, Library, G-Workspace, Logbook, Stage-Gate) dengan DevTools Console terbuka; tidak boleh ada error merah.
+3. **Merge & rilis:** `git switch main`, `git merge --no-ff <branch>`, `npm run sync:push -- "release: ..."` → cek deployment *Ready* di Vercel. Gagal? *Instant Rollback* di Vercel.
+4. **Aturan Firestore:** `cd apps/operations-cockpit` lalu `npx firebase-tools deploy --only firestore:rules` (login Firebase akun PM).
+5. **Uji tim:** tiap anggota login di produksi dan membuat satu WO percobaan (tandai "uji" lalu batalkan).
+6. **Catat ukuran `projectData/area1`** dari panel Kesehatan Data (harus < 500 KB).
+7. **Milestone Gantt G1** (akhir minggu 13 PSTF 1) ditambahkan lewat UI Schedule, centang *Stage-gate milestone*.
+8. **Re-audit akhir** oleh agent/pihak **selain** pelaksana (Blueprint §7.2), dicatat di log riwayat.

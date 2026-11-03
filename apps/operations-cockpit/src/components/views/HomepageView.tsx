@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { DataHealthPanel } from '../common/DataHealthPanel';
 import {
   Config,
   DeliverableItem,
@@ -535,6 +536,9 @@ export const HomepageView: React.FC = () => {
           </button>
         )}
       </div>
+
+      {/* KESEHATAN DATA REKAYASA (Blueprint BAB IV tambahan v2.0; data public/data/health.json) */}
+      <DataHealthPanel />
 
       {/* ========================================================================= */}
       {/* CORE BENTO GRID (3 Columns on >= 1280px, aligned bottom edges) */}

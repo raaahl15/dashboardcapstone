@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { WhatsAppShareButton } from '../common/WhatsAppShareButton';
 import {
   buildMomSummaryPeriodOptions,
   computeMomPeriodWorkOrders,
@@ -677,6 +678,19 @@ export const WeeklyMoMView: React.FC = () => {
                 </p>
               </div>
 
+              <div className="flex flex-wrap items-center gap-2">
+              <WhatsAppShareButton
+                label="Bagikan action item aktif ke WhatsApp"
+                text={[
+                  `*Action Item MoM aktif (${activeActionsCount})*`,
+                  ...trackerActions
+                    .filter((a) => a.progress === 'In Progress')
+                    .map((a) => {
+                      const pic = getUser(a.pic || a.picCode);
+                      return `- ${a.code} (${a.week}): ${a.issue} | PIC ${pic?.nickname || pic?.name || a.picName || a.picCode} | tenggat ${a.deadline}`;
+                    }),
+                ].join('\n')}
+              />
               {isPM && (
                 <button
                   type="button"
@@ -687,6 +701,7 @@ export const WeeklyMoMView: React.FC = () => {
                   Tambah Baris
                 </button>
               )}
+              </div>
             </div>
 
             <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
@@ -891,6 +906,17 @@ export const WeeklyMoMView: React.FC = () => {
                       <span className="text-[11px] text-[#4A5A72] flex items-center gap-1">
                         {log.location}
                       </span>
+                      <WhatsAppShareButton
+                        compact
+                        label={`Bagikan ringkasan MoM ${log.weekLabel} ke WhatsApp`}
+                        text={[
+                          `*MoM ${log.weekLabel}: ${log.topic}*`,
+                          `${log.dayText} | ${log.location} | ${log.evaluator}`,
+                          `Kehadiran: ${log.presenceRatio}`,
+                          '',
+                          log.summary,
+                        ].join('\n')}
+                      />
                       {isPM && (
                         <button
                           type="button"

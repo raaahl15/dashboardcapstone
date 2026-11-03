@@ -6,7 +6,8 @@
   "scripts": {
     "postinstall": "npm ci --prefix apps/operations-cockpit",
     "dev": "npm run dev --prefix apps/operations-cockpit",
-    "build": "npm run build --prefix apps/operations-cockpit",
+    "build": "node tools/build_manifest.js && npm run build --prefix apps/operations-cockpit",
+    "data:cockpit": "node tools/build_manifest.js",
     "check": "node tools/check_companions.js",
     "sync:dwsim": "python tools/dwsim/export_hmb.py",
     "calc": ".venv\\Scripts\\python tools/calc/run_all.py",

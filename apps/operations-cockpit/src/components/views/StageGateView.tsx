@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { StageGateTimeline } from '../common/StageGateTimeline';
 import {
   ShieldCheck,
   Printer,
@@ -190,7 +191,7 @@ export const StageGateView: React.FC = () => {
                 AUDIT INTERNAL TAHAP 3
               </span>
               <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
-                Sidang Akhir: 15 Des 2026
+                G2 Evaluasi PSTF 1: {config.tenderDeadline}
               </span>
             </div>
 
@@ -229,6 +230,9 @@ export const StageGateView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* PEMETAAN STAGE-GATE G1–G4 (Blueprint §1.7) */}
+      <StageGateTimeline />
 
       {/* ========================================================================= */}
       {/* MASTER READINESS GAUGE & METRIC CARDS */}

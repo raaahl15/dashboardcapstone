@@ -1,0 +1,1022 @@
+{
+ "generated_at": "2026-11-03T07:40:29.930Z",
+ "calculators": [
+  {
+   "file": "CALC_API520_PSV.csv",
+   "items": [
+    {
+     "tag": "PSV-101",
+     "description": "PSV-101 proteksi tekanan lebih reaktor R-101, skenario blocked outlet (fase uap)",
+     "result": "PASS",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "PSV-101 proteksi tekanan lebih reaktor R-101, skenario blocked outlet (fase uap)",
+       "unit": "",
+       "source": "API 520 Part I / API 526 / API 521",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Skenario relief",
+       "symbol": "",
+       "value": "Blocked outlet R-101: laju relief = laju masuk normal (S-104)",
+       "unit": "-",
+       "source": "API 521 §4.4.2 (closed outlet); skenario lain (kebakaran, kegagalan pendingin, runaway) belum dikaji",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju relief",
+       "symbol": "W",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Suhu relief (diambil = suhu operasi)",
+       "symbol": "T",
+       "value": "250",
+       "unit": "degC",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.T",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Berat molekul uap",
+       "symbol": "M",
+       "value": "31.8957",
+       "unit": "kg/kmol",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.mw",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor kompresibilitas",
+       "symbol": "Z",
+       "value": "0.93452",
+       "unit": "-",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.z",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Rasio kalor spesifik Cp/Cv",
+       "symbol": "k",
+       "value": "1.21469",
+       "unit": "-",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.k",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Set pressure",
+       "symbol": "P_set",
+       "value": "16",
+       "unit": "bar(g)",
+       "source": "Master Instrument Index PSV-101 'Set: 16.0 bar(g)' (data contoh); set pressure = tekanan desain R-101, belum ditetapkan",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Overpressure yang diizinkan",
+       "symbol": "",
+       "value": "10",
+       "unit": "%",
+       "source": "API 520 Part I: 10 % untuk satu katup, kasus non-kebakaran",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan atmosfer",
+       "symbol": "",
+       "value": "1.01325",
+       "unit": "bar(a)",
+       "source": "Tekanan atmosfer standar",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan balik total",
+       "symbol": "",
+       "value": "1.01325",
+       "unit": "bar(a)",
+       "source": "Sementara buang ke atmosfer; bila ke flare header, ganti dengan tekanan balik flare",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Koefisien discharge efektif",
+       "symbol": "Kd",
+       "value": "0.975",
+       "unit": "-",
+       "source": "API 520 Part I, nilai untuk sizing awal gas",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor koreksi backpressure",
+       "symbol": "Kb",
+       "value": "1",
+       "unit": "-",
+       "source": "Katup konvensional, backpressure diabaikan",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor kombinasi rupture disk",
+       "symbol": "Kc",
+       "value": "1",
+       "unit": "-",
+       "source": "Tanpa rupture disk di hulu",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tekanan relief",
+       "symbol": "P1",
+       "value": "18.6133",
+       "unit": "bar(a)",
+       "source": "P_set (1 + overpressure) + P_atm",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tekanan aliran kritis",
+       "symbol": "P_cf",
+       "value": "10.4538",
+       "unit": "bar(a)",
+       "source": "API 520 Part I pers. (1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rezim aliran",
+       "symbol": "",
+       "value": "kritis",
+       "unit": "",
+       "source": "P_back vs P_cf",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Luas efektif dibutuhkan",
+       "symbol": "A",
+       "value": "885.31",
+       "unit": "mm2",
+       "source": "API 520 Part I pers. (3) kritis",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Huruf orifice API 526",
+       "symbol": "",
+       "value": "K",
+       "unit": "",
+       "source": "API 526 Tabel 1",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Luas orifice terpilih",
+       "symbol": "A_sel",
+       "value": "1185.8",
+       "unit": "mm2",
+       "source": "API 526 Tabel 1",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Margin luas",
+       "symbol": "",
+       "value": "33.9423",
+       "unit": "%",
+       "source": "A_sel / A - 1",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Orifice API 526 tersedia (satu katup)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "A = 885.3 mm2 [API 526]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "k fisik (1 < k < 2)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "k = 1.2147 [konsistensi data]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Skenario relief wajib dikaji ulang (API 521)",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_ASME_Thermowell.csv",
+   "items": [
+    {
+     "tag": "TW-101",
+     "description": "Thermowell bed katalis 1 R-101 (loop TIC-101)",
+     "result": "BELUM DIHITUNG",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Thermowell bed katalis 1 R-101 (loop TIC-101)",
+       "unit": "",
+       "source": "ASME PTC 19.3 TW-2016",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rasio frekuensi wake/alami",
+       "symbol": "fs/fn",
+       "value": "BELUM DIHITUNG",
+       "unit": "-",
+       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    },
+    {
+     "tag": "TW-102",
+     "description": "Thermowell bed katalis 2 R-101",
+     "result": "BELUM DIHITUNG",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Thermowell bed katalis 2 R-101",
+       "unit": "",
+       "source": "ASME PTC 19.3 TW-2016",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rasio frekuensi wake/alami",
+       "symbol": "fs/fn",
+       "value": "BELUM DIHITUNG",
+       "unit": "-",
+       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    },
+    {
+     "tag": "TW-103",
+     "description": "Thermowell outlet uap R-101",
+     "result": "BELUM DIHITUNG",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Thermowell outlet uap R-101",
+       "unit": "",
+       "source": "ASME PTC 19.3 TW-2016",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rasio frekuensi wake/alami",
+       "symbol": "fs/fn",
+       "value": "BELUM DIHITUNG",
+       "unit": "-",
+       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_ISA75_ControlValve.csv",
+   "items": [
+    {
+     "tag": "FCV-101",
+     "description": "Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6\"-PL-101)",
+     "result": "PASS",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6\"-PL-101)",
+       "unit": "",
+       "source": "IEC 60534-2-1 / ISA-75.01.01",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa normal",
+       "symbol": "q_m",
+       "value": "8321.27",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas cairan",
+       "symbol": "rho",
+       "value": "791.72",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas cairan",
+       "symbol": "mu",
+       "value": "0.55065",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Suhu",
+       "symbol": "T1",
+       "value": "25.3345",
+       "unit": "degC",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.T",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan hulu (discharge P-101)",
+       "symbol": "P1",
+       "value": "15.5",
+       "unit": "bar(a)",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.P",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Beda tekanan desain katup",
+       "symbol": "dP",
+       "value": "1",
+       "unit": "bar",
+       "source": "Belum ada di model DWSIM (tidak ada katup); diambil 1,0 bar sebagai porsi rugi tekanan sistem untuk kendali yang baik; tetapkan dari hidrolik jalur",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor laju desain maksimum terhadap normal",
+       "symbol": "",
+       "value": "1.25",
+       "unit": "-",
+       "source": "Margin desain umum 1,1-1,3 x normal; tetapkan dari URS (turndown/kapasitas maksimum)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Antoine A metanol",
+       "symbol": "",
+       "value": "5.20409",
+       "unit": "-",
+       "source": "NIST Chemistry WebBook, methanol, log10(P/bar)=A-B/(T+C), 288-357 K; dipakai sebagai pendekatan Pv campuran (x MeOH 0,983)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Antoine B metanol",
+       "symbol": "",
+       "value": "1581.34",
+       "unit": "K",
+       "source": "NIST Chemistry WebBook, methanol",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Antoine C metanol",
+       "symbol": "",
+       "value": "-33.5",
+       "unit": "K",
+       "source": "NIST Chemistry WebBook, methanol",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan kritis metanol",
+       "symbol": "Pc",
+       "value": "81",
+       "unit": "bar",
+       "source": "NIST Chemistry WebBook, methanol (Pc ~ 81 bar)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor pemulihan tekanan cairan",
+       "symbol": "FL",
+       "value": "0.9",
+       "unit": "-",
+       "source": "IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Valve style modifier",
+       "symbol": "Fd",
+       "value": "0.46",
+       "unit": "-",
+       "source": "IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter dalam pipa",
+       "symbol": "D",
+       "value": "154.08",
+       "unit": "mm",
+       "source": "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Ukuran katup",
+       "symbol": "d",
+       "value": "154.08",
+       "unit": "mm",
+       "source": "Sementara sama dengan pipa (tanpa reducer, Fp = 1); setelah Kv diketahui pilih ukuran katup lalu hitung ulang",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tekanan uap pada T1",
+       "symbol": "Pv",
+       "value": "17.2352",
+       "unit": "kPa",
+       "source": "Persamaan Antoine (input LITERATUR)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Laju volumetrik (normal)",
+       "symbol": "Q",
+       "value": "10.5104",
+       "unit": "m3/h",
+       "source": "q_m / rho",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koefisien aliran Kv (normal)",
+       "symbol": "Kv",
+       "value": "9.35618",
+       "unit": "m3/h",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koefisien aliran Cv (normal)",
+       "symbol": "Cv",
+       "value": "10.8157",
+       "unit": "US gpm/psi^0.5",
+       "source": "Cv = 1,156 Kv",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor rasio tekanan kritis (normal)",
+       "symbol": "FF",
+       "value": "0.947084",
+       "unit": "-",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (8)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Reynolds katup (normal)",
+       "symbol": "Re_v",
+       "value": "169367",
+       "unit": "-",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (23)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Tidak choked (normal)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Aliran turbulen (normal)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Re_v = 1.69e+05 [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Laju volumetrik (maksimum)",
+       "symbol": "Q",
+       "value": "13.138",
+       "unit": "m3/h",
+       "source": "q_m / rho",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koefisien aliran Kv (maksimum)",
+       "symbol": "Kv",
+       "value": "11.6952",
+       "unit": "m3/h",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koefisien aliran Cv (maksimum)",
+       "symbol": "Cv",
+       "value": "13.5197",
+       "unit": "US gpm/psi^0.5",
+       "source": "Cv = 1,156 Kv",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor rasio tekanan kritis (maksimum)",
+       "symbol": "FF",
+       "value": "0.947084",
+       "unit": "-",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (8)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Reynolds katup (maksimum)",
+       "symbol": "Re_v",
+       "value": "189360",
+       "unit": "-",
+       "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (23)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Tidak choked (maksimum)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Aliran turbulen (maksimum)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Re_v = 1.89e+05 [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Tidak flashing (P2 > Pv)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "P2 = 14.500 bar(a), Pv = 0.1724 bar(a) [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Kv dipakai memilih ukuran katup dari katalog vendor (bukan bagian skrip)",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_ISO5167_Orifice.csv",
+   "items": [
+    {
+     "tag": "FE-101",
+     "description": "Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6\"-PL-101)",
+     "result": "PASS",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6\"-PL-101)",
+       "unit": "",
+       "source": "ISO 5167-2:2022",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa normal",
+       "symbol": "q_m",
+       "value": "8321.27",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan hulu",
+       "symbol": "P1",
+       "value": "15.5",
+       "unit": "bar(a)",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.P",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Suhu hulu",
+       "symbol": "T1",
+       "value": "25.3345",
+       "unit": "degC",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.T",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas cairan",
+       "symbol": "rho",
+       "value": "791.72",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas cairan",
+       "symbol": "mu",
+       "value": "0.55065",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props_by_phase.liquid.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Fase fluida",
+       "symbol": "",
+       "value": "liquid",
+       "unit": "-",
+       "source": "hmb_streams.json S-102 vapor_fraction = 0",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter dalam pipa",
+       "symbol": "D",
+       "value": "154.08",
+       "unit": "mm",
+       "source": "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh, belum dari line sizing)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Beda tekanan desain pada laju normal",
+       "symbol": "dP",
+       "value": "25",
+       "unit": "kPa",
+       "source": "Pilihan rentang DP transmitter (0-25 kPa), dipertahankan dari CSV lama; perlu ditetapkan PIC",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis pengambilan tekanan",
+       "symbol": "",
+       "value": "flange",
+       "unit": "-",
+       "source": "ISO 5167-2 §5.2.1 (flange taps umum di industri); konfirmasi dengan spesifikasi orifice flange",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter bore orifice",
+       "symbol": "d",
+       "value": "27.9509",
+       "unit": "mm",
+       "source": "ISO 5167-2:2022 pers. (1), diselesaikan iteratif",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rasio diameter",
+       "symbol": "beta",
+       "value": "0.181405",
+       "unit": "-",
+       "source": "d/D",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koefisien discharge",
+       "symbol": "C",
+       "value": "0.59841",
+       "unit": "-",
+       "source": "Reader-Harris/Gallagher, ISO 5167-2:2022 pers. (4)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor ekspansibilitas",
+       "symbol": "epsilon",
+       "value": "1",
+       "unit": "-",
+       "source": "1 untuk cairan",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds pipa",
+       "symbol": "Re_D",
+       "value": "34687.7",
+       "unit": "-",
+       "source": "4 q_m / (pi D mu)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan di pipa",
+       "symbol": "v",
+       "value": "0.156579",
+       "unit": "m/s",
+       "source": "q_m / (rho A)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rugi tekanan permanen",
+       "symbol": "dw",
+       "value": "24.0341",
+       "unit": "kPa",
+       "source": "ISO 5167-2:2022 pers. (7)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Cek balik laju alir",
+       "symbol": "q_m",
+       "value": "8321.27",
+       "unit": "kg/h",
+       "source": "ISO 5167-1 pers. (1) dengan d, C, epsilon hasil",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "d >= 12,5 mm",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "d = 27.95 mm [ISO 5167-2:2022 §5.3.1]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "50 <= D <= 1000 mm",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "D = 154.08 mm [ISO 5167-2:2022 §5.3.1]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "0,10 <= beta <= 0,75",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "beta = 0.1814 [ISO 5167-2:2022 §5.3.1]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Re_D minimum",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Re_D = 34688 >= 5000 [ISO 5167-2:2022 §5.3.1 (flange taps)]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Cek balik laju alir",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "selisih 1.92e-14 % [konsistensi]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Semua cek batas standar",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_TeknoEkonomi_NPV.csv",
+   "items": [
+    {
+     "tag": "NPV-001",
+     "description": "Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",
+     "result": "PASS",
+     "data_status": "PLACEHOLDER",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",
+       "unit": "",
+       "source": "Analisis arus kas terdiskonto",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "CAPEX total",
+       "symbol": "",
+       "value": "4850000",
+       "unit": "USD",
+       "source": "CSV lama (data contoh bootstrap, LOG-004)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "OPEX per tahun",
+       "symbol": "",
+       "value": "285000",
+       "unit": "USD",
+       "source": "CSV lama (data contoh bootstrap, LOG-004)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Pendapatan/penghematan per tahun",
+       "symbol": "",
+       "value": "1450000",
+       "unit": "USD",
+       "source": "CSV lama (data contoh bootstrap, LOG-004)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Suku bunga diskonto",
+       "symbol": "",
+       "value": "10",
+       "unit": "%",
+       "source": "CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Umur ekonomi",
+       "symbol": "",
+       "value": "20",
+       "unit": "tahun",
+       "source": "Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Batas IRR minimum (WACC)",
+       "symbol": "",
+       "value": "12",
+       "unit": "%",
+       "source": "CSV lama ('Harus > WACC (12%)')",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Target payback",
+       "symbol": "",
+       "value": "5",
+       "unit": "tahun",
+       "source": "CSV lama ('Target < 5 Tahun')",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Arus kas bersih tahunan",
+       "symbol": "CF",
+       "value": "1165000",
+       "unit": "USD/tahun",
+       "source": "pendapatan - OPEX",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Net Present Value",
+       "symbol": "NPV",
+       "value": "5068302",
+       "unit": "USD",
+       "source": "sum CF_t/(1+i)^t, t=0..20",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Internal Rate of Return",
+       "symbol": "IRR",
+       "value": "23.6781",
+       "unit": "%",
+       "source": "NPV(IRR) = 0",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Payback sederhana",
+       "symbol": "PBP",
+       "value": "4.16309",
+       "unit": "tahun",
+       "source": "CAPEX / CF",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Payback terdiskonto",
+       "symbol": "DPBP",
+       "value": "5.65956",
+       "unit": "tahun",
+       "source": "kumulatif PV = 0",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "NPV > 0",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "NPV = 5,068,302 [kriteria kelayakan]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "IRR > batas minimum",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "IRR = 23.68 % vs 12.0 % [kriteria kelayakan]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Payback < target",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "PBP = 4.16 vs 5.0 tahun [kriteria kelayakan]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Kelayakan bergantung pada status input",
+       "status": "PLACEHOLDER"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

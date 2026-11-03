@@ -250,7 +250,7 @@ dme-capstone-master/
 │   ├── export_dwsim_hmb.js                      [DIHAPUS, LOG-019] ekstraktor v0, diganti dwsim/export_hmb.py
 │   ├── upload_to_gdrive.js                      [ADA] unggahan awal DRIVE_ROOT → Drive via CLI `gdrive` (tidak idempoten)
 │   ├── lib/env.js                               [ADA] loader .env.local (DRIVE_ROOT, GDRIVE_ROOT_FOLDER_ID)
-│   ├── build_manifest.js                        [BARU] indeks .md untuk modul Master Library
+│   ├── build_manifest.js                        [ADA, LOG-022] bundel data rekayasa → apps/operations-cockpit/public/data/ (+ --check kesegaran)
 │   ├── requirements.txt                         [BARU] fluids, ezdxf, pyyaml, numpy-financial
 │   └── whatsapp-bot/                            [OPSIONAL] lihat §3.5
 │
@@ -453,13 +453,13 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 | 3 | Schedule & Gantt (`ScheduleView.tsx`) | Ada | Firestore | Timeline 16 minggu, jalur kritis, terhubung dengan penutupan WO. |
 | 4 | Team RACI (`TeamRaciView.tsx`) | Ada | Firestore | Matriks RACI per bab dan gambar, profil tim. |
 | 5 | Weekly MoM (`WeeklyMoMView.tsx`) | Ada | Firestore | Notulensi bimbingan, action item menjadi WO, **referensi MoM menjadi bukti status `ACC Pembimbing`**. |
-| 6 | DWSIM Stream Hub (`DwsimStreamView.tsx`) | **Baru** | `public/data/hmb_streams.json` | Tabel HMB (T, P, flow, fraksi uap, komposisi) dengan tag pabrik + tanggal ekstraksi. |
+| 6 | DWSIM Stream Hub (`DwsimStreamView.tsx`) | Ada (LOG-022) | `public/data/hmb_streams.json` | Tabel HMB (T, P, flow, fraksi uap, komposisi) dengan tag pabrik + tanggal ekstraksi; filter lingkup Area 1; unit operasi & neraca massa. |
 | 7 | Workspaces & Deliverables (`WorkspacesView.tsx`) | Ada | Firestore + Drive | Pelacak 10 deliverable FEED, preview PDF dari Drive. |
 | 8 | Standards (`StandardsView.tsx`) | Ada | Statis + Drive | Rujukan standar ISA/ISO/API/ASME/IEC. |
-| 9 | Master Library (`MasterLibraryView.tsx`) | **Baru** | `public/data/library_manifest.json` (dari `build_manifest.js`) | Penjelajah artefak + pembaca `.md` (KaTeX) + indikator status & kepatuhan companion. |
-| 10 | Google Workspace Hub (`GoogleWorkspaceView.tsx`) | **Baru** | `google_workspace_registry.json` | Tautan ke Docs, Sheets, Drive. |
+| 9 | Master Library (`MasterLibraryView.tsx`) | Ada (LOG-022) | `public/data/library_manifest.json`, `calc_results.json`, `tag_validation_report.json` (dari `build_manifest.js`) | Penjelajah artefak + pembaca `.md` (teks; rumus KaTeX belum dirender) + status; tab hasil kalkulator & validasi tag. |
+| 10 | Google Workspace Hub (`GoogleWorkspaceView.tsx`) | Ada (LOG-022) | `public/data/google_workspace_registry.json` | Tautan ke Docs, Sheets, folder Drive + PIC/status. |
 | 11 | Logbook Presensi (`LogbookView.tsx`) | Ada | Firestore | Logbook harian/mingguan + ekspor rekap untuk Simaster. |
-| 12 | Stage-Gate (`StageGateView.tsx`) | Ada | Firestore + manifest | Evaluasi kesiapan G1–G4 sesuai pemetaan §1.7 terhadap rubrik DTNTF; hanya artefak berstatus `Diajukan`/`ACC Pembimbing` yang dihitung. Saat ini view baru mencakup satu sidang (= G2); dilengkapi di Fase 4. |
+| 12 | Stage-Gate (`StageGateView.tsx`) | Ada | Firestore + manifest | Evaluasi kesiapan G1–G4 sesuai pemetaan §1.7 terhadap rubrik DTNTF; hanya artefak berstatus `Diajukan`/`ACC Pembimbing` yang dihitung. LOG-022: panel garis waktu G1–G4 (konfigurasi tetap dari §1.7, tanggal dari `config`); milestone Gantt G1/G3/G4 ditambahkan PM lewat UI Schedule. |
 
 **Tambahan v2.0:** panel **"Kesehatan Data"** di Homepage menampilkan umur `hmb_streams.json`, jumlah `FAIL` kalkulator, jumlah inkonsistensi tag, dan jumlah artefak tanpa companion.
 
@@ -586,19 +586,21 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-021: validator selesai, lintas dokumen jalan (14 ERROR, 33 WARNING), pembaca DXF teruji pada P&ID sintetis. Tinggal dijalankan pada Draf P&ID DXF asli dari JN.)*
   - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 
-#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari
+#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari — Status: KODE SELESAI di branch `fase-4-cockpit` (LOG-022), menunggu uji browser PM di preview Vercel lalu merge
+* **Selesai (LOG-022):** `tools/build_manifest.js` (data → `public/data/`, dicek kesegarannya oleh `npm run check`); modul `DwsimStreamView`, `MasterLibraryView`, `GoogleWorkspaceView`; panel Kesehatan Data (HMB, kalkulator, tag, companion, ukuran `projectData/area1`); tombol `wa.me` di detail WO, Tracker Action, dan setiap Meeting Log; panel G1–G4 di Stage-Gate; rute & navigasi baru. **Belum:** milestone Gantt G1 (dan G3/G4 semester depan) ditambahkan PM lewat UI Schedule; pembaca rumus KaTeX di Master Library.
 * **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
 * **DoD:**
-  - [ ] `tsc --noEmit` 0 error dan `npm run build` sukses (waktu build dicatat).
-  - [ ] 12 modul dapat dibuka tanpa error di console browser.
-  - [ ] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya).
+  - [x] `tsc --noEmit` 0 error dan `npm run build` sukses (waktu build dicatat). *(LOG-022: tsc exit 0; build 1.710 modul, 4–8 detik di PC Desktop.)*
+  - [ ] 12 modul dapat dibuka tanpa error di console browser. *(Butuh browser: PM membuka preview Vercel branch `fase-4-cockpit`, klik ke-12 modul + DevTools Console. Agent tidak punya browser.)*
+  - [x] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya). *(LOG-022: `build_manifest.js --check` membandingkan hash sumber; `npm run check`/`sync:push` menolak bila basi; tanggal ekstraksi tampil di modul.)*
 
-#### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari
+#### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: PERANGKAT LUNAK SIAP (LOG-022), kegiatan rilis & serah terima menunggu tim
+* **Perangkat lunak (LOG-022):** validasi tag menyeluruh (`npm run validate:tags`, LOG-021); ekspor logbook CSV (kolom Lampiran 2 Panduan; format unggah Simaster belum terdokumentasi, CSV umum); indikator ukuran `projectData/area1` di panel Kesehatan Data. **Kegiatan manusia:** merge ke `main` (rilis Vercel), `firebase deploy --only firestore:rules` (butuh login Firebase PM), login + WO percobaan oleh tiap anggota, kompilasi bundel Stage-Gate di Drive (Antigravity), re-audit akhir oleh agent/pihak **selain** pelaksana (§7.2). Langkah di README "Rilis Produksi & Serah Terima".
 * **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; rilis produksi di Vercel (push ke `main`) + deploy `firestore.rules`; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
 * **DoD:**
   - [ ] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`.
   - [ ] Seluruh anggota tim berhasil login dan membuat WO percobaan di versi produksi.
-  - [ ] Ukuran dokumen `projectData/area1` tercatat dan < 500 KB.
+  - [ ] Ukuran dokumen `projectData/area1` tercatat dan < 500 KB. *(LOG-022: indikator tersedia di panel Kesehatan Data; tinggal dibaca & dicatat PM setelah rilis.)*
   - [ ] Re-audit akhir tercatat di log riwayat.
 
 ---
@@ -732,6 +734,7 @@ flowchart TD
 | R-06 | Dokumen Firestore `projectData/area1` melewati 1 MiB | Tinggi | Sedang | Pantau ukuran; pecah ke koleksi saat > 500 KB (§3.6) | RG |
 | R-07 | Konflik file `.dwg` di dua perangkat | Sedang | Sedang | SOP §8.4 (satu perangkat per file) | JN |
 | R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Rendah (Drive kini di akun pribadi) | Fallback unduh CSV manual (§3.3) | JN |
+| R-13 | File di `public/data/` (HMB, kalkulator, companion, registry Google) dapat diunduh **tanpa login** dari website produksi; login Firebase hanya melindungi tampilan. Registry memuat tautan folder Drive yang saat ini berstatus "siapa saja yang memiliki link" | Sedang | Sedang | Sebelum merge Fase 4 ke `main`: ubah akses umum folder `CAPSTONE_DME_AREA1` ke **Dibatasi** dan bagikan per email; jangan menaruh data rahasia (kredensial, data pribadi) di folder `0x_` yang dibundel | RG |
 | R-12 | Seluruh Drive/Docs/Sheets dimiliki satu akun pribadi PM; jika akun bermasalah atau akses tim terlewat dibagikan, dokumen tidak bisa diakses | Sedang | Rendah | Bagikan folder induk `CAPSTONE_DME_AREA1` ke email UGM seluruh anggota (Editor); salinan teks penting tetap di Git (CSV snapshot, mirror Docs di `06_.../mirrors/`) | RG |
 | R-09 | Tim 5 orang, sedangkan panduan menyebut firma 3–4 orang; penilaian individu memakai logbook (anti *free-rider*) | Sedang | Sedang | Keputusan PM: tetap 5 orang. RACI per deliverable dibuat tegas, dan logbook tiap anggota wajib spesifik & lengkap 12 baris agar kontribusi individu terbukti | RG |
 | R-11 | Setiap push ke `main` memicu deploy produksi Vercel; deploy gagal/rusak memengaruhi website live | Tinggi | Sedang | Root Directory `apps/operations-cockpit` + skip deploy tanpa perubahan; `npm run build` lokal sebelum push perubahan web; rollback lewat *Instant Rollback* Vercel ke deployment sebelumnya | RG |
