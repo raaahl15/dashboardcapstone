@@ -22,7 +22,7 @@ tags: ["DWSIM", "HMB", "JSON", "Generated", "Area-100"]
 
 > ⚠️ **FILE HASIL GENERATE — jangan edit manual.** Buat ulang dengan `npm run sync:dwsim` setiap kali `DME.dwxmz` berubah, lalu commit keduanya dalam satu commit.
 >
-> **Status WIP:** nilai berasal dari model DWSIM (bukan placeholder), tetapi **asal-usul model belum dikonfirmasi**: metadata file menunjukkan disimpan 2021-05-25 dengan DWSIM 6.5 pada zona waktu +05:30. Sebelum angka dipakai di laporan, IH perlu memastikan model ini dibuat/divalidasi firma sendiri dan kondisi operasinya punya rujukan (Blueprint §3.1).
+> **Status WIP:** nilai berasal dari model DWSIM (bukan placeholder). Asal-usul model **terjawab (LOG-024)**: Tabel 1 RFP KAK-IC-DME-2026-001 mengutip fraksi mol yang identik dengan model ini, jadi model adalah **referensi klien dari dokumen lelang** (menjelaskan metadata simpan 2021-05-25, DWSIM 6.5, +05:30). Sebelum angka dikutip, IH menulis sitasi RFP dan rujukan literatur kondisi operasi (Blueprint §3.1).
 
 ## 1. Skema v1
 
@@ -73,7 +73,7 @@ Tabel di atas hanya ringkasan; angka acuan selalu `hmb_streams.json` terbaru (ce
 2. **S-107 di model: 89,0 °C, 10,4 bar, fraksi uap 0,07.** Logbook/MoM cockpit menyebut efluen "terkunci pada 45 °C dan 10 bar" dengan komposisi MeOH 0,18 / DME 0,41 / H₂O 0,41. Komposisi hampir sama, **suhu berbeda 44 °C**. Perlu disepakati dengan Area 2 mana yang berlaku, lalu model atau dokumen diperbarui.
 3. **S-106 (outlet cair reaktor) laju alirnya nol**, konsisten dengan reaktor fase gas. Tag tetap dipertahankan (keputusan tag_map FINAL).
 4. **Duty R-101 negatif** artinya panas dilepas reaktor (eksotermik); sistem pendingin reaktor perlu dirancang untuk ±733 kW.
-5. Model terakhir dihitung dan disimpan **2021-05-25 (+05:30)**; lihat catatan status WIP di atas.
+5. Model terakhir dihitung dan disimpan **2021-05-25 (+05:30)**: model referensi klien dari RFP (terverifikasi LOG-024).
 
 ## 4. SOP
 1. Jalankan DWSIM sampai konvergen, simpan `DME.dwxmz`.

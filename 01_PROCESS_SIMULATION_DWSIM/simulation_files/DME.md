@@ -28,7 +28,7 @@ Memodelkan konversi metanol menjadi DME melalui dehidrasi katalitik fase gas:
 $$2\,\text{CH}_3\text{OH} \rightarrow \text{CH}_3\text{OCH}_3 + \text{H}_2\text{O} \qquad (\Delta H_r \approx -23{,}4\ \text{kJ/mol})$$
 
 - Kondisi reaktor yang tercantum di draf awal: 250–320 °C, 12–15 bar(a). **Dari file simulasi (LOG-019):** R-101 isotermal 250 °C, 14,7 bar(a), konversi metanol ≈ 80 %, duty −733 kW. *[Rujukan literatur masih PERLU DIKONFIRMASI]*
-- **Asal-usul model (LOG-019):** metadata file menunjukkan model terakhir disimpan **2021-05-25, DWSIM 6.5.0.0, zona waktu +05:30**. *[PERLU DIKONFIRMASI IH: apakah model dibuat firma, atau diadaptasi dari sumber lain (cantumkan rujukannya)]*
+- **Asal-usul model (LOG-019):** metadata file menunjukkan model terakhir disimpan **2021-05-25, DWSIM 6.5.0.0, zona waktu +05:30**. **Terjawab (LOG-024):** fraksi mol S-08…S-11 di Tabel 1 RFP KAK-IC-DME-2026-001 identik dengan model ini (selisih ≤ 7×10⁻⁵), jadi `DME.dwxmz` adalah **model referensi klien dari dokumen lelang**. Di laporan, sitasi sebagai bagian RFP; pengembangan/validasi oleh firma ditulis terpisah.
 - Kapasitas produksi, kemurnian produk, dan konversi: *[PERLU DIKONFIRMASI — menjadi basis URS]*
 
 ## 2. Struktur Flowsheet (tag DWSIM)

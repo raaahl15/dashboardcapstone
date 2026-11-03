@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** FASE 2 DITUTUP DENGAN CATATAN (2026-11-03, LOG-018) — Fase 3 BERJALAN  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode siap di branch `fase-4-cockpit` (LOG-023)  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 15:50 WIB  
+**Terakhir Diperbarui:** 2026-11-03 18:15 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -125,6 +125,22 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
 * **Keputusan PM**: Fase 2 **ditutup dengan catatan**. Kedua butir ditangguhkan, bukan dianggap lulus, dan masing-masing punya syarat penutupan (Blueprint Fase 2). Fase 3 dimulai.
 * **Aturan baru (Blueprint BAB VI)**: pengecualian atas DoD hanya boleh diputuskan PM, wajib menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
+### 13. Alur Rilis Website lewat Branch & Data Statis Publik (2026-11-03)
+* **Konteks**: PM meminta seluruh fase diselesaikan. Fase 4 mengubah kode website, padahal push ke `main` langsung menjadi deploy produksi (R-11), dan agent tidak punya browser untuk DoD "12 modul tanpa error console".
+* **Keputusan**:
+  - Perubahan kode cockpit dikerjakan di **branch** (`fase-4-cockpit`) → **preview Vercel** → diuji PM di browser → merge ke `main`. Dokumen/log tetap langsung di `main`.
+  - Data rekayasa dibundel sebagai file statis `public/data/*.json` (sesuai §3.6), dengan pemeriksaan kesegaran di `npm run check`.
+  - **Risiko baru R-13**: file statis dapat diunduh tanpa login. Syarat merge: akses umum folder Drive diubah ke **Dibatasi**.
+
+### 14. RFP KAK-IC-DME-2026-001 & Template LaTeX Resmi Masuk Proyek (2026-11-03)
+* **Konteks**: PM menyerahkan dokumen RFP/TOR dan template laporan PSTF 1 (LaTeX + logo UGM) yang belum tercatat.
+* **Temuan → Keputusan**:
+  - Fraksi mol Tabel 1 RFP identik dengan HMB proyek → `DME.dwxmz` adalah **model referensi klien**; temuan "asal-usul model" (LOG-019) ditutup, model wajib disitasi sebagai bagian RFP.
+  - Template resmi memakai **5 bab** (menambah Bab 4 Kajian Keselamatan dan subbab 3.1/3.4) → struktur template **yang berlaku**; Google Docs laporan disesuaikan.
+  - SIL ditentukan dengan **HAZOP + LOPA** sesuai RFP §3.1.2 (bukan risk graph seperti teks contoh template).
+  - Tag di RFP (REAC-01, HEATER-01, PUMP-01, C-01, C-02) adalah nama klien; dokumen firma tetap memakai tag pabrik dengan tabel padanan.
+  - Tenggat RFP: FEED 15-12-2026 (= G2), DED 30-06-2027 (acuan G3/G4).
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -238,6 +254,63 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-024] 2026-11-03 18:15 WIB — Integrasi RFP KAK-IC-DME-2026-001 & template LaTeX PSTF 1; laporan disesuaikan ke 5 bab
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"ada tambahan dokumen untuk RFP yang belum dimasukkan serta template laporannya"*
+* **Fase**: lintas fase (dokumen acuan) + laporan PSTF 1
+* **Perubahan**:
+  - **Baru** `00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md` (status WIP, reviewer RG): identitas, lingkup, persyaratan I&C yang mengikat Area 1, padanan tag RFP ↔ pabrik, verifikasi data DWSIM, serahan FEED/DED, dampak ke dokumen. PDF asli disalin ke staging Drive lokal `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\KAK-IC-DME-2026-001_RFP.pdf` (tidak di Git, §2.2).
+  - **Baru** `00_CORE_GUIDELINES/templates/PSTF1_LaTeX/laporan_pstf1.tex` + `logoUGM.png` (salinan asli tanpa perubahan) dan companion `templates/PSTF1_LaTeX.md` (struktur 5 bab, format, keputusan terbuka: anggota ke-5, metode SIL, alat tulis).
+  - `Panduan_Capstone_DTNTF_2026.md` §9: koreksi struktur 5 bab + rujukan RFP. `DME.md`, `hmb_streams.md`: asal-usul model terjawab.
+  - **Google Docs Laporan PSTF 1** (`1sR0IRYj…`), sebelumnya hanya kerangka buatan agent (tanpa tulisan/komentar tim): judul subbab disamakan dengan template; petunjuk isi diperkaya dari RFP (§2.1, §2.3, §3.1.2, §3.3.1, §5.2); **baru**: Ringkasan Eksekutif, 3.1 Matriks Pembobot Opsi Desain, 3.4 Identifikasi Variabel Kendali, **Bab 4 Kajian Keselamatan** (4.1 HAZOP, 4.2 SIL/LOPA); tekno-ekonomi menjadi Bab 5 (5.1 CAPEX, 5.2 OPEX, 5.3 Kelayakan Finansial; subbab 4.4 lama digabung ke 5.3); tabel pembagian 16 baris (pengerja + reviewer untuk bagian baru).
+  - Registry: `laporan_pstf1.structure`, `tor_rfp`, `section_owners`/`section_reviewers` 15 bagian; companion Rev 0.3.
+* **Bukti / Verifikasi**:
+  - Hash: PDF `6a0b16bbbe9daf34` (Downloads = `D:\rahul\autocad` = staging), `.tex` `768575a7bb2b190e`, logo `be158a703272e932` (salinan repo = asli).
+  - RFP Tabel 1 vs `hmb_streams.json`: S-08 x DME 0,999983 = 0,999983; S-09 0,3151/0,6660 vs 0,31503/0,66600; S-10 0,9034/0,0411 vs 0,903376/0,041065; S-11 0,9900 = 0,9900 → selisih maks 7×10⁻⁵ (pembulatan RFP).
+  - Google Docs: tahap 1 `replaceAllText` 25 × 1 kemunculan; tahap 2 batch 92 request (skrip penyusun indeks + `docs_index.py new-table`, penjaga revisi) tanpa error; tahap 3 merapikan tebal tabel & paragraf kosong. `read_file_content` → urutan Ringkasan, Bab 1 (1.1–1.3), Bab 2, Bab 3 (3.1–3.5), Bab 4 (4.1–4.2), Bab 5 (5.1–5.3), Lampiran A–B sesuai template.
+  - `npm run check` → PASS.
+* **Keputusan**: lihat Kronologi #14. Pembagian pengerja/reviewer bagian baru oleh agent (delegasi PM, LOG-016): 3.1 JN/HD, 3.4 AL/IH, 4.1 IH (+AL)/RG, 4.2 AL/JN, Ringkasan RG/HD; Lampiran A reviewer → AL (beban: HD 4, JN 4, IH 4, AL 3, RG 1 + cek akhir).
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log).
+  - [ ] **PM**: putuskan alat tulis laporan (Google Docs → LaTeX saat final, atau langsung LaTeX/Overleaf) dan format 5 anggota pada template (konfirmasi Dosen Koordinator).
+  - [ ] **JN**: `SIGNAL_TYPE` index → transmitter HART/FF (RFP §2.3).
+  - [ ] **Claude Code**: perbarui branch `fase-4-cockpit` (G4 = tenggat DED 30-06-2027; bundel ulang data cockpit).
+
+---
+
+### [LOG-023] 2026-11-03 17:30 WIB — Fase 4 (cockpit) & perangkat lunak Fase 5 di branch `fase-4-cockpit`; verifikasi akses Drive
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"selesaikan semua fase terlebih dahulu"* / *"lanjutkan"*
+* **Fase**: 4–5 (+ verifikasi Fase 2)
+* **Perubahan** (semua kode di branch **`fase-4-cockpit`**, commit `a44c6ac`, `4d88a2e`, `5cfd628`; **belum** di `main`):
+  - **Baru** `tools/build_manifest.js`: membundel `hmb_streams.json`, `tag_validation_report.json`, `google_workspace_registry.json`, `calc_results.json` (dari `CALC_*.csv`), `library_manifest.json` (semua companion `.md` folder `0x_`), `health.json` (ringkasan + hash sumber) ke `apps/operations-cockpit/public/data/`. Mode `--check` mendeteksi data basi (hash isi dengan akhir baris dinormalisasi). `check_companions.js` memanggilnya (butir 6), sehingga `npm run check`/`sync:push` menolak data basi. Root `npm run build` = `build_manifest` + build cockpit; skrip baru `data:cockpit`.
+  - **Modul baru**: `DwsimStreamView` (6), `MasterLibraryView` (9; tab dokumen, hasil kalkulator, validasi tag), `GoogleWorkspaceView` (10); navigasi `DWSIM`, `Library`, `G-Workspace`.
+  - **Homepage**: `DataHealthPanel` (umur & neraca HMB, kalkulator PASS/FAIL/PLACEHOLDER, error tag, companion, **perkiraan ukuran `projectData/area1`** vs 500 KB).
+  - **WhatsApp `wa.me`** (§3.5): tombol bagikan di detail WO, header Tracker Action (action item aktif), dan setiap kartu Meeting Log.
+  - **Stage-Gate**: `StageGateTimeline` G1–G4 (§1.7; G1 = akhir minggu 13 dari `config.projectStartDate`, G2 = `config.tenderDeadline`, G3/G4 menunggu jadwal PSTF 2); pill header "G2 Evaluasi PSTF 1".
+  - **Logbook**: ekspor CSV (kolom Lampiran 2 Panduan, UTF-8 BOM, mengikuti filter).
+  - Blueprint (branch): tabel 12 modul, status & DoD Fase 4–5, risiko **R-13**, pohon tools, DoD Fase 2 butir 3. README (branch): perintah baru + "Rilis Produksi & Serah Terima" (8 langkah).
+* **Bukti / Verifikasi**:
+  - `tsc --noEmit` → exit 0. `npm run build` → `✓ 1710 modules transformed`, built in 0,96–1,60 s (total 4–8 s), 3 modul baru jadi chunk terpisah, `dist/data/` berisi 6 JSON (±140 KB).
+  - `vite preview` lokal: keenam `/data/*.json` → HTTP 200 `application/json`, JSON valid; `/` → 200.
+  - Uji kesegaran: menambah 1 baris ke `tag_map.md` → `npm run check` **FAIL** "data cockpit basi"; dikembalikan → PASS. Mengubah akhir baris ke CRLF → tetap PASS (bug hash byte mentah ditemukan & diperbaiki di `4d88a2e`).
+  - `npm run test:py` → 30 passed; `npm run check` → PASS.
+  - `git push -u origin fase-4-cockpit` → branch baru di GitHub (Vercel membuat preview deployment; status belum dicek agent).
+  - **Akses Drive** (tindak lanjut LOG-017/022): `get_file_permissions CAPSTONE_DME_AREA1` → 4 email UGM **writer**, owner PM, `anyone: reader`. Cocok dengan laporan Antigravity LOG-022.
+  - **Catatan penomoran**: pesan commit `a44c6ac`/`4d88a2e` menyebut "LOG-022" karena ditulis sebelum entri Antigravity LOG-022 terlihat; rujukan di file sudah dikoreksi ke LOG-023 (`5cfd628`). Riwayat Git tidak ditulis ulang.
+* **Keputusan**: lihat Kronologi #13. Ekspor logbook berupa CSV umum karena format unggah Simaster tidak terdokumentasi. Pembaca rumus KaTeX di Master Library belum dibuat (isi `.md` ditampilkan sebagai teks).
+* **Status DoD**:
+  - Fase 4: tsc & build ✅; data HMB segar ✅; **12 modul tanpa error console ⏳ (uji browser PM di preview)**.
+  - Fase 5: perangkat lunak siap; ⏳ 0 phantom pada P&ID `Diajukan` (butuh P&ID JN), ⏳ login + WO percobaan tiap anggota, ⏳ catat ukuran `projectData/area1`, ⏳ re-audit akhir oleh pihak selain pelaksana.
+  - Fase 2 butir 3: (a) ✅ (b) ✅ (c) ⏳ satu anggota membuka 3 URL.
+* **Tindak Lanjut**:
+  - [ ] **PM**: ubah akses umum Drive `CAPSTONE_DME_AREA1` ke **Dibatasi** (syarat merge, R-13).
+  - [ ] **PM**: buka preview Vercel branch `fase-4-cockpit`, cek 12 modul + Console; bila bersih → merge ke `main` (README "Rilis Produksi & Serah Terima").
+  - [ ] **PM**: `firebase deploy --only firestore:rules`; tambah milestone G1 di Schedule; catat ukuran `projectData/area1`.
+  - [ ] **Tim**: login produksi + WO percobaan; satu anggota membuka 3 URL dokumen (Fase 2 butir 3); uji laptop (Fase 2 butir 1).
+  - [ ] **JN**: P&ID DXF (Fase 3 butir 4, Fase 5 butir 1) dan ASME PTC 19.3 TW (Fase 3 butir 3).
+  - [ ] **Re-audit akhir** oleh Antigravity atau reviewer lain (bukan Claude Code), dicatat di log.
 
 ---
 
