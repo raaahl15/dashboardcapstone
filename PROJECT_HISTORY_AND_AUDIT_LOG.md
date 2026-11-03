@@ -228,6 +228,40 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-011] 2026-11-03 12:05 WIB — Pembuatan 5 subfolder Google Drive & pemindahan Sheets/Docs (Fase 2)
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul)
+* **Fase**: 2
+* **Tujuan**: Menutup tindak lanjut Antigravity di LOG-010 (membuat subfolder Google Drive dan memindahkan file Sheets & Docs ke foldernya masing-masing).
+* **Perubahan**:
+  - **Google Drive** (akun pribadi PM, root `CAPSTONE_DME_AREA1`, ID `1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod`):
+    - Dibuat 5 subfolder baru di root:
+      - `04_INSTRUMENT_INDEX_SHEETS` (ID: `1uXARjW3nBoODCgDgHC_1VdKedFdl6S69`)
+      - `06_LIVING_REPORTS_GDOCS` (ID: `1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16`)
+      - `07_FINAL_DELIVERABLES_PDF` (ID: `1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF`)
+      - `08_WORK_ORDERS_EVIDENCE` (ID: `1358fFhWSzj3rdswxzz3njcibp_dKppoA`)
+      - `09_STAGE_GATES_SUBMISSIONS` (ID: `1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf`)
+    - Dipindahkan 3 file dokumen kerja dari root ke folder tujuan (menggunakan `gdrive mutate mv` tanpa mengubah ID file):
+      - `1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM` (Master Instrument Index & IO List DME Area 1) → dipindah ke `04_INSTRUMENT_INDEX_SHEETS` (`1uXARjW3nBoODCgDgHC_1VdKedFdl6S69`)
+      - `1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg` (FDS-IC-DME-2026-001 Functional Design Specification & Control Narrative) → dipindah ke `06_LIVING_REPORTS_GDOCS` (`1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16`)
+      - `1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w` (Laporan PSTF 1 FEED Pabrik DME Area 1 (Draf)) → dipindah ke `06_LIVING_REPORTS_GDOCS` (`1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16`)
+* **Bukti / Verifikasi**:
+  - `gdrive mutate mkdir` untuk kelima folder → sukses mengembalikan ID masing-masing folder (`1uXARjW3nBoODCgDgHC_1VdKedFdl6S69`, `1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16`, `1v1KKSNmUZYS8Hzq0pMecC59NF2YBf_sF`, `1358fFhWSzj3rdswxzz3njcibp_dKppoA`, `1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf`).
+  - `gdrive mutate mv` untuk ketiga file → sukses dipindahkan (`Moved: Master Instrument Index & IO List DME Area 1`, `Moved: FDS-IC-DME-2026-001...`, `Moved: Laporan PSTF 1...`).
+  - `gdrive readonly ls 1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod` → Root kini bersih, hanya berisi 7 subfolder: `00_CORE_GUIDELINES`, `03_CAD_DWG`, `04_INSTRUMENT_INDEX_SHEETS`, `06_LIVING_REPORTS_GDOCS`, `07_FINAL_DELIVERABLES_PDF`, `08_WORK_ORDERS_EVIDENCE`, `09_STAGE_GATES_SUBMISSIONS`.
+  - `gdrive readonly ls 1uXARjW3nBoODCgDgHC_1VdKedFdl6S69` → berisi 1 spreadsheet: `Master Instrument Index & IO List DME Area 1` (ID `1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM`).
+  - `gdrive readonly ls 1nl1e3H4gAGeRiC6vv6_3nTkHMGwS7z16` → berisi 2 dokumen: FDS (ID `1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg`) dan Laporan PSTF 1 (ID `1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w`).
+  - `node tools/check_companions.js` → `12 / 12` PASS.
+* **Keputusan**:
+  - `google_workspace_registry.json` tidak diubah (dikelola oleh Claude Code sesuai instruksi). ID kelima folder dilaporkan di log ini agar Claude Code dapat memperbarui registry pada sesinya.
+  - Tidak ada perubahan pada isi file Sheets/Docs (hanya pemindahan lokasi folder).
+  - Skrip `tools/upload_to_gdrive.js` tidak dijalankan ulang.
+* **Tindak Lanjut**:
+  - [ ] **Claude Code**: catat ID kelima folder baru ke dalam `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` (memperbarui field `folders` dan mengosongkan `folders_pending`).
+  - [ ] **PM**: Share folder `CAPSTONE_DME_AREA1` ke email UGM keempat anggota (Editor) dan dosen (Commenter).
+  - [ ] **Claude Code / tim**: buat skrip `pull_sheets` untuk sinkronisasi Sheets → CSV repo.
+
+---
+
 ### [LOG-010] 2026-11-03 12:00 WIB — Verifikasi konektor Google Drive; Sheets Instrument Index, Docs FDS & kerangka PSTF 1, registry
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"cek konektor Google Drive, lalu kerjakan tindak lanjut LOG-008"*
 * **Fase**: 2
@@ -249,7 +283,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Kolom `DATA_STATUS` ditambahkan di Sheets (konsisten dengan CSV kalkulator, LOG-004). CSV index di repo **belum** disinkron ulang; kolom ini masuk pada sinkronisasi `pull_sheets` pertama.
   - Master FDS pindah ke Google Docs; `FDS_Control_Narrative_ISA506.md` tidak diperbarui lagi kecuali metadata.
 * **Tindak Lanjut**:
-  - [ ] **Antigravity**: buat folder `04_INSTRUMENT_INDEX_SHEETS/` dan `06_LIVING_REPORTS_GDOCS/` (dan folder lain di `folders_pending` registry), lalu pindahkan Sheets ke `04_…` dan kedua Docs ke `06_…`. Kabari Claude Code agar ID folder dicatat di registry.
+  - [x] **Antigravity**: buat folder `04_INSTRUMENT_INDEX_SHEETS/` dan `06_LIVING_REPORTS_GDOCS/` (dan folder lain di `folders_pending` registry), lalu pindahkan Sheets ke `04_…` dan kedua Docs ke `06_…`. Kabari Claude Code agar ID folder dicatat di registry. (Selesai di LOG-011)
   - [ ] **PM**: Share folder `CAPSTONE_DME_AREA1` ke email UGM keempat anggota (Editor) dan dosen (Commenter), lalu minta satu anggota membuka ketiga URL (DoD Fase 2 butir 3).
   - [ ] **PM**: tetapkan PIC laporan PSTF 1 (field `pic` di registry kosong) dan reviewer FDS.
   - [ ] **Claude Code / tim**: `pull_sheets` (Node sementara Python belum terpasang) untuk sinkron Sheets → CSV (DoD Fase 2 butir 2).
