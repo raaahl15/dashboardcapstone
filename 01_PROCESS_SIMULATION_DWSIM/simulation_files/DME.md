@@ -27,7 +27,8 @@ tags: ["DWSIM", "HMB", "Area-100", "Area-200"]
 Memodelkan konversi metanol menjadi DME melalui dehidrasi katalitik fase gas:
 $$2\,\text{CH}_3\text{OH} \rightarrow \text{CH}_3\text{OCH}_3 + \text{H}_2\text{O} \qquad (\Delta H_r \approx -23{,}4\ \text{kJ/mol})$$
 
-- Kondisi reaktor yang tercantum di draf awal: 250–320 °C, 12–15 bar(a). *[PERLU DIKONFIRMASI dari file simulasi + rujukan literatur]*
+- Kondisi reaktor yang tercantum di draf awal: 250–320 °C, 12–15 bar(a). **Dari file simulasi (LOG-019):** R-101 isotermal 250 °C, 14,7 bar(a), konversi metanol ≈ 80 %, duty −733 kW. *[Rujukan literatur masih PERLU DIKONFIRMASI]*
+- **Asal-usul model (LOG-019):** metadata file menunjukkan model terakhir disimpan **2021-05-25, DWSIM 6.5.0.0, zona waktu +05:30**. *[PERLU DIKONFIRMASI IH: apakah model dibuat firma, atau diadaptasi dari sumber lain (cantumkan rujukannya)]*
 - Kapasitas produksi, kemurnian produk, dan konversi: *[PERLU DIKONFIRMASI — menjadi basis URS]*
 
 ## 2. Struktur Flowsheet (tag DWSIM)
@@ -46,12 +47,12 @@ Daftar objek berikut diambil dari ekstraksi otomatis `hmb_streams.json` (2026-11
 
 Alur (diverifikasi dari konektor objek di XML model, LOG-014): umpan metanol `S-01` → `PUMP-01` → `S-02` → `MIX-01` (bertemu recycle `S-14`) → `S-03` → `HEAT-01` → `S-04` → `RC-01` → `S-05` (+ outlet cair `S-06`) → `COOL-01` → `S-07` → `CSCOL-01` (puncak `S-08` produk DME; bawah `S-09`) → `CSCOL-02` (`S-10` metanol → `PUMP-02` → `COOL-02` → `REC-01` → `S-14`; `S-11` air).
 
-**Lingkup Area 1** (keputusan PM 2026-11-03): `S-01`…`S-07` + `S-14`. Pabrik dibagi 3 area: Area 1 reaktor (firma ini), Area 2 distilasi 1 (`CSCOL-01`), Area 3 distilasi 2 (`CSCOL-02` + loop recycle, sementara). `S-07` keluar ke Area 2; `S-14` masuk dari Area 3. Pemetaan ke tag pabrik ada di [`../tag_map.csv`](../tag_map.csv) (status USULAN; companion `tag_map.md`).
+**Lingkup Area 1** (keputusan PM 2026-11-03): `S-01`…`S-07` + `S-14`. Pabrik dibagi 3 area: Area 1 reaktor (firma ini), Area 2 distilasi 1 (`CSCOL-01`), Area 3 distilasi 2 (`CSCOL-02` + loop recycle, sementara). `S-07` keluar ke Area 2; `S-14` masuk dari Area 3. Pemetaan ke tag pabrik ada di [`../tag_map.csv`](../tag_map.csv) (status FINAL; companion `tag_map.md`).
 
 ## 3. SOP Pembaruan & Ekstraksi Data
 1. Buka `DME.dwxmz` di DWSIM, jalankan solver, pastikan seluruh objek konvergen.
 2. Simpan file.
-3. Jalankan `npm run sync:dwsim` (saat ini `tools/export_dwsim_hmb.js`, hanya mengekstrak daftar objek; akan diganti `tools/dwsim/export_hmb.py` di Fase 3 yang mengekstrak T, P, laju alir, komposisi, dan properti).
+3. Jalankan `npm run sync:dwsim` (`tools/dwsim/export_hmb.py`, LOG-019): mengekstrak T, P, laju alir, komposisi, properti, dan duty, lalu memvalidasi neraca massa (≤ 0,5 %). Skrip gagal dan tidak menulis file bila data tidak lengkap. Kamus data: `exported_data/hmb_streams.md`.
 4. Commit `DME.dwxmz` bersama `hmb_streams.json` dalam satu commit.
 
 ## 4. Log Revisi

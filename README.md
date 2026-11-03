@@ -60,7 +60,8 @@ npm run dev                     # jalankan cockpit di http://localhost:3000
 | Perintah | Fungsi |
 | :--- | :--- |
 | `npm run check` | Periksa companion `.md`, status dokumen, ukuran & duplikat file |
-| `npm run sync:dwsim` | Ekstrak data DWSIM ke `hmb_streams.json` |
+| `npm run sync:dwsim` | Ekstrak HMB DWSIM (T, P, laju alir, komposisi, duty) ke `hmb_streams.json` + validasi neraca massa (Python) |
+| `npm run test:py` | Uji pipeline Python (butuh `.venv`) |
 | `npm run sync:push -- "pesan"` | Commit aman + push (menolak file liar) |
 | `npm run sync:pull` | Tarik perubahan terbaru (`pull --rebase`) |
 | `npm run build` | Build produksi cockpit |

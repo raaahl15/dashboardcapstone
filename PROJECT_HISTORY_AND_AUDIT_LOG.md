@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 2 DITUTUP DENGAN CATATAN (2026-11-03, LOG-018) — Fase 3 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 14:00 WIB  
+**Terakhir Diperbarui:** 2026-11-03 14:30 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -238,6 +238,37 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-019] 2026-11-03 14:30 WIB — `export_hmb.py`: HMB skema v1 dari DWSIM + uji otomatis
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"okey lanjutkan pengerjaannya"*
+* **Fase**: 3
+* **Tujuan**: Menuntaskan ekstraksi HMB (Blueprint §3.1) sebagai dasar PFD + tabel neraca Bab 3.2 dan input kalkulator.
+* **Perubahan**:
+  - **Baru**: `tools/dwsim/export_hmb.py` (pustaka standar Python saja): membuka `.dwxmz` dan mencari XML secara dinamis; membaca per stream T, P, laju massa & molar, fraksi uap, komposisi, ρ/μ/Cp/MW (campuran + per fase); duty unit operasi (`DeltaQ`); status solver, property package, komponen, versi DWSIM & waktu simpan dari file; tag pabrik/area/scope dari `tag_map.csv`; validasi (tag hilang/duplikat, nilai kosong, Σx ≠ 1, objek belum terhitung, neraca massa > 0,5 %) → gagal tanpa menulis file. Opsi `--check`.
+  - **Baru**: `tools/dwsim/test_export_hmb.py` + `conftest.py` (10 uji, termasuk 2 uji negatif).
+  - **Dihapus**: `tools/export_dwsim_hmb.js` (skema v0; tersimpan di riwayat Git).
+  - `package.json`: `sync:dwsim` → `python tools/dwsim/export_hmb.py`; baru `test:py`.
+  - `exported_data/hmb_streams.json` dibuat ulang (skema v1); `hmb_streams.md` Rev 1.0 (status **WIP**, reviewer AL): kamus skema, ringkasan HMB Area 1, 5 temuan, SOP.
+  - `DME.md`: kondisi R-101 dari file, catatan asal-usul model, SOP ekstraksi; tag_map FINAL. Blueprint: pohon tools, DoD Fase 3 butir 1 & 2 ✅. README: perintah.
+* **Bukti / Verifikasi**:
+  - Penelusuran XML: per `<Phase>` DWSIM ada **dua** elemen `<Properties>`/`<Compounds>` (pertama hanya teks nama kelas .NET); percobaan pertama membaca elemen yang salah → semua nilai kosong → diperbaiki (`_child_with_data`). Percobaan kedua crash pada neraca sebelum daftar masalah dilaporkan → diperbaiki. Densitas S-06 = `inf` (stream tanpa aliran) → kini `null` + `allow_nan=False`.
+  - `python export_hmb.py --check` → `AllObjectsCalculated | PP: NRTL`, 14 stream, 10 unit, **galat neraca maks 0,0266 %** (M-101, toleransi recycle), peringatan: S-06 laju alir nol.
+  - `npm run sync:dwsim` (PATH baru) → file ditulis; `Infinity|NaN` di JSON = 0 kemunculan.
+  - `npm run test:py` → **10 passed**.
+  - Cek fisik: S-101 8.321,3 kg/h MeOH 0,983 @ 25 °C/1 bar → P-101 15,5 bar → E-101 250 °C uap (4.726 kW) → R-101 isotermal, x MeOH 0,966 → 0,193 (konversi ≈ 80 %), duty −733 kW → E-102 (3.245,6 kW) → S-107 89 °C/10,4 bar/VF 0,07. kg/h ÷ kmol/h = MW (diuji).
+  - `npm run check` → PASS (via `sync:push`).
+* **Temuan untuk tim**:
+  1. **Asal-usul model**: `GeneralInfo` → disimpan 2021-05-25, DWSIM 6.5.0.0, zona waktu +05:30. IH perlu mengonfirmasi model dibuat/divalidasi firma atau mencantumkan rujukan sumbernya (rubrik menilai pemodelan sebagai karya firma).
+  2. **S-107**: model 89 °C vs logbook "terkunci 45 °C dan 10 bar" (komposisi hampir sama). Sepakati dengan Area 2.
+  3. Konversi ≈ 80 % dan produk DME 5.891,5 kg/h perlu dicocokkan dengan target TOR/URS.
+* **Keputusan**: status solver diturunkan dari `Calculated`/`ErrorMessage` per objek (dicatat di `meta.solver_status_basis`), karena file DWSIM tidak menyimpan status konvergensi global; ini memenuhi aturan "dibaca dari file, bukan hardcoded" (§1.3). Status `hmb_streams.md` = WIP (data riil, asal-usul model belum dikonfirmasi).
+* **Tindak Lanjut**:
+  - [ ] **IH**: konfirmasi asal-usul model & rujukan kondisi operasi; review oleh AL.
+  - [ ] **IH / PM**: sepakati kondisi S-107 dengan Area 2 dan S-114 dengan Area 3.
+  - [ ] **IH**: isi Bab 3.2 laporan dari `hmb_streams.json` (bukan dari tabel ringkasan).
+  - [ ] **Claude Code (berikutnya)**: mesin kalkulator `tools/calc/` (input YAML ← HMB) atau `validate_tags.py`.
 
 ---
 

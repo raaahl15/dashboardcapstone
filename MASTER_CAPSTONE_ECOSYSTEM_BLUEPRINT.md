@@ -241,13 +241,13 @@ dme-capstone-master/
 ├── apps/operations-cockpit/                     [ADA] React + Vite + Firebase (9 dari 12 modul)
 │
 ├── tools/
-│   ├── dwsim/export_hmb.py                      [BARU] menggantikan tools/export_dwsim_hmb.js
+│   ├── dwsim/export_hmb.py                      [ADA, LOG-019] HMB skema v1 + test_export_hmb.py
 │   ├── calc/                                    [BARU] mesin kalkulator Python
 │   ├── sync/pull_sheets.js                      [ADA, LOG-012] Sheets → CSV (Node)
 │   ├── validate_tags.py                         [BARU]
 │   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
 │   ├── check_companions.js                      [ADA] pengecek companion, status, ukuran & duplikat (`npm run check`)
-│   ├── export_dwsim_hmb.js                      [ADA] ekstraktor v0 (hanya daftar objek), diganti di Fase 3
+│   ├── export_dwsim_hmb.js                      [DIHAPUS, LOG-019] ekstraktor v0, diganti dwsim/export_hmb.py
 │   ├── upload_to_gdrive.js                      [ADA] unggahan awal DRIVE_ROOT → Drive via CLI `gdrive` (tidak idempoten)
 │   ├── lib/env.js                               [ADA] loader .env.local (DRIVE_ROOT, GDRIVE_ROOT_FOLDER_ID)
 │   ├── build_manifest.js                        [BARU] indeks .md untuk modul Master Library
@@ -580,8 +580,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
 * **Aktivitas:** `tools/dwsim/export_hmb.py` (skema §3.1); `tag_map.csv`; mesin kalkulator `tools/calc/` + input YAML; uji verifikasi per kalkulator; `validate_tags.py`.
 * **DoD:**
-  - [ ] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file.
-  - [ ] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi.
+  - [x] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file. *(LOG-019: 14 stream; status diturunkan dari `Calculated`/`ErrorMessage` per objek karena DWSIM tidak menyimpan status global.)*
+  - [x] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi. *(LOG-019: 10 unit, galat maks 0,027 % di M-101; divalidasi otomatis setiap ekstraksi.)*
   - [ ] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi.
   - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan.
   - [ ] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar.
