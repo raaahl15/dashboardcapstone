@@ -1,4 +1,4 @@
-﻿# CATATAN SEJARAH PROYEK & LAPORAN AUDIT SISTEM
+# CATATAN SEJARAH PROYEK & LAPORAN AUDIT SISTEM
 **Proyek Capstone:** Front-End Engineering Design (FEED) Pabrik Dimethyl Ether (DME) Area 1  
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
