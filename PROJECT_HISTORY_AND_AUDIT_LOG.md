@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode siap di branch `fase-4-cockpit` (LOG-023)  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 17:30 WIB  
+**Terakhir Diperbarui:** 2026-11-03 18:15 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -132,6 +132,15 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Data rekayasa dibundel sebagai file statis `public/data/*.json` (sesuai §3.6), dengan pemeriksaan kesegaran di `npm run check`.
   - **Risiko baru R-13**: file statis dapat diunduh tanpa login. Syarat merge: akses umum folder Drive diubah ke **Dibatasi**.
 
+### 14. RFP KAK-IC-DME-2026-001 & Template LaTeX Resmi Masuk Proyek (2026-11-03)
+* **Konteks**: PM menyerahkan dokumen RFP/TOR dan template laporan PSTF 1 (LaTeX + logo UGM) yang belum tercatat.
+* **Temuan → Keputusan**:
+  - Fraksi mol Tabel 1 RFP identik dengan HMB proyek → `DME.dwxmz` adalah **model referensi klien**; temuan "asal-usul model" (LOG-019) ditutup, model wajib disitasi sebagai bagian RFP.
+  - Template resmi memakai **5 bab** (menambah Bab 4 Kajian Keselamatan dan subbab 3.1/3.4) → struktur template **yang berlaku**; Google Docs laporan disesuaikan.
+  - SIL ditentukan dengan **HAZOP + LOPA** sesuai RFP §3.1.2 (bukan risk graph seperti teks contoh template).
+  - Tag di RFP (REAC-01, HEATER-01, PUMP-01, C-01, C-02) adalah nama klien; dokumen firma tetap memakai tag pabrik dengan tabel padanan.
+  - Tenggat RFP: FEED 15-12-2026 (= G2), DED 30-06-2027 (acuan G3/G4).
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -245,6 +254,29 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-024] 2026-11-03 18:15 WIB — Integrasi RFP KAK-IC-DME-2026-001 & template LaTeX PSTF 1; laporan disesuaikan ke 5 bab
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"ada tambahan dokumen untuk RFP yang belum dimasukkan serta template laporannya"*
+* **Fase**: lintas fase (dokumen acuan) + laporan PSTF 1
+* **Perubahan**:
+  - **Baru** `00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md` (status WIP, reviewer RG): identitas, lingkup, persyaratan I&C yang mengikat Area 1, padanan tag RFP ↔ pabrik, verifikasi data DWSIM, serahan FEED/DED, dampak ke dokumen. PDF asli disalin ke staging Drive lokal `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\KAK-IC-DME-2026-001_RFP.pdf` (tidak di Git, §2.2).
+  - **Baru** `00_CORE_GUIDELINES/templates/PSTF1_LaTeX/laporan_pstf1.tex` + `logoUGM.png` (salinan asli tanpa perubahan) dan companion `templates/PSTF1_LaTeX.md` (struktur 5 bab, format, keputusan terbuka: anggota ke-5, metode SIL, alat tulis).
+  - `Panduan_Capstone_DTNTF_2026.md` §9: koreksi struktur 5 bab + rujukan RFP. `DME.md`, `hmb_streams.md`: asal-usul model terjawab.
+  - **Google Docs Laporan PSTF 1** (`1sR0IRYj…`), sebelumnya hanya kerangka buatan agent (tanpa tulisan/komentar tim): judul subbab disamakan dengan template; petunjuk isi diperkaya dari RFP (§2.1, §2.3, §3.1.2, §3.3.1, §5.2); **baru**: Ringkasan Eksekutif, 3.1 Matriks Pembobot Opsi Desain, 3.4 Identifikasi Variabel Kendali, **Bab 4 Kajian Keselamatan** (4.1 HAZOP, 4.2 SIL/LOPA); tekno-ekonomi menjadi Bab 5 (5.1 CAPEX, 5.2 OPEX, 5.3 Kelayakan Finansial; subbab 4.4 lama digabung ke 5.3); tabel pembagian 16 baris (pengerja + reviewer untuk bagian baru).
+  - Registry: `laporan_pstf1.structure`, `tor_rfp`, `section_owners`/`section_reviewers` 15 bagian; companion Rev 0.3.
+* **Bukti / Verifikasi**:
+  - Hash: PDF `6a0b16bbbe9daf34` (Downloads = `D:\rahul\autocad` = staging), `.tex` `768575a7bb2b190e`, logo `be158a703272e932` (salinan repo = asli).
+  - RFP Tabel 1 vs `hmb_streams.json`: S-08 x DME 0,999983 = 0,999983; S-09 0,3151/0,6660 vs 0,31503/0,66600; S-10 0,9034/0,0411 vs 0,903376/0,041065; S-11 0,9900 = 0,9900 → selisih maks 7×10⁻⁵ (pembulatan RFP).
+  - Google Docs: tahap 1 `replaceAllText` 25 × 1 kemunculan; tahap 2 batch 92 request (skrip penyusun indeks + `docs_index.py new-table`, penjaga revisi) tanpa error; tahap 3 merapikan tebal tabel & paragraf kosong. `read_file_content` → urutan Ringkasan, Bab 1 (1.1–1.3), Bab 2, Bab 3 (3.1–3.5), Bab 4 (4.1–4.2), Bab 5 (5.1–5.3), Lampiran A–B sesuai template.
+  - `npm run check` → PASS.
+* **Keputusan**: lihat Kronologi #14. Pembagian pengerja/reviewer bagian baru oleh agent (delegasi PM, LOG-016): 3.1 JN/HD, 3.4 AL/IH, 4.1 IH (+AL)/RG, 4.2 AL/JN, Ringkasan RG/HD; Lampiran A reviewer → AL (beban: HD 4, JN 4, IH 4, AL 3, RG 1 + cek akhir).
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log).
+  - [ ] **PM**: putuskan alat tulis laporan (Google Docs → LaTeX saat final, atau langsung LaTeX/Overleaf) dan format 5 anggota pada template (konfirmasi Dosen Koordinator).
+  - [ ] **JN**: `SIGNAL_TYPE` index → transmitter HART/FF (RFP §2.3).
+  - [ ] **Claude Code**: perbarui branch `fase-4-cockpit` (G4 = tenggat DED 30-06-2027; bundel ulang data cockpit).
 
 ---
 

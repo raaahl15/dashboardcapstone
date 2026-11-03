@@ -89,6 +89,8 @@ tags: ["Panduan", "Rubrik", "PSTF 1", "PSTF 2", "Stage-Gate"]
 
 ## 9. Struktur Laporan (Lampiran 3A/3B)
 - **PSTF 1** (template: `http://ugm.id/TemplatePSTF1`): Bab 1 Konseptualisasi (TOR, first-principle, URS) · Bab 2 FDS/Control Narrative · Bab 3 Basic Engineering (PFD + neraca massa & panas) · Bab 4 Tekno-ekonomi · Lampiran A Draf P&ID (A3) · Lampiran B Logbook.
+  - **Koreksi (LOG-024): template LaTeX resmi** (`templates/PSTF1_LaTeX/`, catatan di `templates/PSTF1_LaTeX.md`) memakai **5 bab**: 1 Konseptualisasi · 2 Functional Design · 3 Basic Engineering (3.1 matriks pembobot opsi desain, 3.2 PFD, 3.3 neraca massa & termal, 3.4 identifikasi CV/MV/DV, 3.5 alur draf P&ID) · **4 Kajian Keselamatan (HAZOP, SIL)** · 5 Kajian Tekno-Ekonomi; lampiran A P&ID, B logbook. Struktur template yang berlaku.
+- **TOR/RFP proyek:** KAK-IC-DME-2026-001 (ringkasan `RFP_KAK-IC-DME-2026-001.md`): FEED 15-12-2026, DED 30-06-2027.
 - **PSTF 2** (template: `http://ugm.id/TemplatePSTF2`): Bab 1 Review FEED · Bab 2 Sizing & Safety · Bab 3 DED (ISA-20, spec break, BoM) · Bab 4 Kendali, HMI & SIS · Bab 5 Virtual FAT · Bab 6 SOP · Lampiran A–D (P&ID Final, Loop & Logic, Hook-up, Datasheet + BoM).
 
 ## 10. Implikasi untuk Sistem Proyek Ini
