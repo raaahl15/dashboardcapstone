@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 13:40 WIB  
+**Terakhir Diperbarui:** 2026-11-03 13:50 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -233,6 +233,23 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-017] 2026-11-03 13:50 WIB — Penundaan akses dosen & uji laptop; prompt berbagi Drive untuk Antigravity
+* **Pelaksana**: Claude Code (AI agent), atas keputusan PM (Rahul): *"email dosen dilewatin dulu, serta uji di laptop lain nanti saja nunggu kerja kelompok bareng bersama kelompok ku"*
+* **Fase**: 2
+* **Perubahan**: tidak ada perubahan file selain entri ini. Prompt instruksi untuk Antigravity disiapkan di percakapan: berbagi folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor, tanpa dosen, tanpa mengubah akses "anyone with link", dengan verifikasi pewarisan izin ke 3 dokumen.
+* **Bukti / Verifikasi**: — (keputusan & delegasi).
+* **Keputusan**:
+  - Akses Drive untuk **dosen ditunda**; tim hanya 4 anggota (Editor). Akses publik link tidak diubah.
+  - **Uji laptop (DoD Fase 2 butir 1) ditunda** sampai sesi kerja kelompok bersama; prosedur tetap sesuai README "Setup Perangkat Baru". Fase 2 tetap BERJALAN sampai butir ini dan butir 3 (akses tim) terverifikasi.
+  - Berbagi Drive diserahkan ke **Antigravity** (pengelola file & folder, LOG-008).
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: berbagi folder ke 4 email UGM (Editor) + entri LOG.
+  - [ ] **Claude Code**: setelah itu, verifikasi izin lewat konektor (`get_file_permissions`) → DoD Fase 2 butir 3 bisa dicentang setelah satu anggota membuka ketiga URL.
+  - [ ] **Kelompok**: uji laptop saat kerja kelompok.
+  - [ ] **PM**: email dosen (Commenter) saat sudah siap.
 
 ---
 
