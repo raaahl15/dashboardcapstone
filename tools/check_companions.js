@@ -153,7 +153,7 @@ for (const group of byHash.values()) {
   if (group.length > 1) errors.push(`File duplikat (isi identik): ${group.join(', ')}`);
 }
 
-// 6) Data rekayasa yang dibundel ke cockpit harus segar (Blueprint §3.6; LOG-022)
+// 6) Data rekayasa yang dibundel ke cockpit harus segar (Blueprint §3.6; LOG-023)
 if (!process.argv.includes('--no-data-check')) {
   const r = spawnSync('node', [path.join(ROOT, 'tools', 'build_manifest.js'), '--check'], { cwd: ROOT, encoding: 'utf8' });
   if (r.status !== 0) {
