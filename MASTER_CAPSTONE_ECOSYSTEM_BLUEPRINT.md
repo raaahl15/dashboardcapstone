@@ -568,7 +568,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets` (versi Node `pull_sheets.js`).
 * **DoD:**
-  - [ ] `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan.
+  - [ ] `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus. Tinggal diuji di laptop sungguhan dengan Node 24 LTS, langkah di README.)*
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
   - [ ] Semua URL di registry bisa dibuka oleh seluruh anggota tim.
 

@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 12:20 WIB  
+**Terakhir Diperbarui:** 2026-11-03 12:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -225,6 +225,34 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-013] 2026-11-03 12:40 WIB — PIC laporan PSTF 1, cek berbagi Drive, perbaikan setup perangkat baru
+* **Pelaksana**: Claude Code (AI agent), atas informasi & instruksi PM (Rahul): folder sudah dibagikan; PIC seluruh laporan = PM, pengerjaan per struktur firma; pertanyaan fungsi reviewer & cara uji laptop.
+* **Fase**: 2
+* **Tujuan**: Mencatat PIC & pembagian pengerjaan laporan, memverifikasi berbagi Drive, dan menyiapkan uji DoD Fase 2 butir 1.
+* **Perubahan**:
+  - Google Docs Laporan PSTF 1: + baris "PIC laporan: Rahul Ghulam Hidayatulloh (PM)" dan tabel "Pembagian pengerjaan per bagian" (10 bagian → pengerja + peran firma, diturunkan dari jobdesk di `apps/operations-cockpit/src/data/initialData.ts`).
+  - Registry: `laporan_pstf1.pic` + `section_owners`.
+  - `package.json`: `postinstall` = `npm ci --prefix apps/operations-cockpit`; `engines.node` = `>=24.12.0`.
+  - `README.md`: bagian "Setup Perangkat Baru (laptop)" + perintah `pull:sheets`.
+  - Blueprint: catatan progres DoD Fase 2 butir 1.
+* **Bukti / Verifikasi**:
+  - `get_file_permissions CAPSTONE_DME_AREA1` → `anyone: reader` + owner. **Belum ada izin per email UGM**: tim belum bisa mengedit Sheets/Docs, dan siapa pun yang memegang link bisa membaca seluruh folder. Agent tidak mengubah izin (keputusan PM).
+  - Docs: `read_file_content` → baris PIC & tabel 11×3 tampil; hanya header tebal (setelah perbaikan gaya tebal yang terwarisi).
+  - **Temuan**: sebelum perbaikan, `npm install` di root tidak memasang dependensi cockpit (root tanpa dependensi, `build` hanya meneruskan ke `apps/operations-cockpit`), jadi `npm run build` di clone baru akan gagal.
+  - Simulasi perangkat baru: commit lokal `21b1c62` → `git clone` ke scratchpad → `npm install` exit 0 (109 s, postinstall `npm ci` cockpit jalan) → `npm run build` exit 0, `✓ built in 1.25s`, `dist/index.html` ada. Build tidak membutuhkan `.env.local`.
+  - `npm install` memperingatkan `EBADENGINE`: `@firebase/*` (Firebase 12) meminta Node ≥ 24.12.0; PC ini Node v22.23.4. Build tetap lulus, tetapi Node 24 LTS direkomendasikan di semua perangkat.
+  - `npm audit` di cockpit: 5 kerentanan *high* (tidak ditangani di sesi ini).
+  - `npm run check` → PASS.
+* **Keputusan**: PM menjadi PIC (Accountable) seluruh laporan PSTF 1; pengerjaan per bagian mengikuti peran firma (usulan pemetaan agent, dapat dikoreksi PM di tabel Docs). Reviewer per bagian **belum** ditetapkan; usulan agent menunggu keputusan PM.
+* **Tindak Lanjut**:
+  - [ ] **PM**: ubah berbagi folder `CAPSTONE_DME_AREA1`: tambahkan 4 email UGM anggota sebagai **Editor** dan dosen sebagai **Commenter**; pertimbangkan mematikan "Siapa saja yang memiliki link".
+  - [ ] **PM**: tetapkan reviewer internal per bagian (lihat usulan di percakapan / LOG berikutnya).
+  - [ ] **PM / anggota**: uji laptop sesuai README "Setup Perangkat Baru" dengan Node 24 LTS → centang DoD Fase 2 butir 1.
+  - [ ] **PM**: perbarui Node di PC Desktop ke 24 LTS.
+  - [ ] Fase 4 atau lebih awal: tangani 5 kerentanan `npm audit` cockpit.
 
 ---
 

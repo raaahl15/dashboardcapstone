@@ -23,12 +23,28 @@ Monorepo proyek Capstone **FEED Pabrik Dimethyl Ether (DME)**, Teknik Fisika DTN
 | `apps/operations-cockpit/` | Web cockpit React + Vite + Firebase |
 | `tools/` | Skrip otomasi (sinkronisasi, pemeriksa, ekstraktor) |
 
-## Mulai Kerja
+## Setup Perangkat Baru (laptop)
+
+Prasyarat: **Git** dan **Node.js 24 LTS** (minimal 24.12; paket Firebase memintanya). Akses ke repo privat `raaahl15/dashboardcapstone` (login GitHub saat clone).
 
 ```bash
-cp .env.example .env.local      # isi DRIVE_ROOT sesuai perangkat
+git clone https://github.com/raaahl15/dashboardcapstone.git dme-capstone-master
+cd dme-capstone-master
+npm install                     # sekaligus memasang dependensi cockpit (postinstall)
+npm run build                   # harus selesai tanpa error -> DoD Fase 2 butir 1
+npm run check                   # harus HASIL: PASS
+```
+
+Untuk **menjalankan** cockpit (bukan sekadar build), dua file lokal perlu dibuat. Keduanya di-ignore Git, jadi tidak ikut clone:
+1. `apps/operations-cockpit/.env.local`: salin dari `.env.example` di folder itu, isi nilai Firebase dari Vercel → Project → Settings → Environment Variables (atau salin file yang sama dari PC Desktop).
+2. `.env.local` di root: salin dari `.env.example`, isi `DRIVE_ROOT` (hanya perlu jika memakai skrip Drive).
+
+Lalu `npm run dev` → http://localhost:3000.
+
+## Mulai Kerja Harian
+
+```bash
 npm run sync:pull               # tarik perubahan terbaru
-npm install --prefix apps/operations-cockpit
 npm run dev                     # jalankan cockpit di http://localhost:3000
 ```
 
@@ -41,6 +57,7 @@ npm run dev                     # jalankan cockpit di http://localhost:3000
 | `npm run sync:push -- "pesan"` | Commit aman + push (menolak file liar) |
 | `npm run sync:pull` | Tarik perubahan terbaru (`pull --rebase`) |
 | `npm run build` | Build produksi cockpit |
+| `npm run pull:sheets -- --key <key> --from-file <csv>` | Sinkron Google Sheets → snapshot CSV repo |
 
 ## Aturan Inti (ringkas dari Blueprint)
 1. **Satu master per data.** File turunan (CSV snapshot, JSON ekspor) tidak diedit manual.
