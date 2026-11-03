@@ -247,6 +247,8 @@ dme-capstone-master/
 │   ├── sync/sync.js                             [ADA] sync:push / sync:pull yang aman (§8.3)
 │   ├── check_companions.js                      [ADA] pengecek companion, status, ukuran & duplikat (`npm run check`)
 │   ├── export_dwsim_hmb.js                      [ADA] ekstraktor v0 (hanya daftar objek), diganti di Fase 3
+│   ├── upload_to_gdrive.js                      [ADA] unggahan awal DRIVE_ROOT → Drive via CLI `gdrive` (tidak idempoten)
+│   ├── lib/env.js                               [ADA] loader .env.local (DRIVE_ROOT, GDRIVE_ROOT_FOLDER_ID)
 │   ├── build_manifest.js                        [BARU] indeks .md untuk modul Master Library
 │   ├── requirements.txt                         [BARU] fluids, ezdxf, pyyaml, numpy-financial
 │   └── whatsapp-bot/                            [OPSIONAL] lihat §3.5
@@ -542,7 +544,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Sign-off:** ✅ disetujui PM pada 2026-11-03 (LOG-005). Tindak lanjut sudah ditutup: folder staging diunggah ke Google Drive oleh PM; `ISO10628_Equipment_recover.dwg` dihapus (isinya sama dengan `.dxf`); ukuran tim **tetap 5 orang** (keputusan PM).
 
 #### FASE 2: Cloud Backbone — Estimasi 2 hari — Status: BERJALAN
-* **Sudah:** isi folder staging diunggah PM ke Google Drive (2026-11-03, lewat web; belum ada Google Drive for Desktop di PC ini).
+* **Sudah:** isi folder staging diunggah ke Google Drive (2026-11-03, via `tools/upload_to_gdrive.js` + CLI `gdrive`; belum ada Google Drive for Desktop di PC ini).
+* **Pembagian kerja:** integrasi Google Drive (sinkronisasi, struktur folder, registry) dikerjakan oleh **Antigravity** (keputusan PM, 2026-11-03). Agent lain tidak mengubah isi Drive.
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets.py`.
 * **DoD:**
@@ -706,4 +709,4 @@ flowchart TD
 | R-07 | Konflik file `.dwg` di dua perangkat | Sedang | Sedang | SOP §8.4 (satu perangkat per file) | JN |
 | R-08 | Kebijakan akun UGM membatasi API Google | Rendah | Sedang | Fallback unduh CSV manual (§3.3) | JN |
 | R-09 | Tim 5 orang, sedangkan panduan menyebut firma 3–4 orang; penilaian individu memakai logbook (anti *free-rider*) | Sedang | Sedang | Keputusan PM: tetap 5 orang. RACI per deliverable dibuat tegas, dan logbook tiap anggota wajib spesifik & lengkap 12 baris agar kontribusi individu terbukti | RG |
-| R-10 | Salinan Drive di web dan folder lokal `CAPSTONE_DME_AREA1` tidak sinkron | Sedang | Sedang | Pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke sana (Fase 2) | RG |
+| R-10 | Salinan Drive di web dan folder lokal `CAPSTONE_DME_AREA1` tidak sinkron | Sedang | Sedang | Integrasi Drive oleh Antigravity (Fase 2); opsi: pasang Google Drive for Desktop dan arahkan `DRIVE_ROOT` ke sana. Jangan menjalankan ulang `upload_to_gdrive.js` ke folder yang sudah terisi | RG |

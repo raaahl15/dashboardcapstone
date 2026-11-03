@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.2 (pemetaan Stage-Gate G1–G4, tim tetap 5 orang)  
-**Terakhir Diperbarui:** 2026-11-03 11:00 WIB  
+**Terakhir Diperbarui:** 2026-11-03 11:20 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -209,6 +209,30 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-006] 2026-11-03 11:20 WIB — Rapikan & commit `upload_to_gdrive.js`; pembagian kerja integrasi Drive
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: 2
+* **Tujuan**: Menindaklanjuti LOG-005: (a) PM memilih opsi 1, yaitu commit `tools/upload_to_gdrive.js` setelah path absolut dipindah ke `.env.local`; (b) mencatat keputusan pembagian kerja Drive.
+* **Perubahan**:
+  - `tools/upload_to_gdrive.js` (skrip unggah yang dibuat di luar sesi ini): path sumber `D:\rahul\CAPSTONE_DME_AREA1` dan ID folder Drive yang di-hardcode **dipindah ke `.env.local`** (`DRIVE_ROOT`, `GDRIVE_ROOT_FOLDER_ID`); ditambah header dokumentasi + peringatan bahwa skrip **tidak idempoten** (menjalankan ulang akan menduplikasi folder & file di Drive). Logika unggah tidak diubah.
+  - **Baru**: `tools/lib/env.js` (loader `.env.local`/`.env` tanpa dependensi, untuk dipakai skrip lain).
+  - `.env.example`: ditambah `GDRIVE_ROOT_FOLDER_ID`. `.env.local` dibuat untuk Desktop PC (di-ignore Git).
+  - Blueprint: daftar tools; Fase 2 mencatat unggahan via CLI dan **integrasi Drive dikerjakan Antigravity**; mitigasi R-10 diperbarui.
+* **Bukti / Verifikasi**:
+  - Loader membaca `.env.local` → `DRIVE_ROOT=D:\rahul\CAPSTONE_DME_AREA1`, `GDRIVE_ROOT_FOLDER_ID` terisi.
+  - Tanpa `.env.local` → skrip berhenti dengan pesan `Variabel 'DRIVE_ROOT' belum diisi…`, exit 1.
+  - `git check-ignore .env.local` → ter-ignore.
+  - Skrip **tidak dijalankan** (CLI `gdrive` tidak ada di shell agent, dan menjalankan ulang akan membuat duplikat).
+  - `npm run check` → PASS.
+* **Keputusan**:
+  - Integrasi Google Drive di Fase 2 dikerjakan **Antigravity**; Claude Code tidak mengubah isi Drive.
+  - Tindak lanjut LOG-005 ditutup: PM mengonfirmasi `ISO10628_Equipment_recover.dwg` **sudah dihapus dari Google Drive**.
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: integrasi Google Drive Fase 2. Gunakan `DRIVE_ROOT`/`GDRIVE_ROOT_FOLDER_ID` dari `.env.local`, catat ID folder di `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json`, dan catat sesi di log ini.
+  - [ ] Fase 2 lainnya: repo GitHub private + push pertama, Google Sheets Master Instrument Index, Google Docs FDS & laporan.
 
 ---
 
