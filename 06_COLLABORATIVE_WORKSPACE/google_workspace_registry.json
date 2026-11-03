@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-11-03T11:55:00+07:00",
+  "updated_by": "Claude Code (LOG-010)",
+  "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
+  "drive": {
+    "root": {
+      "title": "CAPSTONE_DME_AREA1",
+      "id": "1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod",
+      "url": "https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod"
+    },
+    "folders": [
+      {
+        "key": "core_guidelines",
+        "title": "00_CORE_GUIDELINES",
+        "id": "1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y",
+        "url": "https://drive.google.com/drive/folders/1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y"
+      },
+      {
+        "key": "cad_dwg",
+        "title": "03_CAD_DWG",
+        "id": "1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo",
+        "url": "https://drive.google.com/drive/folders/1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo"
+      }
+    ],
+    "folders_pending": [
+      "04_INSTRUMENT_INDEX_SHEETS",
+      "06_LIVING_REPORTS_GDOCS",
+      "07_FINAL_DELIVERABLES_PDF",
+      "08_WORK_ORDERS_EVIDENCE",
+      "09_STAGE_GATES_SUBMISSIONS"
+    ]
+  },
+  "documents": [
+    {
+      "key": "instrument_index",
+      "type": "sheets",
+      "title": "Master Instrument Index & IO List DME Area 1",
+      "doc_no": "INST-IDX-DME-001",
+      "id": "1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM",
+      "url": "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit",
+      "tabs": ["Instrument_Index", "IO_List", "Catatan"],
+      "repo_snapshot": "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.csv",
+      "sync_direction": "sheets_to_repo",
+      "target_folder": "04_INSTRUMENT_INDEX_SHEETS",
+      "pic": "Jonathan Pangihutan Michael Siahaan",
+      "status": "Draft",
+      "data_status": "PLACEHOLDER"
+    },
+    {
+      "key": "fds",
+      "type": "docs",
+      "title": "FDS-IC-DME-2026-001 Functional Design Specification & Control Narrative",
+      "doc_no": "FDS-IC-DME-2026-001",
+      "id": "1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg",
+      "url": "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit",
+      "repo_companion": "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md",
+      "target_folder": "06_LIVING_REPORTS_GDOCS",
+      "pic": "Altaf Ramadhan Parvez",
+      "status": "Draft",
+      "data_status": "PLACEHOLDER"
+    },
+    {
+      "key": "laporan_pstf1",
+      "type": "docs",
+      "title": "Laporan PSTF 1 FEED Pabrik DME Area 1 (Draf)",
+      "doc_no": "",
+      "id": "1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w",
+      "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit",
+      "structure": "Lampiran 3A Panduan Capstone: Bab 1-4 + Lampiran A-B",
+      "target_folder": "06_LIVING_REPORTS_GDOCS",
+      "pic": "",
+      "status": "Draft",
+      "data_status": "KERANGKA"
+    }
+  ]
+}

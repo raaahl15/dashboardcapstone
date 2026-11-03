@@ -5,7 +5,7 @@
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
 **Status Audit Terakhir:** FASE 1.5 SIGN-OFF PM (2026-11-03, LOG-005) — Fase 2 BERJALAN  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 11:50 WIB  
+**Terakhir Diperbarui:** 2026-11-03 12:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -225,6 +225,35 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-010] 2026-11-03 12:00 WIB — Verifikasi konektor Google Drive; Sheets Instrument Index, Docs FDS & kerangka PSTF 1, registry
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul): *"cek konektor Google Drive, lalu kerjakan tindak lanjut LOG-008"*
+* **Fase**: 2
+* **Tujuan**: Menutup tindak lanjut Claude Code di LOG-008/LOG-009.
+* **Perubahan**:
+  - **Google Drive** (akun pribadi PM, root `CAPSTONE_DME_AREA1`, ID `1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod`), 3 file baru di root folder:
+    - Google Sheets **Master Instrument Index & IO List DME Area 1** (`1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM`). Tab `Instrument_Index`: 9 baris dari CSV repo (nilai tidak diubah; `FAIL_MODE` "- "/" - " dinormalkan jadi "-") + kolom baru `DATA_STATUS` = `PLACEHOLDER`; validasi dropdown `IO_TYPE` dan `DATA_STATUS`; sorotan kuning untuk PLACEHOLDER. Tab `IO_List`: formula `FILTER` dari Instrument_Index (tanpa `Mechanical`) + ringkasan `COUNTIF` per IO_TYPE. Tab `Catatan`: status, aturan SSOT, penomoran tag, 4 inkonsistensi yang diketahui. Locale en_US, zona waktu Asia/Jakarta.
+    - Google Docs **FDS-IC-DME-2026-001** (`1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg`), Rev 0.3: isi Rev 0.2 dari repo + kerangka kosong Bab 1 (ruang lingkup) dan Bab 5–7 (start-up, operasi normal, shutdown) yang diwajibkan panduan; catatan inkonsistensi ditambah butir TSHH-101 tidak ada di index.
+    - Google Docs **Laporan PSTF 1 FEED Pabrik DME Area 1 (Draf)** (`1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w`): kerangka Lampiran 3A (Bab 1 Konseptualisasi, Bab 2 FDS, Bab 3 Basic Engineering, Bab 4 Tekno-ekonomi, Lampiran A Draf P&ID, Lampiran B Logbook) dengan petunjuk isi per subbab.
+  - **Repo**: baru `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` (+ companion `google_workspace_registry.md`, status WIP); `google_ref` diisi di `Master_Instrument_Index_DME.md` dan `FDS_Control_Narrative_ISA506.md` (FDS.md kini arsip Rev 0.2); Blueprint Fase 2 butir progres Google Workspace.
+* **Bukti / Verifikasi**:
+  - `search_files "title contains 'CAPSTONE_DME_AREA1'"` → 1 folder, owner `rahulghulam15@gmail.com` → **konektor berfungsi** (tindak lanjut LOG-009 butir 1 ditutup). Isi root: hanya `00_CORE_GUIDELINES` dan `03_CAD_DWG`.
+  - `get_values Instrument_Index!A:O` → 10 baris (header + 9 tag) sama dengan CSV. `get_values IO_List!A:M` → 8 baris I/O; ringkasan AI 4, AO 2, DI 0, DO 1, Serial 1, total 8, Mechanical 1; **0 nilai error**.
+  - `read_file_content` kedua Docs → heading, daftar, dan tabel log revisi terkonversi benar.
+  - `npm run check` → `12 / 12`, `WIP=6, Draft=10`, **PASS**.
+  - **Belum diuji**: akses anggota tim ke URL (folder belum di-Share ke email UGM; agent tidak mengubah izin berbagi).
+* **Keputusan**:
+  - Dokumen ditaruh di **root** `CAPSTONE_DME_AREA1`, bukan membuat subfolder sendiri, karena struktur folder adalah tugas Antigravity (LOG-008). Memindah file di Drive tidak mengubah ID, jadi registry tetap berlaku.
+  - Kolom `DATA_STATUS` ditambahkan di Sheets (konsisten dengan CSV kalkulator, LOG-004). CSV index di repo **belum** disinkron ulang; kolom ini masuk pada sinkronisasi `pull_sheets` pertama.
+  - Master FDS pindah ke Google Docs; `FDS_Control_Narrative_ISA506.md` tidak diperbarui lagi kecuali metadata.
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: buat folder `04_INSTRUMENT_INDEX_SHEETS/` dan `06_LIVING_REPORTS_GDOCS/` (dan folder lain di `folders_pending` registry), lalu pindahkan Sheets ke `04_…` dan kedua Docs ke `06_…`. Kabari Claude Code agar ID folder dicatat di registry.
+  - [ ] **PM**: Share folder `CAPSTONE_DME_AREA1` ke email UGM keempat anggota (Editor) dan dosen (Commenter), lalu minta satu anggota membuka ketiga URL (DoD Fase 2 butir 3).
+  - [ ] **PM**: tetapkan PIC laporan PSTF 1 (field `pic` di registry kosong) dan reviewer FDS.
+  - [ ] **Claude Code / tim**: `pull_sheets` (Node sementara Python belum terpasang) untuk sinkron Sheets → CSV (DoD Fase 2 butir 2).
+  - [ ] **Fase 4**: `GoogleWorkspaceView` membaca `google_workspace_registry.json`.
 
 ---
 

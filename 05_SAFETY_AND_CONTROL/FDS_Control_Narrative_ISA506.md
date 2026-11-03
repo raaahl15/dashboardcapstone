@@ -6,12 +6,12 @@ standard: "ISA-5.06.01 / NAMUR NA 35"
 target_files: []
 generated_by: ""
 source_data:
-  - "PLACEHOLDER — master akan dipindah ke Google Docs (Fase 2)"
+  - "PLACEHOLDER — master sekarang di Google Docs (registry key: fds, LOG-010)"
 author: "Altaf Ramadhan Parvez (PIC)"
 reviewer: ""
 status: "Draft"
 review_evidence: ""
-google_ref: ""
+google_ref: "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit"
 last_updated: "2026-11-03"
 tags: ["FDS", "Control Narrative", "ISA-5.06"]
 ---
@@ -21,6 +21,8 @@ tags: ["FDS", "Control Narrative", "ISA-5.06"]
 **Proyek:** Pabrik Dimethyl Ether (DME) Berbasis Dehidrasi Metanol  
 **No. Dokumen:** FDS-IC-DME-2026-001
 
+> 📄 **Master sekarang di Google Docs** (2026-11-03, LOG-010): [FDS-IC-DME-2026-001](https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit). Isi di bawah adalah **arsip Rev 0.2** dan tidak diperbarui lagi; semua perubahan FDS ditulis di Google Docs. Rev 0.3 di Docs menambah kerangka Bab 1 (ruang lingkup) dan Bab 5–7 (start-up, operasi normal, shutdown).
+>
 > ⚠️ **DRAF KERANGKA (PLACEHOLDER).** Isi di bawah adalah contoh awal, belum diturunkan dari URS dan Draf P&ID. Mulai **Fase 2**, master FDS ditulis di **Google Docs**. Panduan Capstone (BAB III §3.1, Lampiran 3A Bab 2) mewajibkan FDS menjelaskan urutan **start-up, operasi normal, dan shutdown otomatis** secara sekuensial; bagian start-up/shutdown belum ada.
 
 ---
@@ -51,3 +53,4 @@ tags: ["FDS", "Control Narrative", "ISA-5.06"]
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Tambah frontmatter (status Draft) & catatan inkonsistensi (LOG-004). |
+| 0.3 | 2026-11-03 | Claude Code (AI) | Master dipindah ke Google Docs; file ini menjadi arsip Rev 0.2 (LOG-010). |

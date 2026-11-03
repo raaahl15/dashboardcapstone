@@ -7,12 +7,12 @@ target_files:
   - "Master_Instrument_Index_DME.csv"
 generated_by: ""
 source_data:
-  - "PLACEHOLDER — master akan dipindah ke Google Sheets (Fase 2); CSV menjadi snapshot read-only"
+  - "PLACEHOLDER — master sekarang di Google Sheets (registry key: instrument_index, LOG-010); CSV menjadi snapshot read-only"
 author: "Jonathan Pangihutan Michael Siahaan (PIC)"
 reviewer: ""
 status: "Draft"
 review_evidence: ""
-google_ref: ""
+google_ref: "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit"
 last_updated: "2026-11-03"
 tags: ["Instrument Index", "IO List", "ISA-5.1"]
 ---
@@ -20,6 +20,8 @@ tags: ["Instrument Index", "IO List", "ISA-5.1"]
 # Panduan Penggunaan: Master_Instrument_Index_DME.csv
 
 > ⚠️ **DATA CONTOH (PLACEHOLDER).** Baris-baris di CSV berasal dari skrip bootstrap (LOG-004), belum diturunkan dari Draf P&ID. Mulai **Fase 2**, master index berada di **Google Sheets**; file CSV ini hanya snapshot yang diperbarui oleh `tools/sync/pull_sheets.py` dan **tidak boleh diedit langsung**.
+
+> 📄 **Master Google Sheets** (dibuat 2026-11-03, LOG-010): [Master Instrument Index & IO List DME Area 1](https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit). Tab `Instrument_Index` (diisi manual, kolom sama dengan CSV + kolom `DATA_STATUS`), `IO_List` (formula `FILTER` dari Instrument_Index, tanpa tag `Mechanical`, + ringkasan jumlah per IO_TYPE), `Catatan` (status & inkonsistensi). CSV ini belum disinkron ulang; kolom `DATA_STATUS` akan muncul di CSV pada sinkronisasi `pull_sheets` pertama.
 
 ## 1. Aturan Penomoran Tag (lihat juga Blueprint §2.3)
 - Format instrumen: `<huruf fungsi ISA-5.1>-<area><nomor loop>`, contoh `FT-101`, `TIC-102`.
@@ -40,3 +42,4 @@ tags: ["Instrument Index", "IO List", "ISA-5.1"]
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; catatan inkonsistensi tag (LOG-004). |
+| 0.3 | 2026-11-03 | Claude Code (AI) | Master dipindah ke Google Sheets; `google_ref` diisi (LOG-010). |
