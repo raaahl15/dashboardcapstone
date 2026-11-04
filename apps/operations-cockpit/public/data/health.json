@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T16:58:38.261Z",
+ "generated_at": "2026-11-04T17:52:56.122Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -28,7 +28,7 @@
   "status_distribution": {
    "WIP": 11,
    "Review Internal": 1,
-   "Draft": 11
+   "Draft": 12
   }
  },
  "sources": {
@@ -60,6 +60,7 @@
   "05_SAFETY_AND_CONTROL/Cause_and_Effect_Matrix_ESD.md": "c97d3d837dd85d054e6831c1b216ec1f568e91a64d7fb365da61d8293cc6431b",
   "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md": "c3238d5f60d4ea7c34c82b2b904095a90cadd24e5fbdcf6fd8e7b69ee69f6620",
   "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "dc726f0349271fb7af0cfdff98049a6c47807d09f6c5cfed8e907f5c33d6643d",
+  "06_COLLABORATIVE_WORKSPACE/RENCANA_REKONSTRUKSI_W1-W18.md": "da85c43d9898d5b7c8e39288d30981a2126711852fa1c28a835742f4840d30a1",
   "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "5025646cd5036f19043f38c1a9e8d10e191b525ad59a5a1f28b60e1cdce60492",
   "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "b059237ac1a0a133686751a58daa8911ddf5e80ad807e906eb3de3865199f513",
   "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "638ff23a640d80712e045d5d44eb11308ed4e05e2af9f91071bc7ef57a59821f",

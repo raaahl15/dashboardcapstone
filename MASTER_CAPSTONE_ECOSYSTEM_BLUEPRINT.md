@@ -167,7 +167,7 @@ Panduan resmi hanya mendefinisikan **dua evaluasi formal**, tetapi juga mewajibk
 
 | Gate | Titik Kontrol di Panduan | Waktu | Penentu Lolos | Bukti Wajib | Isi Bundel Minimum |
 | :---: | :--- | :--- | :--- | :--- | :--- |
-| **G1** | ACC Pembimbing atas draf Laporan PSTF 1 (Lampiran 1, Tahap 2, syarat maju presentasi) | Akhir minggu 13 PSTF 1 | Dosen Pembimbing | Paraf/ACC tercatat di MoM | Laporan PSTF 1 Bab 1–4, PFD + neraca massa & panas, Draf P&ID A3, tekno-ekonomi, logbook |
+| **G1** | ACC Pembimbing atas draf Laporan PSTF 1 (Lampiran 1, Tahap 2, syarat maju presentasi) | Akhir minggu **efektif** 13 PSTF 1 (2 minggu UTS tidak dihitung) = **29 Nov 2026** (keputusan PM, dikonfirmasi dosen, LOG-044) | Dosen Pembimbing | Paraf/ACC tercatat di MoM | Laporan PSTF 1 Bab 1–4, PFD + neraca massa & panas, Draf P&ID A3, tekno-ekonomi, logbook |
 | **G2** | **Evaluasi PSTF 1** — panel Koordinator + Pembimbing + Praktisi (Tahap 3) | Minggu 14–16 PSTF 1 (jadwal cockpit: **15 Des 2026**) | Panel evaluasi: *Layak* / *Revisi Mayor* | Berita acara / nilai Lampiran 4A–4B | Bundel G1 versi final + slide presentasi tender |
 | **G3** | ACC final Pembimbing atas kalkulasi sizing & DED (Lampiran 1, Tahap 4) | Akhir minggu 13 PSTF 2 | Dosen Pembimbing | Paraf/ACC tercatat di MoM | Laporan PSTF 2 Bab 1–6, P&ID Final, ISA-20, loop & logic, hook-up, BoM, Virtual FAT |
 | **G4** | **Evaluasi Akhir PSTF 2** (Tahap 5) | Minggu 14–16 PSTF 2 | Panel evaluasi | Nilai Lampiran 5A–5B | Bundel G3 final + cetak biru A3 |

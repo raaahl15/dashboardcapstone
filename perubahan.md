@@ -1,0 +1,21 @@
+**Pernyataan perubahan:** jadi, project ini merupakan project capstone yang dimulai sedari awal semester. berikut aku cantumkan tanggalnya
+1. 17 Agustus (Kelas terkait Penjelasan awal capstone, dosen koordinator menjelaskan panduan dan lain sebagainya, serta pembentukan awal kelompok besar berisi 13 mahasiswa lalu dibagi 3 area sesuai dengan RFP)
+2. ⁠24 Agustus (Kelas terkait penyampaian RFP yang akan di upload, dan terdapat penugasan untuk membaca rfp, melaksanakan simulasi dwisim, pembagian area mulai dilakukan, dan aku di area 1 sebagai PM dengan keempat anggota ku. dimana ada penugasan untuk membuat gambaran neraca massa dan energi awalbanget dan pembuatan PFD area 1)
+3. ⁠31 Agustus (Kelas dengan dosen koordinator terkait URS dan PFD, penugasan sebelumnya dikumpulkan cetak, lalu dijelaskan urs serta pengenalan PFD, lalu terdapat penugasan lagi untuk membuat PFD gabungan seluruh area lengkap)
+4. ⁠7 September (Kelas dengan dosen koordinator terkait PFD Area, pfd area lengkap dikumpulkan, dan diberi arahan setelah hari ini dan minggu depan merupakan jadwal bimbingan intensif dengan dosen pembimbing, bukan kelas lagi. dimana, mulai menyusun timeline gannchart dan lain sebagainya, serta menjelaskan tugas yang sudah diberikan saat kelas)
+5. ⁠14 September (Bimbingan 1, dilaksanakan bimbingan 1, mkelompok area 1 menjelaskan sudah melakukan tugas yang dikelas, belum membuat rencana matang timeline dan sebagainya, maka diberikan penugasan untuk menyusun timeline dari awal hingga akhir serta melakukan pengerjaan project sesuai timeline dan lain sebagainya, terdapat komentar untuk menyempurnakan PFD neraca massa dan lain sebagainya tapi disesuaikan dengan timeline yang dirancang masing masing)
+6. ⁠21 September (Bimbingan 2, area kami menyusun timeline namun belum fix, menyempurnakan PFD dan meraca massa serta mwembuat URS dan draft bab 1, selanjutnya kami mengerjakan P&I dan FDS)
+7. ⁠28 September (Bimbingan 3, memaparkan P&ID, FDS, URS, dan PFD terbaru dan disuruh melanjutkan pengerjaan sesuai dengan timeline yang dibuat)
+8. ⁠5 Oktober (UTS, tidak ada penugasan tidak ada bimbingan, menyempurnakan website dashboard)
+9. ⁠12 Oktober (UTS, sama seperti 5 oktober)
+10. ⁠19 Oktober (Bimbingan 4, memaparkan P&ID terbaru, melakukan fiksasi PFD dan melanjutkan draft bab 1)
+11. ⁠26 Oktober (Bimbingan 5, fiksasi bab 1, melakukan rvisi P&ID, serta membuat template acuan, legend, autcad, penyempurnaan website ashboard serta menghimpun semua dokumen dokumen acuan sesuai dengan panduan capstone)
+12. ⁠2 November (Bimbingan 6, besok)
+13. ⁠9 November (Bimbingan 7)
+14. ⁠16 November (Bimbingan 8)
+15. ⁠23 November (Bimbingan 9)
+16. ⁠30 November (Bimbingan 10)
+17. ⁠7 Desember (Bimbingan 11)
+18. ⁠14 Desember (Bimbingan 12)
+
+Dimana, hari mulai setiap minggunya senin, serta bimbingannya setiap kamis, dan 4 kelas awal oleh dosen koordinator disetiap kamis. rencananya setiap work order di tambahkan setiap hari minggu sesuai dengan bimbingan, kamis merupakan bimbingan untuk memaparkan hasil work order atau tugas, jika work order ada revisi maka direvisi sampai hari sabtu, lalu dilanjutkan lagi membuat work order sesuai timeline dan rencana dan begitu terus selanjutnya

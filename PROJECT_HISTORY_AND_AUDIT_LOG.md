@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); projectData ≈ 35 KB (LOG-040); re-audit akhir oleh Antigravity (LOG-041; berkas laporan belum ada, LOG-042); **DoD 20/20, semua fase SELESAI** (sign-off Fase 4 & 5, LOG-043; 2 butir atas pernyataan PM)  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); projectData ≈ 35 KB (LOG-040); re-audit akhir oleh Antigravity (LOG-041; berkas laporan belum ada, LOG-042); **DoD 20/20, semua fase SELESAI** (sign-off Fase 4 & 5, LOG-043; 2 butir atas pernyataan PM); rekonstruksi W1–W18 + G1 29 Nov (LOG-044, impor menunggu PM)  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-05 00:50 WIB  
+**Terakhir Diperbarui:** 2026-11-05  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,39 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-044] 2026-11-05 — Rekonstruksi timeline, Gantt & Work Order W1–W18 dari riwayat PM; G1 = 29 Nov (minggu efektif)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): pengerjaan W1–W12 belum ter-tracking sistem; susun ulang timeline mingguan, Gantt, dan WO dari `perubahan.md`, lalu lanjutkan proyek lewat sistem. Keputusan PM: K1 minggu efektif (dikonfirmasi dosen), K3 Bab 4 tekno-ekonomi belum dikerjakan.
+* **Fase**: pasca-roadmap (operasional PSTF 1)
+* **Perubahan**:
+  - `perubahan.md` (riwayat mingguan dari PM) masuk repo sebagai sumber.
+  - **Baru** `06_COLLABORATIVE_WORKSPACE/RENCANA_REKONSTRUKSI_W1-W18.md` Rev 0.3:
+    - kalender 18 minggu (W1 = 17 Agu, sesi Kamis, W8–9 UTS);
+    - WO-001…023 rekonstruksi + WO-024…028 untuk W13;
+    - Gantt 6 fase / 32 tugas;
+    - rencana W13–W18 menuju G1 (29 Nov) dan G2 (15 Des);
+    - keputusan K1–K6.
+  - Berkas impor cockpit `cockpit_import_rekonstruksi.json` dibuat di luar repo (scratchpad agent; generator `build_import.py`). Isinya `config`, `ganttPhases`, `ganttTasks`, `weeklyPlans`, `meetingLogs`, `workOrders`.
+  - **Aturan tanggal:** `dueDate` = target, `completedAt` = tanggal aktual (W1–W11 dari `perubahan.md`, W12 dari log repo), `createdAt`/riwayat = waktu nyata 2026-11-05. Pekerjaan terlambat tetap tercatat terlambat (WO-006 timeline: target 17 Sep, masih Dikerjakan). **Logbook tidak direkonstruksi** karena logbook per orang (arahan dosen 22 Okt) wajib ditulis tiap anggota sendiri.
+  - Blueprint §1.7: G1 = akhir minggu efektif 13 = 29 Nov 2026.
+  - Branch `g1-minggu-efektif` (`cd4de74`): `StageGateTimeline.tsx` G1 = minggu 13 + 2 minggu UTS → 29 Nov; menunggu preview + merge.
+* **Bukti / Verifikasi**:
+  - Ekspor cockpit 2026-11-04 (dari PM) dibaca: `projectStartDate` sudah `2026-08-17`; `workOrders` kosong; UID anggota dipakai untuk `assigneeIds`.
+  - Berkas impor lolos pemeriksaan setara validator `parseAndValidateImportJson` / `isValidWorkOrderRecord` dan aturan Firestore `isValidWorkOrderData`: kunci WO persis, status/prioritas/scheduleLink/origin sah, `taskId` WO ada di Gantt, kode unik. Ukuran 64 KB.
+  - `tsc --noEmit` exit 0 di branch G1. Perhitungan: 17 Agu + 15 minggu − 1 hari = 29 Nov 2026.
+* **Temuan di data cockpit lama** (tidak diubah agent, dicatat untuk PM):
+  - rencana mingguan W3–W10 berstatus Done dengan klaim yang tidak ada di riwayat (kerangka CAPEX/OPEX W3, model reaktor stabil W7);
+  - jawaban sidang berisi angka yang belum dihitung (IRR 22,4 %, Monte Carlo, ESDV-01/TT-102 280 °C, S-07 115 °C/1,2 MPa);
+  - rubrik R² 0,992; logbook uji "a" terverifikasi "Hari ini"; tracker ACT-01 "v";
+  - `supervisorReviewer` masih "Dr. Ir. Chemical Eng"; Ihsaan punya field `legacyid` (huruf kecil).
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek menu Work Order. Bila sudah ada WO lama (notifikasi menyebut "WO-001 Pembuatan PFD"), beri tahu agent sebelum impor agar kode tidak bentrok.
+  - [ ] **PM**: impor lewat foto profil → Backup & Restore → tempel JSON → Impor; lalu cek Gantt, WO, dan Beranda.
+  - [ ] **PM**: preview branch `g1-minggu-efektif` → "merge".
+  - [ ] **PM**: bersihkan data uji / angka tanpa dasar di atas lewat UI.
+  - [ ] **Semua anggota**: isi logbook pribadi W1–W12 (tandai sebagai pengisian terlambat).
+  - [ ] **W13**: WO-024…028, terutama **WO-027 Bab 4 (Kritis)**, dipaparkan pada Bimbingan 7 (12 Nov).
+
+---
 ### [LOG-043] 2026-11-05 00:50 WIB — Sign-off PM Fase 4 & Fase 5; merge `fix-health-mojibake` ke produksi — seluruh fase SELESAI
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"sign off fase 4 dan 5 serta merge"*
 * **Fase**: 4, 5
