@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp, NavTab } from '../../context/AppContext';
 import { UserChip, resolveAvatarBgProps } from '../common/UserChip';
+import { NAV_GROUPS, groupOfTab } from './navigation';
 import {
   Bell,
   LogOut,
@@ -102,20 +103,16 @@ export const Header: React.FC<HeaderProps> = ({
     }
   };
 
-  const navItems: { key: NavTab; label: string }[] = [
-    { key: 'homepage', label: 'Homepage' },
-    { key: 'work-orders', label: 'Work Order' },
-    { key: 'schedule', label: 'Schedule' },
-    { key: 'team-raci', label: 'Team & RACI' },
-    { key: 'weekly-mom', label: 'Weekly MoM' },
-    { key: 'standards', label: 'Standards' },
-    { key: 'workspaces', label: 'Workspaces' },
-    { key: 'dwsim', label: 'DWSIM' },
-    { key: 'library', label: 'Library' },
-    { key: 'gworkspace', label: 'G-Workspace' },
-    { key: 'logbook', label: 'Logbook' },
-    { key: 'stage-gate', label: 'Stage-Gate' },
-  ];
+  // 8 menu bergrup (Blueprint v2.4 BAB IV, LOG-032); sub-tab dirender di App.tsx
+  const activeGroup = groupOfTab(activeTab);
+  const navItems: { key: NavTab; label: string; groupKey: string; sectionStart: boolean }[] = NAV_GROUPS.map(
+    (g, i) => ({
+      key: g.tabs[0].key,
+      label: g.label,
+      groupKey: g.key,
+      sectionStart: i > 0 && NAV_GROUPS[i - 1].section !== g.section,
+    })
+  );
 
   const avatarBgProps = resolveAvatarBgProps(currentUser.avatarBg);
   const avatarInitials = currentUser.avatarInitial || currentUser.code;
@@ -148,21 +145,25 @@ export const Header: React.FC<HeaderProps> = ({
           aria-label="Navigasi Utama"
         >
           {navItems.map((item) => {
-            const isActive = activeTab === item.key;
+            const isActive = activeGroup.key === item.groupKey;
             return (
-              <button
-                key={item.key}
-                type="button"
-                onClick={() => setActiveTab(item.key)}
-                className={`px-3 2xl:px-4 min-h-[44px] rounded-full text-xs font-semibold tracking-tight transition-all duration-200 whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#0B1B33] text-white shadow-xs'
-                    : 'text-[#4A5A72] hover:text-[#0B1B33] hover:bg-white/90'
-                }`}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                {item.label}
-              </button>
+              <React.Fragment key={item.groupKey}>
+                {item.sectionStart && (
+                  <span className="mx-1 h-6 w-px bg-[#C9DCEB]" aria-hidden="true" />
+                )}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(item.key)}
+                  className={`px-3 2xl:px-4 min-h-[44px] rounded-full text-xs font-semibold tracking-tight transition-all duration-200 whitespace-nowrap ${
+                    isActive
+                      ? 'bg-[#0B1B33] text-white shadow-xs'
+                      : 'text-[#4A5A72] hover:text-[#0B1B33] hover:bg-white/90'
+                  }`}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {item.label}
+                </button>
+              </React.Fragment>
             );
           })}
         </nav>
@@ -403,14 +404,18 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Mobile Pill Navigation Strip */}
-      <div className="xl:hidden mt-2.5 overflow-x-auto scrollbar-none pb-1 flex gap-1.5">
+      <nav
+        className="xl:hidden mt-2.5 overflow-x-auto scrollbar-none pb-1 flex gap-1.5"
+        aria-label="Navigasi Utama (seluler)"
+      >
         {navItems.map((item) => {
-          const isActive = activeTab === item.key;
+          const isActive = activeGroup.key === item.groupKey;
           return (
             <button
-              key={item.key}
+              key={item.groupKey}
               type="button"
               onClick={() => setActiveTab(item.key)}
+              aria-current={isActive ? 'page' : undefined}
               className={`px-3.5 min-h-[44px] rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                 isActive
                   ? 'bg-[#0B1B33] text-white shadow-xs'
@@ -421,7 +426,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           );
         })}
-      </div>
+      </nav>
     </header>
   );
 };

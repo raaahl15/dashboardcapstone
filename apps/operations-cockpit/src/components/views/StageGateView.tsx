@@ -175,7 +175,7 @@ export const StageGateView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="space-y-3">
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Stage-Gate Readiness &amp; Self-Audit
+          Kesiapan Stage-Gate
         </h1>
 
         <div className="space-y-2.5">
@@ -188,7 +188,7 @@ export const StageGateView: React.FC = () => {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
               <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
-                AUDIT INTERNAL TAHAP 3
+                AUDIT INTERNAL
               </span>
               <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
                 G2 Evaluasi PSTF 1: {config.tenderDeadline}

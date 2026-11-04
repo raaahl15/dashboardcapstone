@@ -4,8 +4,8 @@
 **Tahun Akademik:** 2026/2027  
 **Dokumen Kontrol:** DOC-CAPSTONE-DME-2026-MASTER-001  
 **Status Anggaran:** Bebas biaya (Rp 0), berbasis FOSS, free tier, dan akun UGM — lihat batasan di BAB VII  
-**Versi:** 2.3 (Revisi Konsep pasca Re-Audit Fase 1 + Fase 1.5 + pemetaan Stage-Gate + hosting Vercel)  
-**Status Dokumen:** Disetujui PM (2026-11-03)  
+**Versi:** 2.4 (v2.3 + konsolidasi cockpit 12 modul → 8 menu, audit Fase 4)  
+**Status Dokumen:** Disetujui PM (2026-11-03); v2.4 atas instruksi PM "lanjutkan P2" (2026-11-04)  
 **Catatan Riwayat Pengerjaan:** [`PROJECT_HISTORY_AND_AUDIT_LOG.md`](PROJECT_HISTORY_AND_AUDIT_LOG.md)
 
 ---
@@ -14,6 +14,7 @@
 
 | Versi | Tanggal | Penyusun | Ringkasan |
 | :--- | :--- | :--- | :--- |
+| 2.4 | 2026-11-04 | Claude Code (AI agent) + PM | BAB IV: 12 modul diringkas menjadi 8 menu dalam 3 grup; Action Item MoM = WO; Weekly Planner = tampilan Gantt; status deliverable §1.4 dengan progres dihitung (audit Fase 4 P1–P2, LOG-030/032). |
 | 1.0 | 2026-11-02 | Antigravity (AI agent) + PM | Konsep awal 8 bab, 5 pilar, roadmap 5 fase. |
 | 2.0 | 2026-11-03 | Claude Code (AI agent) + PM | Revisi konsep berdasarkan re-audit Fase 1: matriks kepemilikan data (SSOT), siklus status dokumen, aturan companion `.md` yang bisa diaudit, mesin kalkulator berbasis skrip, kebijakan penyimpanan Git vs Drive, pemisahan folder Git dan Drive, WhatsApp gateway dijadikan opsional, Fase 1.5 Remediasi, dan Definition of Done per fase. |
 | 2.3 | 2026-11-03 | Claude Code (AI agent) + PM | Hosting resmi pindah ke **Vercel** (website sudah live); remote GitHub = `raaahl15/dashboardcapstone`; `vercel.json` dikembalikan; risiko R-11 (push = deploy produksi). |
@@ -430,33 +431,37 @@ File CSV statis tidak bisa dihitung ulang, sehingga kesalahannya tidak terdeteks
 
 ---
 
-## BAB IV: Spesifikasi 12 Modul Website Area-1 Cockpit
+## BAB IV: Spesifikasi 12 Modul Website Area-1 Cockpit (8 Menu, v2.4)
+
+**Perubahan v2.4 (audit Fase 4 P2, LOG-032):** ke-12 modul tetap ada, tetapi navigasi diringkas menjadi **8 menu dalam 3 grup**. Modul yang tumpang tindih menjadi sub-tab (definisi di `apps/operations-cockpit/src/components/layout/navigation.ts`):
 
 ```text
-┌────────────────────────────────────────────────────────────────────────┐
-│                   AREA-1 DME OPERATIONS COCKPIT                        │
-├─────────────────┬─────────────────────┬────────────────────────────────┤
-│ GOVERNANCE      │ ENGINEERING HUB     │ DTNTF ACADEMIC                 │
-├─────────────────┼─────────────────────┼────────────────────────────────┤
-│ 1. Homepage     │ 6. DWSIM Stream Hub │ 11. Logbook Presensi UGM       │
-│ 2. Work Orders  │ 7. Workspaces       │ 12. Stage-Gate & Sidang Rubrik │
-│ 3. Schedule     │ 8. Standards        │                                │
-│ 4. Team RACI    │ 9. Master Library   │                                │
-│ 5. Weekly MoM   │ 10. Google Workspace│                                │
-└─────────────────┴─────────────────────┴────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────────────────────────────┐
+│                          AREA-1 DME OPERATIONS COCKPIT (8 menu)                       │
+├──────────────────────┬──────────────────────────────────────┬─────────────────────────┤
+│ GOVERNANCE           │ ENGINEERING HUB                      │ DTNTF ACADEMIC          │
+├──────────────────────┼──────────────────────────────────────┼─────────────────────────┤
+│ Beranda      (1)     │ Data Rekayasa: Neraca HMB (6)        │ Rapat & Logbook:        │
+│ Work Order   (2)     │   · Kalkulator · Validasi Tag (9)    │   Rapat Mingguan (5)    │
+│ Jadwal       (3)     │ Dokumen: Deliverable (7)             │   · Logbook (11)        │
+│ Tim & RACI   (4)     │   · Google Workspace (10)            │ Stage-Gate (12)         │
+│                      │   · Companion .md (9) · Standar (8)  │                         │
+└──────────────────────┴──────────────────────────────────────┴─────────────────────────┘
 ```
+
+Aturan konsolidasi v2.4: (a) **Action Item MoM = Work Order**: action item baru langsung dibuatkan WO dan statusnya mengikuti WO; (b) **Weekly Planner = tampilan Gantt minggu berjalan**; weekly plan lama menjadi arsip read-mostly dan tidak ditambah lagi; (c) status deliverable memakai §1.4 dengan progres dihitung (`utils/docStatus.ts`, LOG-030); (d) judul halaman berbahasa Indonesia.
 
 | No | Modul (komponen) | Status | Sumber Data | Fungsi |
 | :---: | :--- | :---: | :--- | :--- |
 | 1 | Homepage (`HomepageView.tsx`) | Ada | Firestore | Dashboard eksekutif: progres deliverable, banner, jadwal bimbingan terdekat. Progres dihitung dari status baku §1.4. |
 | 2 | Work Orders (`WorkOrdersView.tsx`) | Ada | Firestore `workOrders` | Tiket kerja berbasis bukti, board/list, status `Ditugaskan → Dikerjakan → Blocked → Diajukan → Selesai`, tautan folder Drive, tombol `wa.me`. |
-| 3 | Schedule & Gantt (`ScheduleView.tsx`) | Ada | Firestore | Timeline 16 minggu, jalur kritis, terhubung dengan penutupan WO. |
+| 3 | Schedule & Gantt (`ScheduleView.tsx`) | Ada | Firestore | Gantt + panel "Rencana Minggu Ini" (task Gantt minggu berjalan, v2.4), jalur kritis, terhubung dengan penutupan WO; weekly plan lama sebagai arsip. |
 | 4 | Team RACI (`TeamRaciView.tsx`) | Ada | Firestore | Matriks RACI per bab dan gambar, profil tim. |
-| 5 | Weekly MoM (`WeeklyMoMView.tsx`) | Ada | Firestore | Notulensi bimbingan, action item menjadi WO, **referensi MoM menjadi bukti status `ACC Pembimbing`**. |
+| 5 | Weekly MoM (`WeeklyMoMView.tsx`) | Ada | Firestore | Notulensi bimbingan; action item langsung menjadi WO (status mengikuti WO, v2.4); tombol "draf logbook dari MoM" (aturan 1×24 jam); **referensi MoM menjadi bukti status `ACC Pembimbing`** (kolom Bukti di Deliverable). |
 | 6 | DWSIM Stream Hub (`DwsimStreamView.tsx`) | Ada (LOG-023) | `public/data/hmb_streams.json` | Tabel HMB (T, P, flow, fraksi uap, komposisi) dengan tag pabrik + tanggal ekstraksi; filter lingkup Area 1; unit operasi & neraca massa. |
-| 7 | Workspaces & Deliverables (`WorkspacesView.tsx`) | Ada | Firestore + Drive | Pelacak 10 deliverable FEED, preview PDF dari Drive. |
+| 7 | Workspaces & Deliverables (`WorkspacesView.tsx`) | Ada | Firestore + Drive | Pelacak deliverable FEED dengan status §1.4, bukti wajib untuk Diajukan/ACC/Revisi, progres dihitung dari status (LOG-030), tautan ke Google Docs/Drive. Preview PDF belum ada. |
 | 8 | Standards (`StandardsView.tsx`) | Ada | Statis + Drive | Rujukan standar ISA/ISO/API/ASME/IEC. |
-| 9 | Master Library (`MasterLibraryView.tsx`) | Ada (LOG-023) | `public/data/library_manifest.json`, `calc_results.json`, `tag_validation_report.json` (dari `build_manifest.js`) | Penjelajah artefak + pembaca `.md` (teks; rumus KaTeX belum dirender) + status; tab hasil kalkulator & validasi tag. |
+| 9 | Master Library (`MasterLibraryView.tsx`) | Ada (LOG-023) | `public/data/library_manifest.json`, `calc_results.json`, `tag_validation_report.json` (dari `build_manifest.js`) | Penjelajah companion `.md` dengan pembaca Markdown + rumus KaTeX dan status §1.4 (menu Dokumen); hasil kalkulator & validasi tag pindah ke menu Data Rekayasa (`EngineeringDataViews.tsx`, v2.4). |
 | 10 | Google Workspace Hub (`GoogleWorkspaceView.tsx`) | Ada (LOG-023) | `public/data/google_workspace_registry.json` | Tautan ke Docs, Sheets, folder Drive + PIC/status. |
 | 11 | Logbook Presensi (`LogbookView.tsx`) | Ada | Firestore | Logbook harian/mingguan + ekspor rekap untuk Simaster. |
 | 12 | Stage-Gate (`StageGateView.tsx`) | Ada | Firestore + manifest | Evaluasi kesiapan G1–G4 sesuai pemetaan §1.7 terhadap rubrik DTNTF; hanya artefak berstatus `Diajukan`/`ACC Pembimbing` yang dihitung. LOG-023: panel garis waktu G1–G4 (konfigurasi tetap dari §1.7, tanggal dari `config`); milestone Gantt G1/G3/G4 ditambahkan PM lewat UI Schedule. |

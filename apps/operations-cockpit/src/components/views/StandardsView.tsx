@@ -119,7 +119,7 @@ export const StandardsView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="space-y-3">
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Rules The Team !
+          Standar &amp; Regulasi
         </h1>
 
         <div className="space-y-2.5">

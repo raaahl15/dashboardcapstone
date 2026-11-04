@@ -326,7 +326,7 @@ export const WorkOrderFormModal: React.FC = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={240}
-                placeholder="Contoh: Validasi neraca energi reaktor R-01 di DWSIM"
+                placeholder="Contoh: Validasi neraca energi reaktor R-101 di DWSIM"
                 className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
                 required
               />
@@ -505,8 +505,11 @@ export const WorkOrderFormModal: React.FC = () => {
               {[
                 { key: 'none' as const, label: 'Tidak Ditautkan' },
                 { key: 'gantt' as const, label: 'Gantt Task' },
-                { key: 'weeklyPlan' as const, label: 'Weekly Plan' },
-              ].map((opt) => {
+                { key: 'weeklyPlan' as const, label: 'Weekly Plan (arsip)' },
+              ]
+                // Weekly Plan sudah diarsipkan (P2, LOG-032): hanya tampil bila WO ini memang tertaut ke sana
+                .filter((opt) => opt.key !== 'weeklyPlan' || linkMode === 'weeklyPlan')
+                .map((opt) => {
                 const active = linkMode === opt.key;
                 return (
                   <button

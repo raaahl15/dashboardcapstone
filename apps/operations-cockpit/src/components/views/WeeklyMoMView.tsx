@@ -12,6 +12,7 @@ import {
   parseIndonesianDateToYmd,
 } from '../../utils/workOrderHelpers';
 import { STATUS_BADGE_CONFIG } from '../workorders/WorkOrderBadges';
+import { requestLogbookDraft } from '../../utils/logbookDraft';
 import {
   Plus,
   ExternalLink,
@@ -51,6 +52,7 @@ export const WeeklyMoMView: React.FC = () => {
     workOrders,
     setSelectedWorkOrderId,
     openWorkOrderForm,
+    setActiveTab,
   } = useApp();
 
   const todayYmd = getTodayLocalYmd();
@@ -104,6 +106,8 @@ export const WeeklyMoMView: React.FC = () => {
   const [newActionIssue, setNewActionIssue] = useState('');
   const [newActionPic, setNewActionPic] = useState('user-ihsan');
   const [newActionProgress, setNewActionProgress] = useState<'Resolved' | 'In Progress'>('In Progress');
+  // Action Item = Work Order (P2, LOG-032): action baru langsung dibuatkan WO kecuali dicentang lepas
+  const [createWoForAction, setCreateWoForAction] = useState(true);
   const [newActionDeadline, setNewActionDeadline] = useState(() => {
     const d = new Date();
     d.setDate(d.getDate() + 7);
@@ -183,6 +187,7 @@ export const WeeklyMoMView: React.FC = () => {
     setNewActionIssue('');
     setNewActionPic('user-ihsan');
     setNewActionProgress('In Progress');
+    setCreateWoForAction(true);
     const deadline = new Date();
     deadline.setDate(deadline.getDate() + 7);
     setNewActionDeadline(deadline.toLocaleDateString('id-ID', {
@@ -217,8 +222,21 @@ export const WeeklyMoMView: React.FC = () => {
       progress: newActionProgress,
     };
 
-    if (editingActionId) updateTrackerAction(editingActionId, actionData);
-    else addTrackerAction(actionData);
+    if (editingActionId) {
+      updateTrackerAction(editingActionId, actionData);
+    } else {
+      const created = addTrackerAction(actionData);
+      if (created && createWoForAction) {
+        openWorkOrderForm({
+          title: actionData.issue,
+          description: `Tindak lanjut Action Item MoM ${created.code} (${actionData.week}): ${actionData.issue}`,
+          assigneeIds: [getUser(newActionPic)?.id || newActionPic],
+          dueDate: parseIndonesianDateToYmd(actionData.deadline),
+          priority: 'Normal',
+          origin: { type: 'mom', trackerActionId: created.id, trackerActionCode: created.code },
+        });
+      }
+    }
 
     setEditingActionId(null);
     setNewActionIssue('');
@@ -292,7 +310,7 @@ export const WeeklyMoMView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="space-y-3">
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Manage Your Progres!
+          Rapat Mingguan (MoM)
         </h1>
 
         <div className="space-y-2.5">
@@ -667,14 +685,14 @@ export const WeeklyMoMView: React.FC = () => {
               <div>
                 <div className="flex items-center gap-2">
                   <h2 className="font-heading font-bold text-base text-[#0B1B33]">
-                    Tracker Action
+                    Action Item MoM → Work Order
                   </h2>
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FEF3C7] text-[#92400E]">
                     {activeActionsCount} Active
                   </span>
                 </div>
                 <p className="text-xs text-[#4A5A72]">
-                  Daftar tindak lanjut hasil masukan &amp; koreksi dosen pembimbing
+                  Masukan dosen pembimbing; setiap action item dikerjakan sebagai Work Order dan statusnya mengikuti WO
                 </p>
               </div>
 
@@ -698,7 +716,7 @@ export const WeeklyMoMView: React.FC = () => {
                   className="min-h-[44px] px-4 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1 shadow-xs transition-all"
                 >
                   <Plus className="w-3.5 h-3.5 text-[#0062CC]" />
-                  Tambah Baris
+                  Tambah Action Item
                 </button>
               )}
               </div>
@@ -753,13 +771,18 @@ export const WeeklyMoMView: React.FC = () => {
                         <td className="p-3 text-center">
                           <button
                             type="button"
+                            disabled={hasActiveLinkedWo}
                             onClick={() => toggleTrackerActionStatus(act.id)}
                             className={`px-3 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 transition-all hover:scale-105 active:scale-95 ${
                               act.progress === 'Resolved'
                                 ? 'bg-[#D1FAE5] text-[#065F46]'
                                 : 'bg-[#FEF3C7] text-[#92400E]'
                             }`}
-                            title="Klik untuk mengubah status (Resolved / In Progress)"
+                            title={
+                              hasActiveLinkedWo
+                                ? 'Status mengikuti Work Order terkait (selesai saat WO Selesai)'
+                                : 'Klik untuk mengubah status (Resolved / In Progress)'
+                            }
                           >
                             {act.progress === 'Resolved' ? (
                               <Check className="w-3 h-3 text-[#047857]" />
@@ -813,7 +836,7 @@ export const WeeklyMoMView: React.FC = () => {
                               className="min-h-[32px] px-3 rounded-full bg-[#EAF6FD] hover:bg-[#0062CC] text-[#0062CC] hover:text-white border border-[#BAE6FD] text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
                             >
                               <Plus className="w-3 h-3" />
-                              Jadikan Tugas
+                              Buat WO
                             </button>
                           ) : linkedWo ? (
                             <button
@@ -973,6 +996,24 @@ export const WeeklyMoMView: React.FC = () => {
                       {log.summary}
                     </p>
                   </div>
+
+                  {/* Panduan Lampiran 2: logbook maks. 1x24 jam setelah pertemuan (P2, LOG-032) */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      requestLogbookDraft({
+                        weekNumber: log.week,
+                        date: log.dayText.replace(/^[A-Za-z]+,\s*/, '').split(' - ')[0],
+                        workDescription: `Asistensi ${log.weekLabel || `Week ${log.week}`}: ${log.topic}. ${log.summary}`,
+                        issueSolution: '',
+                      });
+                      setActiveTab('logbook');
+                    }}
+                    className="min-h-[44px] px-4 rounded-full bg-[#EAF6FD] hover:bg-[#0062CC] text-[#0062CC] hover:text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Buat draf logbook dari MoM ini
+                  </button>
                 </div>
               ))}
             </div>
@@ -1149,6 +1190,20 @@ export const WeeklyMoMView: React.FC = () => {
                 </select>
               </div>
 
+              {!editingActionId && (
+                <label className="flex items-start gap-2 text-xs text-[#0B1B33] min-h-[44px] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={createWoForAction}
+                    onChange={(e) => setCreateWoForAction(e.target.checked)}
+                    className="mt-0.5 w-4 h-4"
+                  />
+                  <span>
+                    Langsung buat Work Order untuk action item ini (disarankan; status action mengikuti WO).
+                  </span>
+                </label>
+              )}
+
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
@@ -1164,7 +1219,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="submit"
                   className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
                 >
-                  {editingActionId ? 'Simpan Perubahan' : 'Simpan Action'}
+                  {editingActionId ? 'Simpan Perubahan' : createWoForAction ? 'Simpan & Buat WO' : 'Simpan Action'}
                 </button>
               </div>
             </form>

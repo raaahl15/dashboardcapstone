@@ -133,7 +133,7 @@ export const TeamRaciView: React.FC = () => {
       {/* Header */}
       <div className="space-y-3">
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Our Team and Matrix Raci
+          Tim &amp; Matriks RACI
         </h1>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">

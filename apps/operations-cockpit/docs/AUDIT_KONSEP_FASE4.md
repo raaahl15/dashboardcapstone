@@ -124,7 +124,8 @@ Perubahan ini mengubah spesifikasi BAB IV, jadi perlu persetujuan PM dan revisi 
 
 **Status pelaksanaan (2026-11-04):**
 - **P0:** Drive Dibatasi ✅ (LOG-028); konten palsu & bug tanggal paraf ✅ (LOG-028); rilis produksi ✅ (LOG-029). Uji Console dari PC masih terbuka.
-- **P1 (branch `p1-status-deliverable`, LOG-030):** status deliverable memakai §1.4 dengan bobot Draft 0 / WIP 40 / Review Internal 70 / Diajukan 90 / ACC Pembimbing 100 / Revisi 40 (disetujui PM); kolom bukti wajib untuk Diajukan/ACC/Revisi; status lama dipetakan saat dibaca (`ACC Final` → Diajukan, bukan ACC, karena tanpa bukti); kartu "Status ACC" dihitung dari deliverable; tenggat dari `config.tenderDeadline`/`projectStartDate`; kartu Kesehatan Data membuka tab Library yang tepat; seed deliverable memakai URL registry asli dan tag pabrik. **Belum:** URL di data live (PM lewat Workspaces → "Perbarui Tautan Berkas"), regulasi Standards, milestone G1 (PM lewat UI). Kartu tenggat Homepage tetap dua (countdown + kartu status tender), kini dari satu sumber data.
+- **P1 (branch `p1-status-deliverable`, LOG-030):** status deliverable memakai §1.4 dengan bobot Draft 0 / WIP 40 / Review Internal 70 / Diajukan 90 / ACC Pembimbing 100 / Revisi 40 (disetujui PM); kolom bukti wajib untuk Diajukan/ACC/Revisi; status lama dipetakan saat dibaca (`ACC Final` → Diajukan, bukan ACC, karena tanpa bukti); kartu "Status ACC" dihitung dari deliverable; tenggat dari `config.tenderDeadline`/`projectStartDate`; kartu Kesehatan Data membuka tab Library yang tepat; seed deliverable memakai URL registry asli dan tag pabrik. **Belum:** URL di data live (PM lewat Workspaces → "Perbarui Tautan Berkas"), regulasi Standards, milestone G1 (PM lewat UI). Kartu tenggat Homepage tetap dua (countdown + kartu status tender), kini dari satu sumber data. P1 dirilis `c4ba653` (LOG-031).
+- **P2 (branch `p2-konsolidasi`, LOG-032; PM memutuskan dikerjakan sebelum G2):** menu 12 → 8 dalam 3 grup + sub-tab (Blueprint v2.4); judul halaman berbahasa Indonesia; Homepage: metrik "Engineers" → "WO Aktif Tim", kartu tenggat ganda dihapus (status tender pindah ke kartu hitung mundur), label statis diganti data; Action Item MoM langsung menjadi WO dan statusnya mengikuti WO; Weekly Planner → "Rencana Minggu Ini" dari Gantt (weekly plan lama = arsip; opsi tautan WO ke weekly plan hanya untuk WO lama); pembaca Markdown + KaTeX di Companion; tombol "draf logbook dari MoM"; tag pabrik di halaman login. Tidak ada data yang dihapus.
 
 ---
 
@@ -137,3 +138,4 @@ Audit lama memberi skor "9,2/10 — LAYAK PENUH OPERASIONAL PRODUKSI". Skornya t
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-04 | Claude Code (AI) | Audit konsep, kelayakan, kegunaan, dan tumpang tindih fitur cockpit (LOG-027). |
 | 0.2 | 2026-11-04 | Claude Code (AI) | Status pelaksanaan P0 (LOG-028/029) dan P1 (LOG-030). |
+| 0.3 | 2026-11-04 | Claude Code (AI) | Status pelaksanaan P2 (LOG-032). |

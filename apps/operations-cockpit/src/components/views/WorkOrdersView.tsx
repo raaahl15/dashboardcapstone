@@ -279,7 +279,7 @@ export const WorkOrdersView: React.FC = () => {
         <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
           <div>
             <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-              Work Order Operations
+              Work Order
             </h1>
             <p className="text-xs sm:text-[13.5px] text-[#334155] mt-1.5">
               Pusat penugasan resmi Project Manager, pelacakan eksekusi anggota, dan persetujuan penyelesaian pekerjaan Area 1 DME.
