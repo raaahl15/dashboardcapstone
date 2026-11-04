@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-03T19:00:00+07:00",
+  "updated_at": "2026-11-04T16:00:00+07:00",
   "updated_by": "Claude Code (LOG-024)",
   "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
   "drive": {
@@ -105,6 +105,12 @@
         "Heidi Falina Brilian"
       ],
       "tor_rfp": "00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md",
+      "tor_rfp_pdf": {
+        "title": "KAK-IC-DME-2026-001_RFP.pdf",
+        "id": "1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn",
+        "url": "https://drive.google.com/file/d/1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn/view",
+        "folder": "00_CORE_GUIDELINES"
+      },
       "target_folder": "06_LIVING_REPORTS_GDOCS",
       "pic": "Rahul Ghulam Hidayatulloh (PM)",
       "section_owners": {

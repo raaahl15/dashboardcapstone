@@ -55,3 +55,4 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 | 0.2 | 2026-11-03 | Claude Code (AI) | + 5 folder dari LOG-011; field sinkronisasi untuk `pull_sheets` (LOG-012). |
 | 0.3 | 2026-11-03 | Claude Code (AI) | Laporan PSTF 1 mengikuti template LaTeX 5 bab: struktur, `tor_rfp`, pengerja & reviewer 15 bagian (LOG-024). |
 | 0.4 | 2026-11-03 | Claude Code (AI) | Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan (11 bagian); + `authoring`, `latex_working_copy`, `members` (5 orang) (LOG-025). |
+| 0.5 | 2026-11-04 | Claude Code (AI) | + `tor_rfp_pdf` (ID Drive PDF RFP dari unggahan Antigravity, LOG-026); akses umum Drive terverifikasi Dibatasi (LOG-028). |
