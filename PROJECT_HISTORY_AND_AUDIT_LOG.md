@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); deploy firestore.rules menunggu PM; P2 setelah G2  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 di branch `p2-konsolidasi` menunggu uji preview (LOG-032); deploy firestore.rules menunggu PM  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 17:45 WIB  
+**Terakhir Diperbarui:** 2026-11-04 19:00 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,33 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-032] 2026-11-04 19:00 WIB — P2 audit Fase 4: 12 modul → 8 menu, Action Item = WO, Weekly Planner = Gantt, KaTeX; Blueprint v2.4 (branch `p2-konsolidasi`)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control: *"lanjutkan aja p2, berikut kita selesaikan dulu semua fase baru fokus ke pengerjaan yang lain"*
+* **Fase**: 4 (P2 dari `AUDIT_KONSEP_FASE4.md` §6)
+* **Tujuan**: menutup klaster tumpang tindih A, E, G dan masalah kegunaan §5 audit.
+* **Keputusan PM**: P2 dikerjakan **sebelum** G2 (membatalkan usulan agent untuk menunda sampai setelah G2); konsekuensi: tim perlu adaptasi ke menu baru.
+* **Perubahan** (branch `p2-konsolidasi` dari `main` `46e7017`, commit `13cd2bb`, via `git worktree`; belum di `main`/produksi):
+  - **Navigasi** — baru `components/layout/navigation.ts`: 8 menu dalam 3 grup Blueprint (Beranda, Work Order, Jadwal, Tim & RACI | Data Rekayasa, Dokumen | Rapat & Logbook, Stage-Gate); `Header.tsx` menampilkan 8 menu + pemisah grup; `App.tsx` bar sub-tab; `NavTab` + `calc`, `tags`. Ke-12 modul tetap ada sebagai sub-tab; tautan internal lama tetap berfungsi.
+  - **Data Rekayasa** — baru `EngineeringDataViews.tsx` (Hasil Kalkulator, Validasi Tag) dipisah dari Master Library; kartu Kesehatan Data langsung ke sub-tab (mekanisme `requestLibraryTab` LOG-030 diganti rute).
+  - **Companion** — `MasterLibraryView.tsx` hanya dokumen + baru `common/MarkdownView.tsx` (react-markdown 9.0.1, remark-gfm 4.0.0, remark-math 6.0.0, rehype-katex 7.0.1, katex 0.16.11; versi dikunci): tabel & rumus KaTeX dirender, HTML mentah tidak.
+  - **Action Item MoM = WO** — `addTrackerAction` mengembalikan `{id, code}`; action item baru langsung membuka form WO terisi (centang default, bisa dilepas); tombol status action dinonaktifkan bila ada WO aktif (status mengikuti WO); label tabel/tombol diperjelas.
+  - **Draf logbook dari MoM** — baru `utils/logbookDraft.ts`; tombol di tiap Meeting Log membuka form logbook kelompok terisi (minggu, tanggal, isi) — tidak tersimpan sampai pengguna menekan Simpan (Panduan Lampiran 2, 1×24 jam).
+  - **Jadwal** — panel Weekly Planner diganti "Rencana Minggu Ini" (task Gantt yang mencakup minggu berjalan + progres WO); weekly plan lama di `<details>` "Arsip"; tombol header → "Tambah Task Gantt"; form WO menyembunyikan opsi tautan Weekly Plan kecuali WO itu memang sudah tertaut.
+  - **Homepage** — "Selamat datang"; metrik "Engineers" → "WO Aktif Tim" (+ terlambat); kartu "Batas Penyerahan Tender" dihapus (status/fase tender pindah ke kartu hitung mundur, menggantikan teks tetap "Critical Path Milestone 04"); pil statis "FEED Stage-Gate Status: In Progress"/"EPC Phase" diganti data.
+  - **Judul Indonesia** di 11 halaman (Jadwal Tim, Standar & Regulasi, Tim & Matriks RACI, Rapat Mingguan, Deliverable FEED, Work Order, Logbook Kegiatan, Kesiapan Stage-Gate, Neraca Massa & Panas, Google Workspace, Companion Dokumen); label statis Schedule ("DME UNIT 01", "Critical Path Baseline Rev-3.2") diganti.
+  - **Login** — diagram dekoratif memakai tag pabrik (R-101, E-101, S-107); placeholder form WO R-01 → R-101.
+  - **Blueprint v2.4** (BAB IV diagram 8 menu + aturan konsolidasi, tabel modul 3/5/7/9, versi & riwayat revisi); `AUDIT_KONSEP_FASE4.md` Rev 0.3; bundel ulang `public/data/`.
+* **Bukti / Verifikasi**:
+  - `tsc --noEmit` → exit 0; `vite build` → `✓ built in 1.48s`, exit 0 (chunk `MasterLibraryView` 446 kB / gzip 133 kB karena KaTeX, dimuat hanya saat sub-tab Companion dibuka; `index` 118 kB); `node tools/check_companions.js` → **HASIL: PASS**; `git push -u origin p2-konsolidasi` → exit 0.
+  - Setiap penggantian teks memakai skrip yang gagal bila pola tidak ditemukan tepat 1× (semua `ok`); `Select-String` tag lama di LoginGateway → 0.
+  - **TIDAK DIUJI**: tampilan & interaksi di browser (preview Vercel), data live Firestore.
+* **Keputusan**: tidak ada migrasi/hapus data (`trackerActions`, `weeklyPlans`, `tasks` tetap di Firestore); konsolidasi dilakukan di alur & tampilan.
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek preview `p2-konsolidasi` — 8 menu & sub-tab, Rapat Mingguan (Tambah Action Item → form WO; tombol draf logbook), Jadwal (Rencana Minggu Ini + Arsip), Dokumen → Companion (rumus tampil), Data Rekayasa; lalu "merge p2".
+  - [ ] Sisa fase yang **tidak bisa diselesaikan agent sendiri**: Fase 2 (uji laptop, anggota buka 3 URL), Fase 3 (P&ID DXF asli & standar thermowell dari JN), Fase 4 (uji Console dari PC), Fase 5 (deploy `firestore.rules`, login + WO uji tim, ukuran `projectData/area1`, milestone G1, re-audit pihak lain).
 
 ---
 
