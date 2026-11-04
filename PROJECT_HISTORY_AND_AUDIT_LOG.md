@@ -279,7 +279,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - MoM Bimbingan 4 mencatat kehadiran 2/5 (Rahul, Heidi), tetapi entri W10 tetap dibuat untuk semua anggota atas permintaan PM. Isinya hanya hasil sesi, bukan klaim kehadiran.
   - Panduan menjadikan logbook dasar nilai individu dan menolak uraian generik. Anggota disarankan menambahkan entri spesifik pekerjaannya sendiri.
 * **Tindak Lanjut**:
-  - [ ] PM: cek preview `logbook-kelompok` → "merge".
+  - [x] PM: "merge". Merge commit e6af6c6; branch dan worktree dihapus.
   - [ ] PM: impor `import_3_logbook_b1-b5.json` setelah merge. Impor menimpa seluruh seksi logbook, jadi ekspor dulu bila sudah ada entri baru.
 
 ---
