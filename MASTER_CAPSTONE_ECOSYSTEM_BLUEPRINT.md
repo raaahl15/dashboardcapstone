@@ -238,7 +238,7 @@ dme-capstone-master/
 │   ├── drawings/DELIVERABLES_DRAWINGS.md        [BARU]
 │   └── reports/DELIVERABLES_REPORTS.md          [BARU]
 │
-├── apps/operations-cockpit/                     [ADA] React + Vite + Firebase (9 dari 12 modul)
+├── apps/operations-cockpit/                     [ADA] React + Vite + Firebase (12 dari 12 modul, rilis LOG-029)
 │
 ├── tools/
 │   ├── dwsim/export_hmb.py                      [ADA, LOG-019] HMB skema v1 + test_export_hmb.py
@@ -523,11 +523,12 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
 │ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
 │ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ BERJALAN     │
-│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ Rencana      │
-│ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ Rencana      │
+│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DIRILIS**    │
+│ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ BERJALAN     │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
 ```
 \* Fase 2 ditutup dengan catatan: 2 butir DoD ditangguhkan atas keputusan PM (uji laptop, konfirmasi akses tim). Lihat Fase 2 dan LOG-018.
+\*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); belum ditutup karena DoD "tanpa error console" baru diuji visual dari iPad.
 
 Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX). Pengecualian hanya boleh diputuskan PM, harus menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
@@ -574,7 +575,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **DoD:**
   - [ ] **DITANGGUHKAN:** `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus.)* **Syarat penutupan:** uji di laptop anggota saat kerja kelompok (Node 24 LTS, README "Setup Perangkat Baru"), ketiga perintah exit 0 dan `npm run check` PASS, dicatat di log.
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
-  - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner + `anyone: reader` (LOG-023); (c) ⏳ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
+  - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner (LOG-023; `anyone: reader` dicabut PM → Dibatasi, terverifikasi LOG-028); (c) ⏳ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
 
 #### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: BERJALAN (mulai 2026-11-03)
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
@@ -586,12 +587,12 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [ ] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-021: validator selesai, lintas dokumen jalan (14 ERROR, 33 WARNING), pembaca DXF teruji pada P&ID sintetis. Tinggal dijalankan pada Draf P&ID DXF asli dari JN.)*
   - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 
-#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari — Status: KODE SELESAI di branch `fase-4-cockpit` (LOG-023), menunggu uji browser PM di preview Vercel lalu merge
+#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari — Status: DIRILIS KE PRODUKSI (2026-11-04, merge `bbfcda1`, LOG-029); audit konsep LOG-027, P0 LOG-028; P1/P2 menunggu keputusan PM (`apps/operations-cockpit/docs/AUDIT_KONSEP_FASE4.md`)
 * **Selesai (LOG-023):** `tools/build_manifest.js` (data → `public/data/`, dicek kesegarannya oleh `npm run check`); modul `DwsimStreamView`, `MasterLibraryView`, `GoogleWorkspaceView`; panel Kesehatan Data (HMB, kalkulator, tag, companion, ukuran `projectData/area1`); tombol `wa.me` di detail WO, Tracker Action, dan setiap Meeting Log; panel G1–G4 di Stage-Gate; rute & navigasi baru. **Belum:** milestone Gantt G1 (dan G3/G4 semester depan) ditambahkan PM lewat UI Schedule; pembaca rumus KaTeX di Master Library.
 * **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
 * **DoD:**
   - [x] `tsc --noEmit` 0 error dan `npm run build` sukses (waktu build dicatat). *(LOG-023: tsc exit 0; build 1.710 modul, 4–8 detik di PC Desktop.)*
-  - [ ] 12 modul dapat dibuka tanpa error di console browser. *(Butuh browser: PM membuka preview Vercel branch `fase-4-cockpit`, klik ke-12 modul + DevTools Console. Agent tidak punya browser.)*
+  - [ ] 12 modul dapat dibuka tanpa error di console browser. *(PARSIAL, LOG-029: PM membuka preview dari iPad dan menyatakan modul tampil normal; DevTools Console tidak tersedia di Safari iPad. **Syarat penutupan:** buka produksi dari PC/laptop dengan Console terbuka, klik ke-12 modul, 0 error merah, catat di log.)*
   - [x] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya). *(LOG-023: `build_manifest.js --check` membandingkan hash sumber; `npm run check`/`sync:push` menolak bila basi; tanggal ekstraksi tampil di modul.)*
 
 #### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: PERANGKAT LUNAK SIAP (LOG-023), kegiatan rilis & serah terima menunggu tim

@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028), menunggu uji preview & keputusan P1  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029), deploy firestore.rules & keputusan P1 menunggu PM  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 16:10 WIB  
+**Terakhir Diperbarui:** 2026-11-04 16:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,28 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-029] 2026-11-04 16:40 WIB — Rilis produksi cockpit Fase 4–5 (merge `fase-4-cockpit` → `main`)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control dari iPad: *"sudah aku cek, lanjutkan langkah selanjutnya"* (setelah membuka preview Vercel branch)
+* **Fase**: 4 → 5 (README "Rilis Produksi & Serah Terima" langkah 1–4)
+* **Tujuan**: merilis 12 modul cockpit + perbaikan P0 ke website produksi.
+* **Perubahan**:
+  - `git merge --no-ff origin/fase-4-cockpit` di `main` → commit `bbfcda1` (31 file, +4.493/−103), lalu `git push origin main` → deploy produksi Vercel otomatis.
+  - Blueprint: tabel roadmap (Fase 4 DIRILIS**, Fase 5 BERJALAN), status & DoD Fase 4, butir Fase 2 (b) (`anyone: reader` dicabut), pohon direktori "12 dari 12 modul".
+* **Bukti / Verifikasi**:
+  - Sebelum push, di `main` hasil merge: `node tools/check_companions.js` → **HASIL: PASS**; `tsc --noEmit` → exit 0; `vite build` → `✓ built in 10.76s`, exit 0; `vercel.json` ada.
+  - `git push origin main` → exit 0.
+  - Aturan Firestore: `firebase login:list` → login sebagai akun PM, project `area1-dme-cockpit`; `firebase deploy --only firestore:rules --dry-run` → `rules file firestore.rules compiled successfully`, `Dry run complete!`. **Deploy sesungguhnya diblokir** pengaman otomatis Claude Code (kategori *Production Deploy*), jadi **belum diterapkan**.
+  - Uji preview: PM menyatakan sudah dicek dari iPad. Console browser **TIDAK DIUJI** (Safari iPad tanpa DevTools). Status deploy produksi Vercel (*Ready*) **TIDAK DIUJI** oleh agent.
+* **Keputusan**: merge dilakukan atas instruksi PM setelah uji preview. DoD Fase 4 butir 2 tetap belum dicentang (PARSIAL) sampai Console dicek dari PC/laptop.
+* **Tindak Lanjut**:
+  - [ ] **PM (di PC)**: `cd apps/operations-cockpit` lalu `firebase deploy --only firestore:rules` (langkah 4; dry-run sudah lulus).
+  - [ ] **PM**: pastikan deployment `bbfcda1` *Ready* di Vercel; bila rusak → *Instant Rollback*.
+  - [ ] **PM (PC/laptop)**: buka produksi dengan Console, klik 12 modul (penutupan DoD Fase 4 butir 2).
+  - [ ] **PM/Tim**: langkah 5–7 README (login + WO uji tiap anggota, catat ukuran `projectData/area1`, milestone G1 di Gantt); perbaiki tanggal paraf logbook "Hari ini" (LOG-028).
+  - [ ] **PM**: keputusan P1/P2 audit. Re-audit akhir oleh pihak selain Claude Code (langkah 8).
 
 ---
 
