@@ -294,6 +294,9 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Berkas impor dipecah dua:
     1. `import_1_action_item_wo.json` (Action Item + WO) bisa diimpor sekarang;
     2. `import_2_slide_deck.json` baru bisa diimpor setelah branch di-merge.
+* **Merge (atas pesan PM: "merge, dan buat slide deck yang belum terisi link, pakai link bimbingan 6 semua aja")**:
+  - Branch digabung ke main lewat merge commit 486e02d; worktree dan branch dihapus.
+  - `import_2_slide_deck.json`: deck B1–B5 kini memakai link deck Bimbingan 6, atas permintaan PM. Isi deck itu tetap materi Bimbingan 6.
 * **Catatan integritas**: agent tidak membuat entri logbook untuk siapa pun. Logbook diisi tiap anggota sendiri (WO-030).
 * **Tindak Lanjut**:
   - [ ] PM: cek preview branch `rapat-logbook-konsep` → "merge".
