@@ -289,6 +289,11 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
     - WO-027 versi koreksi I&C (LOG-049);
     - WO-029 checklist "Pindahkan ke Google Docs" tercentang (LOG-050);
     - **WO-030 baru**: logbook per orang, 5 anggota, tenggat 12 Nov, dari ACT-12 (B4).
+* **Koreksi impor (PM melaporkan "Format JSON tidak valid")**: validator impor `slideDecks` menolak link `#`.
+  - Perbaikan ada di branch: commit 13368c1, `appContextHelpers.ts` kini menerima link kosong `#`.
+  - Berkas impor dipecah dua:
+    1. `import_1_action_item_wo.json` (Action Item + WO) bisa diimpor sekarang;
+    2. `import_2_slide_deck.json` baru bisa diimpor setelah branch di-merge.
 * **Catatan integritas**: agent tidak membuat entri logbook untuk siapa pun. Logbook diisi tiap anggota sendiri (WO-030).
 * **Tindak Lanjut**:
   - [ ] PM: cek preview branch `rapat-logbook-konsep` → "merge".
