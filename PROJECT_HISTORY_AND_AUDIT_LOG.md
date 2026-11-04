@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode siap di branch `fase-4-cockpit` (LOG-023)  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul, P0 menunggu keputusan PM (LOG-027)  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 19:00 WIB  
+**Terakhir Diperbarui:** 2026-11-04 15:30 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,56 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-027] 2026-11-04 15:30 WIB — Fase 4: audit konsep, kelayakan, kegunaan & tumpang tindih fitur cockpit; bundel ulang data
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"lanjutkan fase 4, coba lakukan audit, kelayakan, dan pelaporan terkait konsep sistem websitenya, apakah sudah sesuai, friendly user, terdapat fitur yang sama atau tumpang tindih … baca semua file md dan jangan lupa catat history pengerjaan"*
+* **Fase**: 4
+* **Tujuan**: menilai apakah cockpit di branch `fase-4-cockpit` sesuai konsep Blueprint, layak di-merge, ramah pengguna, dan bebas fitur ganda; serta menutup tindak lanjut LOG-025 (bundel ulang data cockpit).
+* **Perubahan** (branch `fase-4-cockpit`, commit `279f97d`; working tree utama tetap di `main`, dikerjakan lewat `git worktree` di scratchpad):
+  - Merge `main` → `fase-4-cockpit` (membawa LOG-024/025: RFP, template LaTeX, registry 11 bagian).
+  - Bundel ulang `apps/operations-cockpit/public/data/*.json` (`node tools/build_manifest.js`).
+  - **Baru** `apps/operations-cockpit/docs/AUDIT_KONSEP_FASE4.md`: kesesuaian 12 modul vs Blueprint BAB IV, 7 klaster tumpang tindih, konten palsu/usang, kegunaan, usulan menu 12 → 8, rekomendasi P0/P1/P2.
+  - `apps/operations-cockpit/docs/audit-report.md`: catatan di awal bahwa skornya tidak berbasis penyebut (§9.2) dan dilengkapi audit baru.
+* **Bukti / Verifikasi**:
+  - `node tools/build_manifest.js --check` → sebelum: 6 sumber basi (Panduan, RFP, PSTF1_LaTeX, registry .json/.md, laporan_pstf1.md); sesudah bundel ulang: bersih. `node tools/check_companions.js` → **HASIL: PASS** (18/18 artefak, 22 companion).
+  - `tsc --noEmit` → exit 0. `vite build` → `✓ built in 1.92s` (total 5 s), 21 chunk.
+  - Pencarian email di `public/data/*.json` → 0 temuan; registry publik memuat 11 URL Google (R-13 tetap terbuka).
+  - Pembacaan: 27 file `.md` repo + 12 view, Header, App, `AppContext` (perhitungan), `initialData.ts`, `types`.
+  - Hasil: **4 PASS, 7 PARSIAL, 1 FAIL** (Workspaces) dari 12 modul. Bug terkonfirmasi: paraf logbook menyimpan `verifiedDate: 'Hari ini'` (`AppContext.tsx:1477`). Konten palsu: `alert` "Ekspor Paket FEED", footer Schedule "Peng-Robinson EOS (DWSIM v8.7)" (model = NRTL, DWSIM 6.5) + "Auto-saved 14:42:09", teks statis Stage-Gate ("100% Diselaraskan"), RACI ringkas *hardcode* struktur bab lama, URL *seed* palsu.
+  - **TIDAK DIUJI**: error console di browser, data live Firestore (temuan *seed* belum tentu sama dengan data live), tampilan ponsel, preview Vercel.
+  - `git push origin fase-4-cockpit` → exit 0.
+* **Keputusan** (usulan, menunggu PM):
+  - Sebelum G2 hanya P0 + sebagian P1 (hapus konten palsu, perbaiki bug, satukan status deliverable ke §1.4, tenggat satu sumber). Penyederhanaan menu 12 → 8 dan peleburan Tracker Action/Weekly Planner (P2) **ditunda sampai setelah G2** agar tim tidak belajar ulang aplikasi di minggu penulisan laporan; bila disetujui → Blueprint v2.4 (BAB IV).
+  - Audit ini bukan re-audit akhir Fase 5 (kode Fase 4 sebagian dibuat Claude Code; §9.2 butir 4).
+* **Tindak Lanjut**:
+  - [ ] **PM**: baca `AUDIT_KONSEP_FASE4.md` §6; setujui/tolak P0–P2, pemetaan status lama → §1.4 dan bobot progres (P1).
+  - [ ] **PM**: akses umum Drive `CAPSTONE_DME_AREA1` → **Dibatasi** (R-13, syarat merge); uji preview Vercel 12 modul.
+  - [ ] **Claude Code**: setelah PM setuju, kerjakan P0 kode di branch (konten palsu, bug `verifiedDate`).
+  - [ ] **Claude Code**: tindak lanjut LOG-026, catat ID Drive PDF RFP `1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` di registry `tor_rfp` (lalu bundel ulang).
+  - [ ] Re-audit akhir Fase 5 oleh pihak selain Claude Code (tetap terbuka dari LOG-023).
+
+---
+
+### [LOG-026] 2026-11-04 15:05 WIB — Unggah berkas PDF RFP (KAK-IC-DME-2026-001) ke Google Drive
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"unggah PDF RFP ke Drive 00_CORE_GUIDELINES/."*
+* **Fase**: 2 (tindak lanjut LOG-024/025)
+* **Tujuan**: Menutup tindak lanjut Antigravity di LOG-024 (mengunggah salinan PDF asli RFP/KAK ke Google Drive agar dapat diakses oleh tim dan dosen tanpa membebani Git monorepo).
+* **Perubahan**:
+  - **Google Drive**:
+    - Berkas `KAK-IC-DME-2026-001_RFP.pdf` (69,4 KB) dari direktori lokal staging `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\` diunggah ke subfolder `00_CORE_GUIDELINES` (ID: `1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y`).
+    - File ID yang terbentuk di Google Drive: **`1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn`**.
+* **Bukti / Verifikasi**:
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\KAK-IC-DME-2026-001_RFP.pdf" --parent 1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y` → `Uploaded: KAK-IC-DME-2026-001_RFP.pdf (ID: 1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn)`.
+  - `gdrive readonly ls 1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y` → folder kini memuat 2 file: `Panduan_Capstone_DTNTF_2026.pdf` (1.1 MB) dan `KAK-IC-DME-2026-001_RFP.pdf` (69.4 KB).
+  - `gdrive readonly permissions 1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` → seluruh 4 email UGM anggota tim otomatis mewarisi peran **writer**, dan `rahulghulam15@gmail.com` sebagai **owner**.
+  - `node tools/check_companions.js` → **PASS**.
+* **Keputusan**:
+  - Berkas PDF disimpan di Google Drive (sesuai Blueprint §2.2 kebijakan biner di luar Git). Repo Git hanya melacak companion Markdown `00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md`.
+  - `google_workspace_registry.json` tidak disentuh (dikelola oleh Claude Code).
+* **Tindak Lanjut**:
+  - [ ] **Claude Code**: catat ID file Drive `1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` ke dalam `google_workspace_registry.json` pada field `tor_rfp` (bila diperlukan).
+
+---
+
 ### [LOG-025] 2026-11-03 19:00 WIB — Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan; anggota ke-5; alat tulis opsi 1
 * **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"untuk struktur template tersebut salah sedikit, isi nya mengikuti panduan ya … laporan PSTF 1 hanya 4 bab saja. lalu tambahkan baris anggota kelima, untuk alat tulis laporan pakai opsi 1."*
 * **Fase**: laporan PSTF 1 (koreksi atas LOG-024)
@@ -282,7 +332,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - [ ] **Tim**: isi NIM lima anggota (Google Docs + `\nimA…\nimE`); PM setujui usulan `\judul`.
   - [ ] **PM**: konfirmasi ke Dosen Koordinator bahwa sampul/pengesahan 5 anggota diterima.
   - [ ] **Claude Code**: bundel ulang data cockpit di branch `fase-4-cockpit` (registry berubah) sebelum merge.
-  - [ ] Tindak lanjut LOG-024 lain tetap terbuka (unggah PDF RFP oleh Antigravity, `SIGNAL_TYPE` HART/FF oleh JN). Butir "PM putuskan alat tulis & format 5 anggota" **selesai** di entri ini.
+  - [ ] Tindak lanjut LOG-024 lain: unggah PDF RFP oleh Antigravity **selesai di LOG-026**; `SIGNAL_TYPE` HART/FF oleh JN tetap terbuka. Butir "PM putuskan alat tulis & format 5 anggota" **selesai** di entri ini.
 
 ---
 
@@ -302,7 +352,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - `npm run check` → PASS.
 * **Keputusan**: lihat Kronologi #14. Pembagian pengerja/reviewer bagian baru oleh agent (delegasi PM, LOG-016): 3.1 JN/HD, 3.4 AL/IH, 4.1 IH (+AL)/RG, 4.2 AL/JN, Ringkasan RG/HD; Lampiran A reviewer → AL (beban: HD 4, JN 4, IH 4, AL 3, RG 1 + cek akhir).
 * **Tindak Lanjut**:
-  - [ ] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log).
+  - [x] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log; selesai di LOG-026).
   - [ ] **PM**: putuskan alat tulis laporan (Google Docs → LaTeX saat final, atau langsung LaTeX/Overleaf) dan format 5 anggota pada template (konfirmasi Dosen Koordinator).
   - [ ] **JN**: `SIGNAL_TYPE` index → transmitter HART/FF (RFP §2.3).
   - [ ] **Claude Code**: perbarui branch `fase-4-cockpit` (G4 = tenggat DED 30-06-2027; bundel ulang data cockpit).
