@@ -264,6 +264,31 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-055] 2026-11-05 — P&ID Rev B dipindah ke DME_Master_Template (A3, logo UGM, ISOCPEUR)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM: *"DME-PID-002_Draft_PID_Area1_RevB.dxf kok template engineeringnya sedikit beda, gak ada logo ugm serta font nya beda tidak mengikuti DME_Master_Template.dxf"*
+* **Temuan**: penyebabnya bukan edit Rev B. Rev A (Drive ID 1BVOyqj0…, LOG-034) memang tidak dibuat di atas template:
+  - kertas **A4** 297×210, sedangkan template dan Panduan Lampiran A meminta **A3**;
+  - tidak ada blok `UGM_LOGO`;
+  - font Arial/ArialB/romans, padahal template memakai ISOCPEUR dengan lebar 0,85;
+  - title block buatan sendiri.
+  - Rev B (LOG-036) hanya mengubah teks, jadi mewarisi semuanya.
+* **Perubahan** (generator `scripts/pid_to_template.py` di scratchpad agent):
+  - **Baru** `D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB_A3.dxf` (sha256 42972fbff65f11ca) beserta `…_RevB_A3_preview.png`.
+  - Isi Rev B (482 entitas) dipindah dengan skala seragam 1,338 ke area gambar sheet 1 `DME_Master_Template.dxf`. Ikut terbawa: frame A–H/1–12, title block template, dan `UGM_LOGO`.
+  - Semua teks memakai style template (isocpeur.ttf, lebar 0,85).
+  - Title block diisi:
+    - DRAFT P&ID AREA 1 – REAKTOR R-101, DME-PID-002, Rev B, 2 OF 4, A3, IFR;
+    - baris revisi A (29-10-26) dan B (04-11-26). Kolom BY/CHK/APP diisi "-" karena belum ada pemeriksa.
+  - Catatan 5 template ("SIS … SIL-2") diganti "SETPOINT TRIP & TARGET SIL TBD (HAZOP/LOPA)", karena SIL belum ditetapkan.
+* **Verifikasi**:
+  - `validate_tags --dxf` pada file baru: 0 ERROR, 1 WARNING (FE-101 belum digambar), sama dengan Rev B lama. Laporan validasi kini menunjuk file A3.
+  - Render SVG→PNG diperiksa visual.
+* **Tindak Lanjut**:
+  - [ ] JN: buka di AutoCAD dan cek tata letak serta ketebalan garis. Rev C dikerjakan dari file A3 ini.
+  - [ ] PM/Antigravity: unggah ke Drive 03_CAD_DWG dan perbarui registry `drive.files`.
+
+---
+
 ### [LOG-054] 2026-11-05 — Cek website pasca-impor; nama dosen pembimbing; tag S-07/C-01 lama direvisi
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM: *"okeey sekarang coba kamu check websitenya"* lalu *"6. berikut nama dosennya: Thomas Oka Pratama, S.T., M.Eng. 7. revisiin"*
 * **Cek website** (`smoke_console.js --dump`, PM login): 14/14 modul, 0 error. Impor 1–3 sudah masuk.
