@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul, P0 menunggu keputusan PM (LOG-027)  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028), menunggu uji preview & keputusan P1  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 15:30 WIB  
+**Terakhir Diperbarui:** 2026-11-04 16:10 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,31 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-028] 2026-11-04 16:10 WIB — P0 audit Fase 4: akses Drive Dibatasi terverifikasi, konten palsu cockpit dihapus, bug tanggal paraf, ID PDF RFP di registry
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control dari iPad: *"akses drive sudah di ubah, aku memberikan kamu akses kesemua enviroment termasuk google drive selama aku mengerjakan di ipad"*
+* **Fase**: 4 (P0 dari `AUDIT_KONSEP_FASE4.md` §6) + tindak lanjut LOG-026
+* **Tujuan**: menutup butir P0 yang tidak butuh keputusan PM, dan memverifikasi aksi PM pada R-13.
+* **Perubahan**:
+  - `main` (commit `8dcf5bc`): `google_workspace_registry.json` + `tor_rfp_pdf` (ID Drive `1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn`, folder `00_CORE_GUIDELINES`), `updated_at` 2026-11-04; companion Rev 0.5.
+  - Branch `fase-4-cockpit` (merge `d624f1c`, commit `24bd508`, via `git worktree`; checkout utama tetap `main`):
+    - `AppContext.tsx`: paraf logbook menyimpan tanggal nyata (`formatYmdToIndonesian(getTodayLocalYmd())`, format sama dengan data lama, mis. "4 Nov 2026") dan tidak lagi menyimpan teks `'Hari ini'`.
+    - `HomepageView.tsx`: tombol "Ekspor Paket FEED" yang hanya memunculkan `alert` palsu diganti tombol ke Google Workspace Hub; "RACI Assignment Ringkas" kini dihitung dari matriks Team RACI (pemegang R per baris, maks. 6 baris), menggantikan teks tetap berstruktur bab lama.
+    - `ScheduleView.tsx`: footer palsu ("Peng-Robinson EOS (DWSIM v8.7)", "Auto-saved to EPC Server • 14:42:09 WIB", klaim kepatuhan ISO/ISA) diganti keterangan sumber data (Firestore).
+    - `StageGateView.tsx`: "Revisi Bab 3 & 4" → jumlah parameter skor < 70; "100% Diselaraskan" → jumlah pertanyaan tanpa jawaban; "Terakhir diperbarui: Hari ini" → "Belum dikunci PM"; pembagian nol pada checklist fisik dijaga.
+    - Bundel ulang `public/data/` (registry berubah).
+* **Bukti / Verifikasi**:
+  - Konektor Google Drive `get_file_permissions`: folder `CAPSTONE_DME_AREA1`, Sheets index, Docs FDS, Docs laporan PSTF 1, dan PDF RFP → hanya owner (akun pribadi PM) + 4 email UGM `writer`; **tidak ada lagi `anyone: reader`** (sebelumnya ada, LOG-023). R-13: tautan di `public/data/` tidak lagi bisa dibuka orang luar.
+  - `tsc --noEmit` → exit 0; `vite build` → `✓ built in 1.51s`, exit 0; `node tools/check_companions.js` → **HASIL: PASS**; `git push origin fase-4-cockpit` → exit 0.
+  - **TIDAK DIUJI**: tampilan di browser (preview Vercel), dan entri logbook live di Firestore yang mungkin sudah berisi `verifiedDate: "Hari ini"` (agent tidak punya akses Firestore).
+* **Keputusan**: butir P0 kode dikerjakan tanpa menunggu persetujuan eksplisit karena audit §6 menandainya "tidak butuh keputusan PM" dan PM memberi akses penuh; perubahan hanya di branch (preview), bukan produksi.
+* **Tindak Lanjut**:
+  - [x] PM: akses umum Drive → Dibatasi (R-13) — **selesai**, terverifikasi di entri ini.
+  - [ ] **PM**: buka preview Vercel `fase-4-cockpit`, cek 12 modul + Console (P0 terakhir sebelum merge).
+  - [ ] **PM**: di Logbook, cek entri berparaf yang tanggalnya tertulis "Hari ini" dan ganti dengan tanggal paraf sebenarnya.
+  - [ ] **PM**: keputusan P1 (pemetaan status lama → §1.4 dan bobot progres) dan P2.
 
 ---
 
