@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 di branch `p1-status-deliverable` menunggu uji preview (LOG-030); deploy firestore.rules menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); deploy firestore.rules menunggu PM; P2 setelah G2  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 17:30 WIB  
+**Terakhir Diperbarui:** 2026-11-04 17:45 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,19 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-031] 2026-11-04 17:45 WIB — Rilis produksi P1 (merge `p1-status-deliverable` → `main`)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control: *"merge p1"*
+* **Fase**: 4 (P1 audit)
+* **Perubahan**: `git merge --no-ff origin/p1-status-deliverable` di `main` → commit `c4ba653` (11 file, +393/−276), `git push origin main` → deploy produksi Vercel otomatis. Isi perubahan: lihat LOG-030.
+* **Bukti / Verifikasi**: di `main` hasil merge: `node tools/check_companions.js` → **HASIL: PASS**; `tsc --noEmit` → exit 0; `vite build` → `✓ built in 1.36s`, exit 0; `git push` → exit 0. **TIDAK DIUJI**: status *Ready* deployment Vercel dan tampilan produksi (PM memerintahkan merge; agent tidak punya browser).
+* **Keputusan**: merge atas instruksi langsung PM.
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek deployment `c4ba653` *Ready* di Vercel; bila rusak → *Instant Rollback*.
+  - [ ] **PM**: di Workspaces, Edit → Simpan tiap deliverable berstatus lama (peringatan kuning hilang bila semua sudah baku); isi bukti & tautan asli.
+  - [ ] Tetap terbuka (LOG-029): deploy `firestore.rules`, uji Console dari PC, milestone G1, uji login tim, tanggal paraf "Hari ini". P2 setelah G2.
 
 ---
 
