@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); projectData ≈ 35 KB (LOG-040); re-audit akhir oleh Antigravity (LOG-041; berkas laporan belum ada, LOG-042); **DoD 20/20** (2 butir atas pernyataan PM); menunggu sign-off Fase 4 & 5  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); projectData ≈ 35 KB (LOG-040); re-audit akhir oleh Antigravity (LOG-041; berkas laporan belum ada, LOG-042); **DoD 20/20, semua fase SELESAI** (sign-off Fase 4 & 5, LOG-043; 2 butir atas pernyataan PM)  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-05 00:40 WIB  
+**Terakhir Diperbarui:** 2026-11-05 00:50 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,22 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-043] 2026-11-05 00:50 WIB — Sign-off PM Fase 4 & Fase 5; merge `fix-health-mojibake` ke produksi — seluruh fase SELESAI
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"sign off fase 4 dan 5 serta merge"*
+* **Fase**: 4, 5
+* **Perubahan**:
+  - **Sign-off PM Fase 4** (DoD 3/3) dan **Fase 5** (DoD 4/4) → Blueprint: kedua fase `SELESAI`. Semua fase roadmap (1.5, 2, 3, 4, 5) kini selesai.
+  - Merge `fix-health-mojibake` (`e088903`) ke `main` sebagai `d71e652` (`--no-ff`), sehingga teks panel Kesehatan Data (≈, ·, →, –, §) tampil benar setelah deploy Vercel.
+  - Worktree sementara branch itu dibersihkan; branch lokal dihapus (remote `origin/fix-health-mojibake` dibiarkan).
+* **Bukti / Verifikasi**: merge tanpa konflik (`main` hanya maju dengan commit dokumen sejak branch dibuat); `tsc --noEmit` exit 0 di `main` setelah merge; `node tools/check_companions.js` → PASS sebelum commit.
+* **Status DoD**: **20/20**, semua fase SELESAI. Tetap tercatat: 2 butir atas pernyataan PM tanpa bukti uji (LOG-039), berkas laporan audit LOG-041 belum ada (LOG-042).
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek produksi setelah deploy Vercel; panel Kesehatan Data harus menampilkan "≈ 35 KB" tanpa karakter rusak.
+  - [ ] **JN**: simbol FE-101 di P&ID (satu-satunya WARNING validator).
+  - [ ] **Antigravity/PM**: berkas laporan audit akhir (LOG-042).
+  - [ ] **Tim**: isi teknis PSTF 1 (laporan 4 bab Panduan, NIM anggota) menuju G2 Evaluasi PSTF 1 (15 Des 2026).
+
+---
 ### [LOG-042] 2026-11-05 00:40 WIB — Catatan atas re-audit LOG-041: berkas laporan audit tidak ditemukan; header status diperbarui
 * **Pelaksana**: Claude Code (AI agent), setelah PM (Rahul) menyatakan *"audit sudah dilakukan"*
 * **Fase**: 5

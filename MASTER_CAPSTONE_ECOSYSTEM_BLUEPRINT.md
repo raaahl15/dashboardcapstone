@@ -528,12 +528,12 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
 │ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ SELESAI*     │
 │ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ SELESAI      │
-│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DoD 3/3**    │
+│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ SELESAI**    │
 │ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ SELESAI      │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
 ```
 \* Fase 2 DoD 3/3 (LOG-039): akses 3 URL terbukti; uji clone laptop **dinyatakan selesai oleh PM tanpa bukti uji** (LOG-018, LOG-039).
-\*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); DoD 3/3 terpenuhi (uji console 14/14 modul PASS, LOG-038), menunggu sign-off PM.
+\*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); DoD 3/3 (uji console 14/14 modul PASS, LOG-038); **sign-off PM 2026-11-05 (LOG-043)**.
 
 Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX). Pengecualian hanya boleh diputuskan PM, harus menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
@@ -592,7 +592,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-034: dijalankan pada Draf P&ID asli `DME-PID-002_Draft_PID_Area1.dxf` (sha256 `5eaa85cdc0103348`) → 56 ERROR, 40 WARNING; 49 temuan dari gambar, termasuk 34 instrumen di gambar yang belum ada di index (index masih PLACEHOLDER) dan 6 tag lama. Penyelarasan gambar ↔ index = pekerjaan JN, syarat DoD Fase 5.)*
   - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 
-#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari — Status: DIRILIS KE PRODUKSI (2026-11-04, merge `bbfcda1`, LOG-029); audit konsep LOG-027, P0 LOG-028; P1/P2 menunggu keputusan PM (`apps/operations-cockpit/docs/AUDIT_KONSEP_FASE4.md`)
+#### FASE 4: Upgrade Cockpit — Estimasi 3–4 hari — Status: SELESAI (sign-off PM 2026-11-05, LOG-043; dirilis `bbfcda1` LOG-029, P1/P2 LOG-031/033, uji console 14/14 LOG-038)
 * **Selesai (LOG-023):** `tools/build_manifest.js` (data → `public/data/`, dicek kesegarannya oleh `npm run check`); modul `DwsimStreamView`, `MasterLibraryView`, `GoogleWorkspaceView`; panel Kesehatan Data (HMB, kalkulator, tag, companion, ukuran `projectData/area1`); tombol `wa.me` di detail WO, Tracker Action, dan setiap Meeting Log; panel G1–G4 di Stage-Gate; rute & navigasi baru. **Belum:** milestone Gantt G1 (dan G3/G4 semester depan) ditambahkan PM lewat UI Schedule; pembaca rumus KaTeX di Master Library.
 * **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
 * **DoD:**
@@ -600,7 +600,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] 12 modul dapat dibuka tanpa error di console browser. *(LOG-038: `tools/smoke_console.js` pada produksi https://dashboardcapstonearea1.vercel.app/ di Chrome PC, login PM → **14/14 modul** (8 menu P2) diklik, **0 error** console/exception/log, HASIL: PASS. Sebelumnya PARSIAL dari iPad, LOG-029.)*
   - [x] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya). *(LOG-023: `build_manifest.js --check` membandingkan hash sumber; `npm run check`/`sync:push` menolak bila basi; tanggal ekstraksi tampil di modul.)*
 
-#### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: PERANGKAT LUNAK SIAP (LOG-023), kegiatan rilis & serah terima menunggu tim
+#### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: SELESAI (sign-off PM 2026-11-05, LOG-043; DoD 4/4, 2 butir atas pernyataan PM LOG-039, re-audit Antigravity LOG-041)
 * **Perangkat lunak (LOG-023):** validasi tag menyeluruh (`npm run validate:tags`, LOG-021); ekspor logbook CSV (kolom Lampiran 2 Panduan; format unggah Simaster belum terdokumentasi, CSV umum); indikator ukuran `projectData/area1` di panel Kesehatan Data. **Kegiatan manusia:** merge ke `main` (rilis Vercel), `firebase deploy --only firestore:rules` (✅ di-deploy PM 2026-11-04, LOG-037; agent diblokir classifier "Production Deploy"), login + WO percobaan oleh tiap anggota, kompilasi bundel Stage-Gate di Drive (Antigravity), re-audit akhir oleh agent/pihak **selain** pelaksana (§7.2). Langkah di README "Rilis Produksi & Serah Terima".
 * **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; rilis produksi di Vercel (push ke `main`) + deploy `firestore.rules`; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
 * **DoD:**
