@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); DoD total 11/20; deploy firestore.rules menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 validasi tag P&ID asli selesai (LOG-034); DoD total 12/20; thermowell & deploy firestore.rules menunggu  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 19:20 WIB  
+**Terakhir Diperbarui:** 2026-11-04 19:50 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,29 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-034] 2026-11-04 19:50 WIB — Fase 3: validasi tag pada Draf P&ID asli `DME-PID-002` (DoD butir 4 terpenuhi); thermowell tetap terblokir
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control: *"sekarang lanjut dulu ke fase 3, kurang apa"*
+* **Fase**: 3
+* **Tujuan**: menutup 2 butir DoD Fase 3 yang tersisa sejauh bisa dilakukan agent.
+* **Perubahan**:
+  - **Ditemukan** di Drive (pencarian konektor): `DME-PID-002_Draft_PID_Area1.dxf` (ID `1BVOyqj0szbffzpYt4y1oWs68yRcwS96G`, 175.330 B, 2026-10-29) di folder Drive "aa" (bersama `PFD AREA 1.pdf`), **di luar** `CAPSTONE_DME_AREA1`. Diunduh lewat konektor (base64 → file) ke scratchpad terisolasi; tidak disalin ke repo/Drive.
+  - `tools/validate_tags.py`: `meta.pid_dxf_checked` kini `"<nama file> (sha256 <16 hex>)"`, bukan path absolut (laporan sama di semua perangkat & tertelusur ke versi gambar).
+  - `01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.json` dibuat ulang dengan `--dxf`; companion `.md` Rev 0.2 (§3 hasil kedua per kode temuan + PIC, §4 sisa pekerjaan, `source_data`).
+  - Blueprint Fase 3 DoD butir 4 dicentang. Bundel ulang `public/data/`.
+* **Bukti / Verifikasi**:
+  - Header DXF `0 SECTION 2 HEADER 9 $ACADVER`; sha256 `5eaa85cdc0103348…`.
+  - `.venv\Scripts\python -I tools/validate_tags.py --dxf <file>` → `P&ID DXF: DME-PID-002_Draft_PID_Area1.dxf (sha256 5eaa85cdc0103348)`, `56 ERROR, 40 WARNING` (sebelumnya tanpa gambar 14/33). Temuan dari gambar (49): PHANTOM_IN_DRAWING 34, WILD_TAG 5 (REAC-01, HEATER-01, C-01, C-02, REG-01), DWSIM_TAG 1 (PUMP-01), UNKNOWN_EQUIPMENT 2 (E-103, T-101), AREA_SCOPE 1 (DC-201), NOT_IN_DRAWING 6 (termasuk ESDV-101 dan FCV-101 yang wajib ada menurut RFP/FDS).
+  - `npm run test:py` → `30 passed`; `node tools/build_manifest.js` → OK; `node tools/check_companions.js` → **HASIL: PASS**.
+  - Thermowell: pencarian Drive (`PTC 19.3`, `thermowell`, `ASME`) → tidak ada salinan standar (hanya Panduan, dokumen ringkasan standar tim, dan *Handbook of Modern Sensors*). Butir DoD 3 **tetap terbuka**.
+* **Keputusan**: gambar dipakai apa adanya sebagai "Draf P&ID asli" (dibuat sebelum tag_map FINAL 2026-11-03, sehingga banyak tag lama); versi terbaru perlu dikonfirmasi JN. Thermowell tidak diimplementasikan tanpa standar & contoh soal (Blueprint §3.2 butir 5).
+* **Status DoD**: Fase 3 **4/5** (sebelumnya 3/5) → total **12/20 (60 %)**.
+* **Tindak Lanjut**:
+  - [ ] **JN**: konfirmasi `DME-PID-002` versi terbaru; ganti tag lama di gambar (R-101, E-101, P-101); pastikan ESDV-101 & FCV-101 ada; selaraskan Master Instrument Index (Sheets) dengan 34 instrumen di gambar (`DATA_STATUS = P&ID`); IH + JN putuskan E-103 dan T-101 di `tag_map.csv`.
+  - [ ] **JN/PM**: sediakan salinan **ASME PTC 19.3 TW-2016** (perpustakaan/akses standar UGM) + contoh soal → agent implementasikan `tools/calc/thermowell.py` + uji (DoD Fase 3 butir 3).
+  - [ ] **Antigravity**: pindahkan/salin `DME-PID-002_Draft_PID_Area1.dxf` dan `PFD AREA 1.pdf` dari folder Drive "aa" ke `CAPSTONE_DME_AREA1/03_CAD_DWG/` (Blueprint §2.2).
 
 ---
 

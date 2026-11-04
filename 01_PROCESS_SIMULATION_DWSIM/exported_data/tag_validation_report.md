@@ -8,12 +8,13 @@ target_files:
 generated_by: "tools/validate_tags.py (npm run validate:tags)"
 source_data:
   - "Master_Instrument_Index_DME.csv, ../tag_map.csv (FINAL), Cause_and_Effect_Matrix_ESD.csv, Master_Alarm_Database_ISA182.csv, mirrors/FDS-IC-DME-2026-001.md"
+  - "Draf P&ID DME-PID-002_Draft_PID_Area1.dxf (Drive, sha256 5eaa85cdc0103348), 2026-11-04"
 author: "Jonathan Pangihutan Michael Siahaan (PIC tag); validator oleh Claude Code (AI)"
 reviewer: "Ihsaan Zauhair Tsaqif Prawira"
 status: "WIP"
 review_evidence: ""
 google_ref: ""
-last_updated: "2026-11-03"
+last_updated: "2026-11-04"
 tags: ["Validation", "Tag", "ISA-5.1", "Generated"]
 ---
 
@@ -50,10 +51,25 @@ Teks yang bukan tag diabaikan: nomor jalur (`6"-PL-101`), nomor dokumen/gambar (
 
 Rincian lengkap per temuan ada di JSON (`findings[]`).
 
-## 3. Sisa untuk DoD Fase 3
-Validator sudah teruji pada P&ID DXF sintetis (`tools/test_validate_tags.py`). DoD butir 4 tercentang setelah dijalankan pada **minimal satu lembar Draf P&ID DXF asli** dari JN.
+## 3. Hasil Kedua (2026-11-04): dengan Draf P&ID asli — 56 ERROR, 40 WARNING
+Gambar: **`DME-PID-002_Draft_PID_Area1.dxf`** (sha256 `5eaa85cdc0103348`, 175.330 B, disimpan 2026-10-29 di Drive folder "aa", di luar `CAPSTONE_DME_AREA1`). Dijalankan: `.venv\Scripts\python -I tools/validate_tags.py --dxf <file>`. **DoD Fase 3 butir 4 terpenuhi** (validator berjalan pada P&ID DXF asli). Gambar dibuat **sebelum** `tag_map.csv` FINAL (2026-11-03), jadi sebagian besar temuan adalah ketertinggalan tag, bukan kesalahan validator.
+
+| Temuan dari gambar | Jumlah | Tag | Arti / tindak lanjut | PIC |
+| :--- | ---: | :--- | :--- | :--- |
+| `PHANTOM_IN_DRAWING` | 34 | FT-101, FV-101, TE-101, TE-102A, TT-101, TT-104, TIC-109, TV-109, TAH-104, TSHH-102, PT-103, PT-106, PI-107, PI-108, PSV-102, LIC-105, LV-105, LG-105, LAL-105, HV-101/102/104–109, NRV-101/102, XV-102, XY-102, XA-102, ST-101, DC-201 | Instrumen ada di gambar tetapi tidak di Master Instrument Index. Index masih **data contoh (PLACEHOLDER)**, sedangkan gambar adalah hasil kerja nyata → index di Sheets perlu **diturunkan dari P&ID** (`DATA_STATUS = P&ID`). HV/NRV (katup manual/check) bisa dikecualikan bila konvensi tim tidak memasukkannya ke index | JN |
+| `WILD_TAG` / `DWSIM_TAG` | 6 | REAC-01, HEATER-01, PUMP-01, C-01, C-02, REG-01 | Tag lama/DWSIM di gambar → ganti tag pabrik (R-101, E-101, P-101); C-01/C-02 milik Area 2/3; REG-01 perlu diperiksa | JN |
+| `UNKNOWN_EQUIPMENT` | 2 | E-103, T-101 | Peralatan di gambar yang tidak ada di `tag_map.csv` → tambahkan ke tag_map (bila memang peralatan Area 1) atau perbaiki tag | IH + JN |
+| `AREA_SCOPE` | 1 | DC-201 | Instrumen bernomor area 2xx di gambar Area 1 | JN |
+| `NOT_IN_DRAWING` | 6 | ESDV-101, FCV-101, AIC-201, LIC-202, PCV-201, PIC-201 | Ada di index tetapi tidak di gambar. ESDV-101 (trip suhu RFP §2.3) dan FCV-101 (kaskade TIC–FIC) **wajib ada di P&ID Area 1**; 2xx = lingkup Area 2 | JN |
+
+Temuan lintas dokumen (index, C&E, alarm, FDS) dari Hasil Pertama tetap ada; rincian lengkap di JSON (`findings[]`). DoD Fase 5 ("0 phantom tag pada P&ID berstatus `Diajukan`") baru bisa tercapai setelah gambar dan index diselaraskan.
+
+## 4. Sisa Pekerjaan
+- JN: konfirmasi `DME-PID-002` adalah versi terbaru; perbarui tag di gambar; selaraskan Master Instrument Index (Sheets) dengan gambar, lalu `npm run pull:sheets` dan jalankan ulang validator.
+- Antigravity: pindahkan/salin DXF ke Drive `CAPSTONE_DME_AREA1/03_CAD_DWG/` agar sesuai kebijakan penyimpanan (Blueprint §2.2).
 
 ## 4. Log Revisi
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Validator + laporan pertama lintas dokumen (LOG-021). |
+| 0.2 | 2026-11-04 | Claude Code (AI) | Dijalankan pada Draf P&ID asli `DME-PID-002` (56 ERROR, 40 WARNING); laporan mencatat nama file + sha256, bukan path absolut (LOG-034). |

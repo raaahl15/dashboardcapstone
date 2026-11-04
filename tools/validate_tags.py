@@ -211,7 +211,11 @@ def run(dxf_paths: list[Path], index_path=INDEX, tagmap_path=TAGMAP, tables=TABL
             "firm_area": FIRM_AREA,
             "index_instruments": len(v.index),
             "tag_map_plant_tags": len(v.plant),
-            "pid_dxf_checked": [str(p) for p in dxf_paths],
+            # Nama file + sidik SHA-256 (bukan path absolut) agar laporan sama di semua perangkat
+            # dan bisa ditelusuri ke versi gambar yang tepat (LOG-034).
+            "pid_dxf_checked": [
+                f"{p.name} (sha256 {hashlib.sha256(p.read_bytes()).hexdigest()[:16]})" for p in dxf_paths
+            ],
             "sources": sources,
         },
         "summary": {"ERROR": by_level["ERROR"], "WARNING": by_level["WARNING"]},
