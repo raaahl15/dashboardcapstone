@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T08:02:57.564Z",
+ "generated_at": "2026-11-04T08:56:40.557Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -58,8 +58,8 @@
   "05_SAFETY_AND_CONTROL/Cause_and_Effect_Matrix_ESD.md": "369aeb89e0e146a30c5321cf1bfa5a36a0654f193fa4cb125e83a76666e68246",
   "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md": "c3238d5f60d4ea7c34c82b2b904095a90cadd24e5fbdcf6fd8e7b69ee69f6620",
   "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "07c02a678b5a743f165a20bbe47a999abef35f369b3ec70c5cab467afa3becca",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "712d6d6afcf576217bf13ea8821d9c426e123b91d6c422e11d70e08e6b48d330",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "bf12f59b293c9239b71c0da42a4946aa88e5bd7f058c1092771827e708671a5c",
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "1a05d0977921b5834c9c4c160bcb41e91bc88220e2272cdd94d568290a8a7e30",
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "8a998687c707581d636a2bec3bd5831dc8248e78270ed3e99365bb607bd1463c",
   "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "8b51d022199557577dae9b4a26337cf8aecd79369424525330eea3a7a0388440",
   "07_FINAL_DELIVERABLES/reports/laporan_pstf1.md": "0b3fae1aa03c40114945506c02e32e4de287d5febf2bd925b5fa63d045858759"
  }

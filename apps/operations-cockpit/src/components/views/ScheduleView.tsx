@@ -906,14 +906,10 @@ export const ScheduleView: React.FC = () => {
             </div>
           </div>
 
-          {/* Footer Standards Compliance */}
-          <div className="pt-2 flex flex-wrap items-center justify-between gap-3 text-[11px] text-[#4A5A72] border-t border-[#EAF6FD]">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" />
-              <span>ISO 10628 &amp; ISA-5.1 Instrumentation Compliance</span>
-            </div>
-            <span>Thermodynamic Baseline: Peng-Robinson EOS (DWSIM v8.7)</span>
-            <span className="font-mono text-[10px]">Auto-saved to EPC Server • 14:42:09 WIB</span>
+          {/* Footer: sumber data jadwal (teks klaim statis dihapus, audit Fase 4 / LOG-028) */}
+          <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#4A5A72] border-t border-[#EAF6FD]">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" />
+            <span>Jadwal tersimpan di Firestore dan tersinkron antar-perangkat secara real-time.</span>
           </div>
         </div>
       </div>

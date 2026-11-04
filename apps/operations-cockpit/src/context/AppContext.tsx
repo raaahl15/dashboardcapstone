@@ -1474,7 +1474,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             ? {
                 ...log,
                 verifiedByLecturer: !log.verifiedByLecturer,
-                verifiedDate: !log.verifiedByLecturer ? 'Hari ini' : undefined,
+                // Tanggal paraf nyata (format sama dengan data lama, mis. "4 Nov 2026"), bukan teks "Hari ini" (LOG-028)
+                verifiedDate: !log.verifiedByLecturer
+                  ? formatYmdToIndonesian(getTodayLocalYmd())
+                  : undefined,
               }
             : log
         ),
