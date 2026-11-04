@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); DoD total 18/20 (sisa: ukuran projectData, re-audit akhir)  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); projectData ≈ 35 KB (LOG-040); DoD total 19/20 (sisa: re-audit akhir)  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-05 00:05 WIB  
+**Terakhir Diperbarui:** 2026-11-05 00:15 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,18 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-040] 2026-11-05 00:15 WIB — Ukuran `projectData/area1` ≈ 35 KB (DoD Fase 5 butir 3); bug teks rusak di panel Kesehatan Data
+* **Pelaksana**: Claude Code (AI agent), dari screenshot produksi yang dikirim PM (Rahul): *"nih hasilnya"*
+* **Fase**: 5
+* **Perubahan**: DoD Fase 5 butir 3 dicentang di Blueprint; Fase 5 DoD 3/4.
+* **Bukti / Verifikasi**: screenshot https://dashboardcapstonearea1.vercel.app/ (Beranda → Kesehatan Data Rekayasa, "Dibundel 04 Nov 2026, 23.34"): Ukuran projectData/area1 **≈ 35 KB** (batas aturan 500 KB, Firestore 1 MiB); juga terlihat HMB 1 hari (AllObjectsCalculated, neraca maks 0,027 %), Kalkulator 12/12 PASS (2 masih PLACEHOLDER, 0 belum dihitung), Inkonsistensi tag 0 error (1 peringatan, P&ID diperiksa 1), Companion 27/27.
+* **Temuan**: teks panel tampil rusak (mojibake): `â‰ˆ` (≈), `Â·` (·), `â†’` (→), `â€“` (–), `Â§` (§). Penyebab: `src/components/common/DataHealthPanel.tsx` tersimpan dengan UTF-8 ter-encode ganda (hanya file ini; grep seluruh `src`). Perbaikan di branch `fix-health-mojibake` (kode web → preview → merge).
+* **Status DoD**: 1.5: 5/5, 2: 3/3, 3: 5/5, 4: 3/3, 5: 3/4 → **19/20 (95 %)**.
+* **Tindak Lanjut**:
+  - [ ] **Re-audit akhir** oleh pihak selain pelaksana (§7.2), dicatat di log (DoD Fase 5 butir 4, butir terakhir).
+  - [ ] **PM**: cek preview branch `fix-health-mojibake`, lalu "merge"; sign-off Fase 4 (dan Fase 5 setelah re-audit).
+
+---
 ### [LOG-039] 2026-11-05 00:05 WIB — Keputusan PM: P&ID selesai direview; akses 3 URL terbukti; uji clone laptop & login semua anggota dinyatakan selesai
 * **Pelaksana**: Claude Code (AI agent) mencatat keputusan PM (Rahul): *"fase 5 bagian P&ID udah review dan done, lalu satu anggota membuka 3 url sudah dilakukan dan lancar, uji clone dan semua anggota login anggap dah selesai"*
 * **Fase**: 2, 5
