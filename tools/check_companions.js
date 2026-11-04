@@ -153,6 +153,14 @@ for (const group of byHash.values()) {
   if (group.length > 1) errors.push(`File duplikat (isi identik): ${group.join(', ')}`);
 }
 
+// 6) Data rekayasa yang dibundel ke cockpit harus segar (Blueprint §3.6; LOG-023)
+if (!process.argv.includes('--no-data-check')) {
+  const r = spawnSync('node', [path.join(ROOT, 'tools', 'build_manifest.js'), '--check'], { cwd: ROOT, encoding: 'utf8' });
+  if (r.status !== 0) {
+    (r.stderr || 'build_manifest --check gagal').trim().split('\n').forEach((l) => errors.push(l.replace(/^\s*x\s*/, '')));
+  }
+}
+
 // ---------------------------------------------------------------- laporan
 const statusCount = {};
 for (const { fm } of companions) statusCount[fm.status || '(kosong)'] = (statusCount[fm.status || '(kosong)'] || 0) + 1;

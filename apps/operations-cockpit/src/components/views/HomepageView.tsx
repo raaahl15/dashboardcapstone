@@ -1,6 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { DataHealthPanel } from '../common/DataHealthPanel';
+import { getRaciRoleForUser } from '../../utils/migrateUserRefs';
 import {
   Config,
   DeliverableItem,
@@ -535,6 +537,9 @@ export const HomepageView: React.FC = () => {
           </button>
         )}
       </div>
+
+      {/* KESEHATAN DATA REKAYASA (Blueprint BAB IV tambahan v2.0; data public/data/health.json) */}
+      <DataHealthPanel />
 
       {/* ========================================================================= */}
       {/* CORE BENTO GRID (3 Columns on >= 1280px, aligned bottom edges) */}
@@ -1159,74 +1164,41 @@ export const HomepageView: React.FC = () => {
                 </button>
               </div>
 
+              {/* Dihitung dari matriks Team RACI (Firestore), bukan teks tetap (audit Fase 4 / LOG-028) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#334155] font-semibold">Otorisasi PM</span>
-                  <div className="inline-flex items-center gap-1.5">
-                    <UserChip
-                      uid="user-rahul"
-                      variant="avatar-nama"
-                      size="xs"
-                      useNickname
-                      nameClassName="!font-bold !text-[#0062CC]"
-                    />
-                    <span className="font-extrabold text-[#0062CC]">(A)</span>
-                  </div>
-                </div>
-                <div className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#334155] font-semibold">Bab 1 URS / Sains</span>
-                  <div className="inline-flex items-center gap-1.5">
-                    <UserChip
-                      uid="user-ihsan"
-                      variant="avatar-nama"
-                      size="xs"
-                      useNickname
-                      nameClassName="!font-bold !text-[#0062CC]"
-                    />
-                    <span className="font-extrabold text-[#0062CC]">(R)</span>
-                  </div>
-                </div>
-                <div className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#334155] font-semibold">Bab 2 FDS &amp; Kontrol</span>
-                  <div className="inline-flex items-center gap-1.5">
-                    <UserChip
-                      uid="user-althaf"
-                      variant="avatar-nama"
-                      size="xs"
-                      useNickname
-                      nameClassName="!font-bold !text-[#0062CC]"
-                    />
-                    <span className="font-extrabold text-[#0062CC]">(R)</span>
-                  </div>
-                </div>
-                <div className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#334155] font-semibold">Bab 4 Inst. &amp; SIS</span>
-                  <div className="inline-flex items-center gap-1.5">
-                    <UserChip
-                      uid="user-jonathan"
-                      variant="avatar-nama"
-                      size="xs"
-                      useNickname
-                      nameClassName="!font-bold !text-[#0062CC]"
-                    />
-                    <span className="font-extrabold text-[#0062CC]">(R)</span>
-                  </div>
-                </div>
-                <div className="sm:col-span-2 px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#334155] font-semibold">
-                    Bab 5–6 CAPEX/OPEX &amp; Ekonomi
-                  </span>
-                  <div className="inline-flex items-center gap-1.5">
-                    <UserChip
-                      uid="user-heidi"
-                      variant="avatar-nama"
-                      size="xs"
-                      useNickname
-                      nameClassName="!font-bold !text-[#0062CC]"
-                    />
-                    <span className="font-extrabold text-[#0062CC]">(R)</span>
-                  </div>
-                </div>
+                {raciRows.slice(0, 6).map((row) => {
+                  const responsible = users.filter((u) => getRaciRoleForUser(row, u.id) === 'R');
+                  return (
+                    <div
+                      key={row.id}
+                      className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2"
+                    >
+                      <span className="text-[11px] text-[#334155] font-semibold truncate" title={row.deliverable}>
+                        {row.deliverable}
+                      </span>
+                      <div className="inline-flex items-center gap-1.5 shrink-0">
+                        {responsible.length === 0 ? (
+                          <span className="text-[11px] text-[#92400E] font-bold">Belum ada R</span>
+                        ) : (
+                          responsible.slice(0, 2).map((u) => (
+                            <UserChip
+                              key={u.id}
+                              uid={u.id}
+                              variant="avatar-nama"
+                              size="xs"
+                              useNickname
+                              nameClassName="!font-bold !text-[#0062CC]"
+                            />
+                          ))
+                        )}
+                        <span className="font-extrabold text-[#0062CC]">(R)</span>
+                      </div>
+                    </div>
+                  );
+                })}
+                {raciRows.length === 0 && (
+                  <p className="text-xs text-[#334155]">Matriks RACI belum diisi.</p>
+                )}
               </div>
             </div>
 
@@ -1331,16 +1303,14 @@ export const HomepageView: React.FC = () => {
               </div>
             </div>
 
-            {/* Export Package Button */}
+            {/* Tombol "Ekspor Paket FEED" (hanya alert palsu) diganti tautan ke dokumen master asli (LOG-028) */}
             <button
               type="button"
-              onClick={() => {
-                alert('Mengunduh arsip paket dokumen FEED Area 1: DME-FEED-Area1-Package-Rev03.zip');
-              }}
+              onClick={() => setActiveTab('gworkspace')}
               className="w-full mt-5 min-h-[44px] bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
             >
-              <Download className="w-3.5 h-3.5" />
-              Ekspor Paket FEED (.zip / PDF)
+              <ExternalLink className="w-3.5 h-3.5" />
+              Buka Dokumen Master (Google Workspace)
             </button>
           </div>
 

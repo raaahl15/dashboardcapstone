@@ -110,6 +110,9 @@ export const Header: React.FC<HeaderProps> = ({
     { key: 'weekly-mom', label: 'Weekly MoM' },
     { key: 'standards', label: 'Standards' },
     { key: 'workspaces', label: 'Workspaces' },
+    { key: 'dwsim', label: 'DWSIM' },
+    { key: 'library', label: 'Library' },
+    { key: 'gworkspace', label: 'G-Workspace' },
     { key: 'logbook', label: 'Logbook' },
     { key: 'stage-gate', label: 'Stage-Gate' },
   ];

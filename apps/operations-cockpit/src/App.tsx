@@ -35,6 +35,15 @@ const LogbookView = React.lazy(() =>
 const StageGateView = React.lazy(() =>
   import('./components/views/StageGateView').then((m) => ({ default: m.StageGateView }))
 );
+const DwsimStreamView = React.lazy(() =>
+  import('./components/views/DwsimStreamView').then((m) => ({ default: m.DwsimStreamView }))
+);
+const MasterLibraryView = React.lazy(() =>
+  import('./components/views/MasterLibraryView').then((m) => ({ default: m.MasterLibraryView }))
+);
+const GoogleWorkspaceView = React.lazy(() =>
+  import('./components/views/GoogleWorkspaceView').then((m) => ({ default: m.GoogleWorkspaceView }))
+);
 
 interface ChunkErrorBoundaryProps {
   children: React.ReactNode;
@@ -163,6 +172,9 @@ const MainApp: React.FC = () => {
             {activeTab === 'workspaces' && <WorkspacesView />}
             {activeTab === 'logbook' && <LogbookView />}
             {activeTab === 'stage-gate' && <StageGateView />}
+            {activeTab === 'dwsim' && <DwsimStreamView />}
+            {activeTab === 'library' && <MasterLibraryView />}
+            {activeTab === 'gworkspace' && <GoogleWorkspaceView />}
           </React.Suspense>
         </ChunkErrorBoundary>
       </main>

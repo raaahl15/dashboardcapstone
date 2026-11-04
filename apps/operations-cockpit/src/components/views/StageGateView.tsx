@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
+import { StageGateTimeline } from '../common/StageGateTimeline';
 import {
   ShieldCheck,
   Printer,
@@ -190,7 +191,7 @@ export const StageGateView: React.FC = () => {
                 AUDIT INTERNAL TAHAP 3
               </span>
               <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
-                Sidang Akhir: 15 Des 2026
+                G2 Evaluasi PSTF 1: {config.tenderDeadline}
               </span>
             </div>
 
@@ -229,6 +230,9 @@ export const StageGateView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* PEMETAAN STAGE-GATE G1–G4 (Blueprint §1.7) */}
+      <StageGateTimeline />
 
       {/* ========================================================================= */}
       {/* MASTER READINESS GAUGE & METRIC CARDS */}
@@ -356,7 +360,7 @@ export const StageGateView: React.FC = () => {
               {averageRubricScore} / 100
             </span>
             <span className="text-[11px] text-[#92400E] font-medium block mt-0.5">
-              Revisi Bab 3 & 4
+              {rubricParameters.filter((p) => p.score < 70).length} parameter skor &lt; 70
             </span>
           </div>
 
@@ -365,10 +369,10 @@ export const StageGateView: React.FC = () => {
               DEFENSE BANK
             </span>
             <span className="font-heading text-2xl font-extrabold text-[#0B1B33] block mt-1 tabular-nums">
-              {defenseQuestions.length} Butir Siap
+              {defenseQuestions.length} Butir
             </span>
             <span className="text-[11px] text-[#065F46] font-medium block mt-0.5">
-              100% Diselaraskan
+              {defenseQuestions.filter((q) => !q.verifiedResponse.trim()).length} belum ada jawaban
             </span>
           </div>
 
@@ -380,7 +384,10 @@ export const StageGateView: React.FC = () => {
               {readyPhysicalCount} / {physicalChecklist.length} Bundel
             </span>
             <span className="text-[11px] text-[#0062CC] font-medium block mt-0.5">
-              {Math.round((readyPhysicalCount / physicalChecklist.length) * 100)}% Cetak Beres
+              {physicalChecklist.length
+                ? Math.round((readyPhysicalCount / physicalChecklist.length) * 100)
+                : 0}
+              % Cetak Beres
             </span>
           </div>
         </div>
@@ -405,7 +412,7 @@ export const StageGateView: React.FC = () => {
             </p>
           </div>
           <span className="text-[11px] text-[#4A5A72]">
-            {config.readinessLocked ? 'Status Terkunci oleh PM' : 'Terakhir diperbarui: Hari ini'}
+            {config.readinessLocked ? 'Status Terkunci oleh PM' : 'Belum dikunci PM'}
           </span>
         </div>
 

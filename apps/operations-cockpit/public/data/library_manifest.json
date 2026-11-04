@@ -1,0 +1,505 @@
+{
+ "generated_at": "2026-11-04T08:56:40.557Z",
+ "documents": [
+  {
+   "path": "00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md",
+   "folder": "00_CORE_GUIDELINES",
+   "id": "GUIDE-DTNTF-2026-001",
+   "title": "Ringkasan Panduan Pelaksanaan Perancangan Sistem Teknik Fisika (PSTF) 2026",
+   "category": "Academic Guideline",
+   "standard": "Panduan PSTF Prodi Teknik Fisika DTNTF FT UGM, 2026 (disahkan 20 Agustus 2026)",
+   "status": "WIP",
+   "author": "Claude Code (AI) — ringkasan",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [],
+   "tags": [
+    "Panduan",
+    "Rubrik",
+    "PSTF 1",
+    "PSTF 2",
+    "Stage-Gate"
+   ],
+   "body": "# Ringkasan Panduan Capstone (PSTF 1 & 2) — DTNTF FT UGM 2026\n\n> 📁 PDF asli disimpan di Google Drive (`DRIVE_ROOT/00_CORE_GUIDELINES/`). Ringkasan ini dibuat dari ekstraksi teks PDF; **jika ada perbedaan, PDF asli yang berlaku**. Nomor halaman merujuk penomoran di PDF.\n\n## 1. Kerangka Umum (BAB I–II)\n- Capstone disimulasikan sebagai **proyek EPC**; kelompok bertindak sebagai **Firma Rekayasa** beranggotakan **3–4 orang**, dengan peran internal seperti Project Manager, Lead Process Engineer, dan Lead Instrument Engineer.\n- Tata kelola proyek mengikuti **NAMUR NA 35**: Fase 1 *Conceptual*, Fase 2 *Basic Engineering*, Fase 3 *Detail Engineering*.\n- **PSTF 1 (Semester 7)** = NAMUR Fase 1 + 2. **PSTF 2 (Semester 8)** = NAMUR Fase 3. PSTF 1 adalah **prasyarat ketat** untuk PSTF 2, dan konsep dasar yang disetujui di PSTF 1 tidak boleh diubah di PSTF 2.\n- Aktor: **Dosen Koordinator** (perwakilan klien, menentukan Stage-Gate & kelulusan), **Praktisi Industri** (menilai NPV, BoM, konstruktabilitas, K3), **Dosen Pembimbing** (*Lead Consultant*, memberi **ACC** setiap draf sebelum dinilai).\n- Penugasan lewat **tender TOR/RFP** di minggu-minggu awal semester ganjil.\n\n## 2. CPMK\n| Kode | Capaian |\n| :--- | :--- |\n| PSTF1-CPMK1 | Menerapkan matematika & sains teknik untuk memodelkan solusi awal |\n| PSTF1-CPMK2 | Merumuskan URS dan batasan desain yang realistis |\n| PSTF1-CPMK3 | Menyusun dokumen FEED (kelayakan teknis-ekonomis + desain konseptual) |\n| PSTF2-CPMK1 | Menerjemahkan FEED menjadi DED komprehensif |\n| PSTF2-CPMK2 | Memvalidasi desain lewat simulasi tingkat lanjut / prototipe |\n| PSTF2-CPMK3 | Menghasilkan dokumen teknis akhir & presentasi profesional beretika |\n\n## 3. Luaran PSTF 1 (BAB III)\n1. **Conceptual**: pemodelan *first-principle* (persamaan + komputasi numerik yang konvergen), **URS** kuantitatif, dan **FDS / Control Narrative (ISA-5.06.01)** mencakup start-up, operasi normal, dan shutdown otomatis.\n2. **Basic Engineering / FEED**: **PFD (ISO 10628) terintegrasi tabel neraca massa & panas** di setiap aliran, dan **Draf P&ID (ISA-5.1)**.\n3. **Tekno-ekonomi** berbasis Draf P&ID: CAPEX, OPEX, **NPV, IRR** (vs suku bunga acuan), **Payback Period**.\n4. **Evaluasi PSTF 1** (minggu 14–16): presentasi PFD, Draf P&ID, dan kesimpulan tekno-ekonomi di depan Koordinator, Pembimbing, dan Praktisi.\n\n## 4. Luaran PSTF 2 (BAB IV)\n1. **P&ID Final** (line sizing, spec break, interlock; ISA-5.1 & 5.2).\n2. **Sizing mutlak, dihitung manual**: orifice/flowmeter (**ISO 5167 / AGA 3**), thermowell (**ASME PTC 19.3 TW**), control valve **Cv + kavitasi (ISA-75.01.01 / IEC 60534-2-1)**, PSV (**API 520/521**).\n3. **Datasheet ISA-TR20.00.01**, **BoM Final** dengan vendor riil, **I/O List (API RP 554)**, **Loop Diagram (ISA-5.4)**, **Hook-up 3D CAD (API RP 551)**.\n4. **Validasi Virtual FAT**: digital twin (mis. DWSIM, Simulink), injeksi skenario stress-test, plot respons (overshoot, settling time), dibandingkan dengan target di URS.\n5. **Keselamatan & siber**: HAZOP, SIS/SIL (**IEC 61511 / ISA-84**), HMI (**ISA-101.01**), alarm (**ISA-18.2 / EEMUA 191**), siber (**IEC 62443**).\n\n## 5. Rubrik Penilaian (Tabel 2, ringkas)\n| Aspek | Baik (70–79) | Sangat Baik (80–100) |\n| :--- | :--- | :--- |\n| PSTF 1: Sains & URS | Simulasi model dasar jalan; URS kuantitatif; FDS logis | Model dinamis presisi; URS/FDS selengkap kontrak klien |\n| PSTF 1: Basic Eng. | PFD ISO 10628 berneraca massa; Draf P&ID ISA-5.1 masuk akal; NPV/IRR logis | P&ID solid, PFD sangat rinci, NPV/IRR dengan risiko suku bunga |\n| PSTF 2: DED | P&ID Final patuh ISA-5.1; ISA-20 & Loop ISA-5.4 akurat; BoM riil | Cetak biru A3 siap tender; hook-up API 551 presisi 3D |\n| PSTF 2: Sizing & Safety | ISO 5167, ISA 75.01, ASME 19.3 **dihitung manual**; SIL diulas | Manual + software presisi (termasuk PSV API 520); SIL/SIS paripurna |\n| PSTF 2: Virtual FAT | Tahan gangguan; HMI ISA-101 & alarm terstandar; mitigasi siber | Simulasi sangat tangguh dengan statistik valid; hierarki alarm EEMUA sempurna |\n| Kinerja tim | Saling menopang, paham standar & asumsi CAPEX | Presentasi level Engineering Manager |\n\n⚠️ Rubrik menilai **\"sizing via kalkulator web tanpa rumusan standar\"** hanya sebagai *Cukup/Revisi Mayor (60–69)*. Skrip kalkulator di repo harus diposisikan sebagai **verifikasi silang** atas perhitungan manual yang ditulis lengkap di laporan.\n\n## 6. Bobot Formulir Penilaian (Lampiran 4–5)\n| Penilai | PSTF 1 | PSTF 2 |\n| :--- | :--- | :--- |\n| Dosen Koordinator | Model sains & FDS 40% · Integrasi BFD/PFD/Draf P&ID 40% · Kualitas penulisan 20% | Sizing presisi 35% · Kepatuhan kode DED (ISA-5.1/5.4/20) 35% · Validitas Virtual FAT 30% |\n| Pembimbing / Praktisi | Tekno-ekonomi & profitabilitas 50% · Kelayakan komersial PFD/P&ID 30% · Presentasi tender 20% | Kelayakan manufaktur & supply chain 40% · K3 (HAZOP/SIL) & audit siber 40% · Etika & presentasi 20% |\n\n## 7. Jadwal & SOP (Lampiran 1)\n| Tahap | Waktu | Inti |\n| :--- | :--- | :--- |\n| 1. Rilis tender & pembentukan firma | Minggu 1–2 PSTF 1 | Koordinator rilis TOR; kelompok 3–4 orang memilih 1 TOR |\n| 2. Conceptual & Basic Engineering | Minggu 3–13 PSTF 1 | Simulasi, FDS, PFD, Draf P&ID, tekno-ekonomi; Pembimbing memaraf ACC draf laporan |\n| 3. Evaluasi proposal | Minggu 14–16 PSTF 1 | Panel evaluasi: Layak atau Revisi Mayor; laporan final A4 + lampiran A3 disahkan Kadep |\n| 4. Detail Engineering & Virtual FAT | Minggu 1–13 PSTF 2 | P&ID Final, ISA-20, sizing manual, hook-up, SIL, BoM; Pembimbing memberi ACC final |\n| 5. Evaluasi akhir | Minggu 14–16 PSTF 2 | Evaluasi DED, sizing, HAZOP/SIL, cetak biru A3, simulasi; penilaian kolektif |\n\n## 8. Logbook (Lampiran 2)\n- Wajib diisi **maksimal 1×24 jam** setelah pertemuan; diparaf Dosen Pembimbing **setiap minggu**.\n- Isi harus **spesifik** (kendala standar, tahap kalkulasi sizing, masalah ekonomi, bug software); kalimat generik (\"mencari bahan di perpustakaan\") tidak diterima.\n- **12 baris** wajib terisi penuh dan diparaf, untuk PSTF 1 maupun PSTF 2.\n- Logbook menjadi dasar penyesuaian nilai individu (mencegah *free-rider*).\n\n## 9. Struktur Laporan (Lampiran 3A/3B)\n- **PSTF 1** (template: `http://ugm.id/TemplatePSTF1`): Bab 1 Konseptualisasi (TOR, first-principle, URS) · Bab 2 FDS/Control Narrative · Bab 3 Basic Engineering (PFD + neraca massa & panas) · Bab 4 Tekno-ekonomi · Lampiran A Draf P&ID (A3) · Lampiran B Logbook.\n  - **Keputusan PM (LOG-025): struktur 4 bab di atas yang berlaku.** Template LaTeX resmi (`templates/PSTF1_LaTeX/`, catatan di `templates/PSTF1_LaTeX.md`) dipakai hanya untuk format dan halaman awal. Contoh isinya yang 5 bab (Bab 4 Kajian Keselamatan HAZOP/SIL, subbab matriks pembobot dan CV/MV/DV) tidak diikuti; HAZOP/SIL masuk PSTF 2. Koreksi atas LOG-024.\n- **TOR/RFP proyek:** KAK-IC-DME-2026-001 (ringkasan `RFP_KAK-IC-DME-2026-001.md`): FEED 15-12-2026, DED 30-06-2027.\n- **PSTF 2** (template: `http://ugm.id/TemplatePSTF2`): Bab 1 Review FEED · Bab 2 Sizing & Safety · Bab 3 DED (ISA-20, spec break, BoM) · Bab 4 Kendali, HMI & SIS · Bab 5 Virtual FAT · Bab 6 SOP · Lampiran A–D (P&ID Final, Loop & Logic, Hook-up, Datasheet + BoM).\n\n## 10. Implikasi untuk Sistem Proyek Ini\n1. **Ukuran tim**: panduan menyebut firma **3–4 orang**; **keputusan PM (2026-11-03): tim tetap 5 orang.** Konsekuensinya, RACI dan logbook tiap anggota harus menunjukkan kontribusi individu yang jelas (Blueprint risiko R-09).\n2. **Stage-Gate**: panduan mendefinisikan **2 evaluasi formal**. Pemetaan proyek (Blueprint §1.7): **G1** = ACC Pembimbing draf PSTF 1 · **G2** = Evaluasi PSTF 1 · **G3** = ACC final Pembimbing PSTF 2 · **G4** = Evaluasi Akhir PSTF 2.\n3. **Sizing manual wajib**: pipeline kalkulator otomatis hanya sebagai verifikasi silang (Blueprint §3.2).\n4. **Logbook**: modul Logbook cockpit perlu menegakkan aturan 1×24 jam, 12 baris, dan paraf mingguan.\n5. **HMB**: PFD wajib terintegrasi neraca massa & panas, jadi skema v1 `hmb_streams.json` (Fase 3) termasuk jalur kritis untuk Evaluasi PSTF 1.\n\n## 11. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Ringkasan dibuat dari ekstraksi teks PDF 30 halaman (LOG-004). Perlu dicek PM. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | §9: catatan LOG-024 (template 5 bab berlaku) diganti keputusan PM bahwa struktur 4 bab Panduan berlaku (LOG-025). |\n"
+  },
+  {
+   "path": "00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md",
+   "folder": "00_CORE_GUIDELINES",
+   "id": "RFP-KAK-IC-DME-2026-001",
+   "title": "RFP / KAK Layanan Konsultansi FEED & DED Sistem I&C Pabrik DME (ringkasan)",
+   "category": "Reference Document",
+   "standard": "Dokumen lelang (TOR/RFP) Dosen Koordinator; ISA, IEC 61508/61511, API 520/526, ISA-75",
+   "status": "WIP",
+   "author": "DTNTF FT UGM (penerbit); ringkasan oleh Claude Code (AI)",
+   "reviewer": "Rahul Ghulam Hidayatulloh",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [],
+   "tags": [
+    "RFP",
+    "TOR",
+    "KAK",
+    "I&C",
+    "FEED",
+    "DED",
+    "Lingkup"
+   ],
+   "body": "# RFP / KAK-IC-DME-2026-001: Konsultansi FEED & DED Sistem I&C Pabrik DME\n\n> 📁 PDF asli di Drive `DRIVE_ROOT/00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` (tidak di Git, kebijakan §2.2). Ringkasan ini untuk penelusuran; **bila berbeda, PDF yang berlaku**. Nomor bagian merujuk PDF.\n\n## 1. Identitas\n| Butir | Isi |\n| :--- | :--- |\n| No. dokumen | KAK-IC-DME-2026-001, terbit 25-08-2026 |\n| Penerbit / konsultan utama | DTNTF FT UGM |\n| Sifat pengadaan | Spesialisasi Sistem Instrumentasi & Kontrol (I&C) |\n| **Batas penawaran** | **FEED 15-12-2026** (= G2 Evaluasi PSTF 1) · **DED 30-06-2027** (acuan G3/G4 PSTF 2) |\n\n## 2. Lingkup (§1.2–1.3)\n- **Termasuk:** I&C Design Basis, filosofi operasi, arsitektur DCS/SIS/FGS + integrasi PLC paket; logika keselamatan, SIL assessment & verification, C&E **reaktor dan kolom distilasi**; sizing + datasheet control valve, safety relief valve, transmitter, process analyzer; loop diagram, hook-up, JB wiring, cable schedule; MR & TBE.\n- **Tidak termasuk:** sipil/struktur, mekanikal bejana tekan, perpipaan non-instrumen, pengadaan fisik, pabrikasi panel, instalasi, konstruksi, komisioning. Serahan = dokumen rekayasa berstatus AFC.\n- **Lingkup firma ini:** RFP mencakup seluruh pabrik; pembagian pabrik ke **3 area** (Area 1 reaktor = firma ini; Area 2 distilasi 1; Area 3 distilasi 2) adalah keputusan PM (LOG-014/015). Persyaratan §2.2 dan baris S-08…S-11 Tabel 1 adalah lingkup Area 2/3.\n\n## 3. Persyaratan Proses & I&C yang Mengikat Area 1 (§2.1, §2.3)\n1. Reaksi dehidrasi metanol fase uap, eksotermik & reversibel: 2 CH₃OH ⇌ CH₃OCH₃ + H₂O (ΔH < 0). Risiko utama: *thermal runaway* yang merusak katalis dan membahayakan reaktor.\n2. **Pemantauan suhu multi-titik** pada reaktor.\n3. **Kontrol kaskade** Temperature Controller pada pemanas ↔ Flow Controller pada pompa umpan.\n4. **SIS/ESD trip suhu tinggi-tinggi** yang menutup ESDV di saluran masuk umpan \"dalam hitungan detik\".\n5. Transmitter pintar **HART atau Foundation Fieldbus** untuk pemeliharaan prediktif lewat Asset Management System (AMS); instrumen analitik wajib auto-calibration dan isolasi sampel.\n6. SIL ditentukan dari **HAZOP → LOPA** (§3.1.2) dan diverifikasi dengan PFD sesuai **IEC 61508/61511** (§5.2).\n7. Sizing katup kontrol & pengaman menurut **ISA-75 dan API 520/526**, termasuk variasi laju, ΔP, viskositas, kavitasi/flashing (§3.2.1).\n8. QA: pemeriksaan berjenjang *Check–Review–Approve* oleh Lead Instrument Engineer + inter-discipline check (§5.1), selaras dengan alur reviewer proyek.\n\n## 4. Padanan Tag RFP ↔ Tag Pabrik Proyek\nRFP memakai nama objek DWSIM/lama. Di dokumen firma wajib memakai tag pabrik (`tag_map.csv` FINAL); kutipan langsung dari RFP boleh tetap memakai nama RFP.\n\n| Tag di RFP | Tag pabrik | Area | Keterangan |\n| :--- | :--- | :---: | :--- |\n| REAC-01 | **R-101** | 1 | Reaktor dehidrasi (DWSIM RC-01) |\n| HEATER-01 | **E-101** | 1 | Pemanas umpan (DWSIM HEAT-01) |\n| PUMP-01 | **P-101** | 1 | Pompa umpan (DWSIM PUMP-01) |\n| ESDV saluran masuk umpan | **ESDV-101** | 1 | Sudah ada di index |\n| C-01 | – | 2 | Kolom distilasi 1 (DWSIM CSCOL-01), tag pabrik oleh Area 2 |\n| C-02, COOL-02, PUMP-02 | – | 3 | Distilasi 2 + loop recycle, tag pabrik oleh Area 3 |\n\n## 5. Data DWSIM di RFP = Model Proyek (diverifikasi 2026-11-03, LOG-024)\nTabel 1 RFP mengutip fraksi mol \"hasil simulasi DWSIM\". Dibandingkan dengan `hmb_streams.json` (ekstraksi `DME.dwxmz`):\n\n| Stream | RFP | HMB proyek | Selisih |\n| :--- | :--- | :--- | ---: |\n| S-08 x DME | 0,999983 | 0,999983 | 0 |\n| S-09 x MeOH / H₂O | 0,3151 / 0,6660 | 0,31503 / 0,66600 | 7×10⁻⁵ / 0 |\n| S-10 x MeOH / H₂O | 0,9034 / 0,0411 | 0,903376 / 0,041065 | 2,4×10⁻⁵ / 3,5×10⁻⁵ |\n| S-11 x H₂O | 0,9900 | 0,9900 | 0 |\n\n**Kesimpulan:** `DME.dwxmz` adalah **model referensi klien** dari dokumen lelang (menjelaskan metadata simpan 2021 / +05:30, LOG-019). Di laporan, sitasi model sebagai bagian RFP KAK-IC-DME-2026-001; pengembangan/validasi oleh firma ditulis terpisah.\n\n## 6. Serahan FEED (PSTF 1) menurut Tabel 3\n| No | Serahan | Format | Padanan di proyek |\n| :---: | :--- | :--- | :--- |\n| 1 | URS I&C | PDF & Word | Laporan Bab 1.3 |\n| 2 | PFD / P&ID I&C overlay | PDF & native DWG | Bab 3.1, 3.3, Lampiran A (P&ID JN) |\n| 3 | I&C Design Basis, Control Narrative & Philosophy | PDF & Word | Bab 2 + FDS-IC-DME-2026-001 |\n| 4 | Estimasi CAPEX & OPEX I&C (Class 2) | PDF & Excel | Bab 4 + `inputs/NPV-001.yaml` (§3.3.1: CAPEX = hardware/software kontrol, katup, kabel, panel; OPEX = kalibrasi, AMS, lisensi) |\n\nSerahan DED (PSTF 2): arsitektur DCS/SIS/FGS, Master Instrument Index & I/O List (Excel), datasheet & sizing, C&E, loop & hook-up, JB wiring & cable schedule, MR & TBE, BoM.\n\n## 7. Dampak ke Dokumen Proyek\n| No | Temuan | Tindak lanjut | PIC |\n| :---: | :--- | :--- | :--- |\n| 1 | Asal-usul model DWSIM terjawab (§5) | Status `hmb_streams.md` bisa naik setelah IH menulis sitasi | IH |\n| 2 | Contoh template laporan punya 5 bab (ada Bab 4 Kajian Keselamatan) | **Keputusan PM (LOG-025):** isi tetap 4 bab Panduan; template hanya format. Serahan FEED Tabel 3 tidak memuat HAZOP | RG |\n| 3 | SIL wajib lewat **HAZOP + LOPA** | Dikerjakan di PSTF 2 (Panduan BAB IV), memakai LOPA, bukan risk graph seperti contoh template | AL |\n| 4 | Transmitter wajib HART/FF + AMS | Kolom `SIGNAL_TYPE` index (mis. \"RTD Pt100\", \"DP Cell 4-20mA\") perlu dinyatakan sebagai transmitter HART | JN |\n| 5 | CAPEX/OPEX I&C **Class 2** | Estimasi biaya Bab 4 mengikuti AACE Class 2 untuk lingkup I&C | HD |\n| 6 | Tenggat DED 30-06-2027 | Acuan jadwal G3/G4 di cockpit | RG |\n\n## 8. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Ringkasan RFP, padanan tag, verifikasi data DWSIM, dampak ke dokumen (LOG-024). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Rujukan bab disesuaikan ke struktur 4 bab Panduan; HAZOP/LOPA dipindah ke PSTF 2 (LOG-025). |\n"
+  },
+  {
+   "path": "00_CORE_GUIDELINES/templates/PSTF1_LaTeX.md",
+   "folder": "00_CORE_GUIDELINES",
+   "id": "TPL-PSTF1-LATEX",
+   "title": "Template LaTeX Laporan PSTF 1 (resmi DTNTF)",
+   "category": "Report Template",
+   "standard": "Panduan Capstone DTNTF 2026, Lampiran 3A",
+   "status": "WIP",
+   "author": "DTNTF FT UGM (template); catatan oleh Claude Code (AI)",
+   "reviewer": "Rahul Ghulam Hidayatulloh",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "PSTF1_LaTeX/laporan_pstf1.tex",
+    "PSTF1_LaTeX/logoUGM.png"
+   ],
+   "tags": [
+    "Template",
+    "LaTeX",
+    "Laporan",
+    "PSTF 1"
+   ],
+   "body": "# Template LaTeX Laporan PSTF 1\n\n> ⚠️ File di `PSTF1_LaTeX/` adalah **template asli, jangan diubah**. Laporan kerja dibuat sebagai salinan (lihat §4). Isi teks contoh di template membahas \"Proses ZXY pada Plant XYZ\" dan **bukan** bahan untuk disalin ke laporan; angka contohnya (mis. 120 °C, CAPEX 116.000 USD) tidak boleh dikutip.\n\n## 1. Isi Template\n> **Keputusan PM (LOG-025):** template dipakai **hanya untuk format dan halaman awal**. Struktur isi laporan mengikuti **Panduan Lampiran 3A (4 bab)**: 1 Konseptualisasi · 2 FDS/Control Narrative · 3 Basic Engineering · 4 Tekno-ekonomi · Lampiran A Draf P&ID (A3) · Lampiran B Logbook. Tabel di bawah hanya mencatat isi contoh template.\n\nHalaman awal: sampul, lembar pengesahan (Dosen Koordinator + 2 Praktisi Industri, Kadep), pakta integritas (e-meterai), ringkasan eksekutif, daftar isi.\n\n| Bab | Subbab di contoh template |\n| :--- | :--- |\n| 1 Konseptualisasi | 1.1 Latar Belakang Dokumen Lelang TOR · 1.2 Penurunan Teori Model Sains Sistem · 1.3 Parameter Batas Operasional Teknis (URS) |\n| 2 Functional Design | 2.1 Logika Pergerakan Proses Kendali (ISA-5.06.01: startup, CV/MV/DV, interlock, FBD) |\n| 3 Basic Engineering | 3.1 Matriks Analitis Pembobot Opsi Desain · 3.2 PFD (ISO 10628) · 3.3 Neraca Massa dan Neraca Termal · 3.4 Identifikasi Variabel Kendali (CV/MV/DV) · 3.5 Penjelasan Alur Draf P&ID (ISA-5.1) |\n| 4 Kajian Keselamatan | 4.1 HAZOP · 4.2 Penentuan SIL |\n| 5 Kajian Tekno-Ekonomi | 5.1 CAPEX · 5.2 OPEX · 5.3 Analisis Kelayakan Finansial (NPV, payback, IRR, sensitivitas) |\n| Lampiran | A Draf P&ID (A3) · B Kumpulan Salinan Logbook |\n\nFormat: A4, 12 pt, margin kiri 4 cm / atas 3 cm / kanan 3 cm / bawah 3 cm, `report`, babel Indonesia.\n\n## 2. Selisih Template dengan Panduan\nContoh template berisi 5 bab: menambah **Bab 4 Kajian Keselamatan (HAZOP, SIL)** serta subbab 3.1 matriks pembobot dan 3.4 identifikasi CV/MV/DV. LOG-024 sempat mengikuti struktur ini; **LOG-025 mengembalikannya ke 4 bab Panduan**. HAZOP dan SIL masuk PSTF 2 (Panduan BAB IV), identifikasi CV/MV/DV dibahas di Bab 2 FDS (operasi normal), dan matriks pembobot opsi desain tidak menjadi subbab wajib.\n\n## 3. Keputusan (LOG-025)\n1. **Struktur isi**: 4 bab Panduan Lampiran 3A (lihat §1).\n2. **Anggota ke-5**: laporan kerja menambah makro `\\namaE`/`\\nimE` dan barisnya di sampul, pengesahan, pakta integritas, dan ringkasan eksekutif. Konfirmasi dengan Dosen Koordinator bila format dikunci.\n3. **Alat tulis: opsi 1.** Draf ditulis di Google Docs (master narasi) dengan struktur yang sama, lalu dipindah ke LaTeX saat finalisasi.\n4. **Metode SIL** (untuk PSTF 2): contoh template memakai *risk graph*; RFP §3.1.2 mensyaratkan **LOPA**, jadi ikuti RFP.\n\n## 4. Cara Memakai\n1. Laporan kerja sudah dibuat di `07_FINAL_DELIVERABLES/reports/laporan_pstf1/` (companion `laporan_pstf1.md`); template di folder ini tetap asli.\n2. Isi data identitas (`\\judul`, NIM, penilai, tanggal) di laporan kerja.\n3. Kompilasi dengan pdfLaTeX, mis. di Overleaf (paket: geometry, babel indonesian, setspace, titlesec, tabularx, graphicx, ulem, amsmath).\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Template disimpan + catatan struktur dan keputusan (LOG-024). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Koreksi PM: isi mengikuti 4 bab Panduan, template hanya format; anggota ke-5 dan opsi 1 diputuskan; laporan kerja dibuat (LOG-025). |\n"
+  },
+  {
+   "path": "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.md",
+   "folder": "01_PROCESS_SIMULATION_DWSIM",
+   "id": "DATA-HMB-DME-001",
+   "title": "Kamus Data: hmb_streams.json (Ekspor Heat & Material Balance DWSIM)",
+   "category": "Process Data Export",
+   "standard": "Skema internal proyek (Blueprint §3.1, skema v1)",
+   "status": "WIP",
+   "author": "Ihsaan Zauhair Tsaqif Prawira (PIC); ekstraktor oleh Claude Code (AI)",
+   "reviewer": "Altaf Ramadhan Parvez",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "hmb_streams.json"
+   ],
+   "tags": [
+    "DWSIM",
+    "HMB",
+    "JSON",
+    "Generated",
+    "Area-100"
+   ],
+   "body": "# Kamus Data: hmb_streams.json\n\n> ⚠️ **FILE HASIL GENERATE — jangan edit manual.** Buat ulang dengan `npm run sync:dwsim` setiap kali `DME.dwxmz` berubah, lalu commit keduanya dalam satu commit.\n>\n> **Status WIP:** nilai berasal dari model DWSIM (bukan placeholder). Asal-usul model **terjawab (LOG-024)**: Tabel 1 RFP KAK-IC-DME-2026-001 mengutip fraksi mol yang identik dengan model ini, jadi model adalah **referensi klien dari dokumen lelang** (menjelaskan metadata simpan 2021-05-25, DWSIM 6.5, +05:30). Sebelum angka dikutip, IH menulis sitasi RFP dan rujukan literatur kondisi operasi (Blueprint §3.1).\n\n## 1. Skema v1\n\n| Field | Isi | Satuan / catatan |\n| :--- | :--- | :--- |\n| `meta.source_sha256` | Hash file `.dwxmz` | Untuk memastikan HMB cocok dengan versi model |\n| `meta.dwsim_build`, `meta.model_saved_on` | Versi DWSIM & waktu simpan model | Dibaca dari `GeneralInfo` |\n| `meta.solver_status` | `AllObjectsCalculated` / `NotConverged` | **Diturunkan** dari `Calculated=true` dan `ErrorMessage` kosong di setiap objek; file DWSIM tidak menyimpan status konvergensi global |\n| `meta.property_package`, `meta.compounds` | NRTL; Methanol, Water, Dimethyl ether | Dibaca dari file |\n| `streams[].dwsim_tag`, `plant_tag`, `area`, `scope` | Tag & lingkup | Dari `tag_map.csv`; `plant_tag` kosong untuk Area 2/3 |\n| `streams[].T`, `P` | Suhu, tekanan | degC, bar(a) |\n| `streams[].mass_flow`, `molar_flow` | Laju alir | kg/h, kmol/h |\n| `streams[].vapor_fraction` | Fraksi mol uap | 0–1 |\n| `streams[].mole_fractions` | Komposisi mol keseluruhan | jumlah = 1 (kecuali stream tanpa aliran) |\n| `streams[].props` | ρ, μ, Cp, MW campuran | kg/m3, cP, kJ/(kg.K), kg/kmol; μ hanya diisi bila satu fase |\n| `streams[].props_by_phase` | Properti fase `vapor` / `liquid`: ρ, μ, Cp, Cv, k = Cp/Cv, Z, MW | `null` bila fase tidak ada; Z hanya bermakna untuk uap (cair → `null`). Ditambahkan di extractor 1.1.0 untuk API 520 (LOG-020) |\n| `unit_operations[]` | Tag, tipe, `duty_kW`, inlet/outlet | `duty_kW` = `DeltaQ` DWSIM; kosong untuk mixer, kolom CAPE-OPEN, recycle |\n| `validation.mass_balance[]` | Neraca massa per unit | Batas galat 0,5%; skrip **gagal** bila terlampaui |\n| `validation.warnings[]` | Hal yang perlu diperhatikan | Contoh: stream tanpa aliran |\n\nKonversi satuan dari internal DWSIM: K → degC (−273,15), Pa → bar (÷10⁵), kg/s → kg/h (×3600), mol/s → kmol/h (×3,6), Pa·s → cP (×1000). NaN/Infinity ditulis sebagai `null`.\n\n## 2. Ringkasan HMB Area 1 (ekstraksi 2026-11-03)\n\n| Plant tag | DWSIM | T (°C) | P (bar a) | Laju (kg/h) | Fraksi uap | x MeOH | x H₂O | x DME |\n| :--- | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |\n| S-101 | S-01 | 25,0 | 1,00 | 8.321,3 | 0,00 | 0,983 | 0,017 | 0,000 |\n| S-102 | S-02 | 25,3 | 15,50 | 8.321,3 | 0,00 | 0,983 | 0,017 | 0,000 |\n| S-103 | S-03 | 25,3 | 15,50 | 10.553,2 | 0,00 | 0,966 | 0,022 | 0,012 |\n| S-104 | S-04 | 250,0 | 14,70 | 10.553,2 | 1,00 | 0,966 | 0,022 | 0,012 |\n| S-105 | S-05 | 250,0 | 14,70 | 10.553,2 | 1,00 | 0,193 | 0,409 | 0,398 |\n| S-106 | S-06 | 250,0 | 14,70 | 0,0 | – | – | – | – |\n| S-107 → Area 2 | S-07 | 89,0 | 10,40 | 10.553,2 | 0,07 | 0,193 | 0,409 | 0,398 |\n| S-114 ← Area 3 | S-14 | 25,3 | 15,50 | 2.234,7 | 0,00 | 0,903 | 0,041 | 0,056 |\n\n| Unit | Duty (kW) | Neraca massa |\n| :--- | ---: | :--- |\n| P-101 pompa umpan | 5,6 | 0,000% |\n| M-101 mixer | – | 0,027% (toleransi konvergensi recycle) |\n| E-101 pemanas umpan | 4.726,1 | 0,000% |\n| R-101 reaktor (isotermal 250 °C) | −733,0 (panas reaksi dilepas) | 0,000% |\n| E-102 pendingin efluen | 3.245,6 | 0,000% |\n\nTabel di atas hanya ringkasan; angka acuan selalu `hmb_streams.json` terbaru (cek `meta.extracted_at` dan `meta.source_sha256`).\n\n## 3. Temuan dari Ekstraksi Pertama\n1. **Konversi metanol R-101 ≈ 80 %** (fraksi mol 0,966 → 0,193), produk DME di Area 2 (S-08) 5.891,5 kg/h murni. IH perlu mencocokkan dengan target kapasitas TOR dan konversi kesetimbangan literatur.\n2. **S-107 di model: 89,0 °C, 10,4 bar, fraksi uap 0,07.** Logbook/MoM cockpit menyebut efluen \"terkunci pada 45 °C dan 10 bar\" dengan komposisi MeOH 0,18 / DME 0,41 / H₂O 0,41. Komposisi hampir sama, **suhu berbeda 44 °C**. Perlu disepakati dengan Area 2 mana yang berlaku, lalu model atau dokumen diperbarui.\n3. **S-106 (outlet cair reaktor) laju alirnya nol**, konsisten dengan reaktor fase gas. Tag tetap dipertahankan (keputusan tag_map FINAL).\n4. **Duty R-101 negatif** artinya panas dilepas reaktor (eksotermik); sistem pendingin reaktor perlu dirancang untuk ±733 kW.\n5. Model terakhir dihitung dan disimpan **2021-05-25 (+05:30)**: model referensi klien dari RFP (terverifikasi LOG-024).\n\n## 4. SOP\n1. Jalankan DWSIM sampai konvergen, simpan `DME.dwxmz`.\n2. `npm run sync:dwsim` (Python 3.12+, hanya pustaka standar). Skrip gagal dan **tidak** menulis file bila ada tag hilang/duplikat, nilai kosong, fraksi mol tidak 1, objek belum terhitung, atau neraca massa > 0,5%.\n3. `npm run test:py` (butuh `.venv`, lihat README) untuk uji ekstraktor.\n4. Commit `DME.dwxmz` + `hmb_streams.json` dalam satu commit.\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Companion dibuat; keterbatasan skema v0 didokumentasikan (LOG-004). |\n| 1.0 | 2026-11-03 | Claude Code (AI) | Skema v1 dari `export_hmb.py`: T, P, laju alir, komposisi, properti, duty, validasi neraca; ringkasan & temuan Area 1 (LOG-019). |\n"
+  },
+  {
+   "path": "01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.md",
+   "folder": "01_PROCESS_SIMULATION_DWSIM",
+   "id": "DATA-TAGVAL-DME-001",
+   "title": "Laporan Validasi Tag Lintas Dokumen Area 1",
+   "category": "Validation Report",
+   "standard": "ISA-5.1; konvensi tag Blueprint §2.3",
+   "status": "WIP",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC tag); validator oleh Claude Code (AI)",
+   "reviewer": "Ihsaan Zauhair Tsaqif Prawira",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "tag_validation_report.json"
+   ],
+   "tags": [
+    "Validation",
+    "Tag",
+    "ISA-5.1",
+    "Generated"
+   ],
+   "body": "# Laporan Validasi Tag (`tag_validation_report.json`)\n\n> 🔄 **FILE HASIL GENERATE.** Buat ulang dengan `npm run validate:tags` (tambahkan `-- --dxf <file P&ID>.dxf` setelah Draf P&ID tersedia). Jangan edit JSON.\n\n## 1. Apa yang Diperiksa\n| Kode | Tingkat | Arti |\n| :--- | :--- | :--- |\n| `DWSIM_TAG` | ERROR | Tag internal DWSIM (`PUMP-01`, `S-08`, `E-01`) dipakai di dokumen; harus tag pabrik dari `tag_map.csv` |\n| `WILD_TAG` | ERROR | Tag 2 digit yang tidak ada di `tag_map.csv` (`REAC-01`, `C-01`, `HEATER-01`) |\n| `UNKNOWN_EQUIPMENT` | ERROR | Tag peralatan/stream 3 digit yang tidak ada di `tag_map.csv` |\n| `PHANTOM_INSTRUMENT` | ERROR | Instrumen dirujuk dokumen tetapi loop-nya tidak ada di index |\n| `PHANTOM_IN_DRAWING` | ERROR | Instrumen digambar di P&ID tetapi tidak terdaftar persis di index |\n| `LOOP_FUNCTION_NOT_LISTED` | WARNING | Fungsi loop (alarm `TAH`, switch `TSHH`, dll.) dirujuk, loop-nya ada, tetapi tidak terdaftar sebagai tag sendiri. Putuskan: daftarkan (mis. bila SIS memakai sensor terpisah) atau biarkan sebagai fungsi loop |\n| `AREA_SCOPE` | WARNING | Tag Area 2/3 (2xx/3xx) di dokumen firma Area 1 |\n| `NOT_IN_DRAWING` | WARNING | Instrumen di index tidak ditemukan di gambar P&ID |\n| `FORMAT` | WARNING | Format tag index tidak baku |\n\nTeks yang bukan tag diabaikan: nomor jalur (`6\"-PL-101`), nomor dokumen/gambar (`DWG-PID-001`), `SIL-3`, `LOG-xxx`, rujukan standar. Bagian dokumen berjudul *Catatan Inkonsistensi* dan *Log Revisi* dilewati karena memang menyebut tag lama sebagai riwayat.\n\n## 2. Hasil Pertama (2026-11-03, tanpa P&ID): 14 ERROR, 33 WARNING\n\n| Masalah | Dokumen | Perbaikan | PIC |\n| :--- | :--- | :--- | :--- |\n| `PUMP-01` (C&E \"PUMP-01-TRIP\") | C&E | Ganti `P-101` | AL |\n| `HEATER-01`, `E-01` | Alarm DB | `HEATER-01` → `E-101`; \"kondenser E-01\" adalah peralatan kolom Area 2 | AL |\n| `S-08` | Index (AIC-201 lokasi) | Aliran Area 2; ikut keputusan loop kolom | JN |\n| `C-01`, `C-02` | Index, C&E, Alarm, FDS Bab 4 | Kolom milik Area 2/3; keluarkan atau ubah jadi antarmuka | JN, AL |\n| `ESDV-201`, `FCV-202`, `TCV-201` (phantom) | C&E | Milik Area 2/3; keluarkan dari C&E Area 1 | AL |\n| 2xx di index (`PIC-201`, `PCV-201`, `LIC-202`, `AIC-201`), C&E, alarm, FDS | semua | Keputusan lingkup (LOG-014/015): keluarkan atau tandai sinyal antarmuka | JN, AL |\n| `TSHH-101`, `TAL/TAH/TAHH-101` | C&E, Alarm, FDS | Loop TIC-101 ada. `TSHH-101` (SIL-3) sebaiknya sensor terpisah dari TIC-101 (independensi SIS, IEC 61511) → daftarkan di index | AL, JN |\n\nRincian lengkap per temuan ada di JSON (`findings[]`).\n\n## 3. Sisa untuk DoD Fase 3\nValidator sudah teruji pada P&ID DXF sintetis (`tools/test_validate_tags.py`). DoD butir 4 tercentang setelah dijalankan pada **minimal satu lembar Draf P&ID DXF asli** dari JN.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Validator + laporan pertama lintas dokumen (LOG-021). |\n"
+  },
+  {
+   "path": "01_PROCESS_SIMULATION_DWSIM/simulation_files/DME.md",
+   "folder": "01_PROCESS_SIMULATION_DWSIM",
+   "id": "SIM-DWSIM-DME-001",
+   "title": "Model Simulasi Proses Dehidrasi Metanol Menjadi Dimethyl Ether (DME)",
+   "category": "Process Simulation",
+   "standard": "ISO 10628 (PFD) / CAPE-OPEN",
+   "status": "WIP",
+   "author": "Ihsaan Zauhair Tsaqif Prawira (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "DME.dwxmz"
+   ],
+   "tags": [
+    "DWSIM",
+    "HMB",
+    "Area-100",
+    "Area-200"
+   ],
+   "body": "# Panduan Model Simulasi: DME.dwxmz\n\n> ℹ️ **Status WIP.** File simulasi adalah hasil kerja riil, tetapi konvergensi, nilai kondisi operasi, dan basis desain di bawah **belum diverifikasi** terhadap isi file maupun literatur. PIC wajib melengkapi bagian bertanda *[PERLU DIKONFIRMASI]*.\n\n## 1. Tujuan & Basis Desain\nMemodelkan konversi metanol menjadi DME melalui dehidrasi katalitik fase gas:\n$$2\\,\\text{CH}_3\\text{OH} \\rightarrow \\text{CH}_3\\text{OCH}_3 + \\text{H}_2\\text{O} \\qquad (\\Delta H_r \\approx -23{,}4\\ \\text{kJ/mol})$$\n\n- Kondisi reaktor yang tercantum di draf awal: 250–320 °C, 12–15 bar(a). **Dari file simulasi (LOG-019):** R-101 isotermal 250 °C, 14,7 bar(a), konversi metanol ≈ 80 %, duty −733 kW. *[Rujukan literatur masih PERLU DIKONFIRMASI]*\n- **Asal-usul model (LOG-019):** metadata file menunjukkan model terakhir disimpan **2021-05-25, DWSIM 6.5.0.0, zona waktu +05:30**. **Terjawab (LOG-024):** fraksi mol S-08…S-11 di Tabel 1 RFP KAK-IC-DME-2026-001 identik dengan model ini (selisih ≤ 7×10⁻⁵), jadi `DME.dwxmz` adalah **model referensi klien dari dokumen lelang**. Di laporan, sitasi sebagai bagian RFP; pengembangan/validasi oleh firma ditulis terpisah.\n- Kapasitas produksi, kemurnian produk, dan konversi: *[PERLU DIKONFIRMASI — menjadi basis URS]*\n\n## 2. Struktur Flowsheet (tag DWSIM)\nDaftar objek berikut diambil dari ekstraksi otomatis `hmb_streams.json` (2026-11-02):\n\n| Kelompok | Objek DWSIM |\n| :--- | :--- |\n| Material stream | `S-01` s.d. `S-14` (14 stream) |\n| Pompa | `PUMP-01`, `PUMP-02` |\n| Mixer | `MIX-01` |\n| Heater / Cooler | `HEAT-01`, `COOL-01`, `COOL-02` |\n| Reaktor | `RC-01` (Conversion Reactor) |\n| Kolom distilasi | `CSCOL-01`, `CSCOL-02` (CAPE-OPEN Unit Operation) |\n| Recycle | `REC-01` |\n| Objek tanpa tag | 1 objek: `GO_MasterTable` (tabel tampilan DWSIM, bukan unit operasi; diperiksa 2026-11-03, LOG-014) |\n\nAlur (diverifikasi dari konektor objek di XML model, LOG-014): umpan metanol `S-01` → `PUMP-01` → `S-02` → `MIX-01` (bertemu recycle `S-14`) → `S-03` → `HEAT-01` → `S-04` → `RC-01` → `S-05` (+ outlet cair `S-06`) → `COOL-01` → `S-07` → `CSCOL-01` (puncak `S-08` produk DME; bawah `S-09`) → `CSCOL-02` (`S-10` metanol → `PUMP-02` → `COOL-02` → `REC-01` → `S-14`; `S-11` air).\n\n**Lingkup Area 1** (keputusan PM 2026-11-03): `S-01`…`S-07` + `S-14`. Pabrik dibagi 3 area: Area 1 reaktor (firma ini), Area 2 distilasi 1 (`CSCOL-01`), Area 3 distilasi 2 (`CSCOL-02` + loop recycle, sementara). `S-07` keluar ke Area 2; `S-14` masuk dari Area 3. Pemetaan ke tag pabrik ada di [`../tag_map.csv`](../tag_map.csv) (status FINAL; companion `tag_map.md`).\n\n## 3. SOP Pembaruan & Ekstraksi Data\n1. Buka `DME.dwxmz` di DWSIM, jalankan solver, pastikan seluruh objek konvergen.\n2. Simpan file.\n3. Jalankan `npm run sync:dwsim` (`tools/dwsim/export_hmb.py`, LOG-019): mengekstrak T, P, laju alir, komposisi, properti, dan duty, lalu memvalidasi neraca massa (≤ 0,5 %). Skrip gagal dan tidak menulis file bila data tidak lengkap. Kamus data: `exported_data/hmb_streams.md`.\n4. Commit `DME.dwxmz` bersama `hmb_streams.json` dalam satu commit.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal companion. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → WIP; perbaiki rujukan skrip; daftar objek dari hasil ekstraksi; tandai bagian yang perlu dikonfirmasi PIC (LOG-004). |\n"
+  },
+  {
+   "path": "01_PROCESS_SIMULATION_DWSIM/tag_map.md",
+   "folder": "01_PROCESS_SIMULATION_DWSIM",
+   "id": "TAGMAP-DME-001",
+   "title": "Peta Tag DWSIM ke Tag Pabrik, Area 1",
+   "category": "Tag Mapping",
+   "standard": "ISA-5.1 / ISO 10628 (konvensi Blueprint §2.3)",
+   "status": "Review Internal",
+   "author": "Ihsaan Zauhair Tsaqif Prawira (PIC); draf disusun Claude Code (AI)",
+   "reviewer": "Jonathan Pangihutan Michael Siahaan",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "tag_map.csv"
+   ],
+   "tags": [
+    "Tag Map",
+    "DWSIM",
+    "Plant Tag",
+    "Battery Limit",
+    "Area-100"
+   ],
+   "body": "# Peta Tag DWSIM ke Tag Pabrik (`tag_map.csv`)\n\n> ✅ **FINAL (2026-11-03, LOG-016).** Tag pabrik Area 1 sudah dikonfirmasi PIC (IH) dan reviewer (JN), sehingga semua baris berstatus `FINAL` dan wajib dipakai di PFD, P&ID, index, FDS, C&E, dan alarm database. Status dokumen `Review Internal`; pengajuan ke pembimbing (`Diajukan`) ditetapkan PM. Temuan 7 (S-106) dan 8 (M-101) diterima apa adanya: S-106 dan M-101 tetap tercatat dengan tag.\n\n`tag_map.csv` adalah **master** pemetaan tag (Blueprint §1.2). Tag DWSIM hanya dipakai di dalam simulasi; P&ID, PFD, FDS, Instrument Index, C&E, alarm database, dan laporan memakai `plant_tag`.\n\n## 1. Pembagian Area Pabrik & Lingkup Area 1 (keputusan PM, 2026-11-03)\nPabrik DME dibagi menjadi **3 area**, masing-masing dikerjakan satu kelompok/firma:\n\n| Area | Isi (objek DWSIM) | Kode area tag |\n| :--- | :--- | :--- |\n| **Area 1 (firma ini)** | Reaktor: S-01…S-07, PUMP-01, MIX-01, HEAT-01, RC-01, COOL-01 + recycle masuk S-14 | 100 |\n| Area 2 | Distilasi 1: CSCOL-01, S-08, S-09 | 200 |\n| Area 3 | Distilasi 2: CSCOL-02, S-10, S-11 + loop recycle PUMP-02, COOL-02, S-12, S-13, REC-01 *(loop recycle ditempatkan di Area 3 sementara, perlu konfirmasi)* | 300 |\n\n| Aliran antarmuka Area 1 | Arah |\n| :--- | :--- |\n| S-101 (DWSIM S-01) | Masuk: umpan metanol segar |\n| S-107 (DWSIM S-07) | **Keluar ke Area 2** (umpan kolom distilasi 1) |\n| S-114 (DWSIM S-14) | **Masuk dari Area 3** (recycle metanol) |\n\nObjek Area 2 dan Area 3 tetap dicantumkan (`plant_tag` kosong) agar seluruh isi model DWSIM tertelusur; tag pabriknya ditetapkan kelompok area masing-masing.\n\nAlur Area 1: `S-101 → P-101 → S-102 → M-101 (+ S-114) → S-103 → E-101 → S-104 → R-101 → S-105 → E-102 → S-107 → [Area 2]`. R-101 juga punya outlet cair S-106.\n\n## 2. Aturan Penomoran\n1. Nomor mengikuti **nomor objek DWSIM**, ditulis dengan gaya tag pabrik area 100: `S-0n → S-10n`, `S-14 → S-114`, `PUMP-01 → P-101`, `RC-01 → R-101`, `MIX-01 → M-101`.\n2. Heat exchanger memakai kode `E`. Karena HEAT-01 dan COOL-01 sama-sama bernomor 01 di DWSIM, urutan mengikuti **arah aliran**: `HEAT-01 → E-101` (pemanas umpan), `COOL-01 → E-102` (pendingin efluen).\n3. Aliran energi DWSIM (`E-01`…`E-10`) **bukan** heat exchanger dan tidak diberi tag pabrik. Formatnya mirip `E-101`, jadi jangan tertukar: `E-01` = daya P-101, `E-02` = duty E-101, `E-03` = duty R-101, `E-04` = duty E-102.\n4. Kolom CSV: `dwsim_tag, plant_tag, object_type, description, area, scope, from, to, status`. `scope`: `AREA_1`, `INTERFACE_OUT`, `INTERFACE_IN`, `AREA_1_ENERGY`, `AREA_2`, `AREA_3`. Kolom `area` = kode area tag (100/200/300). `status`: `USULAN` → `FINAL` setelah dikonfirmasi IH + JN.\n\n## 3. Dampak ke Dokumen Lain (perlu ditindaklanjuti PIC masing-masing)\n| No | Temuan | Dokumen | PIC |\n| :---: | :--- | :--- | :--- |\n| 1 | Loop kolom distilasi 1 (`PIC-201`, `PCV-201`, `LIC-202`, `AIC-201`) berada di **lingkup Area 2**. Perlu dikeluarkan dari index Area 1, atau ditandai sebagai sinyal antarmuka bila memang dipertukarkan. | Master Instrument Index (Sheets) | JN |\n| 2 | FDS §4 (loop tekanan & refluks kolom C-01) berada di luar lingkup Area 1. | FDS (Docs) | AL |\n| 3 | Tag liar `REAC-01`, `C-01`, `HEATER-01` di index/FDS/C&E harus diganti `R-101`, `E-101`; `C-01` milik Area 2. | Index, FDS, C&E, alarm database | JN, AL |\n| 4 | Logbook/MoM di cockpit menyebut **\"kondensor parsial E-101\"** untuk pendingin efluen reaktor. Menurut aturan §2.2 tag itu menjadi **E-102**. Data live ada di Firestore, jadi perlu dikoreksi lewat UI cockpit. | Cockpit (Firestore) | RG |\n| 5 | Kode area tag dikoreksi: **1xx = Area 1 reaktor, 2xx = Area 2 distilasi 1, 3xx = Area 3 distilasi 2** (sebelumnya 3xx = utilitas). Firma Area 1 hanya menerbitkan tag 1xx. | Blueprint §2.3, companion index | RG |\n| 9 | Penempatan loop recycle (PUMP-02, COOL-02) di Area 3 masih sementara; sepakati dengan kelompok Area 3, termasuk spesifikasi S-114 di battery limit. | tag_map.csv | RG, IH |\n| 6 | Re-audit (LOG-002) mencatat \"1 unit bertag kosong\". Objek itu adalah `GO_MasterTable` (tabel tampilan DWSIM), bukan unit operasi; jumlah unit sebenarnya 10. | `hmb_streams.json` (diperbaiki di Fase 3) | IH |\n| 7 | Outlet cair reaktor S-06/S-106 tidak tersambung ke unit lain. Perlu dikonfirmasi apakah laju alirnya nol (reaktor fase gas) atau ada aliran yang belum dimodelkan. | DME.dwxmz | IH |\n| 8 | M-101 di P&ID kemungkinan hanya sambungan pipa (tee). Putuskan apakah tetap diberi tag peralatan. | P&ID, PFD | IH, JN |\n\n## 4. SOP Pembaruan\n1. Ubah `tag_map.csv` (master di Git) lalu `npm run check`.\n2. Bila model DWSIM berubah (objek baru/hapus), cocokkan ulang daftar `dwsim_tag` dengan topologi model.\n3. Setelah IH + JN setuju, ubah `status` baris menjadi `FINAL` dan isi `review_evidence` companion ini dengan referensi MoM.\n4. Fase 3: `validate_tags.py` memakai file ini untuk memeriksa tag di P&ID, index, FDS, C&E, dan alarm database.\n\n## 5. Verifikasi Draf\nTopologi dibaca dari XML di dalam `DME.dwxmz` (salinan di folder sementara; file master tidak diubah): 35 GraphicObject, yaitu 14 aliran material, 10 aliran energi, 10 unit operasi, dan 1 tabel. Konektor masuk/keluar setiap unit dicocokkan satu per satu dengan kolom `from`/`to`.\n\n## 6. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Draf awal dari topologi DWSIM + keputusan lingkup PM (LOG-014). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Pabrik 3 area (Area 2 distilasi 1, Area 3 distilasi 2); S-114 masuk dari Area 3; kode area 100/200/300 (LOG-015). |\n| 1.0 | 2026-11-03 | Ihsaan Z. T. Prawira / Jonathan P. M. Siahaan | Dikonfirmasi; status baris `FINAL`, dokumen `Review Internal` (LOG-016). |\n"
+  },
+  {
+   "path": "02_ENGINEERING_CALCULATORS/CALC_API520_PSV.md",
+   "folder": "02_ENGINEERING_CALCULATORS",
+   "id": "CALC-API520-001",
+   "title": "Kalkulator Sizing Katup Pelepas Tekanan (PSV)",
+   "category": "Engineering Calculator",
+   "standard": "API 520 Part I / API 521 / ASME BPVC Sec. VIII",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "CALC_API520_PSV.csv",
+    "inputs/PSV-101.yaml"
+   ],
+   "tags": [
+    "Safety",
+    "PSV",
+    "Relief",
+    "Area-100"
+   ],
+   "body": "# Panduan Penggunaan: CALC_API520_PSV.csv\n\n> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/PSV-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.\n>\n> ⚠️ **Status data: PLACEHOLDER** karena set pressure 16,0 bar(g) masih data contoh dari index. Skenario relief (blocked outlet) dan tekanan balik masih ASUMSI. Belum boleh dikutip ke laporan.\n\n## 1. Cakupan\nMenentukan laju relief, luas orifice efektif (API 520 Part I), dan huruf orifice API 526 untuk PSV **Area 1**: saat ini **PSV-101** (proteksi R-101, fase uap). PSV-201/202 di CSV lama adalah lingkup Area 2/3 dan sudah dikeluarkan. Kajian skenario relief lengkap (API 521: kebakaran, kegagalan pendingin, runaway reaction) belum dikerjakan dan **wajib** sebelum hasil final.\n\n## 2. Persamaan Luas Orifice (uap/gas, aliran kritis, API 520 Part I)\n$$A = \\frac{W}{C\\, K_d\\, P_1\\, K_b\\, K_c} \\sqrt{\\frac{T\\, Z}{M}}$$\n\ndengan $P_1 = P_{set}(1 + \\text{overpressure}) + P_{atm}$; aliran kritis bila $P_2 < P_1 \\left(\\frac{2}{k+1}\\right)^{k/(k-1)}$, selain itu dipakai persamaan subkritis.\n\n## 3. Input & Hasil PSV-101 (LOG-020)\n\n| Input | Nilai | Status |\n| :--- | ---: | :---: |\n| Skenario | Blocked outlet R-101: laju relief = laju masuk normal (S-104) | ASUMSI (API 521 §4.4.2) |\n| $W$, $T$ | 10.553,2 kg/h; 250,0 °C | HMB (S-104) |\n| $M$, $Z$, $k$ | 31,90 kg/kmol; 0,935; 1,215 | HMB (S-104 fase uap) |\n| Set pressure | 16,0 bar(g) | PLACEHOLDER (index) |\n| Overpressure | 10 % | STANDAR (API 520, satu katup, non-kebakaran) |\n| $K_d$ | 0,975 | STANDAR (sizing awal gas) |\n| Tekanan balik, $K_b$, $K_c$ | 1,013 bar(a); 1,0; 1,0 | ASUMSI |\n\n| Hasil | Nilai |\n| :--- | ---: |\n| $P_1$ relief | 18,61 bar(a) |\n| Rezim | kritis ($P_{cf}$ = 10,45 bar(a)) |\n| Luas efektif $A$ | 885,3 mm² |\n| Orifice API 526 | **K** (1.185,8 mm², margin 34 %) |\n\n**Uji verifikasi:** API 520 Part I contoh 1 (kritis, 3.698 mm²) dan contoh 2 (subkritis, 4.248 mm²) direproduksi lewat modul `psv.py` utuh (termasuk penentuan rezim), selisih < 0,1 %.\n\n## 4. Catatan atas CSV Lama (sudah diganti, Re-audit 2026-11-03)\n1. **`PSV-101` undersized**: luas terhitung 845,2 mm², tetapi orifice terpilih huruf **J = 830 mm²** (lebih kecil dari kebutuhan). Orifice terpilih harus ≥ luas terhitung.\n2. Laju relief (14.500 / 18.200 / 11.000 kg/h) tidak memiliki turunan skenario API 521 (blocked outlet, fire case, reflux failure, dll.).\n3. Tag peralatan `REAC-01`, `C-01`, `C-02` belum mengikuti `tag_map.csv`.\n\n## 5. SOP\n1. Identifikasi seluruh skenario relief per peralatan berdasarkan API 521; pilih skenario dengan laju terbesar, lalu perbarui `relief_case` dan `W` di `inputs/PSV-101.yaml`.\n2. Tetapkan set pressure dari tekanan desain R-101 (ganti PLACEHOLDER) dan tekanan balik dari sistem buang (atmosfer/flare).\n3. Hitung manual luas orifice, pilih huruf orifice API 526 ≥ luas terhitung; tuliskan di laporan PSTF 2 Bab 2.\n4. `npm run calc` sebagai verifikasi silang (library `fluids.safety_valve`); selisih < 0,5 %.\n\n## 6. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan PSV-101 undersized (LOG-004). |\n| 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/psv.py`; PSV-101 dari HMB S-104 → orifice K; PSV Area 2/3 dikeluarkan; uji API 520 (LOG-020). |\n"
+  },
+  {
+   "path": "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.md",
+   "folder": "02_ENGINEERING_CALCULATORS",
+   "id": "CALC-ASME-TW-001",
+   "title": "Verifikasi Frekuensi Wake & Kekuatan Thermowell",
+   "category": "Engineering Calculator",
+   "standard": "ASME PTC 19.3 TW-2016",
+   "status": "Draft",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "CALC_ASME_Thermowell.csv"
+   ],
+   "tags": [
+    "Temperature",
+    "Thermowell",
+    "Vibration",
+    "Area-100"
+   ],
+   "body": "# Panduan Penggunaan: CALC_ASME_Thermowell.csv\n\n> ⚠️ **BELUM DIHITUNG.** Sejak LOG-021 seluruh angka bootstrap (LOG-004) **dihapus** dari CSV karena tidak punya sumber, dan baris TW-201/202 (lingkup Area 2) dikeluarkan. CSV kini hanya berisi daftar thermowell Area 1 (TW-101/102/103 di R-101) dengan status `BELUM DIHITUNG`, format kolom sama dengan kalkulator lain.\n>\n> **Belum diotomasi (LOG-020).** Berbeda dengan tiga kalkulator lain, tidak ada pustaka terbuka yang mengimplementasikan ASME PTC 19.3 TW-2016, dan proyek belum memegang salinan standar beserta contoh soalnya. Mengimplementasikan persamaan dari ingatan tanpa contoh verifikasi akan melanggar Blueprint §3.2 butir 5. Langkah: (1) PIC (JN) menyediakan salinan ASME PTC 19.3 TW-2016 (cek perpustakaan/akses standar UGM); (2) implementasi `tools/calc/thermowell.py` + uji terhadap contoh di standar. Baris TW-201/202 di CSV adalah lingkup Area 2 dan akan dikeluarkan saat CSV dibuat ulang. Kecepatan uap di sekitar R-101 sudah bisa diturunkan dari HMB S-104 (0,272 m³/s) begitu diameter pipa/nozzle ditetapkan.\n\n## 1. Cakupan\nMemverifikasi thermowell terhadap resonansi akibat *vortex shedding* (frekuensi wake), tegangan statik dan dinamik, serta tekanan hidrostatik eksternal sesuai ASME PTC 19.3 TW-2016.\n\n## 2. Kriteria Utama\n- Frekuensi wake: $f_s = \\dfrac{N_S\\, V}{B}$ ($N_S$ = bilangan Strouhal, $V$ = kecepatan fluida, $B$ = diameter tip).\n- Frekuensi alami terpasang $f_{n,c}$ dihitung dengan koreksi massa fluida, massa sensor, dan kelenturan dudukan (*mounting compliance*).\n- Batas frekuensi: untuk thermowell yang tidak diizinkan melewati resonansi, $f_s < 0{,}8\\, f_{n,c}$; kondisi lain mengikuti kriteria tegangan dinamik pada standar.\n- Pemeriksaan tegangan statik/dinamik dan tekanan eksternal **juga wajib**; lolos rasio frekuensi saja tidak cukup.\n\n## 3. Catatan Inkonsistensi pada Data Placeholder (Re-audit 2026-11-03)\n1. `TW-101` dan `TW-102` memiliki frekuensi alami & wake identik walaupun suhu prosesnya berbeda.\n2. Belum ada pemeriksaan tegangan dan tekanan eksternal.\n3. Kecepatan fluida (mis. 18,5 m/s) tidak memiliki sumber dari HMB + ukuran pipa.\n\n## 4. SOP (berlaku mulai Fase 3)\n1. Hitung kecepatan fluida dari laju volumetrik (`hmb_streams.json`) dan diameter dalam pipa.\n2. Hitung manual $f_s$, $f_{n,c}$, tegangan, dan tekanan sesuai ASME PTC 19.3 TW; tuliskan di laporan PSTF 2 Bab 2.\n3. Verifikasi silang dengan implementasi skrip + contoh soal dari standar.\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan inkonsistensi (LOG-004). |\n| 0.3 | 2026-11-03 | Claude Code (AI) | Angka bootstrap tanpa sumber dihapus; TW-201/202 (Area 2) dikeluarkan; REAC-01 → R-101; format CSV disamakan (LOG-021). |\n"
+  },
+  {
+   "path": "02_ENGINEERING_CALCULATORS/CALC_ISA75_ControlValve.md",
+   "folder": "02_ENGINEERING_CALCULATORS",
+   "id": "CALC-ISA75-001",
+   "title": "Kalkulator Sizing Katup Kendali (Control Valves)",
+   "category": "Engineering Calculator",
+   "standard": "ANSI/ISA-75.01.01 / IEC 60534-2-1",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "CALC_ISA75_ControlValve.csv",
+    "inputs/FCV-101.yaml"
+   ],
+   "tags": [
+    "Control Valve",
+    "Cv",
+    "Area-100",
+    "Instrumentation"
+   ],
+   "body": "# Panduan Penggunaan: CALC_ISA75_ControlValve.csv\n\n> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/FCV-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.\n>\n> ⚠️ **Status data: PLACEHOLDER** (diameter pipa dari index masih data contoh; ΔP katup, faktor laju maksimum, FL/Fd, dan ukuran katup = ASUMSI). Belum boleh dikutip ke laporan.\n\n## 1. Cakupan\nMenghitung $K_v$/$C_v$ pada laju normal dan maksimum, serta memeriksa choked flow, laminar, dan flashing untuk katup kendali cair **Area 1**: saat ini **FCV-101** (umpan metanol, discharge P-101, S-102). Tag Area 2/3 di CSV lama (PCV-201, LCV-202) bukan lingkup firma Area 1 dan sudah dikeluarkan. TCV-102 (steam pemanas) belum dihitung karena utilitas steam belum ada di model DWSIM. Pemilihan ukuran bodi, trim, dan fail action tetap dari katalog vendor.\n\n## 2. Standar Acuan\n- **ISA-75.01.01 / IEC 60534-2-1** — persamaan aliran untuk sizing control valve.\n- Panduan Capstone DTNTF 2026 BAB IV §4.1: nilai $C_v$ **serta analisis pencegahan kavitasi** wajib dihitung.\n\n## 3. Persamaan Utama (cair, aliran turbulen non-choked)\n$$C_v = \\frac{Q}{N_1 F_P} \\sqrt{\\frac{\\rho_1/\\rho_0}{\\Delta p}}$$\ndengan pemeriksaan choked flow: $\\Delta p_{choked} = F_L^2 \\,(p_1 - F_F\\, p_v)$. Untuk gas/uap memakai bentuk persamaan dengan faktor ekspansi $Y$ dan rasio $x_T$.\n\n## 4. Input & Hasil FCV-101 (LOG-020)\n\n| Input | Nilai | Status |\n| :--- | ---: | :---: |\n| $q_m$, $\\rho$, $\\mu$, $T_1$, $P_1$ | 8.321,3 kg/h; 791,7 kg/m³; 0,551 cP; 25,3 °C; 15,50 bar(a) | HMB (S-102) |\n| ΔP katup | 1,0 bar | ASUMSI (tidak ada katup di model DWSIM) |\n| Faktor laju maksimum | 1,25 × normal | ASUMSI (tetapkan dari URS) |\n| $p_v$ | Antoine metanol NIST (pendekatan campuran x MeOH 0,983) | LITERATUR |\n| $p_c$ | 81 bar (NIST) | LITERATUR |\n| $F_L$ / $F_d$ | 0,90 / 0,46 (globe single-port tipikal) | ASUMSI (ganti data vendor) |\n| $D$ pipa / ukuran katup | 154,08 mm / sama dengan pipa | PLACEHOLDER / ASUMSI |\n\n| Hasil | Normal | Maksimum |\n| :--- | ---: | ---: |\n| $Q$ | 10,51 m³/h | 13,14 m³/h |\n| $K_v$ | 9,36 m³/h | 11,70 m³/h |\n| $C_v$ | 10,8 | 13,5 |\n| Choked / laminar / flashing | tidak / tidak / tidak ✅ | tidak / tidak ✅ |\n\n$p_v$ pada 25,3 °C = 17,2 kPa. Setelah ukuran katup dipilih dari katalog, ubah `d_valve` dan jalankan ulang (faktor $F_P$ berubah bila ada reducer).\n\n**Uji verifikasi:** IEC 60534-2-1 contoh 1 (globe, $K_v$ = 165,0 m³/h) dan contoh 2 (ball, $K_v$ = 238,1 m³/h) direproduksi; persamaan Antoine diuji pada titik didih normal metanol (337,8 K → 1,013 bar, selisih < 1 %).\n\n## 5. Catatan atas CSV Lama (sudah diganti, Re-audit 2026-11-03)\n1. `TCV-102` menulis `450 kg/h` di kolom `FLOW_M3_H` (satuan tidak konsisten).\n2. Belum ada kolom $p_v$, $F_L$, $F_F$, sehingga pemeriksaan kavitasi yang diwajibkan panduan belum ada.\n3. Kolom gas (`PCV-201`) memakai format kolom yang sama dengan cair; persamaan gas membutuhkan $M$, $Z$, $\\kappa$, $x_T$.\n\n## 6. SOP\n1. Kondisi proses diambil otomatis dari `hmb_streams.json` (rujukan stream di YAML memakai tag pabrik).\n2. Hitung manual $C_v$ pada laju min/normal/maks + cek kavitasi; tuliskan di laporan PSTF 2 Bab 2.\n3. `npm run calc` sebagai verifikasi silang (library `fluids`, IEC 60534-2-1); selisih < 0,5 %.\n4. Pilih ukuran katup sehingga bukaan pada laju normal berada di rentang wajar (sekitar 20–80 %), lalu perbarui `d_valve`, $F_L$, $F_d$ dari data vendor.\n\n## 7. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan inkonsistensi (LOG-004). |\n| 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/control_valve.py`; FCV-101 dari HMB; tag Area 2/3 dikeluarkan; uji IEC (LOG-020). |\n"
+  },
+  {
+   "path": "02_ENGINEERING_CALCULATORS/CALC_ISO5167_Orifice.md",
+   "folder": "02_ENGINEERING_CALCULATORS",
+   "id": "CALC-ISO5167-001",
+   "title": "Kalkulator Sizing Orifice Plate Flowmeter",
+   "category": "Engineering Calculator",
+   "standard": "ISO 5167-1 / ISO 5167-2 (atau AGA Report No. 3)",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "CALC_ISO5167_Orifice.csv",
+    "inputs/FE-101.yaml"
+   ],
+   "tags": [
+    "Flow",
+    "Orifice",
+    "Area-100",
+    "Instrumentation"
+   ],
+   "body": "# Panduan Penggunaan: CALC_ISO5167_Orifice.csv\n\n> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/FE-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.\n>\n> ⚠️ **Status data: PLACEHOLDER** karena diameter pipa (6\"-PL-101) masih data contoh dari index. Hasil belum boleh dikutip ke laporan. Status naik otomatis setelah input PLACEHOLDER diganti (status hasil = status input terlemah).\n\n## 1. Tujuan & Ruang Lingkup\nMenghitung diameter bore orifice ($d$), rasio diameter ($\\beta = d/D$), koefisien debit ($C$), faktor ekspansi ($\\varepsilon$), dan rugi tekanan permanen untuk **FE-101** (loop FIC-101), yaitu pengukuran laju umpan metanol **cair** di discharge pompa P-101 (aliran **S-102**, jalur 6\"-PL-101). CSV lama memakai uap 250 °C di S-01, padahal FIC-101 menurut index berada di discharge pompa (cair); hal ini dikoreksi.\n\n## 2. Standar Acuan\n- **ISO 5167-1** — prinsip umum pengukuran aliran dengan alat beda tekanan.\n- **ISO 5167-2** — orifice plate: persamaan Reader-Harris/Gallagher untuk $C$, persamaan $\\varepsilon$, batas keberlakuan.\n- Panduan Capstone DTNTF 2026 BAB IV §4.1: sizing orifice **wajib dihitung secara numerik dan manual**.\n\n## 3. Parameter Input\n\n| Variabel | Simbol | Nilai | Sumber | Status |\n| :--- | :---: | ---: | :--- | :---: |\n| Laju alir massa | $q_m$ | 8.321,3 kg/h | `hmb_streams.json` → S-102 | HMB |\n| Tekanan hulu | $P_1$ | 15,50 bar(a) | `hmb_streams.json` → S-102 | HMB |\n| Suhu hulu | $T_1$ | 25,3 °C | `hmb_streams.json` → S-102 | HMB |\n| Densitas cair | $\\rho_1$ | 791,7 kg/m³ | `hmb_streams.json` → S-102 (NRTL) | HMB |\n| Viskositas cair | $\\mu$ | 0,551 cP | `hmb_streams.json` → S-102 | HMB |\n| Diameter dalam pipa | $D$ | 154,08 mm | ASME B36.10M 6\" Sch 40, dari nomor jalur di index (data contoh) | PLACEHOLDER |\n| ΔP desain | $\\Delta p$ | 25 kPa | Rentang DP transmitter; tetapkan PIC | ASUMSI |\n| Jenis tapping | – | flange | ISO 5167-2 §5.2.1; konfirmasi spesifikasi | ASUMSI |\n\nUntuk cairan $\\varepsilon = 1$; eksponen isentropik tidak dipakai.\n\n## 4. Persamaan (ISO 5167-2)\n$$q_m = \\frac{C}{\\sqrt{1 - \\beta^4}}\\, \\varepsilon\\, \\frac{\\pi}{4} d^2 \\sqrt{2\\, \\Delta p\\, \\rho_1}$$\n\nBatas keberlakuan orifice (flange/corner/D–D/2 tappings): $0{,}1 \\le \\beta \\le 0{,}75$, $d \\ge 12{,}5$ mm, $50 \\le D \\le 1000$ mm, dan batas $Re_D$ minimum sesuai jenis tapping.\n\n## 5. Hasil Skrip (verifikasi silang, LOG-020)\n\n| Hasil | Nilai | Cek ISO 5167-2 §5.3.1 |\n| :--- | ---: | :--- |\n| Diameter bore $d$ | 27,95 mm | ≥ 12,5 mm ✅ |\n| $\\beta$ | 0,181 | 0,10–0,75 ✅ |\n| $C$ (Reader-Harris/Gallagher) | 0,5984 | – |\n| $Re_D$ | 34.688 | ≥ max(5000; 170 β² D) ✅ |\n| Kecepatan di pipa | 0,157 m/s | – |\n| Rugi tekanan permanen | 24,0 kPa | – |\n\n**Temuan:** kecepatan cairan 0,16 m/s menunjukkan pipa 6\" terlalu besar untuk 10,5 m³/h (kecepatan cairan lazim 1–2 m/s, kira-kira setara 2\"). Ukuran jalur perlu ditetapkan lewat line sizing sebelum orifice dihitung final; β akan naik bila D mengecil.\n\n**Uji verifikasi** (`tools/calc/test_verification.py`): $C$ dari skrip dibandingkan dengan implementasi **independen** persamaan (4) ISO 5167-2 yang ditulis langsung dari standar (3 kasus, selisih < 10⁻⁵), dan laju alir dihitung balik dengan persamaan dasar ISO 5167-1 (selisih < 10⁻⁴). Kasus β < 0,10 terbukti ditolak (FAIL).\n\n## 6. Catatan atas CSV Lama (sudah diganti, Re-audit 2026-11-03)\n1. Dari input CSV ($d$ = 85,2 mm; $\\beta$ = 0,553; $\\Delta p$ = 25 kPa; $\\rho_1$ = 11,24 kg/m³; $C$ = 0,6012; $\\varepsilon$ = 0,985), persamaan di §4 menghasilkan $q_m \\approx$ **9.600 kg/h**, bukan 12.500 kg/h.\n2. Dari $q_m$ = 12.500 kg/h, $D$ = 154,08 mm, $\\mu$ = 0,0165 cP diperoleh $Re_D = 4 q_m / (\\pi D \\mu) \\approx$ **1,7 × 10⁶**, bukan 385.400.\n3. Sumber densitas tertulis \"DWSIM Peng-Robinson\", padahal model simulasi memakai NRTL.\n4. Tag `REAC-01` tidak sesuai tag DWSIM (`RC-01`); tag pabrik final mengikuti `tag_map.csv`.\n\n## 7. SOP\n1. Pastikan `hmb_streams.json` terbaru (`npm run sync:dwsim`, cek `meta.extracted_at`).\n2. Perbarui `inputs/FE-101.yaml` (ganti nilai PLACEHOLDER/ASUMSI dengan sumber yang sah).\n3. Hitung manual sesuai §4 (iterasi $C$ ↔ $Re_D$) dan tuliskan langkahnya di laporan PSTF 2 Bab 2.\n4. `npm run calc` sebagai **pemeriksa silang**; selisih manual vs skrip harus < 0,5 %. `npm run test:py` harus lulus.\n5. Bila semua input berstatus HMB/STANDAR/LITERATUR (atau ASUMSI yang disetujui PIC), ajukan `Review Internal`.\n\n## 8. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan inkonsistensi (LOG-004). |\n| 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/orifice.py`; FE-101 di S-102 (cair); CSV generate; uji verifikasi (LOG-020). |\n"
+  },
+  {
+   "path": "02_ENGINEERING_CALCULATORS/CALC_TeknoEkonomi_NPV.md",
+   "folder": "02_ENGINEERING_CALCULATORS",
+   "id": "CALC-TEKNOEKONOMI-001",
+   "title": "Model Analisis Kelayakan Tekno-Ekonomi Area 1",
+   "category": "Financial & Economic Evaluation",
+   "standard": "AACE International RP 18R-97 (klasifikasi estimasi)",
+   "status": "Draft",
+   "author": "Heidi Falina Brilian (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "CALC_TeknoEkonomi_NPV.csv",
+    "inputs/NPV-001.yaml"
+   ],
+   "tags": [
+    "Economics",
+    "CAPEX",
+    "OPEX",
+    "NPV",
+    "IRR"
+   ],
+   "body": "# Panduan Analisis Kelayakan: CALC_TeknoEkonomi_NPV.csv\n\n> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/NPV-001.yaml`. Jangan edit CSV; ubah input YAML.\n>\n> ⚠️ **DATA PLACEHOLDER — JANGAN DIKUTIP KE LAPORAN.** Mesin hitung sudah siap dan terverifikasi, tetapi **semua input** masih data contoh dari CSV lama (CAPEX 4,85 jt USD, OPEX 0,285 jt, pendapatan 1,45 jt, i = 10 %, n = 20 tahun). Hasil saat ini: NPV 5,07 jt USD, IRR 23,7 %, payback 4,16 tahun (terdiskonto 5,66 tahun), cocok dengan hitung ulang LOG-004. PIC (HD) mengganti input dengan estimasi berbasis Draf P&ID + sumber harga.\n\n## 1. Cakupan\nMenurut Panduan Capstone DTNTF 2026 (BAB III §3.3), kajian tekno-ekonomi **berbasis Draf P&ID** dan mencakup: estimasi CAPEX (perangkat keras, software, pipa, jasa engineering), OPEX (listrik, kalibrasi, maintenance), NPV, IRR terhadap suku bunga acuan, dan Payback Period. Rubrik nilai *Sangat Baik* menuntut analisis risiko suku bunga pasar (sensitivitas).\n\n## 2. Persamaan\n$$NPV = -CAPEX + \\sum_{t=1}^{n} \\frac{CF_t}{(1+i)^t}, \\qquad CF_t = \\text{Savings}_t - OPEX_t$$\nIRR adalah nilai $i$ yang membuat $NPV = 0$. Payback sederhana $= CAPEX / CF$ (untuk arus kas konstan).\n\n## 3. Catatan Inkonsistensi pada Data Placeholder (Re-audit 2026-11-03)\nDengan input CSV (CAPEX 4,85 juta USD; savings 1,45 juta; OPEX 0,285 juta → CF = 1,165 juta USD/tahun; i = 10%; n = 20 tahun):\n\n| Indikator | Nilai di CSV | Hitung ulang | Keterangan |\n| :--- | :---: | :---: | :--- |\n| NPV @10% | 3.742.500 USD | ≈ 5,07 juta USD | Tidak konsisten |\n| IRR | 24,8% | ≈ 23,7% | Selisih kecil |\n| Payback | 3,8 tahun | ≈ 4,2 tahun | Tidak konsisten (versi lama companion bahkan menulis 3,2 tahun) |\n\nAsumsi umur pabrik 20 tahun dan discount rate 10% juga belum memiliki rujukan.\n\n## 4. SOP\n1. Turunkan daftar item CAPEX dari Draf P&ID + Master Instrument Index (jumlah dan jenis instrumen).\n2. Cari harga katalog/vendor (cantumkan sumber dan tanggal kurs) dan isi `inputs/NPV-001.yaml` dengan status yang sesuai.\n3. Hitung NPV, IRR, Payback, dan sensitivitas terhadap discount rate & harga produk (sensitivitas belum ada di skrip; tambahkan bila dibutuhkan untuk rubrik *Sangat Baik*).\n4. `npm run calc` sebagai verifikasi silang (`numpy-financial`).\n\n**Model skrip:** tahun 0 = −CAPEX, tahun 1..n = pendapatan − OPEX, tanpa pajak/depresiasi/eskalasi. **Uji verifikasi:** contoh buku teks (CAPEX 1.000, CF 500 × 3 tahun, i = 10 %) → NPV 243,43; NPV(IRR) = 0; payback 2,00 tahun; terdiskonto 2,352 tahun.\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; hitung ulang NPV/Payback (LOG-004). |\n| 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/npv.py` + payback terdiskonto; input contoh dipindah ke YAML (PLACEHOLDER); uji verifikasi (LOG-020). |\n"
+  },
+  {
+   "path": "03_CAD_AND_PID_LIBRARIES/symbol_libraries/SYMBOL_LIBRARIES.md",
+   "folder": "03_CAD_AND_PID_LIBRARIES",
+   "id": "CAD-LIB-DME-001",
+   "title": "Library Simbol AutoCAD (ISO 10628, ISA-5.1/5.2/5.4/101/62443, API RP 551)",
+   "category": "CAD Standards",
+   "standard": "ISO 10628 / ISA-5.1 / ISA-5.2 / ISA-5.4 / ISA-101.01 / ISA/IEC 62443 / API RP 551",
+   "status": "WIP",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [],
+   "tags": [
+    "AutoCAD",
+    "Symbol Library",
+    "Block"
+   ],
+   "body": "# Companion Kolektif: Library Simbol AutoCAD\n\n> 📁 **Lokasi file:** sejak Fase 1.5 (LOG-004), seluruh file library disimpan di Google Drive (`DRIVE_ROOT/03_CAD_DWG/symbol_libraries/`), bukan di Git.\n\n## 1. Daftar Library\n\n| File | Standar | Isi (berdasarkan nama & draf awal) |\n| :--- | :--- | :--- |\n| `ISO10628_Equipment.dxf` | ISO 10628 | Simbol peralatan: reaktor fixed bed, kolom distilasi, heat exchanger, pompa sentrifugal |\n| `ISA51_Instruments.dxf` | ISA-5.1 | Bubble field/DCS/SIS, control valve, ESDV, PSV |\n| `ISA52_LogicGates.dxf` | ISA-5.2 | Gerbang AND, OR, NOT, time delay |\n| `ISA54_LoopDiagrams.dxf` | ISA-5.4 | Elemen loop diagram (terminal, marshalling) |\n| `APIRP551_Hookup.dxf` | API RP 551 | Hook-up transmitter tekanan (root valve, manifold, pipe stand) |\n| `ISA101_HMI.dxf` | ISA-101.01 | Elemen grafis HMI |\n| `ISA62443_Security.dxf` | ISA/IEC 62443 | Diagram zona & conduit keamanan siber |\n| `DME_PID_Master_Legend.dxf` | ISA-5.1 / ISO 10628 | Lembar legenda P&ID |\n\n> File recovery AutoCAD `ISO10628_Equipment_recover.dwg` (sha256 `0b88eb2af89ac562…`) **dihapus** pada 2026-11-03 atas keputusan PM, karena isinya sama dengan `ISO10628_Equipment.dxf` (LOG-005).\n\n## 2. Asal-usul File (penting)\n- Skrip bootstrap `generate_libraries.js` (dihapus di Fase 1.5) hanya menghasilkan 4 library pertama dalam bentuk DXF sederhana (puluhan entitas, tanpa header `$ACADVER`). File di Drive berukuran 3–4 MB dengan header AutoCAD (`AC1009`), dan `plot.log` mencatat file tersebut dibuka & di-plot di AutoCAD pada 2026-11-01.\n- Kesimpulannya, library ini adalah **file CAD hasil kerja manual di AutoCAD**, bukan file hasil generate. Jangan dibuat ulang dari skrip.\n\n## 3. Cara Memakai\n1. Pastikan Google Drive for Desktop sudah sinkron (Fase 2), lalu buka folder `DRIVE_ROOT/03_CAD_DWG/symbol_libraries/`.\n2. Sisipkan blok ke gambar P&ID lewat `INSERT` atau DesignCenter (`ADCENTER`).\n3. Jangan mengedit library yang sama di dua perangkat sekaligus (Blueprint §8.4).\n\n## 4. Yang Perlu Diverifikasi PIC\n- Kesesuaian setiap simbol dengan standar acuannya.\n- Atribut blok instrumen (tag) harus bisa dibaca `validate_tags.py` (Fase 3): gunakan atribut bernama tetap, misal `TAG`.\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Companion kolektif dibuat; file dipindah ke Drive; hash dicatat (LOG-004). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | `ISO10628_Equipment_recover.dwg` dihapus atas keputusan PM (LOG-005). |\n"
+  },
+  {
+   "path": "03_CAD_AND_PID_LIBRARIES/templates/acad_dme.md",
+   "folder": "03_CAD_AND_PID_LIBRARIES",
+   "id": "CAD-LIN-DME-001",
+   "title": "Definisi Linetype Sinyal Instrumentasi AutoCAD",
+   "category": "CAD Standards",
+   "standard": "ISA-5.1-2009 (Instrumentation Symbols and Identification)",
+   "status": "WIP",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "acad_dme.lin"
+   ],
+   "tags": [
+    "AutoCAD",
+    "Linetype",
+    "ISA-5.1"
+   ],
+   "body": "# Panduan Konfigurasi: acad_dme.lin\n\nFile ini mendefinisikan tipe garis khusus sesuai simbol garis ISA-5.1 untuk AutoCAD:\n- Sinyal elektrik (4–20 mA, HART): `-- - -- - --`\n- Sinyal pneumatik (3–15 psi): `-- // -- // --`\n- Data link / fieldbus (Modbus, Fieldbus, Ethernet): `-- [ ] -- [ ] --`\n- Capillary tube: `-- X -- X --`\n\n## Cara Memakai\n1. Di AutoCAD: `LINETYPE` → *Load…* → *File…* → pilih `acad_dme.lin` dari repo ini.\n2. Pilih linetype yang dibutuhkan, lalu tetapkan pada layer sinyal di template (`06_INST_ELEC_SIG`, `07_INST_PNEUM_SIG`).\n\n## Yang Perlu Diverifikasi PIC\n- Kesesuaian setiap pola garis terhadap tabel simbol garis ISA-5.1-2009.\n- Skala linetype (`LTSCALE`) untuk lembar A3 dan A1.\n\n## Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal (`acad_dme_lin.md`). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Rename → `acad_dme.md` (aturan nama companion v2.0); status → WIP; tambah cara pakai (LOG-004). |\n"
+  },
+  {
+   "path": "03_CAD_AND_PID_LIBRARIES/templates/DME_Master_Template.md",
+   "folder": "03_CAD_AND_PID_LIBRARIES",
+   "id": "CAD-TPL-DME-001",
+   "title": "Template Baku Gambar Teknik AutoCAD P&ID dan PFD",
+   "category": "CAD Standards",
+   "standard": "ISO 5457 (ukuran lembar) / ISO 7200 (title block) / ISA-5.1",
+   "status": "WIP",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [],
+   "tags": [
+    "AutoCAD",
+    "Template",
+    "Title Block"
+   ],
+   "body": "# Panduan Penggunaan: DME_Master_Template\n\n> 📁 **Lokasi file:** sejak Fase 1.5 (LOG-004), file biner template disimpan di Google Drive (`DRIVE_ROOT/03_CAD_DWG/templates/`), bukan di Git. Companion ini tetap di repo sebagai dokumentasi. Hash di frontmatter dipakai untuk memastikan versi file yang dipakai sama.\n\n## 1. Format Lembar & Etiket\n- Format **A3 landscape** (420 × 297 mm) dan **A1 landscape** (841 × 594 mm).\n- Title block memuat: Departemen Teknik Nuklir dan Teknik Fisika UGM, nama proyek, no. dokumen, kode lembar, revisi, dan kolom approval/paraf tim.\n- Panduan Capstone mewajibkan lampiran cetak biru **A3 lipat** pada laporan PSTF 1 dan PSTF 2.\n\n## 2. Struktur Layer\n| Layer | Warna | Lineweight / Linetype |\n| :--- | :--- | :--- |\n| `00_BORDER` | 7 (white) | — |\n| `01_TITLE_BLOCK` | 7 (white) | — |\n| `02_PROCESS_MAJOR` | 4 (cyan) | 0,50 mm |\n| `03_PROCESS_MINOR` | 3 (green) | 0,25 mm |\n| `04_EQUIPMENT` | 7 (white) | 0,70 mm |\n| `05_INST_BUBBLE` | 1 (red) | 0,25 mm |\n| `06_INST_ELEC_SIG` | 2 (yellow) | linetype sinyal elektrik (`acad_dme.lin`) |\n| `07_INST_PNEUM_SIG` | 6 (magenta) | linetype sinyal pneumatik (`acad_dme.lin`) |\n| `08_TEXT_MAJOR`, `09_TEXT_MINOR` | 7 (white) | — |\n| `10_DIMENSION` | 8 (grey) | — |\n\n## 3. Riwayat Berkas\n- File duplikat `DME_Master_Template.dwg`, `Engineering_Drawing_Template.dwg`, dan `Engineering_Drawing_Template.dxf` (byte-identik dengan `.dwt`/`.dxf` di atas) dihapus pada Fase 1.5. Salinan lengkap riwayat lama ada di bundle backup `dme-capstone-master_BACKUP_2026-11-03_pre-phase1.5.bundle`.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → WIP; file biner dipindah ke Drive; duplikat dihapus (LOG-004). |\n"
+  },
+  {
+   "path": "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.md",
+   "folder": "04_INSTRUMENTATION_ISA20",
+   "id": "INST-IDX-DME-001",
+   "title": "Master Instrument Index & I/O List Pabrik DME Area 1",
+   "category": "Instrumentation Database",
+   "standard": "ISA-5.1 / ISA-TR20.00.01 / API RP 554 (I/O List)",
+   "status": "Draft",
+   "author": "Jonathan Pangihutan Michael Siahaan (PIC)",
+   "reviewer": "Altaf Ramadhan Parvez",
+   "last_updated": "2026-11-03",
+   "google_ref": "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit",
+   "target_files": [
+    "Master_Instrument_Index_DME.csv"
+   ],
+   "tags": [
+    "Instrument Index",
+    "IO List",
+    "ISA-5.1"
+   ],
+   "body": "# Panduan Penggunaan: Master_Instrument_Index_DME.csv\n\n> ⚠️ **DATA CONTOH (PLACEHOLDER).** Baris-baris di CSV berasal dari skrip bootstrap (LOG-004), belum diturunkan dari Draf P&ID. Mulai **Fase 2**, master index berada di **Google Sheets**; file CSV ini hanya snapshot yang diperbarui oleh `tools/sync/pull_sheets.js` dan **tidak boleh diedit langsung**.\n\n> 📄 **Master Google Sheets** (dibuat 2026-11-03, LOG-010): [Master Instrument Index & IO List DME Area 1](https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit). Tab `Instrument_Index` (diisi manual, kolom sama dengan CSV + kolom `DATA_STATUS`), `IO_List` (formula `FILTER` dari Instrument_Index, tanpa tag `Mechanical`, + ringkasan jumlah per IO_TYPE), `Catatan` (status & inkonsistensi). Sinkronisasi pertama Sheets → CSV: 2026-11-03 (LOG-012), menambah kolom `DATA_STATUS`; nilai lain tidak berubah.\n\n> 🔄 **Cara memperbarui CSV ini** (jangan edit CSV langsung): di Sheets buka tab `Instrument_Index` → *File → Download → Comma Separated Values (.csv)*, lalu jalankan `npm run pull:sheets -- --key instrument_index --from-file <path-csv>`. Tambahkan `--dry-run` untuk melihat ringkasan perbedaan tanpa menulis. Skrip menolak CSV tanpa kolom wajib atau dengan `TAG_NUMBER` kosong/ganda.\n\n## 1. Aturan Penomoran Tag (lihat juga Blueprint §2.3)\n- Format instrumen: `<huruf fungsi ISA-5.1>-<area><nomor loop>`, contoh `FT-101`, `TIC-102`.\n- Digit pertama nomor loop = area pabrik: **1xx** Area 1 reaktor (firma ini), **2xx** Area 2 distilasi 1, **3xx** Area 3 distilasi 2 (LOG-015). Index firma Area 1 hanya berisi tag **1xx**; tag 2xx/3xx hanya boleh muncul sebagai sinyal antarmuka.\n- Huruf pertama = variabel terukur (`T`, `P`, `F`, `L`, `A`); huruf berikutnya = fungsi (`I` indikator, `C` kontroler, `T` transmitter, `V` katup, `S` switch, `A` alarm).\n- Tag peralatan di kolom lokasi wajib memakai **tag pabrik** dari `tag_map.csv`, bukan tag DWSIM.\n\n## 2. Catatan Inkonsistensi Data Contoh (Re-audit 2026-11-03)\n1. Tag peralatan bercampur: `REAC-01`, `C-01` (index) vs `RC-01`, `CSCOL-01` (DWSIM).\n2. Tag yang dirujuk C&E Matrix tetapi **tidak ada** di index: `TSHH-101`, `PSHH-201`, `LSHH-202`, `LSLL-202`, `ESDV-201`, `FCV-202`, `TCV-201`.\n3. Alarm tekanan kolom: index `PIC-201` H = 13,5 bar vs alarm database `PAH-201` H = 12,5 bar(a).\n\n## 3. Kolom CSV\n`TAG_NUMBER, P_AND_ID_NO, SERVICE_DESCRIPTION, LOCATION, LINE_EQUIPMENT_NO, SIGNAL_TYPE, IO_TYPE, RANGE_MIN, RANGE_MAX, ENG_UNIT, SETPOINT_ALARM, FAIL_MODE, CONTROLLER_TYPE, SAFETY_CRITICAL, DATA_STATUS`\n\n`DATA_STATUS`: `PLACEHOLDER` (data contoh), `ASUMSI`, atau `P&ID` (sudah diturunkan dari Draf P&ID). Daftar kolom wajib ada di `required_columns` registry.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; catatan inkonsistensi tag (LOG-004). |\n| 0.3 | 2026-11-03 | Claude Code (AI) | Master dipindah ke Google Sheets; `google_ref` diisi (LOG-010). |\n| 0.4 | 2026-11-03 | Claude Code (AI) | CSV disinkron dari Sheets via `pull_sheets.js`: + kolom `DATA_STATUS` (LOG-012). |\n| 0.5 | 2026-11-03 | Claude Code (AI) | `REAC-01` → `R-101` (tag_map FINAL) di Sheets lalu disinkron; reviewer Altaf (LOG-016). |\n"
+  },
+  {
+   "path": "05_SAFETY_AND_CONTROL/Cause_and_Effect_Matrix_ESD.md",
+   "folder": "05_SAFETY_AND_CONTROL",
+   "id": "SAFE-ESD-DME-001",
+   "title": "Matriks Sebab-Akibat (Cause & Effect) Sistem ESD",
+   "category": "Functional Safety",
+   "standard": "IEC 61511 / ISA-84 / ISA-5.2",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "Cause_and_Effect_Matrix_ESD.csv"
+   ],
+   "tags": [
+    "SIS",
+    "ESD",
+    "SIL",
+    "Cause & Effect"
+   ],
+   "body": "# Panduan Penggunaan: Cause_and_Effect_Matrix_ESD.csv\n\n> ⚠️ **DATA CONTOH (PLACEHOLDER).** Isi berasal dari skrip bootstrap (LOG-004). Nilai SIL (SIL-1 s.d. SIL-3) **belum ditentukan** lewat HAZOP + LOPA/risk graph sesuai IEC 61511, jadi tidak boleh dikutip.\n\n## 1. Fungsi Dokumen\nMemetakan setiap pemicu (*cause*: sensor trip) ke aksi keselamatan (*effect*: katup/motor), lengkap dengan target SIL dan waktu respons. Panduan Capstone (BAB IV §4.3) mewajibkan SIL ditentukan dari evaluasi probabilitas kegagalan, bukan ditetapkan langsung.\n\n## 2. Isi Data Contoh\n1. `TSHH-101` (suhu bed reaktor ≥ 320 °C) → tutup `ESDV-101` (< 2 s) dan trip pompa umpan (< 1 s).\n2. `PSHH-201` (tekanan kolom ≥ 14,5 bar) → trip katup steam reboiler `ESDV-201` (< 3 s).\n3. `LSHH-202` / `LSLL-202` (level bawah kolom) → `FCV-202` / `TCV-201`.\n\n## 3. Catatan Inkonsistensi (Re-audit 2026-11-03)\n1. `ESDV-201`, `FCV-202`, `TCV-201`, dan seluruh tag switch (`TSHH`, `PSHH`, `LSHH`, `LSLL`) tidak ada di Master Instrument Index.\n2. Alarm database memakai `TAHH-101`/`PAHH-201`/`LALL-202` untuk fungsi yang sama; pilih satu konvensi (switch trip vs alarm) dan sinkronkan.\n3. Target SIL-3 untuk dua fungsi pertama perlu justifikasi kuat; SIL-3 jarang dipakai di industri proses dan berdampak besar pada arsitektur dan biaya.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; catatan inkonsistensi (LOG-004). |\n"
+  },
+  {
+   "path": "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md",
+   "folder": "05_SAFETY_AND_CONTROL",
+   "id": "FDS-IC-DME-2026-001",
+   "title": "Functional Design Specification (FDS) & Control Narrative",
+   "category": "Control Philosophy",
+   "standard": "ISA-5.06.01 / NAMUR NA 35",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "Jonathan Pangihutan Michael Siahaan",
+   "last_updated": "2026-11-03",
+   "google_ref": "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit",
+   "target_files": [],
+   "tags": [
+    "FDS",
+    "Control Narrative",
+    "ISA-5.06"
+   ],
+   "body": "# Functional Design Specification (FDS) & Control Narrative\n**Standar Acuan:** ISA-5.06.01 / NAMUR NA 35  \n**Proyek:** Pabrik Dimethyl Ether (DME) Berbasis Dehidrasi Metanol  \n**No. Dokumen:** FDS-IC-DME-2026-001\n\n> 📄 **Master sekarang di Google Docs** (2026-11-03, LOG-010): [FDS-IC-DME-2026-001](https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit). Isi di bawah adalah **arsip Rev 0.2** dan tidak diperbarui lagi; semua perubahan FDS ditulis di Google Docs. Rev 0.3 di Docs menambah kerangka Bab 1 (ruang lingkup) dan Bab 5–7 (start-up, operasi normal, shutdown).\n>\n> ⚠️ **DRAF KERANGKA (PLACEHOLDER).** Isi di bawah adalah contoh awal, belum diturunkan dari URS dan Draf P&ID. Mulai **Fase 2**, master FDS ditulis di **Google Docs**. Panduan Capstone (BAB III §3.1, Lampiran 3A Bab 2) mewajibkan FDS menjelaskan urutan **start-up, operasi normal, dan shutdown otomatis** secara sekuensial; bagian start-up/shutdown belum ada.\n\n---\n\n## 1. Loop Kontrol Kaskade Reaktor Dehidrasi (REAC-01)\n* **Master Controller (Primary):** Temperature Controller `TIC-101` memantau temperatur keluaran `HEATER-01` dan titik panas bed katalis `REAC-01`.\n* **Slave Controller (Secondary):** Flow Controller `FIC-101` mengatur katup `FCV-101` pada pipa discharge `PUMP-01`.\n* **Prinsip Operasi:** Jika suhu reaksi melampaui setpoint ($250^\\circ\\text{C}$), output `TIC-101` akan memodulasi pasokan panas pada `HEATER-01` dan membatasi laju umpan metanol melalui `FIC-101` untuk mencegah pelepasan panas eksotermik berlebih.\n\n## 2. Sistem Keselamatan Interlock Darurat (SIS / ESD)\n* **Trip High-High Suhu Reaktor (`TSHH-101`):** Jika temperatur bed katalis mencapai $\\ge 320^\\circ\\text{C}$, sinyal dikirim ke Logic Solver Safety (SIL-3).\n* **Aksi Interlock 1:** Menutup Emergency Shut-off Valve `ESDV-101` pada jalur inlet umpan dalam waktu $< 2$ detik.\n* **Aksi Interlock 2:** Menghentikan motor pompa umpan `PUMP-01` dalam waktu $< 1$ detik untuk memutus suplai reaktan.\n\n## 3. Loop Kontrol Tekanan & Refluks Kolom Distilasi DME (C-01)\n* **Pressure Control (`PIC-201`):** Mengatur bukaan katup `PCV-201` pada saluran gas atas menuju condenser untuk menjaga tekanan stabil pada $11.2\\text{ bar(a)}$.\n* **Purity Control (`AIC-201`):** Gas Chromatograph online memantau fraksi mol DME. Jika kemurnian turun di bawah $99.99\\%$, sistem secara otomatis menaikkan rasio refluks pompa puncak.\n\n---\n\n## Catatan Inkonsistensi (Re-audit 2026-11-03)\n1. Batas kemurnian 99,99% (§3) berbeda dengan alarm `AAL-201` = 99,90% dan `DME.md` (> 99,9%).\n2. Satu kontroler `TIC-101` disebut memantau dua titik (keluaran heater dan bed reaktor); kaskade perlu didefinisikan dengan tag terpisah.\n3. Tag peralatan belum mengikuti `tag_map.csv`.\n\n## Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Tambah frontmatter (status Draft) & catatan inkonsistensi (LOG-004). |\n| 0.3 | 2026-11-03 | Claude Code (AI) | Master dipindah ke Google Docs; file ini menjadi arsip Rev 0.2 (LOG-010). |\n"
+  },
+  {
+   "path": "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md",
+   "folder": "05_SAFETY_AND_CONTROL",
+   "id": "SAFE-ALARM-DME-001",
+   "title": "Database Pengelolaan & Rasionalisasi Alarm",
+   "category": "Functional Safety",
+   "standard": "ANSI/ISA-18.2-2016 / EEMUA Publication 191",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "",
+   "target_files": [
+    "Master_Alarm_Database_ISA182.csv"
+   ],
+   "tags": [
+    "Alarm Management",
+    "ISA-18.2",
+    "EEMUA 191"
+   ],
+   "body": "# Panduan Penggunaan: Master_Alarm_Database_ISA182.csv\n\n> ⚠️ **DATA CONTOH (PLACEHOLDER).** Setpoint dan prioritas belum hasil rasionalisasi alarm. Jangan dikutip ke laporan.\n\n## 1. Fungsi Dokumen\nDaftar alarm hasil rasionalisasi ISA-18.2: tag, tipe (L/H/LL/HH), setpoint, prioritas, respons operator, dan konsekuensi jika diabaikan.\n\n## 2. Klasifikasi Prioritas (data contoh)\n- **Class 1 (Emergency/Critical)**: `TAHH-101`, `PAHH-201`, `LALL-202`.\n- **Class 2 (Medium/High)**: `TAH-101`, `PAH-201`, `LAL-202`, `AAL-201`.\n- **Class 3 (Low)**: `TAL-101`.\n\n## 3. Catatan Inkonsistensi (Re-audit 2026-11-03)\n1. `AAL-201` di kolom prioritas tertulis `High (Class 2)`, sedangkan alarm Class 2 lain tertulis `Medium (Class 2)`.\n2. `PAH-201` = 12,5 bar(a), sedangkan Master Instrument Index menulis alarm H `PIC-201` = 13,5 bar.\n3. Batas kemurnian DME: alarm `AAL-201` = 99,90% mol, sedangkan FDS menulis 99,99%.\n4. Peralatan `E-01`, `HEATER-01`, `PUMP-02` belum memakai tag pabrik dari `tag_map.csv`.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; catatan inkonsistensi (LOG-004). |\n"
+  },
+  {
+   "path": "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md",
+   "folder": "06_COLLABORATIVE_WORKSPACE",
+   "id": "GWS-REGISTRY-001",
+   "title": "Registry Google Workspace (Drive, Sheets, Docs) Proyek DME Area 1",
+   "category": "Collaborative Workspace",
+   "standard": "",
+   "status": "WIP",
+   "author": "Claude Code (AI)",
+   "reviewer": "Rahul Ghulam Hidayatulloh",
+   "last_updated": "2026-11-03",
+   "google_ref": "https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod",
+   "target_files": [
+    "google_workspace_registry.json"
+   ],
+   "tags": [
+    "Google Workspace",
+    "Registry",
+    "Drive",
+    "Sheets",
+    "Docs"
+   ],
+   "body": "# Registry Google Workspace\n\nDaftar ID dan URL folder Drive serta dokumen Google (Sheets/Docs) proyek. File ini dibaca cockpit (modul 10 Google Workspace Hub, Fase 4) dan skrip sinkronisasi (`pull_sheets`, Fase 2).\n\n## 1. Aturan\n- **Pemilik semua file**: akun Google pribadi PM (Blueprint §3.3). Tim diberi akses Editor, dosen Commenter/Viewer, lewat Share ke email UGM.\n- **Pembagian kerja** (LOG-008): Antigravity mengelola folder & file biner di Drive; Claude Code mengelola isi Sheets/Docs dan memperbarui registry ini.\n- **ID tidak berubah saat file dipindah** antar folder Drive. Setelah Antigravity membuat folder target (`folders_pending`), dokumen cukup dipindah; ID dan URL di registry tetap berlaku. Tambahkan ID folder baru ke `drive.folders`.\n- Registry hanya berisi ID dan URL. Tidak boleh ada token, kunci API, atau kredensial.\n\n## 2. Isi Saat Ini (2026-11-03)\n| Key | Jenis | Judul | Folder target | Status |\n| :--- | :--- | :--- | :--- | :--- |\n| `instrument_index` | Sheets | Master Instrument Index & IO List DME Area 1 | `04_INSTRUMENT_INDEX_SHEETS` | Draft, data PLACEHOLDER |\n| `fds` | Docs | FDS-IC-DME-2026-001 | `06_LIVING_REPORTS_GDOCS` | Draft, isi PLACEHOLDER |\n| `laporan_pstf1` | Docs | Laporan PSTF 1 FEED (Draf) | `06_LIVING_REPORTS_GDOCS` | Draft, kerangka |\n\nKetiga dokumen sudah berada di folder targetnya (dipindah Antigravity, LOG-011). Seluruh 7 folder Blueprint §3.3 tercatat di `drive.folders`; `folders_pending` kosong.\n\nEntri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `required_columns`, yang dipakai `tools/sync/pull_sheets.js` untuk validasi.\n\n## 3. Skema\n- `drive.root`, `drive.folders[]`: `{key, title, id, url}`.\n- `drive.folders_pending[]`: nama folder Blueprint §3.3 yang belum ada di Drive.\n- `documents[]`: `{key, type (sheets|docs|slides), title, doc_no, id, url, target_folder, pic, status, data_status}`, ditambah `repo_snapshot` + `sync_direction` untuk Sheets yang disalin ke CSV, atau `repo_companion` untuk Docs yang punya companion di repo.\n\n## 4. SOP Pembaruan\n1. Buat atau pindahkan dokumen di Drive.\n2. Perbarui entri di `google_workspace_registry.json` (ID diambil dari URL `/d/<id>/`).\n3. Perbarui `updated_at`, jalankan `npm run check`, dan catat di log riwayat.\n\n## 5. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Registry awal: root + 2 folder Drive, 1 Sheets, 2 Docs (LOG-010). |\n| 0.2 | 2026-11-03 | Claude Code (AI) | + 5 folder dari LOG-011; field sinkronisasi untuk `pull_sheets` (LOG-012). |\n| 0.3 | 2026-11-03 | Claude Code (AI) | Laporan PSTF 1 mengikuti template LaTeX 5 bab: struktur, `tor_rfp`, pengerja & reviewer 15 bagian (LOG-024). |\n| 0.4 | 2026-11-03 | Claude Code (AI) | Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan (11 bagian); + `authoring`, `latex_working_copy`, `members` (5 orang) (LOG-025). |\n| 0.5 | 2026-11-04 | Claude Code (AI) | + `tor_rfp_pdf` (ID Drive PDF RFP dari unggahan Antigravity, LOG-026); akses umum Drive terverifikasi Dibatasi (LOG-028). |\n"
+  },
+  {
+   "path": "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md",
+   "folder": "06_COLLABORATIVE_WORKSPACE",
+   "id": "MIRROR-FDS-IC-DME-2026-001",
+   "title": "Mirror teks FDS-IC-DME-2026-001 (dari Google Docs)",
+   "category": "Mirror",
+   "standard": "ISA-5.06.01 / NAMUR NA 35",
+   "status": "Draft",
+   "author": "Altaf Ramadhan Parvez (PIC dokumen master)",
+   "reviewer": "Jonathan Pangihutan Michael Siahaan",
+   "last_updated": "2026-11-03",
+   "google_ref": "https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit",
+   "target_files": [],
+   "tags": [
+    "Mirror",
+    "FDS",
+    "Generated"
+   ],
+   "body": "> 🔁 **MIRROR READ-ONLY.** Master ada di Google Docs (`google_ref`). File ini salinan teks untuk pemeriksaan otomatis (`tools/validate_tags.py`). Jangan edit di sini; perbarui mirror setiap kali master berubah.\n\n# Functional Design Specification (FDS) & Control Narrative\n**Proyek:** Pabrik Dimethyl Ether (DME) Berbasis Dehidrasi Metanol, Area 1\n**No. Dokumen:** FDS-IC-DME-2026-001\n**Standar acuan:** ISA-5.06.01 / NAMUR NA 35\n**PIC:** Altaf Ramadhan Parvez\n**Reviewer:** Jonathan Pangihutan Michael Siahaan\n**Status:** Draft\n**Revisi:** 0.3 (2026-11-03)\n\n**Status isi: DRAF KERANGKA (PLACEHOLDER).** Isi Bab 2 sampai 4 adalah contoh awal dari repo (LOG-004), belum diturunkan dari URS dan Draf P&ID. Angka dan tag di dalamnya belum boleh dikutip sebagai hasil desain. Panduan Capstone (BAB III §3.1, Lampiran 3A Bab 2) mewajibkan FDS menjelaskan urutan start-up, operasi normal, dan shutdown otomatis secara sekuensial; bagian itu disediakan di Bab 5 sampai 7 dan masih kosong.\n\n## 1. Ruang Lingkup & Rujukan\n[Isi: batas sistem kendali Area 1 (area 100: umpan S-101 sampai efluen S-107 ke Area 2, ditambah recycle masuk S-114 dari Area 3; sinyal antarmuka dengan Area 2 dan Area 3), dokumen rujukan (URS, PFD, Draf P&ID, Master Instrument Index & IO List di Google Sheets), dan daftar singkatan.]\n\n## 2. Loop Kontrol Kaskade Reaktor Dehidrasi (R-101)\n- **Master controller (primary):** temperature controller TIC-101 memantau temperatur keluaran E-101 dan titik panas bed katalis R-101.\n- **Slave controller (secondary):** flow controller FIC-101 mengatur katup FCV-101 pada pipa discharge P-101.\n- **Prinsip operasi:** jika suhu reaksi melampaui setpoint (250 °C), output TIC-101 memodulasi pasokan panas pada E-101 dan membatasi laju umpan metanol melalui FIC-101 untuk mencegah pelepasan panas eksotermik berlebih.\n\n## 3. Sistem Keselamatan Interlock Darurat (SIS / ESD)\n- **Trip high-high suhu reaktor (TSHH-101):** jika temperatur bed katalis mencapai 320 °C atau lebih, sinyal dikirim ke logic solver safety (SIL-3).\n- **Aksi interlock 1:** menutup emergency shut-off valve ESDV-101 pada jalur inlet umpan dalam waktu kurang dari 2 detik.\n- **Aksi interlock 2:** menghentikan motor pompa umpan P-101 dalam waktu kurang dari 1 detik untuk memutus suplai reaktan.\n\n## 4. Loop Kontrol Tekanan & Refluks Kolom Distilasi DME (C-01)\n- **Pressure control (PIC-201):** mengatur bukaan katup PCV-201 pada saluran gas atas menuju kondensor untuk menjaga tekanan stabil pada 11,2 bar(a).\n- **Purity control (AIC-201):** gas chromatograph online memantau fraksi mol DME. Jika kemurnian turun di bawah 99,99%, sistem otomatis menaikkan rasio refluks pompa puncak.\n\n## 5. Urutan Start-up\n[Belum ditulis. Isi langkah sekuensial, kondisi izin (permissive) tiap langkah, dan mode kontroler (MAN/AUTO/CAS) sampai pabrik mencapai kondisi operasi normal.]\n\n## 6. Operasi Normal\n[Belum ditulis. Isi setpoint operasi per loop yang diturunkan dari HMB DWSIM, batas operasi aman, dan tanggapan terhadap gangguan umum.]\n\n## 7. Urutan Shutdown Normal & Shutdown Darurat\n[Belum ditulis. Pisahkan shutdown terencana dan shutdown otomatis oleh SIS. Rujuk Cause & Effect Matrix ESD untuk aksi per pemicu.]\n\n## 8. Catatan Inkonsistensi (Re-audit 2026-11-03)\n1. Batas kemurnian 99,99% (Bab 4) berbeda dengan alarm AAL-201 = 99,90% dan DME.md (> 99,9%).\n2. Satu kontroler TIC-101 disebut memantau dua titik (keluaran heater dan bed reaktor); kaskade perlu didefinisikan dengan tag terpisah.\n3. Tag peralatan belum mengikuti tag_map.csv (REAC-01, C-01 vs RC-01, CSCOL-01 di DWSIM).\n4. TSHH-101 dirujuk di Bab 3 tetapi belum ada di Master Instrument Index.\n5. Lingkup Area 1 (keputusan PM 2026-11-03) berakhir di S-107 ke Area 2 (distilasi 1), ditambah recycle masuk S-114 dari Area 3 (distilasi 2). Bab 4 (kolom C-01) berada di lingkup Area 2 dan perlu dikeluarkan atau diubah menjadi deskripsi antarmuka. Tag peralatan mengikuti tag_map.csv (FINAL, LOG-016): R-101 (sebelumnya REAC-01), E-101 pemanas umpan (sebelumnya HEATER-01), E-102, P-101 (sebelumnya PUMP-01); penggantian di Bab 2 dan 3 sudah diterapkan.\n\n## 9. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal. |\n| 0.2 | 2026-11-03 | Claude Code (AI) | Status Draft dan catatan inkonsistensi (LOG-004). |\n| 0.3 | 2026-11-03 | Claude Code (AI) | Dipindah dari repo ke Google Docs sebagai master; ditambah kerangka Bab 1 dan Bab 5 sampai 7 (LOG-010). |\n"
+  },
+  {
+   "path": "07_FINAL_DELIVERABLES/reports/laporan_pstf1.md",
+   "folder": "07_FINAL_DELIVERABLES",
+   "id": "RPT-PSTF1-LATEX",
+   "title": "Laporan Kerja LaTeX PSTF 1 FEED Pabrik DME Area 1",
+   "category": "Final Deliverable",
+   "standard": "Panduan Capstone DTNTF 2026, Lampiran 3A (struktur 4 bab); template LaTeX resmi DTNTF (format)",
+   "status": "WIP",
+   "author": "Rahul Ghulam Hidayatulloh (PIC); salinan kerja disiapkan Claude Code (AI)",
+   "reviewer": "",
+   "last_updated": "2026-11-03",
+   "google_ref": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit",
+   "target_files": [
+    "laporan_pstf1/laporan_pstf1.tex"
+   ],
+   "tags": [
+    "Laporan",
+    "LaTeX",
+    "PSTF 1",
+    "FEED"
+   ],
+   "body": "# Laporan Kerja LaTeX PSTF 1\n\nSalinan kerja dari template resmi. Draf ditulis di Google Docs (master narasi); isi dipindah ke file ini saat finalisasi (keputusan PM, opsi 1, LOG-025).\n\n## 1. Perubahan terhadap Template\n1. **Anggota ke-5**: makro `\\namaE`/`\\nimE` ditambahkan. Barisnya muncul di sampul, lembar pengesahan, pakta integritas (tanda tangan Anggota 5 di baris tersendiri), dan ringkasan eksekutif.\n2. **Struktur isi = Panduan Lampiran 3A (4 bab)**: 1 Konseptualisasi · 2 FDS/Control Narrative (start-up, operasi normal termasuk CV/MV/DV, shutdown otomatis) · 3 Basic Engineering (PFD, neraca massa & termal, alur Draf P&ID) · 4 Kajian Tekno-Ekonomi (CAPEX, OPEX, NPV/IRR/payback) · Lampiran A Draf P&ID (A3) · Lampiran B Logbook. Bab Kajian Keselamatan dan subbab matriks pembobot dari contoh template tidak dipakai; HAZOP dan SIL (LOPA) masuk PSTF 2.\n3. Teks contoh template (\"Proses ZXY pada Plant XYZ\") dihapus; setiap subbab berisi penanda `[...]`.\n\n## 2. Data Identitas yang Belum Diisi\n- NIM kelima anggota, tanggal penulisan dan ujian, nama Dosen Koordinator (dan NIP), dua Praktisi Industri.\n- Judul `\\judul` masih **usulan**, perlu disetujui PM dan Dosen Pembimbing.\n- Nama dan NIP Kadep diambil apa adanya dari template resmi; cek ulang saat finalisasi.\n\n## 3. Kompilasi\npdfLaTeX dari folder `laporan_pstf1/`. Logo dibaca dari folder template lewat `\\graphicspath` (repo melarang file duplikat); di Overleaf, unggah `logoUGM.png` dari template ke folder yang sama. Paket: geometry, babel indonesian, setspace, titlesec, tabularx, graphicx, ulem, amsmath). Belum dikompilasi di repo karena PC ini tidak memasang TeX; gunakan Overleaf.\n\n## 4. Log Revisi\n| Rev | Tanggal | Penulis | Deskripsi |\n| :--- | :--- | :--- | :--- |\n| 0.1 | 2026-11-03 | Claude Code (AI) | Salinan kerja dibuat: anggota ke-5, struktur 4 bab Panduan (LOG-025). |\n"
+  }
+ ]
+}
