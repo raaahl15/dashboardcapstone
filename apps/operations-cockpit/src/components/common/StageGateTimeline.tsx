@@ -6,7 +6,7 @@ import { useStaticData } from '../../utils/staticData';
 /**
  * Pemetaan Stage-Gate G1–G4 ke titik kontrol Panduan Capstone (Blueprint §1.7, keputusan PM 2026-11-03).
  * Konfigurasi gate bersifat tetap (bukan data Firestore); tanggal G1 dihitung dari config.projectStartDate
- * (akhir minggu 13 PSTF 1), G2 dari config.tenderDeadline. Jadwal PSTF 2 belum dirilis.
+ * (akhir minggu 13 PSTF 1, dihitung dalam minggu EFEKTIF: 2 minggu UTS W8–W9 tidak dihitung, keputusan PM\n * dikonfirmasi dosen, LOG-044 → 29 Nov 2026), G2 dari config.tenderDeadline. Jadwal PSTF 2 belum dirilis.
  */
 interface Gate {
   id: 'G1' | 'G2' | 'G3' | 'G4';
@@ -55,7 +55,7 @@ const GATES: Gate[] = [
 /** RFP KAK-IC-DME-2026-001: batas penawaran FEED 15-12-2026 (= G2) dan DED 30-06-2027 (acuan G4). */
 export const RFP_DED_DEADLINE = new Date(2027, 5, 30);
 const DATE_NOTE: Record<Gate['id'], string> = {
-  G1: 'akhir minggu 13 PSTF 1',
+  G1: 'akhir minggu efektif 13 PSTF 1 (tanpa 2 minggu UTS)',
   G2: 'tenggat FEED (RFP)',
   G3: 'jadwal PSTF 2 belum dirilis',
   G4: 'tenggat DED (RFP)',
@@ -69,6 +69,9 @@ export const parseIndoDate = (text: string): Date | null => {
   if (!m || !(m[2] in MONTHS)) return null;
   return new Date(Number(m[3]), MONTHS[m[2]], Number(m[1]));
 };
+
+/** Minggu UTS PSTF 1 (W8–W9, 5–18 Okt 2026) yang tidak dihitung sebagai minggu Panduan (LOG-044). */
+export const UTS_BREAK_WEEKS = 2;
 
 /** Akhir minggu ke-n proyek (minggu 1 dimulai projectStartDate). */
 export const endOfProjectWeek = (startYmd: string, week: number): Date | null => {
@@ -86,7 +89,7 @@ export const StageGateTimeline: React.FC = () => {
 
   const dates = useMemo<Record<Gate['id'], Date | null>>(
     () => ({
-      G1: endOfProjectWeek(config.projectStartDate, 13),
+      G1: endOfProjectWeek(config.projectStartDate, 13 + UTS_BREAK_WEEKS),
       G2: parseIndoDate(config.tenderDeadline),
       G3: null,
       G4: RFP_DED_DEADLINE,
