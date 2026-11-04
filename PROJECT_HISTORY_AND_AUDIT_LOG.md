@@ -264,6 +264,29 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-056] 2026-11-05 06:45 WIB — Unggah Draf P&ID Rev B A3 DXF & gambar pratinjau PNG ke Drive
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"unggah D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB_A3.dxf dan Gambar pratinjau: D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB_A3_preview.png ke drive"*
+* **Fase**: 5 (tindak lanjut LOG-055)
+* **Tujuan**: Menutup tindak lanjut Antigravity di LOG-055 (mengunggah berkas Draf P&ID Area 1 Rev B berformat standar A3 beserta berkas gambar pratinjau PNG ke Google Drive proyek agar dapat diakses oleh tim dan dosen pembimbing).
+* **Perubahan**:
+  - **Google Drive**:
+    - Berkas `DME-PID-002_Draft_PID_Area1_RevB_A3.dxf` (6,07 MB) diunggah ke subfolder `03_CAD_DWG` (ID: `1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo`).
+      - File ID Google Drive: **`139mgb1OOiHVfaICTTI8mvU8B30UethwH`**.
+    - Berkas `DME-PID-002_Draft_PID_Area1_RevB_A3_preview.png` (253 KB) diunggah ke subfolder `03_CAD_DWG` (ID: `1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo`).
+      - File ID Google Drive: **`17RGU8aGjvnmexQzAtmXyJBw53snWQsLU`**.
+  - **Registry**: `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` diperbarui dengan menambahkan kedua berkas pada `drive.files`; companion `google_workspace_registry.md` diperbarui ke Rev 0.7.
+* **Bukti / Verifikasi**:
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB_A3.dxf" --parent 1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo` → `Uploaded: DME-PID-002_Draft_PID_Area1_RevB_A3.dxf (ID: 139mgb1OOiHVfaICTTI8mvU8B30UethwH)`.
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB_A3_preview.png" --parent 1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo` → `Uploaded: DME-PID-002_Draft_PID_Area1_RevB_A3_preview.png (ID: 17RGU8aGjvnmexQzAtmXyJBw53snWQsLU)`.
+  - `gdrive readonly permissions` pada kedua berkas → seluruh 4 email UGM anggota tim (`ihsaan`, `altaf`, `jonathan`, `heidi`) otomatis mewarisi peran **writer (Editor)**, dan `rahulghulam15@gmail.com` sebagai **owner**.
+  - `node tools/check_companions.js` → **PASS**.
+* **Keputusan**:
+  - Berkas gambar CAD berukuran besar (> 5 MB) dan pratinjau grafik disimpan di Google Drive (sesuai Blueprint §2.2). Monorepo Git melacak referensi registry dan companion markdown.
+* **Tindak Lanjut**:
+  - [ ] **JN**: buka berkas DXF A3 di AutoCAD untuk pemeriksaan visual tata letak, proporsi teks ISOCPEUR, dan ketebalan garis sebelum revisi C/sidang.
+
+---
+
 ### [LOG-055] 2026-11-05 — P&ID Rev B dipindah ke DME_Master_Template (A3, logo UGM, ISOCPEUR)
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM: *"DME-PID-002_Draft_PID_Area1_RevB.dxf kok template engineeringnya sedikit beda, gak ada logo ugm serta font nya beda tidak mengikuti DME_Master_Template.dxf"*
 * **Temuan**: penyebabnya bukan edit Rev B. Rev A (Drive ID 1BVOyqj0…, LOG-034) memang tidak dibuat di atas template:
@@ -285,7 +308,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Render SVG→PNG diperiksa visual.
 * **Tindak Lanjut**:
   - [ ] JN: buka di AutoCAD dan cek tata letak serta ketebalan garis. Rev C dikerjakan dari file A3 ini.
-  - [ ] PM/Antigravity: unggah ke Drive 03_CAD_DWG dan perbarui registry `drive.files`.
+  - [x] PM/Antigravity: unggah ke Drive 03_CAD_DWG dan perbarui registry `drive.files` (selesai di LOG-056).
 
 ---
 

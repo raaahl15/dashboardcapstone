@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T23:37:24.690Z",
+ "generated_at": "2026-11-04T23:42:54.512Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -61,8 +61,8 @@
   "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md": "c3238d5f60d4ea7c34c82b2b904095a90cadd24e5fbdcf6fd8e7b69ee69f6620",
   "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "dc726f0349271fb7af0cfdff98049a6c47807d09f6c5cfed8e907f5c33d6643d",
   "06_COLLABORATIVE_WORKSPACE/RENCANA_REKONSTRUKSI_W1-W18.md": "ac6181a4b90caa0800b205359d2f73e13d28e948df4c1a8fc991215bf56892e8",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "5025646cd5036f19043f38c1a9e8d10e191b525ad59a5a1f28b60e1cdce60492",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "b059237ac1a0a133686751a58daa8911ddf5e80ad807e906eb3de3865199f513",
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "41ceb2cd0cedd9da04b2e8cd19bfd4795f4298e19ffd29a0345c82987e5b586b",
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "e95420e147e8a6c6461c6ed743c4e52c3dd7676d5aac8e6577e2008ef9cd425f",
   "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "638ff23a640d80712e045d5d44eb11308ed4e05e2af9f91071bc7ef57a59821f",
   "07_FINAL_DELIVERABLES/reports/laporan_pstf1.md": "0b3fae1aa03c40114945506c02e32e4de287d5febf2bd925b5fa63d045858759",
   "07_FINAL_DELIVERABLES/reports/laporan_pstf1/BAB1_Konseptualisasi_Sistem.md": "6b458e81f56a99a68b566b6152e32285e4827c5daf28b803d33c00a996c231a6"

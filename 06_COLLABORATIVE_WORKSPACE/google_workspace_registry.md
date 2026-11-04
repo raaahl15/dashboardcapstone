@@ -13,7 +13,7 @@ reviewer: "Rahul Ghulam Hidayatulloh"
 status: "WIP"
 review_evidence: ""
 google_ref: "https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod"
-last_updated: "2026-11-03"
+last_updated: "2026-11-05"
 tags: ["Google Workspace", "Registry", "Drive", "Sheets", "Docs"]
 ---
 
@@ -58,3 +58,4 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 | 0.4 | 2026-11-03 | Claude Code (AI) | Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan (11 bagian); + `authoring`, `latex_working_copy`, `members` (5 orang) (LOG-025). |
 | 0.5 | 2026-11-04 | Claude Code (AI) | + `tor_rfp_pdf` (ID Drive PDF RFP dari unggahan Antigravity, LOG-026); akses umum Drive terverifikasi Dibatasi (LOG-028). |
 | 0.6 | 2026-11-04 | Claude Code (AI) | + `drive.files`: P&ID DME-PID-002 Rev B (03_CAD_DWG) dan ASME PTC 19.3 TW-2016 (00_CORE_GUIDELINES), diunggah PM, diverifikasi lewat konektor (LOG-038). |
+| 0.7 | 2026-11-05 | Antigravity (AI) | + `drive.files`: P&ID DME-PID-002 Rev B A3 DXF & gambar pratinjau PNG (03_CAD_DWG) diunggah ke Drive (LOG-056). |

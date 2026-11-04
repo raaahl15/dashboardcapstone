@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-04T16:00:00+07:00",
-  "updated_by": "Claude Code (LOG-024)",
+  "updated_at": "2026-11-05T06:45:00+07:00",
+  "updated_by": "Antigravity (LOG-056)",
   "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
   "drive": {
     "root": {
@@ -71,6 +71,24 @@
         "url": "https://drive.google.com/file/d/1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F/view",
         "folder": "00_CORE_GUIDELINES",
         "note": "Standar thermowell (hak cipta ASME, akses tim saja); dasar tools/calc/thermowell.py (LOG-035/036)"
+      },
+      {
+        "key": "pid_dme_pid_002_revB_a3",
+        "title": "DME-PID-002_Draft_PID_Area1_RevB_A3.dxf",
+        "id": "139mgb1OOiHVfaICTTI8mvU8B30UethwH",
+        "url": "https://drive.google.com/file/d/139mgb1OOiHVfaICTTI8mvU8B30UethwH/view",
+        "folder": "03_CAD_DWG",
+        "sha256_16": "42972fbff65f11ca",
+        "note": "Draf P&ID Area 1 Rev B pada DME_Master_Template A3 (ISOCPEUR, logo UGM, title block resmi, LOG-055)"
+      },
+      {
+        "key": "pid_dme_pid_002_revB_a3_preview",
+        "title": "DME-PID-002_Draft_PID_Area1_RevB_A3_preview.png",
+        "id": "17RGU8aGjvnmexQzAtmXyJBw53snWQsLU",
+        "url": "https://drive.google.com/file/d/17RGU8aGjvnmexQzAtmXyJBw53snWQsLU/view",
+        "folder": "03_CAD_DWG",
+        "sha256_16": "165e03a959a4515b",
+        "note": "Gambar pratinjau Draf P&ID Area 1 Rev B A3 (LOG-055)"
       }
     ]
   },
@@ -82,12 +100,32 @@
       "doc_no": "INST-IDX-DME-001",
       "id": "1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM",
       "url": "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit",
-      "tabs": ["Instrument_Index", "IO_List", "Catatan"],
+      "tabs": [
+        "Instrument_Index",
+        "IO_List",
+        "Catatan"
+      ],
       "repo_snapshot": "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.csv",
       "sync_direction": "sheets_to_repo",
       "sync_tab": "Instrument_Index",
       "key_column": "TAG_NUMBER",
-      "required_columns": ["TAG_NUMBER", "P_AND_ID_NO", "SERVICE_DESCRIPTION", "LOCATION", "LINE_EQUIPMENT_NO", "SIGNAL_TYPE", "IO_TYPE", "RANGE_MIN", "RANGE_MAX", "ENG_UNIT", "SETPOINT_ALARM", "FAIL_MODE", "CONTROLLER_TYPE", "SAFETY_CRITICAL", "DATA_STATUS"],
+      "required_columns": [
+        "TAG_NUMBER",
+        "P_AND_ID_NO",
+        "SERVICE_DESCRIPTION",
+        "LOCATION",
+        "LINE_EQUIPMENT_NO",
+        "SIGNAL_TYPE",
+        "IO_TYPE",
+        "RANGE_MIN",
+        "RANGE_MAX",
+        "ENG_UNIT",
+        "SETPOINT_ALARM",
+        "FAIL_MODE",
+        "CONTROLLER_TYPE",
+        "SAFETY_CRITICAL",
+        "DATA_STATUS"
+      ],
       "target_folder": "04_INSTRUMENT_INDEX_SHEETS",
       "pic": "Jonathan Pangihutan Michael Siahaan",
       "status": "Draft",
