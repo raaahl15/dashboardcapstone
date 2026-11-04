@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console produksi 14/14 PASS → Fase 4 DoD 3/3 menunggu sign-off (LOG-038); DoD total 14/20  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console 14/14 PASS, Fase 4 DoD 3/3 menunggu sign-off (LOG-038); Fase 2 selesai & Fase 5 2/4 atas pernyataan PM (LOG-039); DoD total 18/20 (sisa: ukuran projectData, re-audit akhir)  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 23:55 WIB  
+**Terakhir Diperbarui:** 2026-11-05 00:05 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,23 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-039] 2026-11-05 00:05 WIB — Keputusan PM: P&ID selesai direview; akses 3 URL terbukti; uji clone laptop & login semua anggota dinyatakan selesai
+* **Pelaksana**: Claude Code (AI agent) mencatat keputusan PM (Rahul): *"fase 5 bagian P&ID udah review dan done, lalu satu anggota membuka 3 url sudah dilakukan dan lancar, uji clone dan semua anggota login anggap dah selesai"*
+* **Fase**: 2, 5
+* **Perubahan** (Blueprint BAB VI):
+  - Fase 2 butir 3 (akses URL): syarat (c) **terpenuhi**, satu anggota membuka ketiga URL dokumen dengan akun UGM, lancar (dilaporkan PM).
+  - Fase 5 butir 1 (P&ID): PM menyatakan Draf P&ID `DME-PID-002` sudah direview dan selesai. Bukti teknis: Rev B (sha256 `92135c824e85225c`, Drive `1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR`) → validator 0 ERROR (LOG-036).
+  - **Pengecualian PM (aturan BAB VI):** Fase 2 butir 1 (uji `git clone` + `npm install` + `npm run build` di laptop) dan Fase 5 butir 2 (semua anggota login + WO percobaan di produksi) **dinyatakan selesai oleh PM tanpa bukti uji di log**. Keduanya dicentang dengan label tersebut dan **tidak** dianggap terverifikasi agent.
+  - Tabel roadmap: Fase 2 SELESAI*, Fase 5 DoD 2/4.
+* **Bukti / Verifikasi**: pernyataan PM pada sesi ini. Agent tidak menerima output uji, daftar WO percobaan, atau MoM review P&ID. Bila P&ID diubah setelah Rev B (mis. JN menambah FE-101), file tersebut belum divalidasi ulang oleh agent.
+* **Status DoD**: 1.5: 5/5, 2: 3/3, 3: 5/5, 4: 3/3, 5: 2/4 → **18/20 (90 %)**, dengan 2 butir berlabel "dinyatakan PM".
+* **Tindak Lanjut**:
+  - [ ] **PM**: catat ukuran `projectData/area1` dari panel Kesehatan Data (DoD Fase 5 butir 3, < 500 KB).
+  - [ ] **Re-audit akhir** oleh pihak selain pelaksana (§7.2), dicatat di log (DoD Fase 5 butir 4).
+  - [ ] **PM**: sign-off Fase 4 (DoD 3/3, LOG-038).
+  - [ ] Opsional: bila ada versi P&ID setelah Rev B, unggah ke Drive dan jalankan `npm run validate:tags -- --dxf <file>`; `tag_map` `T-101` masih `USULAN` (konfirmasi IH + JN).
+
+---
 ### [LOG-038] 2026-11-04 23:55 WIB — Uji console produksi 14/14 modul PASS (DoD Fase 4 butir 2); file Drive terverifikasi
 * **Pelaksana**: Claude Code (AI agent) menjalankan skrip; PM (Rahul) login sendiri di jendela browser uji. Atas pesan PM: *"no. 4 sudah, ini link vercel nya https://dashboardcapstonearea1.vercel.app/"* lalu *"udah berhasil login"*.
 * **Fase**: 4 (DoD butir 2), 5 (penyimpanan Drive)

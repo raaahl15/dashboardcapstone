@@ -83,7 +83,7 @@ Sekaligus diselaraskan: Master Instrument Index (Sheets, 30 tag dari gambar), `t
 
 Pembanding: Rev A diperiksa ulang dengan index dan validator baru → 8 ERROR (`PUMP-01`, `HEATER-01`, `REAC-01`, `REG-01`, `C-01`, `C-02`, `DC-201`, `E-103`), 2 WARNING (`DC-201` area, `FE-101`). Semua 34 phantom instrumen Rev A hilang karena index kini diturunkan dari gambar.
 
-**DoD Fase 5 butir 1** ("0 phantom tag pada P&ID berstatus `Diajukan`"): gambar Rev B sudah 0 ERROR, tetapi belum berstatus `Diajukan`. Langkah menuju status itu: JN memeriksa Rev B di AutoCAD (tata letak teks, FE-101), IH dan JN mengonfirmasi T-101, lalu PM menetapkan status.
+**DoD Fase 5 butir 1** ("0 phantom tag pada P&ID berstatus `Diajukan`"): gambar Rev B 0 ERROR; **PM menyatakan P&ID sudah direview dan selesai (LOG-039) → butir dicentang.** Catatan awal (sebelum review): Langkah menuju status itu: JN memeriksa Rev B di AutoCAD (tata letak teks, FE-101), IH dan JN mengonfirmasi T-101, lalu PM menetapkan status.
 
 ## 5. Sisa Pekerjaan
 - JN: buka Rev B di AutoCAD dan periksa tata letak teks yang diganti; tambahkan simbol FE-101; simpan sebagai DWG master dan jalankan ulang `npm run validate:tags -- --dxf <file>`.

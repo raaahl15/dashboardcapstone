@@ -526,13 +526,13 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 ┌───────────────┬────────────────────────────────────────────────────────┬──────────────┐
 │ FASE 1        │ Konsolidasi Monorepo & Companion .md                   │ via 1.5      │
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
-│ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
+│ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ SELESAI*     │
 │ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ SELESAI      │
 │ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DoD 3/3**    │
-│ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ BERJALAN     │
+│ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ DoD 2/4      │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
 ```
-\* Fase 2 ditutup dengan catatan: 2 butir DoD ditangguhkan atas keputusan PM (uji laptop, konfirmasi akses tim). Lihat Fase 2 dan LOG-018.
+\* Fase 2 DoD 3/3 (LOG-039): akses 3 URL terbukti; uji clone laptop **dinyatakan selesai oleh PM tanpa bukti uji** (LOG-018, LOG-039).
 \*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); DoD 3/3 terpenuhi (uji console 14/14 modul PASS, LOG-038), menunggu sign-off PM.
 
 Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX). Pengecualian hanya boleh diputuskan PM, harus menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
@@ -578,9 +578,9 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Catatan:** selama Drive for Desktop belum terpasang, `D:\rahul\CAPSTONE_DME_AREA1\` adalah salinan lokal yang **tidak** tersinkron otomatis. Perubahan di salah satu sisi harus disalin manual, atau pasang Drive for Desktop lalu arahkan `DRIVE_ROOT` ke folder Drive (direkomendasikan).
 * **Aktivitas:** buat repo GitHub private + push; buat folder Drive `CAPSTONE_DME_AREA1/` terpisah dari monorepo; isi `.env.local` dengan `DRIVE_ROOT`; buat Google Sheets Master Instrument Index & IO List; buat Google Docs FDS & laporan; isi `google_workspace_registry.json`; buat `pull_sheets` (versi Node `pull_sheets.js`).
 * **DoD:**
-  - [ ] **DITANGGUHKAN:** `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus.)* **Syarat penutupan:** uji di laptop anggota saat kerja kelompok (Node 24 LTS, README "Setup Perangkat Baru"), ketiga perintah exit 0 dan `npm run check` PASS, dicatat di log.
+  - [x] **DINYATAKAN SELESAI OLEH PM (LOG-039, tanpa bukti uji di log):** `git clone` di laptop + `npm install` + `npm run build` berhasil tanpa langkah manual tambahan. *(LOG-013: `postinstall` ditambahkan; simulasi clone bersih di PC Desktop lulus.)* **Syarat penutupan:** uji di laptop anggota saat kerja kelompok (Node 24 LTS, README "Setup Perangkat Baru"), ketiga perintah exit 0 dan `npm run check` PASS, dicatat di log.
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
-  - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner (LOG-023; `anyone: reader` dicabut PM → Dibatasi, terverifikasi LOG-028); (c) ⏳ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
+  - [x] Semua URL di registry bisa dibuka oleh seluruh anggota tim. *(LOG-039: syarat (c) terpenuhi, satu anggota membuka ketiga URL dokumen dengan akun UGM dan lancar, dilaporkan PM.)* **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner (LOG-023; `anyone: reader` dicabut PM → Dibatasi, terverifikasi LOG-028); (c) ✅ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM (LOG-039). Akses dosen menyusul (ditunda PM).
 
 #### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: SELESAI (DoD 5/5, LOG-034/035; **sign-off PM 2026-11-04, LOG-036**). Catatan saat sign-off: hasil kalkulator berstatus data ASUMSI/PLACEHOLDER (input desain belum final). Penyelarasan P&ID ↔ index dikerjakan di LOG-036 (Rev B: 0 ERROR).
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
@@ -604,8 +604,8 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Perangkat lunak (LOG-023):** validasi tag menyeluruh (`npm run validate:tags`, LOG-021); ekspor logbook CSV (kolom Lampiran 2 Panduan; format unggah Simaster belum terdokumentasi, CSV umum); indikator ukuran `projectData/area1` di panel Kesehatan Data. **Kegiatan manusia:** merge ke `main` (rilis Vercel), `firebase deploy --only firestore:rules` (✅ di-deploy PM 2026-11-04, LOG-037; agent diblokir classifier "Production Deploy"), login + WO percobaan oleh tiap anggota, kompilasi bundel Stage-Gate di Drive (Antigravity), re-audit akhir oleh agent/pihak **selain** pelaksana (§7.2). Langkah di README "Rilis Produksi & Serah Terima".
 * **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; rilis produksi di Vercel (push ke `main`) + deploy `firestore.rules`; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
 * **DoD:**
-  - [ ] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`. *(PARSIAL, LOG-036: Draf P&ID `DME-PID-002` **Rev B** + index Sheets yang diturunkan dari gambar → **0 ERROR**, 1 WARNING (FE-101 belum digambar). **Syarat penutupan:** JN memeriksa Rev B di AutoCAD dan menambah FE-101, IH + JN mengonfirmasi T-101, lalu PM menetapkan gambar `Diajukan` dan validator dijalankan ulang tanpa ERROR.)*
-  - [ ] Seluruh anggota tim berhasil login dan membuat WO percobaan di versi produksi.
+  - [x] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`. *(LOG-036: Draf P&ID `DME-PID-002` Rev B (sha256 `92135c824e85225c`) → 0 ERROR, 1 WARNING FE-101. LOG-039: PM menyatakan P&ID sudah direview dan selesai; status `Diajukan` ditetapkan PM.)*
+  - [x] **DINYATAKAN SELESAI OLEH PM (LOG-039, tanpa bukti uji di log):** Seluruh anggota tim berhasil login dan membuat WO percobaan di versi produksi.
   - [ ] Ukuran dokumen `projectData/area1` tercatat dan < 500 KB. *(LOG-023: indikator tersedia di panel Kesehatan Data; tinggal dibaca & dicatat PM setelah rilis.)*
   - [ ] Re-audit akhir tercatat di log riwayat.
 
