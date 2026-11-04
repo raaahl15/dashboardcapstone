@@ -264,6 +264,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-053] 2026-11-05 — Logbook kembali 6 (kelompok + 5 anggota); isian Bimbingan 1–5
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"logbooknya tetap dibuat 6, 1 logbook kelompok area 1 dan 5 logbook setiap anggota, isilah logbook tersebut dimana untuk bimbingan 1-5 sama semua disetiap logbook, dengan format untuk uraian logbook yaitu Judul Uraian: Isi Uraian"*
+* **Perubahan kode** (branch `logbook-kelompok`, 9b029e5, tsc 0, menunggu preview lalu merge):
+  - `LogbookView.tsx`: entitas Kelompok Area 1 dikembalikan; target 6 × 12 = 72; pengingat 1×24 jam ikut memeriksa logbook kelompok.
+  - Placeholder uraian memakai format "Judul Uraian: Isi Uraian".
+  - Tombol "Sinkronkan 72 Entri" tetap dihapus.
+* **Berkas impor** `import_3_logbook_b1-b5.json` (scratchpad agent, generator `scripts/build_import_logbook.py`):
+  - 30 entri = 6 logbook × Bimbingan 1–5 (W5, W6, W7, W10, W11), isi sama di setiap logbook sesuai permintaan PM;
+  - isi diambil dari MoM / `perubahan.md`;
+  - setiap uraian diberi penanda "(Ditulis ulang 5 Nov 2026 dari MoM.)";
+  - `verifiedByLecturer = false`.
+* **Catatan integritas**:
+  - MoM Bimbingan 4 mencatat kehadiran 2/5 (Rahul, Heidi), tetapi entri W10 tetap dibuat untuk semua anggota atas permintaan PM. Isinya hanya hasil sesi, bukan klaim kehadiran.
+  - Panduan menjadikan logbook dasar nilai individu dan menolak uraian generik. Anggota disarankan menambahkan entri spesifik pekerjaannya sendiri.
+* **Tindak Lanjut**:
+  - [ ] PM: cek preview `logbook-kelompok` → "merge".
+  - [ ] PM: impor `import_3_logbook_b1-b5.json` setelah merge. Impor menimpa seluruh seksi logbook, jadi ekspor dulu bila sudah ada entri baru.
+
+---
+
 ### [LOG-052] 2026-11-05 — Rapat & Logbook mengikuti konsep: slide deck B1–B6, Action Item MoM → WO, logbook per orang
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"update bagian rapat dan logbook, untuk your slide deck tambahin slide deck bimbingan 1-5, tapi bimbingan 1-4 pakai link kosong dulu dan bimbingan 5 pakai link yang udah dibuat, susun juga Action Item MoM → Work Order sesuai konsep yang dibuat"*
 * **Perubahan kode** (branch `rapat-logbook-konsep`, ab5f392, tsc 0, menunggu preview PM lalu merge):
