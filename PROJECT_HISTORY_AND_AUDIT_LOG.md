@@ -264,6 +264,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-046] 2026-11-05 — Merge G1 minggu efektif; Bab 1 = Revisi (WO-029) + pembaruan deliverable; perbaikan RACI di branch
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"1. merge, 2. Bab 1 revisi, 3. udah diperbaiki ya?, 4. udah kuhapus"*
+* **Perubahan**:
+  - Merge `g1-minggu-efektif` → `main` (`d7c3585`, `--no-ff`): Stage-Gate G1 = 29 Nov 2026. Worktree & branch lokal dibersihkan.
+  - Branch **`fix-raci-uid`** (`410660f`), belum di-merge: helper `getRaciRoleForUserRecord` mencoba UID, `legacyId`, dan `legacyid` (huruf kecil, ada di profil Ihsaan); dipakai panel "RACI Assignment Ringkas" di Beranda. Penyebab bug: `raciRows.assignments` memakai ID kanonik `user-…`, sedangkan profil memakai UID Firebase.
+  - Berkas impor kecil `cockpit_import_deliverables.json` (scratchpad agent) berisi `deliverables` (6) + `workOrders` (WO-029):
+    - Bab 1 → **Revisi** (bukti `WO-029`);
+    - Bab 2 WIP W14 (tautan FDS asli); Bab 3 Draft W14; Lampiran A WIP W15 (tautan P&ID Rev B); Bab 4 Draft W15 "belum dimulai";
+    - antarmuka S-07/C-01 → S-107 ke Area 2 (data HMB);
+    - tautan Drive palsu (`…/folders/dme-area1-bab2` dst.) diganti tautan dokumen nyata; subtitle tag lama (R-01, C-01, DWSIM v8.4) dikoreksi.
+  - WO-029 "Revisi Bab 1 sesuai catatan pembimbing" (RG, dukungan IH, tenggat 12 Nov). WO disinkron dari Firestore (`onSnapshot`), jadi impor satu WO tidak menghapus WO lain.
+* **Bukti / Verifikasi**: `tsc --noEmit` exit 0 di `main` (setelah merge) dan di branch RACI; validasi deliverable (field wajib, bobot total 100).
+* **Catatan PM**: logbook uji "a" sudah dihapus PM (LOG-045 butir 4 selesai).
+* **Tindak Lanjut**:
+  - [ ] PM: impor `cockpit_import_deliverables.json`.
+  - [ ] PM: preview `fix-raci-uid` → "merge".
+  - [ ] PM: catatan revisi Bab 1 dari pembimbing ditulis di MoM Bimbingan 6 (WO-028/029).
+  - [ ] PM (opsional): ubah status tugas Gantt 4.1 menjadi Berjalan selama revisi.
+
+---
 ### [LOG-045] 2026-11-05 — Verifikasi impor rekonstruksi di produksi: Gantt, WO, MoM, config tampil sesuai
 * **Pelaksana**: Claude Code (AI agent); PM (Rahul) mengimpor berkas LOG-044 dan login di browser uji. Atas pesan PM: *"bisakah kamu cek websitenya dan menilai apakah semuanya sudah diterapkan"*
 * **Perubahan**: `tools/smoke_console.js` + opsi `--dump`, menyimpan teks tiap modul di laporan (`tools/out/`, di-ignore) agar isi data bisa dicocokkan dengan berkas impor.
