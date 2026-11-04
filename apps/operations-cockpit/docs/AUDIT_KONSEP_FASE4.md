@@ -122,6 +122,10 @@ Perubahan ini mengubah spesifikasi BAB IV, jadi perlu persetujuan PM dan revisi 
 
 **Urutan yang disarankan:** P0 (satu sesi agent + aksi PM) → merge ke `main` → P1 bertahap sebelum G1 (akhir minggu 13) → P2 setelah G2.
 
+**Status pelaksanaan (2026-11-04):**
+- **P0:** Drive Dibatasi ✅ (LOG-028); konten palsu & bug tanggal paraf ✅ (LOG-028); rilis produksi ✅ (LOG-029). Uji Console dari PC masih terbuka.
+- **P1 (branch `p1-status-deliverable`, LOG-030):** status deliverable memakai §1.4 dengan bobot Draft 0 / WIP 40 / Review Internal 70 / Diajukan 90 / ACC Pembimbing 100 / Revisi 40 (disetujui PM); kolom bukti wajib untuk Diajukan/ACC/Revisi; status lama dipetakan saat dibaca (`ACC Final` → Diajukan, bukan ACC, karena tanpa bukti); kartu "Status ACC" dihitung dari deliverable; tenggat dari `config.tenderDeadline`/`projectStartDate`; kartu Kesehatan Data membuka tab Library yang tepat; seed deliverable memakai URL registry asli dan tag pabrik. **Belum:** URL di data live (PM lewat Workspaces → "Perbarui Tautan Berkas"), regulasi Standards, milestone G1 (PM lewat UI). Kartu tenggat Homepage tetap dua (countdown + kartu status tender), kini dari satu sumber data.
+
 ---
 
 ## 7. Catatan atas Audit Lama (`docs/audit-report.md`, 2026-11-01)
@@ -132,3 +136,4 @@ Audit lama memberi skor "9,2/10 — LAYAK PENUH OPERASIONAL PRODUKSI". Skornya t
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-04 | Claude Code (AI) | Audit konsep, kelayakan, kegunaan, dan tumpang tindih fitur cockpit (LOG-027). |
+| 0.2 | 2026-11-04 | Claude Code (AI) | Status pelaksanaan P0 (LOG-028/029) dan P1 (LOG-030). |

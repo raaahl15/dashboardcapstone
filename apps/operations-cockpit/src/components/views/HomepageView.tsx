@@ -3,9 +3,10 @@ import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { DataHealthPanel } from '../common/DataHealthPanel';
 import { getRaciRoleForUser } from '../../utils/migrateUserRefs';
+import { STATUS_PILL, deliverableProgress, deliverableStatus } from '../../utils/docStatus';
+import { parseIndoDate } from '../common/StageGateTimeline';
 import {
   Config,
-  DeliverableItem,
   MeetingLogItem,
   SlideDeckItem,
   WorkOrder,
@@ -30,7 +31,6 @@ import {
   Pencil,
   ArrowRight,
   Calendar,
-  Download,
   AlertTriangle,
   X,
   Flag,
@@ -174,7 +174,6 @@ export const HomepageView: React.FC = () => {
     updateConfig,
     tasks,
     deliverables,
-    updateDeliverable,
     verifiedLogbooksCount,
     users,
     raciRows,
@@ -197,9 +196,30 @@ export const HomepageView: React.FC = () => {
     return () => window.clearInterval(id);
   }, []);
 
+  // Tenggat dari satu sumber: config.tenderDeadline + config.projectStartDate (P1 audit, LOG-030)
+  const tenderTargetMs = useMemo(() => {
+    const d = parseIndoDate(config.tenderDeadline);
+    if (!d) return new Date('2026-12-15T23:59:00+07:00').getTime(); // RFP KAK-IC-DME-2026-001
+    d.setHours(23, 59, 0, 0);
+    return d.getTime();
+  }, [config.tenderDeadline]);
+  const projectStartMs = useMemo(() => {
+    const [y, m, d] = config.projectStartDate.split('-').map(Number);
+    return y && m && d ? new Date(y, m - 1, d).getTime() : tenderTargetMs - 16 * 7 * 86400000;
+  }, [config.projectStartDate, tenderTargetMs]);
+
+  const accSummary = useMemo(() => {
+    const statuses = deliverables.map((d) => deliverableStatus(d));
+    return {
+      total: deliverables.length,
+      acc: statuses.filter((s) => s === 'ACC Pembimbing').length,
+      submitted: statuses.filter((s) => s === 'Diajukan').length,
+    };
+  }, [deliverables]);
+
   const tenderCountdown = useMemo(() => {
-    const targetMs = new Date('2026-12-15T23:59:00+07:00').getTime();
-    const startMs = new Date('2026-09-01T00:00:00+07:00').getTime();
+    const targetMs = tenderTargetMs;
+    const startMs = projectStartMs;
     const diffMs = Math.max(0, targetMs - nowMs);
     const totalMinutes = Math.floor(diffMs / 60000);
     const days = Math.floor(totalMinutes / (60 * 24));
@@ -209,7 +229,7 @@ export const HomepageView: React.FC = () => {
     const elapsedRatio = Math.min(1, Math.max(0, (nowMs - startMs) / totalSpan));
     const dashOffset = Math.round(264 * elapsedRatio);
     return { days, hours, minutes, dashOffset };
-  }, [nowMs]);
+  }, [nowMs, tenderTargetMs, projectStartMs]);
 
   const validRaciCount = useMemo(
     () => raciRows.filter((r) => r.validationStatus.startsWith('Valid')).length,
@@ -313,10 +333,6 @@ export const HomepageView: React.FC = () => {
   const [meetingAgenda, setMeetingAgenda] = useState(config.upcomingMeeting.mainAgenda);
   const [meetingDate, setMeetingDate] = useState(config.upcomingMeeting.date);
 
-  const [showDeliverableModal, setShowDeliverableModal] = useState(false);
-  const [selectedDeliverable, setSelectedDeliverable] = useState<DeliverableItem | null>(null);
-  const [editProgress, setEditProgress] = useState(0);
-
   const completedTasksCount = tasks.filter((t) => t.completed).length;
   const activeStatusConfig =
     PROJECT_STATUS_MAP[config.projectStatus] || PROJECT_STATUS_MAP['ON TRACK'];
@@ -390,13 +406,6 @@ export const HomepageView: React.FC = () => {
       },
     });
     setShowMeetingModal(false);
-  };
-
-  const handleSaveDeliverable = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedDeliverable) return;
-    updateDeliverable(selectedDeliverable.id, { progress: Number(editProgress) });
-    setShowDeliverableModal(false);
   };
 
   return (
@@ -1026,7 +1035,7 @@ export const HomepageView: React.FC = () => {
                   Batas Penyerahan Tender
                 </span>
                 <span className="font-heading text-lg font-bold text-[#0B1B33] block mt-1">
-                  15 Des 2026
+                  {config.tenderDeadline.split(',')[0]}
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -1044,14 +1053,15 @@ export const HomepageView: React.FC = () => {
                 <span className="text-[11px] text-[#334155] font-medium block">
                   Status ACC Pembimbing
                 </span>
-                <span className="font-heading text-lg font-bold text-[#0B1B33] block mt-1">
-                  {config.supervisorStatus}
+                {/* Dihitung dari status deliverable §1.4, bukan teks config manual (P1 audit, LOG-030) */}
+                <span className="font-heading text-lg font-bold text-[#0B1B33] block mt-1 tabular-nums">
+                  {accSummary.acc} / {accSummary.total} ACC
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#92400E] text-[10px] font-bold flex items-center gap-1">
                   <Clock className="w-3 h-3 text-[#B45309]" />
-                  Pending Review
+                  {accSummary.submitted} menunggu ACC
                 </span>
                 <span className="text-[10px] text-[#334155] truncate">
                   {config.supervisorReviewer}
@@ -1248,7 +1258,11 @@ export const HomepageView: React.FC = () => {
               <div className="space-y-3 pt-1">
                 {deliverables
                   .filter((d) => d.weight > 0)
-                  .map((del) => (
+                  .map((del) => {
+                    // Progres dihitung dari status baku §1.4 (P1 audit, LOG-030); ubah status di Workspaces
+                    const delStatus = deliverableStatus(del);
+                    const delProgress = deliverableProgress(del);
+                    return (
                     <div key={del.id} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
                         <span className="font-bold text-[#0B1B33] truncate max-w-[210px]">
@@ -1256,18 +1270,15 @@ export const HomepageView: React.FC = () => {
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0">
                           <span className="font-bold text-[#0B1B33] tabular-nums">
-                            {del.progress}%
+                            {delProgress}%
                           </span>
                           {isPM && (
                             <button
                               type="button"
-                              onClick={() => {
-                                setSelectedDeliverable(del);
-                                setEditProgress(del.progress);
-                                setShowDeliverableModal(true);
-                              }}
-                              className="text-[#334155] hover:text-[#0062CC]"
-                              title={`Update progres ${del.title}`}
+                              onClick={() => setActiveTab('workspaces')}
+                              className="min-w-[28px] min-h-[28px] flex items-center justify-center text-[#334155] hover:text-[#0062CC]"
+                              title={`Ubah status ${del.title} di Workspaces`}
+                              aria-label={`Ubah status ${del.title} di Workspaces`}
                             >
                               <Pencil className="w-3 h-3" />
                             </button>
@@ -1284,22 +1295,21 @@ export const HomepageView: React.FC = () => {
                               {del.badgeNote}
                             </span>
                           )}
-                          {del.status === 'Aktif' && (
-                            <span className="px-1.5 py-0.5 bg-[#DBEAFE] text-[#1E3A8A] text-[10px] font-bold rounded-md">
-                              Aktif
-                            </span>
-                          )}
+                          <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded-md ${STATUS_PILL[delStatus]}`}>
+                            {delStatus}
+                          </span>
                         </div>
                       </div>
 
                       <div className="w-full h-2 rounded-full bg-[#DCEBF7] overflow-hidden">
                         <div
                           className="h-full bg-[#007BFF] rounded-full transition-all duration-300"
-                          style={{ width: `${del.progress}%` }}
+                          style={{ width: `${delProgress}%` }}
                         ></div>
                       </div>
                     </div>
-                  ))}
+                    );
+                  })}
               </div>
             </div>
 
@@ -1734,47 +1744,6 @@ export const HomepageView: React.FC = () => {
         </div>
       )}
 
-      {/* Edit Deliverable Progress Modal */}
-      {showDeliverableModal && selectedDeliverable && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-sm bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-2 border-b border-[#EAF6FD]">
-              Update Progres: {selectedDeliverable.title}
-            </h3>
-            <form onSubmit={handleSaveDeliverable} className="mt-4 space-y-4">
-              <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Persentase (%)</span>
-                  <span className="font-bold text-[#0062CC]">{editProgress}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={editProgress}
-                  onChange={(e) => setEditProgress(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-              <div className="flex justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowDeliverableModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
-                >
-                  Perbarui
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
