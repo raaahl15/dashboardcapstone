@@ -264,6 +264,28 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-045] 2026-11-05 — Verifikasi impor rekonstruksi di produksi: Gantt, WO, MoM, config tampil sesuai
+* **Pelaksana**: Claude Code (AI agent); PM (Rahul) mengimpor berkas LOG-044 dan login di browser uji. Atas pesan PM: *"bisakah kamu cek websitenya dan menilai apakah semuanya sudah diterapkan"*
+* **Perubahan**: `tools/smoke_console.js` + opsi `--dump`, menyimpan teks tiap modul di laporan (`tools/out/`, di-ignore) agar isi data bisa dicocokkan dengan berkas impor.
+* **Bukti / Verifikasi** (produksi https://dashboardcapstonearea1.vercel.app/, 14/14 modul, 0 error console):
+  - Gantt: **32/32 tugas**, **6/6 fase**; minggu berjalan W12; tautan WO ke tugas Gantt bekerja (mis. 3.2 "2/2 WO selesai").
+  - Work Order: **28/28 kode dan judul**. Beranda: "WO Aktif Tim 7, 1 terlambat" (WO-006, target 17 Sep).
+  - MoM: **9/9 topik**; "Weekly Reviews 9 sesi"; entri 22 Okt tampil sebagai Week 10.
+  - Config: banner G1 29 Nov, fokus W13, Bimbingan 7 Kamis 12 Nov, status NEEDS ATTENTION + deskripsi LOG-044 tampil.
+  - Rencana mingguan: 18 entri masuk sebagai "Arsip Weekly Plan lama (18)". Sesuai desain P2 (LOG-032), "Rencana Minggu Ini" diambil dari Gantt.
+  - `projectData/area1` ≈ 36 KB.
+* **Belum sesuai / temuan**:
+  1. Stage-Gate masih **G1 = 15 Nov 2026**: branch `g1-minggu-efektif` belum di-merge.
+  2. Progress Dokumen FEED 8 %: deliverable masih data lama (Bab 1 "Draft, Lewat target W3" walau difiksasi W11; target Bab 2–4 = W5/W7/W11, tidak sesuai rencana baru W14–W15).
+  3. "RACI Assignment Ringkas" menampilkan "Belum ada R" untuk keenam baris, padahal validasi 6/6. Dugaan: `raciRows.assignments` memakai ID lama `user-…`, sedangkan pengguna memakai UID Firebase. Perlu dicek di kode.
+  4. "Logbook ACC 1/72" menghitung entri uji "a".
+* **Tindak Lanjut**:
+  - [ ] PM: preview + "merge" `g1-minggu-efektif`.
+  - [ ] PM: putuskan status Bab 1 (Review Internal / Diajukan / ACC) dan target baru deliverable → agent siapkan impor kecil.
+  - [ ] Agent: telusuri bug tampilan RACI (branch + preview).
+  - [ ] PM: hapus logbook uji "a".
+
+---
 ### [LOG-044] 2026-11-05 — Rekonstruksi timeline, Gantt & Work Order W1–W18 dari riwayat PM; G1 = 29 Nov (minggu efektif)
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): pengerjaan W1–W12 belum ter-tracking sistem; susun ulang timeline mingguan, Gantt, dan WO dari `perubahan.md`, lalu lanjutkan proyek lewat sistem. Keputusan PM: K1 minggu efektif (dikonfirmasi dosen), K3 Bab 4 tekno-ekonomi belum dikerjakan.
 * **Fase**: pasca-roadmap (operasional PSTF 1)

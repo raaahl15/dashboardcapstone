@@ -5,6 +5,7 @@
  * Pemakaian (di PC/laptop yang punya Chrome atau Edge):
  *   node tools/smoke_console.js --url https://<domain-produksi>
  *   node tools/smoke_console.js --url http://localhost:5173 --login-timeout 300
+ *   node tools/smoke_console.js --url <URL> --dump     (simpan teks tiap modul ke laporan untuk cek isi data)
  *
  * Alur:
  *   1. Membuka Chrome/Edge dengan PROFIL SEMENTARA (bukan profil pribadi) + remote debugging.
@@ -121,6 +122,7 @@ async function main() {
   }
   const loginTimeout = Number(arg('login-timeout', '600')) * 1000;
   const dwell = Number(arg('dwell', '2500'));
+  const dump = process.argv.includes('--dump');
   const nav = readNav();
   const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'cockpit-smoke-'));
   const browser = spawn(findBrowser(), [
@@ -167,6 +169,10 @@ async function main() {
         const okTab = g.tabs.length > 1 ? await cdp.eval(clickByText(t.label)) : true;
         await sleep(dwell);
         const mod = { menu: g.label, tab: t.label, key: t.key, clicked: Boolean(okGroup && okTab), errors: errors.length - before };
+        if (dump) {
+          // --dump: simpan teks halaman agar isi data (Gantt, WO, MoM, dst.) bisa dicocokkan di luar browser
+          mod.text = String(await cdp.eval('document.querySelector("main")?.innerText || document.body.innerText')).slice(0, 60000);
+        }
         report.modules.push(mod);
         console.log(`  ${mod.clicked ? '✓' : '✗ tidak ditemukan'}  ${phase}  — ${mod.errors} error`);
       }
