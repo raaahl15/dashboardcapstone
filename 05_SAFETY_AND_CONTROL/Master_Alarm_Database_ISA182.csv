@@ -1,9 +1,4 @@
 TAG_NUMBER,INSTRUMENT_DESCRIPTION,ALARM_TYPE,SETPOINT,UNIT,PRIORITY_EEMUA_191,OPERATOR_RESPONSE_REQUIRED,POTENTIAL_CONSEQUENCE
-TAL-101,Preheater Outlet Temp Low,Low (L),235.0,degC,Low (Class 3),Periksa laju steam HEATER-01,Konversi reaksi katalitik menurun
-TAH-101,Reactor Bed Temp High,High (H),295.0,degC,Medium (Class 2),Turunkan laju umpan atau tambah pendinginan,Potensi degradasi katalis cepat
-TAHH-101,Reactor Bed Temp High-High,High-High (HH),320.0,degC,Emergency / Critical (Class 1),Otomatis ESDV-101 Trip. Verifikasi posisi katup,Thermal runaway / Ledakan bejana reaktor
-PAH-201,DME Column Overhead Pressure High,High (H),12.5,bar(a),Medium (Class 2),Cek pendingin kondenser E-01,Kenaikan titik didih campuran
-PAHH-201,DME Column Pressure High-High,High-High (HH),14.5,bar(a),Emergency / Critical (Class 1),Otomatis Trip steam reboiler,Pelepasan gas darurat melalui PSV-201
-LAL-202,C-01 Bottom Liquid Level Low,Low (L),20.0,%,Medium (Class 2),Kurangi laju transfer ke C-02,Potensi kavitasi pompa transfer PUMP-02
-LALL-202,C-01 Bottom Liquid Level Low-Low,Low-Low (LL),10.0,%,Emergency / Critical (Class 1),Trip reboiler heater,Kerusakan tube reboiler akibat pemanasan kering
-AAL-201,Online DME Purity Low,Low (L),99.90,% mol,High (Class 2),Naikkan rasio refluks kolom C-01,Produk off-spec / tidak memenuhi kontrak jual
+TAH-104,Preheater E-101 Outlet Temp High,High (H),TBD,degC,Medium (Class 2),Kurangi media pemanas E-101 dan cek TT-104,Umpan R-101 terlalu panas; titik panas bed katalis naik
+LAL-105,Feed Drum T-101 Level Low,Low (L),TBD,%,Medium (Class 2),Cek umpan segar P-101 dan posisi LV-105,Umpan E-101 terputus; kavitasi / gangguan laju umpan
+XA-102,Reactor SIS Trip (TSHH-102),Trip,-,State,Emergency / Critical (Class 1),Verifikasi XV-102 tertutup dan P-101 berhenti; ikuti prosedur shutdown darurat,Thermal runaway R-101

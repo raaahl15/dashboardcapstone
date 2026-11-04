@@ -1,0 +1,14 @@
+# Line sizing S-105 (line P-105 di DME-PID-002), LOG-036.
+tag: S-105
+calculator: line_sizing
+description: "Line P-105: efluen uap R-101 ke E-102 (uap 250 °C, 14,7 bar)"
+standard: ASME B36.10M; Darcy–Weisbach + Colebrook
+inputs:
+  m_flow:  {stream: S-105, field: mass_flow, unit: kg/h, symbol: ṁ, label: Laju alir massa}
+  rho:     {stream: S-105, field: props_by_phase.vapor.rho, unit: kg/m3, symbol: ρ, label: Densitas uap}
+  mu:      {stream: S-105, field: props_by_phase.vapor.mu, unit: cP, symbol: μ, label: Viskositas uap}
+  service: {value: vapor, unit: "-", label: Jenis layanan, source: "HMB: fraksi uap 1,0", status: HMB}
+  schedule:  {value: "40", unit: "-", label: Schedule pipa, source: "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A", status: ASUMSI}
+  roughness: {value: 0.045, unit: mm, symbol: ε, label: Kekasaran absolut, source: "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat", status: LITERATUR}
+  v_max:  {value: 30, unit: m/s, symbol: V_maks, label: Kecepatan maksimum, source: "Gas dan uap 15–30 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)", status: LITERATUR}
+  dp_max: {value: 0.5, unit: bar/100 m, symbol: ΔP_maks, label: Penurunan tekanan maksimum, source: "Uap proses ~15 bar, aturan praktis usulan agent (LOG-036)", status: ASUMSI}

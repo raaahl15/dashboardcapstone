@@ -2,7 +2,7 @@
 # Nilai bersumber HMB diambil otomatis; nilai lain WAJIB punya sumber + status (Blueprint §1.3).
 tag: FE-101
 calculator: orifice
-description: Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6"-PL-101)
+description: Orifice plate FE-101 untuk FT-101/FIC-101, umpan metanol cair di discharge P-101 (line 2"-P-102)
 standard: ISO 5167-2:2022
 inputs:
   q_m:   {stream: S-102, field: mass_flow, symbol: q_m, label: Laju alir massa normal}
@@ -11,9 +11,9 @@ inputs:
   rho:   {stream: S-102, field: props_by_phase.liquid.rho, unit: kg/m3, symbol: rho, label: Densitas cairan}
   mu:    {stream: S-102, field: props_by_phase.liquid.mu, unit: cP, symbol: mu, label: Viskositas cairan}
   phase: {value: liquid, unit: "-", source: "hmb_streams.json S-102 vapor_fraction = 0", status: HMB, label: Fase fluida}
-  D:     {value: 154.08, unit: mm, symbol: D, label: Diameter dalam pipa,
-          source: "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh, belum dari line sizing)",
-          status: PLACEHOLDER}
+  D:     {value: 52.51, unit: mm, symbol: D, label: Diameter dalam pipa,
+          source: "CALC_LineSizing.csv S-102 → NPS 2 in Sch 40 (ASME B36.10M), LOG-036",
+          status: ASUMSI}
   dP:    {value: 25.0, unit: kPa, symbol: dP, label: Beda tekanan desain pada laju normal,
           source: "Pilihan rentang DP transmitter (0-25 kPa), dipertahankan dari CSV lama; perlu ditetapkan PIC",
           status: ASUMSI}

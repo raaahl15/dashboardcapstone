@@ -6,7 +6,9 @@ Sumber yang diperiksa:
   * tag_map.csv (FINAL)                                        -> daftar peralatan & stream resmi
   * Cause & Effect Matrix, Master Alarm Database (CSV)
   * Mirror Google Docs di 06_COLLABORATIVE_WORKSPACE/mirrors/*.md (mis. FDS)
-  * P&ID DXF (opsional, --dxf): atribut blok (INSERT/ATTRIB) dan teks (TEXT/MTEXT)
+  * P&ID DXF (opsional, --dxf): atribut blok (INSERT/ATTRIB) dan teks (TEXT/MTEXT); gelembung
+    instrumen yang ditulis sebagai dua TEXT (huruf fungsi di atas nomor loop) dipasangkan (LOG-036)
+Item perpipaan HV/NRV/ST (katup tangan, check valve, strainer) tidak diperiksa terhadap index.
 
 Pemakaian:
     npm run validate:tags
@@ -51,12 +53,23 @@ TOKEN = re.compile(r"(?<![A-Za-z0-9_-])([A-Z]{1,6})-(\d{2,3})([A-Z]?)(?![A-Za-z0
 NOT_TAGS = {"LOG", "SIL", "WO", "ISA", "IEC", "ISO", "API", "ASME", "NA", "REV", "G", "PSTF", "CPMK", "R-"}
 SKIP_SECTION = re.compile(r"^#+\s*.*(catatan inkonsistensi|log revisi)", re.IGNORECASE)
 ISA_FIRST = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+# Item perpipaan, bukan instrumen: katup tangan (HV), check valve (NRV), strainer (ST). Konvensi tim
+# (LOG-036): masuk line list / valve list, tidak masuk Master Instrument Index.
+PIPING_ITEMS = {"HV", "NRV", "ST"}
+
+
+SUFFIX_LIST = re.compile(r"(?<![A-Za-z0-9_-])([A-Z]{1,6})-(\d{2,3})([A-Z])((?:/[A-Z])+)(?![A-Za-z0-9])")
 
 
 def extract_tags(text: str) -> list[str]:
     text = LINE_NO.sub(" ", text)
     text = DOC_NO.sub(" ", text)
     out = []
+    # singkatan elemen redundan "TE-102A/B/C" = TE-102A, TE-102B, TE-102C (TE-102A ikut tertangkap TOKEN)
+    for m in SUFFIX_LIST.finditer(text):
+        prefix, num, _, rest = m.groups()
+        if prefix not in NOT_TAGS:
+            out += [f"{prefix}-{num}{s}" for s in rest.split("/") if s]
     for m in TOKEN.finditer(text):
         prefix, num, suf = m.groups()
         if prefix in NOT_TAGS:
@@ -84,11 +97,30 @@ def text_without_history(md: str) -> str:
     return re.sub(r"\A.*?\n---\n", "", body, count=1, flags=re.S) if md.startswith("---") else body
 
 
+BUBBLE_FUNC = re.compile(r"^[A-Z]{2,5}$")
+BUBBLE_NUM = re.compile(r"^\d{3}[A-Z]?$")
+
+
+def pair_bubbles(texts: list[tuple[str, float, float, float]]) -> list[str]:
+    """Gelembung ISA-5.1 sering digambar sebagai dua TEXT: huruf fungsi di atas, nomor loop di bawah
+    ("LT" / "105"). Pasangkan bila sumbu x hampir sama dan nomor tepat di bawah huruf (≤ 3× tinggi teks).
+    texts = [(teks, x, y, tinggi)]. Kembalikan tag gabungan, mis. "LT-105"."""
+    nums = [(t, x, y) for t, x, y, h in texts if BUBBLE_NUM.match(t.strip())]
+    out = []
+    for t, x, y, h in texts:
+        if not BUBBLE_FUNC.match(t.strip()):
+            continue
+        below = [(y - ny, n) for n, nx, ny in nums if abs(nx - x) <= max(0.5, h) and 0 < y - ny <= 3 * h]
+        if below:
+            out.append(f"{t.strip()}-{min(below)[1].strip()}")
+    return out
+
+
 def read_dxf_text(path: Path) -> str:
     import ezdxf  # hanya dibutuhkan bila --dxf dipakai
 
     doc = ezdxf.readfile(path)
-    chunks = []
+    chunks, singles = [], []
     for layout in doc.layouts:
         for e in layout:
             t = e.dxftype()
@@ -96,9 +128,11 @@ def read_dxf_text(path: Path) -> str:
                 chunks += [a.dxf.text for a in e.attribs]
             elif t == "TEXT":
                 chunks.append(e.dxf.text)
+                p = e.dxf.insert
+                singles.append((e.dxf.text, p.x, p.y, e.dxf.height))
             elif t == "MTEXT":
                 chunks.append(e.plain_text())
-    return "\n".join(chunks)
+    return "\n".join(chunks + pair_bubbles(singles))
 
 
 class Validator:
@@ -141,6 +175,8 @@ class Validator:
         if len(prefix) == 1:
             self.add("ERROR", "UNKNOWN_EQUIPMENT", tag, source, "Tag peralatan/stream tidak ada di tag_map.csv")
             return "unknown"
+        if prefix in PIPING_ITEMS:
+            return "piping"  # di luar index instrumen (lihat PIPING_ITEMS)
         # instrumen (>= 2 huruf fungsi ISA-5.1, 3 digit)
         if number[0] != FIRM_AREA:
             self.add("WARNING", "AREA_SCOPE", tag, source, f"Instrumen area {number[0]}xx, di luar lingkup firma Area 1")

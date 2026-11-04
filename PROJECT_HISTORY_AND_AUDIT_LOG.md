@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 DoD 5/5 (validasi P&ID asli LOG-034, thermowell LOG-035), menunggu sign-off PM; DoD total 13/20; deploy firestore.rules menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); DoD total 13/20; deploy firestore.rules & uji console produksi menunggu PM  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 20:40 WIB  
+**Terakhir Diperbarui:** 2026-11-04 23:30 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,55 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-036] 2026-11-04 23:30 WIB — Sign-off Fase 3; line sizing + thermowell TW-104; P&ID DME-PID-002 Rev B ↔ index selaras (0 ERROR); skrip uji console cockpit
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"1. sudah bisa di sign off, 2. kerjakan, 3. jalankan, 4. lakukan penyimpanan di gdrive, aku izin kan km megupload di gdrive, 9. lakukan sesuai rekomendasi mu, 10. langsung isi sesuai rekomendasi dan perhitungan mu."* (nomor merujuk daftar sisa pekerjaan yang diberikan agent di sesi yang sama).
+* **Fase**: 3 (sign-off), 4 (DoD butir 2), 5 (DoD butir 1)
+* **Tujuan**: menutup sisa pekerjaan yang bisa dikerjakan agent dari daftar DoD 13/20.
+* **Perubahan**:
+  - **(1) Sign-off Fase 3** oleh PM → Blueprint: Fase 3 `SELESAI`.
+  - **(10) Kalkulator line sizing baru** `tools/calc/line_sizing.py` (ASME B36.10M, Darcy–Weisbach + Colebrook, dua fase homogen + API RP 14E) + 7 input `inputs/LINE-S-1xx.yaml` + `CALC_LineSizing.csv/.md`. Hasil: S-101 3", S-102 2", S-103 2", **S-104/S-105 6"**, S-107 3" (dua fase), S-114 1-1/2". Kriteria V maks dari Towler & Sinnott Tabel 5.3 (LITERATUR), batas ΔP & isap = ASUMSI agent.
+  - **(10) Thermowell**: `thermowell.py` + cek **§6-8.4** (operasi tunak di luar pita 0,4–0,6 f_n^c bila lolos resonansi in-line; sebelumnya cukup < 0,8 — celah ditemukan saat membaca PDF) dan **Tabel 4-1-1/4-2-1** (batas dimensi, sebelumnya tidak dicek). `TW-103` (S-105) **dihapus** karena P&ID tidak punya elemen suhu di S-105; diganti **`TW-104`** (TT-104, S-104): pipa 6" Sch 40, tapered flens A/B 31,8/22,2 mm, L 232,1 mm, L₀ 157,1 mm (nozzle 150 mm), S_f 93,8 MPa (*No welds*, Tabel 6-12.3-1), E 178,8 GPa & S 92,9 MPa F316 dari tabel B31.3 (nilai menurut agent, ASUMSI) → **PASS**, f_s/f_n^c 0,300. Flens Class 300 (Class 150 tidak cukup pada 250 °C, cek manual di companion).
+  - `FCV-101.yaml` → **`FV-101.yaml`** (tag P&ID); FE-101 & FV-101 memakai D 52,51 mm (2") dari line sizing → status data PLACEHOLDER → ASUMSI (β orifice 0,518; Kv tidak berubah).
+  - **(9) P&ID ↔ index**: Draf P&ID **`DME-PID-002_Draft_PID_Area1_RevB.dxf`** (sha256 `92135c824e85225c`) dibuat dari Rev A dengan **hanya mengganti teks** (19 teks) + baris revisi B: tag lama (`REAC-01`, `HEATER-01`, `PUMP-01`, `REG-01`, `DC-201`, `C-01/C-02`) dihapus, `E-103` → `E-102` (tag_map FINAL), ukuran line P-102/P-103 → 2", P-104/P-105 → 6". Disimpan di staging `D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\`.
+  - **Master Instrument Index (Google Sheets)** dibangun ulang dari gambar: 30 tag (`FV-101`, `XV-102`/`XY-102`/`XA-102`, `TE-102A/B/C` + `TSHH-102` 2oo3, `PT-103`, `TT-104`/`TAH-104`, loop 105 T-101, `PT-106`/`PSV-102`, `PI-107/108`, loop 109, `FE-101`); `FCV-101`, `ESDV-101`, loop 2xx dihapus; `IO_TYPE` `Soft` untuk fungsi DCS/SIS; formula `IO_List` kini mengecualikan `Soft`; tab `Catatan` diperbarui. Snapshot CSV via `pull_sheets.js` (+27 / −6 / 3 berubah).
+  - `tag_map.csv`: + baris **`T-101`** (drum umpan, padanan fisik M-101, tanpa objek DWSIM) berstatus **`USULAN`**; baris lain tetap FINAL; companion temuan 10.
+  - C&E dan alarm database ditulis ulang untuk fungsi Area 1 yang digambar (`TSHH-102` → `XV-102`, `P-101`, `XA-102`; alarm `TAH-104`, `LAL-105`, `XA-102`), setpoint/SIL `TBD` (HAZOP/LOPA), baris Area 2 dikeluarkan.
+  - **FDS Google Doc → Rev 0.4** (9 penggantian kalimat dengan `requiredRevisionId` + baris log revisi): Bab 2–3 memakai FV-101/FT-101/FE-101, TSHH-102 (2oo3, terpisah dari TIC-101), XV-102/XY-102/XA-102; trip 320 °C (data contoh) → TBD; Bab 4 menjadi antarmuka Area 2 (S-107, TIC-109/TV-109). Mirror repo diperbarui.
+  - `validate_tags.py`: gelembung ISA dua TEXT (`LT` di atas `105`) kini dipasangkan (sebelumnya tidak terbaca), singkatan `TE-102A/B/C` diurai, item perpipaan `HV`/`NRV`/`ST` dikecualikan (konvensi baru, dicatat di companion index) + 4 uji.
+  - **(2)** `tools/smoke_console.js` (baru): membuka Chrome dengan profil sementara + CDP, **menunggu pengguna login sendiri**, mengklik 8 menu / 14 modul dari `navigation.ts`, mencatat console.error/exception/log error per modul, menulis `tools/out/*.json` (di-ignore). `.gitignore` + `tools/out/`.
+  - **(4)** PDF ASME PTC 19.3 TW-2016 disalin ke staging `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\ASME-PTC-19-3-TW-2016.pdf`.
+  - Blueprint: Fase 3 SELESAI; DoD Fase 5 butir 1 diberi status PARSIAL + syarat penutupan; companion CV, orifice, thermowell, line sizing, index, C&E, alarm, tag_map, laporan validasi tag diperbarui; `public/data/` dibundel ulang.
+* **Bukti / Verifikasi**:
+  - `npm run test:py` → **45 passed** (34 lama + 3 thermowell + 5 line sizing + 3 validator).
+  - `npm run calc` → 6/6 CSV, 12 hasil PASS; status: FE-101/FV-101/TW-104/line sizing **ASUMSI**, PSV-101/NPV-001 PLACEHOLDER.
+  - Sweep thermowell (pipa 6"): A/B 25,4/19,1 mm imersi 75 mm → r 0,435 → FAIL §6-8.4; 31,8/22,2 mm → r 0,300 PASS. Pipa 3" (Rev A, V ≈ 57 m/s): semua geometri yang dicoba gagal.
+  - `validate_tags --dxf RevB` → **0 ERROR, 1 WARNING** (`FE-101` belum digambar). Pembanding Rev A dengan index & validator baru → 8 ERROR, 2 WARNING. Sebelumnya (LOG-034) 56 ERROR, 40 WARNING.
+  - Diff teks Rev A → Rev B dicek per entitas: semua pengganti sama panjang atau lebih pendek, kecuali catatan stream 14 (tinggi 0,8 mm, masih di dalam tabel). Render visual **tidak** dilakukan (matplotlib tidak terpasang) → JN wajib memeriksa di AutoCAD.
+  - Google: `update_values` Instrument_Index 30 baris, dibaca ulang (tanpa sisa baris lama); FDS `replaceAllText` 9/9 tepat 1 kemunculan.
+  - `smoke_console.js` diuji terhadap dev server lokal (browser terbuka, CDP terhubung, menunggu login, laporan ditulis, exit 2 tanpa login). Parsing menu: 8 menu, 14 modul.
+  - `node tools/build_manifest.js` → OK; `node tools/check_companions.js` → **HASIL: PASS**.
+* **Tidak berhasil / diblokir**:
+  - **(3)** `firebase deploy --only firestore:rules` → **diblokir** classifier Claude Code (*Production Deploy*), sama seperti LOG-029. Belum diterapkan.
+  - **(4)** Unggah PDF ke Google Drive: konektor hanya menerima isi file sebagai base64 di parameter tool (8,6 MB → ±11,5 MB teks, tidak praktis); CLI `gdrive` tidak ada di PC ini. PDF dan DXF Rev B hanya **disalin ke folder staging lokal**, belum di Drive.
+  - `batch_clear_values` Sheets diblokir classifier (*External System Writes*). Tidak diperlukan karena 30 baris baru menimpa 9 baris lama, dan sudah diverifikasi dengan membaca ulang.
+  - **(2)** Uji console produksi belum dijalankan: butuh login akun cockpit (agent tidak memegang kredensial) dan URL produksi tidak tercatat di repo.
+* **Keputusan** (agent, atas mandat PM "sesuai rekomendasi"; semua perlu review PIC):
+  - Index = turunan P&ID; ESDV memakai tag gambar `XV-102` (ISA-5.1), FCV-101 → `FV-101`.
+  - HV/NRV/ST = item perpipaan, di luar index instrumen.
+  - `T-101` ditambahkan USULAN, bukan FINAL; `E-103` gambar → `E-102` (tag_map FINAL menang).
+  - Setpoint trip SIS & alarm = TBD (bukan angka contoh 320 °C / SIL-3) sampai HAZOP/LOPA PSTF 2.
+* **Status DoD**: Fase 3 **SELESAI** (sign-off PM). Fase 5 butir 1 **PARSIAL** (0 ERROR di Rev B; menunggu review JN + status `Diajukan`). Total tetap **13/20**.
+* **Tindak Lanjut**:
+  - [ ] **PM**: jalankan sendiri `cd apps/operations-cockpit; firebase deploy --only firestore:rules`.
+  - [ ] **PM**: dari PC dengan Chrome, `node tools/smoke_console.js --url <URL produksi Vercel>` → login di jendela yang terbuka → laporan PASS/FAIL (DoD Fase 4 butir 2).
+  - [ ] **PM/Antigravity**: unggah dari staging ke Drive: `03_CAD_DWG/DME-PID-002_Draft_PID_Area1_RevB.dxf` dan `00_CORE_GUIDELINES/ASME-PTC-19-3-TW-2016.pdf` (akses terbatas; lisensi ASME).
+  - [ ] **JN**: periksa Rev B di AutoCAD (teks pengganti, tabel revisi), tambah simbol FE-101, konfirmasi ukuran line & kelas pipa A1A, dimensi TW-104 & nozzle 150 mm; tetapkan E/S F316 dari salinan B31.3.
+  - [ ] **IH + JN**: konfirmasi `T-101` (USULAN) dan catatan 6 gambar (tekanan T-101 101,3 kPa vs 1550 kPa, FEHE).
+  - [ ] **AL**: review FDS Rev 0.4, C&E, alarm database (perubahan agent).
+  - [ ] **Cockpit**: `src/data/initialData.ts` masih menyebut FCV-101/ESDV-101 di data contoh (seed). Perbaiki lewat branch + preview bila perlu.
 
 ---
 

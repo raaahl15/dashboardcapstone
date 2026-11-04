@@ -1,10 +1,31 @@
 TAG_NUMBER,P_AND_ID_NO,SERVICE_DESCRIPTION,LOCATION,LINE_EQUIPMENT_NO,SIGNAL_TYPE,IO_TYPE,RANGE_MIN,RANGE_MAX,ENG_UNIT,SETPOINT_ALARM,FAIL_MODE,CONTROLLER_TYPE,SAFETY_CRITICAL,DATA_STATUS
-TIC-101,DWG-PID-001,Reactor Bed Multipoint Temp,R-101,R-101 Bed-1,RTD Pt100,AI,0,400,degC,HH:320 degC (Trip),-,DCS,YES (SIL-2),PLACEHOLDER
-FIC-101,DWG-PID-001,Methanol Feed Flowrate,Field Pipe,"6""-PL-101",HART (4-20mA),AI,0,20000,kg/h,L: 2000 kg/h,-,DCS,NO,PLACEHOLDER
-FCV-101,DWG-PID-001,Feed Pump Discharge Flow Valve,Field Pipe,"6""-PL-101",Pneumatic 4-20mA,AO,0,100,%,-,FC,DCS,NO,PLACEHOLDER
-ESDV-101,DWG-PID-001,Reactor Emergency Feed Shut-off,Inlet Pipe,"6""-PL-101",24VDC Solenoid,DO,0,1,State,Trip on High-High Temp,FC,SIS / ESD,YES (SIL-3),PLACEHOLDER
-PIC-201,DWG-PID-002,DME Column Overhead Pressure,C-01 Top,C-01 Vapor Line,HART (4-20mA),AI,0,25,bar(a),H: 13.5 bar,-,DCS,YES (SIL-1),PLACEHOLDER
-PCV-201,DWG-PID-002,DME Overhead Off-Gas Valve,Top Line,"4""-PL-201",Pneumatic 4-20mA,AO,0,100,%,-,FO,DCS,NO,PLACEHOLDER
-LIC-202,DWG-PID-002,C-01 Sump Liquid Level,C-01 Bottom,C-01 Boot,DP Cell 4-20mA,AI,0,100,%,L: 20% / H: 80%,-,DCS,NO,PLACEHOLDER
-AIC-201,DWG-PID-002,Online DME Product Purity (GC),Top Stream S-08,"3""-PL-205",Modbus TCP/IP,Serial,95,100,% mol,L: 99.90% mol,-,DCS,NO,PLACEHOLDER
-PSV-101,DWG-PID-001,Reactor Overpressure Safety Relief,R-101 Top,Nozzle N1,Mechanical,Mechanical,0,16,bar(g),Set: 16.0 bar(g),FO,Autonomous,YES (Safety),PLACEHOLDER
+FE-101,DME-PID-002,Orifice plate laju umpan metanol (elemen primer FT-101),Discharge P-101,"2""-P-102","Orifice plate, flange taps (ISO 5167-2)",Mechanical,0,25,kPa,dP desain 25 kPa pada 8321 kg/h (CALC_ISO5167),-,-,NO,ASUMSI
+FT-101,DME-PID-002,Transmitter laju umpan metanol (DP orifice FE-101),Discharge P-101,"2""-P-102",HART (4-20mA),AI,0,12500,kg/h,-,-,DCS,NO,ASUMSI
+FIC-101,DME-PID-002,"Kontrol laju umpan metanol (slave kaskade, SP dari TIC-101)",DCS (CCR),"2""-P-102",Soft (DCS),Soft,0,12500,kg/h,SP normal 8321 kg/h (HMB S-102),-,DCS,NO,ASUMSI
+FV-101,DME-PID-002,Katup kendali laju umpan metanol,Discharge P-101,"2""-P-102",HART (4-20mA) + I/P,AO,0,100,%,"Kv 9,4 normal / 11,7 maks (CALC_ISA75)",FC,DCS,NO,ASUMSI
+TE-101,DME-PID-002,Elemen suhu multi-titik bed katalis R-101,R-101 bed,R-101,Thermocouple tipe K multi-titik,Mechanical,0,500,degC,-,-,-,NO,ASUMSI
+TT-101,DME-PID-002,Transmitter suhu bed katalis R-101 (multi-titik),R-101,R-101,HART (4-20mA),AI,0,500,degC,-,-,DCS,NO,ASUMSI
+TIC-101,DME-PID-002,"Kontrol suhu bed R-101 (master kaskade, output = SP FIC-101)",DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,SP 250 degC (HMB S-105),-,DCS,NO,ASUMSI
+TE-102A,DME-PID-002,"Elemen suhu SIS bed R-101, kanal A (2oo3)",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+TE-102B,DME-PID-002,"Elemen suhu SIS bed R-101, kanal B (2oo3)",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+TE-102C,DME-PID-002,"Elemen suhu SIS bed R-101, kanal C (2oo3)",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+TSHH-102,DME-PID-002,Trip suhu tinggi-tinggi R-101 (voting 2oo3 di logic solver SIS),SIS logic solver,R-101,Soft (SIS),Soft,0,500,degC,"HH: TBD (HAZOP/LOPA, PSTF 2)",-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",PLACEHOLDER
+XA-102,DME-PID-002,Alarm trip SIS R-101 di HMI,DCS (CCR),R-101,Soft (SIS ke HMI),Soft,0,1,State,Aktif saat TSHH-102 trip,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+XV-102,DME-PID-002,Katup shut-off darurat umpan masuk R-101 (ESDV),Inlet R-101,"6""-P-104",Limit switch 24VDC (posisi buka/tutup),DI,0,1,State,Tutup saat TSHH-102 trip,FC,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+XY-102,DME-PID-002,Solenoid aktuator XV-102,Inlet R-101,"6""-P-104",24VDC Solenoid,DO,0,1,State,De-energize to trip,FC,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
+PT-103,DME-PID-002,Transmitter tekanan efluen R-101,Outlet R-101,"6""-P-105",HART (4-20mA),AI,0,25,bar(a),-,-,DCS,NO,ASUMSI
+PSV-101,DME-PID-002,Katup pengaman tekanan lebih R-101,R-101 top,R-101,Mechanical,Mechanical,0,16,bar(g),Set: TBD < tekanan desain R-101 (CALC_API520),-,Autonomous,YES (Safety),PLACEHOLDER
+TT-104,DME-PID-002,Transmitter suhu keluaran E-101 (umpan reaktor),Outlet E-101,"6""-P-104",HART (4-20mA),AI,0,400,degC,-,-,DCS,NO,ASUMSI
+TAH-104,DME-PID-002,Alarm suhu tinggi keluaran E-101,DCS (CCR),"6""-P-104",Soft (DCS),Soft,0,400,degC,H: TBD (rasionalisasi alarm ISA-18.2),-,DCS,NO,PLACEHOLDER
+LT-105,DME-PID-002,Transmitter level T-101,T-101,T-101,"HART (4-20mA), DP",AI,0,100,%,-,-,DCS,NO,ASUMSI
+LIC-105,DME-PID-002,Kontrol level T-101,DCS (CCR),T-101,Soft (DCS),Soft,0,100,%,SP 50 %,-,DCS,NO,ASUMSI
+LV-105,DME-PID-002,Katup kendali level T-101 (keluaran ke E-101),Outlet T-101,"2""-P-103",HART (4-20mA) + I/P,AO,0,100,%,-,FC,DCS,NO,ASUMSI
+LG-105,DME-PID-002,Gelas penduga level T-101 (lokal),T-101,T-101,Mechanical,Mechanical,0,100,%,-,-,Lokal,NO,ASUMSI
+LAL-105,DME-PID-002,Alarm level rendah T-101,DCS (CCR),T-101,Soft (DCS),Soft,0,100,%,L: TBD (rasionalisasi alarm ISA-18.2),-,DCS,NO,PLACEHOLDER
+PT-106,DME-PID-002,Transmitter tekanan T-101,T-101 top,T-101,HART (4-20mA),AI,0,4,bar(a),-,-,DCS,NO,ASUMSI
+PSV-102,DME-PID-002,Katup pengaman tekanan lebih T-101,T-101 top,T-101,Mechanical,Mechanical,0,4,bar(g),Set: TBD (tekanan desain T-101 belum ditetapkan),-,Autonomous,YES (Safety),PLACEHOLDER
+PI-107,DME-PID-002,Indikator tekanan isap P-101 (lokal),Suction P-101,"3""-P-101",Pressure gauge (bourdon),Mechanical,-1,3,bar(g),-,-,Lokal,NO,ASUMSI
+PI-108,DME-PID-002,Indikator tekanan discharge P-101 (lokal),Discharge P-101,"2""-P-102",Pressure gauge (bourdon),Mechanical,0,25,bar(g),-,-,Lokal,NO,ASUMSI
+TT-109,DME-PID-002,Transmitter suhu keluaran E-102 (efluen ke Area 2),Outlet E-102,"3""-P-107",HART (4-20mA),AI,0,200,degC,-,-,DCS,NO,ASUMSI
+TIC-109,DME-PID-002,Kontrol suhu keluaran E-102,DCS (CCR),"3""-P-107",Soft (DCS),Soft,0,200,degC,SP 89 degC (HMB S-107),-,DCS,NO,ASUMSI
+TV-109,DME-PID-002,Katup kendali air pendingin E-102 (CW return),CW return E-102,E-102,HART (4-20mA) + I/P,AO,0,100,%,-,FO,DCS,NO,ASUMSI

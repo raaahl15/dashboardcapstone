@@ -6,6 +6,8 @@ Uji verifikasi mesin kalkulator (Blueprint §3.2 butir 5: minimal satu uji per k
 * Orifice       : implementasi INDEPENDEN persamaan Reader-Harris/Gallagher (ISO 5167-2 pers. 4)
                   dibandingkan dengan modul orifice; cek balik persamaan dasar ISO 5167-1.
 * NPV           : contoh buku teks yang dapat dihitung tangan.
+* Thermowell    : ASME PTC 19.3 TW-2016 contoh 8-1 & 8-2; pita operasi §6-8.4; batas dimensi Tabel 4-1-1.
+* Line sizing   : ID ASME B36.10M, nilai Colebrook diagram Moody, hitung tangan Darcy, konversi API RP 14E.
 * Mesin         : propagasi status, dan gagal-atomik bila satu input rusak.
 
 Jalankan: npm run test:py
@@ -18,6 +20,7 @@ from fluids.control_valve import size_control_valve_l
 
 import common
 import control_valve
+import line_sizing
 import npv
 import orifice
 import psv
@@ -200,9 +203,67 @@ def test_ptc193_gagal_bila_frekuensi_terlalu_dekat():
     assert o["freq_ok"] is False and o["passed"] is False
 
 
+TW_GAS = dict(  # tirus flens di uap 6" (bukan contoh standar): lolos tegangan siklik di resonansi in-line
+    shape="tapered", support="flanged", A=0.0254, B=0.0191, d=0.0066, t=0.0064, b=0.0, L0=0.157,
+    V=14.59, rho=10.78, mu=1.778e-5, P=1.369e6, E=178.8e9, E_ref=195e9, rho_m=8000.0, rho_s=2700.0,
+    S=92.9e6, Sf=93.8e6, FE=1.0, zeta=0.0005, strouhal="correlation")
+
+
+@pytest.mark.parametrize("L,ok", [(0.217, True), (0.232, False)])
+def test_ptc193_pita_operasi_6_8_4(L, ok):
+    # lolos resonansi in-line → batas 0,8, tetapi §6-8.4 melarang 0,4 ≤ f_s/f_n^c ≤ 0,6 saat tunak
+    o = thermowell.evaluate({**TW_GAS, "L": L})
+    assert o["inline_ok"] is True and o["limit_ratio"] == 0.8
+    r = o["fs"] / o["fnc"]
+    assert (r < 0.4) is ok and o["freq_ok"] is ok
+
+
+def test_ptc193_batas_dimensi_tabel_4_1_1():
+    assert thermowell.evaluate(EX_8_1)["dim_issues"] == [] and thermowell.evaluate(EX_8_2)["dim_issues"] == []
+    o = thermowell.evaluate({**TW_GAS, "L": 0.217, "B": 0.0130})  # B/A 0,51 < 0,58 dan (B-d)/2 3,2 mm
+    assert o["dim_issues"] == ["0,58 ≤ B/A ≤ 1"] and o["passed"] is False
+
+
 def test_ptc193_step_shank_di_luar_tabel_ditolak():
     with pytest.raises(common.CalcError, match="Tabel 6-5.3-1"):
         thermowell.evaluate({**EX_8_2, "B": 0.016})
+
+
+# ---------------------------------------------------------------- line sizing
+def test_line_sizing_dimensi_b36_10m():
+    # ID Sch 40 = OD − 2t (ASME B36.10M): 2" 52,50 mm; 6" 154,06 mm; 3" Sch 80 73,66 mm
+    assert line_sizing.pipe_id("2", "40") * 1000 == pytest.approx(52.51, abs=0.02)
+    assert line_sizing.pipe_id("6", "40") * 1000 == pytest.approx(154.06, abs=0.02)
+    assert line_sizing.pipe_id("3", "80") * 1000 == pytest.approx(73.66, abs=0.02)
+
+
+def test_line_sizing_colebrook_nilai_moody():
+    # Diagram Moody / Colebrook: Re = 1e5, ε/D = 1e-4 → f = 0,0185; Re = 1e6, halus → f = 0,0116
+    from fluids import friction_factor
+    assert friction_factor(Re=1e5, eD=1e-4) == pytest.approx(0.0185, rel=5e-3)
+    assert friction_factor(Re=1e6, eD=0.0) == pytest.approx(0.0116, rel=5e-3)
+
+
+def test_line_sizing_hitung_tangan_darcy():
+    # air 1000 kg/m3, 1 cP, ṁ = 10 kg/s dalam 3" Sch 40: V = 2,097 m/s; Re = 1,634e5
+    h = line_sizing.hydraulics(10.0, 1000.0, 1e-3, 0.07792, 4.5e-5)
+    assert h["V"] == pytest.approx(10.0 / (1000 * math.pi * 0.07792**2 / 4))
+    assert h["Re"] == pytest.approx(1000 * h["V"] * 0.07792 / 1e-3)
+    assert h["dp_bar_100m"] == pytest.approx(h["f"] * 1000 * h["V"] ** 2 / (2 * 0.07792) * 100 / 1e5)
+
+
+def test_line_sizing_api14e_satuan():
+    # ρ_m = 1 lb/ft³ (16,018 kg/m³), C = 100 → V_e = 100 ft/s = 30,48 m/s
+    assert line_sizing.erosional_velocity(100, 16.01846337) == pytest.approx(30.48, rel=1e-6)
+
+
+def test_line_sizing_pilih_nps_terkecil_yang_lolos():
+    g = dict(service="vapor", schedule="40", m_flow=10553.2 / 3600, rho=10.78, mu=1.778e-5, eps=4.5e-5,
+             v_max=30.0, dp_max=0.5, C=100.0)
+    o = line_sizing.evaluate(g)
+    assert o["chosen"]["nps"] == "6" and not o["candidates"][-2]["ok"]  # 4" ditolak (V 33 m/s > 30)
+    with pytest.raises(common.CalcError, match="service"):
+        line_sizing.evaluate({**g, "service": "slurry"})
 
 
 # ---------------------------------------------------------------- mesin

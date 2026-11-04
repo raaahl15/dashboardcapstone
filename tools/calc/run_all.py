@@ -16,6 +16,7 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import control_valve  # noqa: E402
+import line_sizing  # noqa: E402
 import npv  # noqa: E402
 import orifice  # noqa: E402
 import psv  # noqa: E402
@@ -28,6 +29,7 @@ CALCULATORS = {
     "psv_gas": (psv, "CALC_API520_PSV.csv"),
     "npv": (npv, "CALC_TeknoEkonomi_NPV.csv"),
     "thermowell": (thermowell, "CALC_ASME_Thermowell.csv"),
+    "line_sizing": (line_sizing, "CALC_LineSizing.csv"),
 }
 
 

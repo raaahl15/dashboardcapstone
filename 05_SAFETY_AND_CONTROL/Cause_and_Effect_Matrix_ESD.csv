@@ -1,6 +1,4 @@
 INITIATING_CAUSE_TAG,DESCRIPTION_TRIGGER,CONDITION,CONSEQUENCE_HAZARD,EFFECT_ACTION_TAG,ACTION_DESCRIPTION,TARGET_SIL,RESPONSE_TIME
-TSHH-101,Reactor Bed Temp High-High,T > 320 degC,Thermal Runaway / Catalyst Damage,ESDV-101,Close Methanol Feed Inlet Valve within 2 seconds,SIL-3,< 2 sec
-TSHH-101,Reactor Bed Temp High-High,T > 320 degC,Reactor Vessel Rupture,PUMP-01-TRIP,Emergency Stop Feed Pump PUMP-01,SIL-3,< 1 sec
-PSHH-201,DME Column Pressure High-High,P > 14.5 bar,Tower Overpressure / Shell Explosion,ESDV-201,Trip Reboiler Steam Supply Valve,SIL-2,< 3 sec
-LSHH-202,C-01 Bottom Level High-High,Level > 90%,Liquid Entrainment to Trays,FCV-202,Full Open Bottom Transfer to C-02,SIL-1,< 5 sec
-LSLL-202,C-01 Bottom Level Low-Low,Level < 10%,Reboiler Dry Run / Tube Burnout,TCV-201,Close Reboiler Steam Supply Valve,SIL-2,< 2 sec
+TSHH-102,Reactor Bed Temp High-High (TE-102A/B/C voting 2oo3),T > TBD degC (HAZOP/LOPA),Thermal Runaway / Catalyst Damage,XV-102,Close reactor feed shut-off valve (de-energize solenoid XY-102),TBD (LOPA),< 2 sec
+TSHH-102,Reactor Bed Temp High-High (TE-102A/B/C voting 2oo3),T > TBD degC (HAZOP/LOPA),Reactor Vessel Overpressure,P-101,Emergency stop feed pump P-101 (motor trip),TBD (LOPA),< 1 sec
+TSHH-102,Reactor Bed Temp High-High (TE-102A/B/C voting 2oo3),T > TBD degC (HAZOP/LOPA),Operator unaware of trip,XA-102,Trip alarm to HMI,TBD (LOPA),< 1 sec

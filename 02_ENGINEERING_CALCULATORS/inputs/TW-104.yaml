@@ -1,0 +1,40 @@
+# Input kalkulator TW-104: thermowell untuk TT-104 (suhu keluaran E-101, aliran S-104, line P-104 DME-PID-002),
+# ASME PTC 19.3 TW-2016. Menggantikan TW-103 (S-105) karena P&ID tidak punya elemen suhu di S-105 (LOG-036).
+# Geometri = desain agent dari sweep L/A/B (LOG-036); konfirmasi dengan datasheet vendor oleh JN.
+tag: TW-104
+calculator: thermowell
+description: TW-104 thermowell TT-104 di S-104 (keluaran E-101), flanged tapered satu-bagian, uap metanol 250 °C
+standard: ASME PTC 19.3 TW-2016
+inputs:
+  # --- fluida (HMB) ---
+  rho:    {stream: S-104, field: props_by_phase.vapor.rho, unit: kg/m3, symbol: ρ, label: Densitas uap}
+  mu:     {stream: S-104, field: props_by_phase.vapor.mu, unit: cP, symbol: μ, label: Viskositas dinamis uap}
+  P:      {stream: S-104, field: P, unit: bar(a), symbol: P, label: Tekanan operasi}
+  m_flow: {stream: S-104, field: mass_flow, unit: kg/h, symbol: ṁ, label: Laju alir massa}
+  pipe_id: {value: 154.06, unit: mm, symbol: D_pipa, label: Diameter dalam pipa S-104,
+        source: "CALC_LineSizing.csv S-104 → NPS 6 in Sch 40 (V 14,6 m/s; ΔP 0,115 bar/100 m), LOG-036", status: ASUMSI}
+  # --- geometri (desain agent, LOG-036) ---
+  shape:   {value: tapered, unit: "-", label: Bentuk shank, source: "Tapered (Fig. 4-1-1a): frekuensi natural lebih tinggi dari straight pada L yang sama", status: ASUMSI}
+  support: {value: flanged, unit: "-", label: Jenis pemasangan, source: "Flens 1-1/2 in ASME B16.5 Class 300 ke nozzle pipa; compliance basis semi-tak-hingga (6-6-5)", status: ASUMSI}
+  A: {value: 31.8, unit: mm, symbol: A, label: Diameter akar, source: "1-1/4 in (heavy-duty tapered); sweep LOG-036: 25,4 mm memberi f_s/f_n^c 0,435 (gagal §6-8.4)", status: ASUMSI}
+  B: {value: 22.2, unit: mm, symbol: B, label: Diameter tip, source: "7/8 in; B/A 0,70 (Tabel 4-1-1: ≥ 0,58)", status: ASUMSI}
+  d: {value: 6.6, unit: mm, symbol: d, label: Diameter bor, source: "Bor 0,26 in untuk sensor RTD/TC 1/4 in", status: ASUMSI}
+  L: {value: 232.1, unit: mm, symbol: L, label: Panjang tak tertumpu,
+      source: "L0 157,1 + imersi 75 mm (ujung ~1/2 ID 154 mm, dekat sumbu pipa)", status: ASUMSI}
+  L0: {value: 157.1, unit: mm, symbol: L_0, label: Panjang terlindung (di dalam nozzle),
+      source: "Tinggi nozzle 150 mm dari OD pipa + tebal dinding 6 in Sch 40 7,11 mm (§6-10.1, 6-10-3)", status: ASUMSI}
+  t: {value: 6.4, unit: mm, symbol: t, label: Tebal tip minimum, source: "1/4 in (Tabel 4-1-1: ≥ 3,0 mm)", status: ASUMSI}
+  b: {value: 0, unit: mm, symbol: b, label: Radius fillet akar, source: "Tidak diketahui → 0, K_t = 2,2 (§6-12.3)", status: STANDAR}
+  # --- material: ASTM A182 F316 (kelas B), satu-bagian dari bar/forging tanpa las ---
+  E:     {value: 178.8, unit: GPa, symbol: E, label: Modulus elastisitas 250 °C,
+          source: "ASME B31.3 Tabel C-6 baja austenitik: 26,5e6 psi (400 °F) → 25,8e6 psi (500 °F), interpolasi 482 °F = 25,93e6 psi. Nilai menurut agent; cocokkan dengan salinan kode", status: ASUMSI}
+  E_ref: {value: 195, unit: GPa, symbol: E_ref, label: Modulus referensi kelas B, source: "§6-12.3 (material kelas B)", status: STANDAR}
+  rho_m: {value: 8000, unit: kg/m3, symbol: ρ_m, label: Densitas material, source: "Densitas F316 (ref. [19] standar, seperti contoh 8-2)", status: LITERATUR}
+  rho_s: {value: 2700, unit: kg/m3, symbol: ρ_s, label: Densitas sensor, source: "Nilai bawaan sensor MI (§6-5.3 langkah 5)", status: STANDAR}
+  S:     {value: 92.9, unit: MPa, symbol: S, label: Tegangan izin maksimum 250 °C,
+          source: "ASME B31.3 Tabel A-1 A182 F316, baris tanpa catatan deformasi (konservatif): 14,3 ksi (400 °F) → 13,3 ksi (500 °F), interpolasi 482 °F = 13,48 ksi. Nilai menurut agent; cocokkan dengan salinan kode", status: ASUMSI}
+  Sf:    {value: 93.8, unit: MPa, symbol: S_f, label: Batas amplitudo fatik,
+          source: "Tabel 6-12.3-1 kelas B 'No welds' (catatan 3): thermowell flens satu-bagian dimesin dari bar/forging, titik tegangan maks di permukaan mesin. Bila flens dilas: 62,8 MPa", status: STANDAR}
+  FE:    {value: 1.0, unit: "-", symbol: F_E, label: Faktor lingkungan, source: "Uap metanol/air < 427 °C tanpa korosi khusus (§6-12.3); tinjau ulang di HAZOP", status: ASUMSI}
+  zeta:  {value: 0.0005, unit: "-", symbol: ζ, label: Faktor redaman, source: "§6-8.2 nilai konservatif", status: STANDAR}
+  strouhal: {value: correlation, unit: "-", label: Metode Strouhal, source: "(6-4-2)", status: STANDAR}

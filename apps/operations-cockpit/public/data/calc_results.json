@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T10:15:21.849Z",
+ "generated_at": "2026-11-04T16:28:01.311Z",
  "calculators": [
   {
    "file": "CALC_API520_PSV.csv",
@@ -234,19 +234,19 @@
    "file": "CALC_ASME_Thermowell.csv",
    "items": [
     {
-     "tag": "TW-103",
-     "description": "TW-103 thermowell outlet uap R-101 (S-105), flanged tapered, uap metanol/DME/air 250 °C",
+     "tag": "TW-104",
+     "description": "TW-104 thermowell TT-104 di S-104 (keluaran E-101), flanged tapered satu-bagian, uap metanol 250 °C",
      "result": "PASS",
-     "data_status": "PLACEHOLDER",
+     "data_status": "ASUMSI",
      "rows": [
       {
        "section": "INFO",
        "parameter": "Deskripsi",
        "symbol": "",
-       "value": "TW-103 thermowell outlet uap R-101 (S-105), flanged tapered, uap metanol/DME/air 250 °C",
+       "value": "TW-104 thermowell TT-104 di S-104 (keluaran E-101), flanged tapered satu-bagian, uap metanol 250 °C",
        "unit": "",
        "source": "ASME PTC 19.3 TW-2016",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -254,16 +254,16 @@
        "symbol": "ρ",
        "value": "10.7798",
        "unit": "kg/m3",
-       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.rho",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.rho",
        "status": "HMB"
       },
       {
        "section": "INPUT",
        "parameter": "Viskositas dinamis uap",
        "symbol": "μ",
-       "value": "0.0178657",
+       "value": "0.0177824",
        "unit": "cP",
-       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.mu",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.mu",
        "status": "HMB"
       },
       {
@@ -272,7 +272,7 @@
        "symbol": "P",
        "value": "14.7",
        "unit": "bar(a)",
-       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.P",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.P",
        "status": "HMB"
       },
       {
@@ -281,17 +281,17 @@
        "symbol": "ṁ",
        "value": "10553.2",
        "unit": "kg/h",
-       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.mass_flow",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.mass_flow",
        "status": "HMB"
       },
       {
        "section": "INPUT",
-       "parameter": "Diameter dalam pipa S-105",
+       "parameter": "Diameter dalam pipa S-104",
        "symbol": "D_pipa",
-       "value": "154.08",
+       "value": "154.06",
        "unit": "mm",
-       "source": "Asumsi 6 in Sch 40 (ASME B36.10M); line sizing S-105 belum dilakukan",
-       "status": "PLACEHOLDER"
+       "source": "CALC_LineSizing.csv S-104 → NPS 6 in Sch 40 (V 14,6 m/s; ΔP 0,115 bar/100 m), LOG-036",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -299,7 +299,7 @@
        "symbol": "",
        "value": "tapered",
        "unit": "-",
-       "source": "Flanged tapered (Fig. 4-1-4), pilihan desain awal",
+       "source": "Tapered (Fig. 4-1-1a): frekuensi natural lebih tinggi dari straight pada L yang sama",
        "status": "ASUMSI"
       },
       {
@@ -308,25 +308,25 @@
        "symbol": "",
        "value": "flanged",
        "unit": "-",
-       "source": "Flens ke nozzle pipa (§6-7(a)); compliance basis semi-tak-hingga (6-6-5)",
+       "source": "Flens 1-1/2 in ASME B16.5 Class 300 ke nozzle pipa; compliance basis semi-tak-hingga (6-6-5)",
        "status": "ASUMSI"
       },
       {
        "section": "INPUT",
        "parameter": "Diameter akar",
        "symbol": "A",
-       "value": "25.4",
+       "value": "31.8",
        "unit": "mm",
-       "source": "Ukuran tipikal 1 in; ganti dengan datasheet vendor",
+       "source": "1-1/4 in (heavy-duty tapered); sweep LOG-036: 25,4 mm memberi f_s/f_n^c 0,435 (gagal §6-8.4)",
        "status": "ASUMSI"
       },
       {
        "section": "INPUT",
        "parameter": "Diameter tip",
        "symbol": "B",
-       "value": "19.1",
+       "value": "22.2",
        "unit": "mm",
-       "source": "Ukuran tipikal 3/4 in; ganti dengan datasheet vendor",
+       "source": "7/8 in; B/A 0,70 (Tabel 4-1-1: ≥ 0,58)",
        "status": "ASUMSI"
       },
       {
@@ -335,16 +335,25 @@
        "symbol": "d",
        "value": "6.6",
        "unit": "mm",
-       "source": "Bor 0,26 in untuk sensor 1/4 in (Tabel 4-1-1)",
+       "source": "Bor 0,26 in untuk sensor RTD/TC 1/4 in",
        "status": "ASUMSI"
       },
       {
        "section": "INPUT",
        "parameter": "Panjang tak tertumpu",
        "symbol": "L",
-       "value": "200",
+       "value": "232.1",
        "unit": "mm",
-       "source": "Usulan agent (LOG-035): sensitivitas pada geometri ini → L ≤ 220 mm lolos, 230 mm GAGAL (f_s > 0,4 f_n^c); 200 mm memberi margin. Tetapkan dari nozzle/piping oleh JN",
+       "source": "L0 157,1 + imersi 75 mm (ujung ~1/2 ID 154 mm, dekat sumbu pipa)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Panjang terlindung (di dalam nozzle)",
+       "symbol": "L_0",
+       "value": "157.1",
+       "unit": "mm",
+       "source": "Tinggi nozzle 150 mm dari OD pipa + tebal dinding 6 in Sch 40 7,11 mm (§6-10.1, 6-10-3)",
        "status": "ASUMSI"
       },
       {
@@ -353,7 +362,7 @@
        "symbol": "t",
        "value": "6.4",
        "unit": "mm",
-       "source": "Tipikal 1/4 in",
+       "source": "1/4 in (Tabel 4-1-1: ≥ 3,0 mm)",
        "status": "ASUMSI"
       },
       {
@@ -362,16 +371,16 @@
        "symbol": "b",
        "value": "0",
        "unit": "mm",
-       "source": "Tidak diketahui → 0 (§6-6)",
+       "source": "Tidak diketahui → 0, K_t = 2,2 (§6-12.3)",
        "status": "STANDAR"
       },
       {
        "section": "INPUT",
        "parameter": "Modulus elastisitas 250 °C",
        "symbol": "E",
-       "value": "178.6",
+       "value": "178.8",
        "unit": "GPa",
-       "source": "Tipikal austenitik ASME B31.1 Tabel C-1 (interpolasi 482 °F ≈ 25,9e6 psi); konfirmasi dari tabel kode yang berlaku",
+       "source": "ASME B31.3 Tabel C-6 baja austenitik: 26,5e6 psi (400 °F) → 25,8e6 psi (500 °F), interpolasi 482 °F = 25,93e6 psi. Nilai menurut agent; cocokkan dengan salinan kode",
        "status": "ASUMSI"
       },
       {
@@ -405,19 +414,19 @@
        "section": "INPUT",
        "parameter": "Tegangan izin maksimum 250 °C",
        "symbol": "S",
-       "value": "115",
+       "value": "92.9",
        "unit": "MPa",
-       "source": "Perkiraan F316 pada 250 °C; ambil dari ASME B31.3 Tabel A-1 (kode pipa proses) sebelum dikutip",
+       "source": "ASME B31.3 Tabel A-1 A182 F316, baris tanpa catatan deformasi (konservatif): 14,3 ksi (400 °F) → 13,3 ksi (500 °F), interpolasi 482 °F = 13,48 ksi. Nilai menurut agent; cocokkan dengan salinan kode",
        "status": "ASUMSI"
       },
       {
        "section": "INPUT",
        "parameter": "Batas amplitudo fatik",
        "symbol": "S_f",
-       "value": "62.8",
+       "value": "93.8",
        "unit": "MPa",
-       "source": "Tabel 6-12.3-1 kelas B 'welded, then machined' (thermowell flens)",
-       "status": "ASUMSI"
+       "source": "Tabel 6-12.3-1 kelas B 'No welds' (catatan 3): thermowell flens satu-bagian dimesin dari bar/forging, titik tegangan maks di permukaan mesin. Bila flens dilas: 62,8 MPa",
+       "status": "STANDAR"
       },
       {
        "section": "INPUT",
@@ -425,7 +434,7 @@
        "symbol": "F_E",
        "value": "1",
        "unit": "-",
-       "source": "Uap metanol/DME/air tanpa korosi khusus; tinjau ulang di HAZOP",
+       "source": "Uap metanol/air < 427 °C tanpa korosi khusus (§6-12.3); tinjau ulang di HAZOP",
        "status": "ASUMSI"
       },
       {
@@ -450,46 +459,46 @@
        "section": "HASIL",
        "parameter": "Kecepatan fluida desain",
        "symbol": "V",
-       "value": "14.5843",
+       "value": "14.5881",
        "unit": "m/s",
        "source": "V = ṁ / (ρ · π D_pipa² / 4)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Bilangan Reynolds (diameter tip)",
        "symbol": "Re",
-       "value": "168078",
+       "value": "196325",
        "unit": "-",
        "source": "(6-4-3)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Bilangan Strouhal",
        "symbol": "N_S",
-       "value": "0.191865",
+       "value": "0.193536",
        "unit": "-",
        "source": "(6-4-2)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Frekuensi natural pendekatan",
        "symbol": "f_a",
-       "value": "383.478",
+       "value": "341.206",
        "unit": "Hz",
        "source": "(6-5-1)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Faktor koreksi bentuk",
        "symbol": "H_f",
-       "value": "1.28715",
+       "value": "1.37071",
        "unit": "-",
        "source": "(6-5-2)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -498,79 +507,79 @@
        "value": "0.999326",
        "unit": "-",
        "source": "(6-5-4)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Koreksi massa sensor",
        "symbol": "H_a,s",
-       "value": "0.983719",
+       "value": "0.989276",
        "unit": "-",
        "source": "(6-5-5)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Faktor compliance tumpuan",
        "symbol": "H_c",
-       "value": "0.92253",
+       "value": "0.916424",
        "unit": "-",
        "source": "(6-6-5)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Frekuensi natural terpasang",
        "symbol": "f_n^c",
-       "value": "447.639",
+       "value": "423.724",
        "unit": "Hz",
        "source": "(6-5-6), (6-6-1)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Frekuensi Strouhal",
        "symbol": "f_s",
-       "value": "146.504",
+       "value": "127.177",
        "unit": "Hz",
        "source": "(6-4-1)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Rasio frekuensi",
        "symbol": "f_s/f_n^c",
-       "value": "0.327281",
+       "value": "0.300141",
        "unit": "-",
-       "source": "batas 0.4",
-       "status": "PLACEHOLDER"
+       "source": "batas 0.8",
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Bilangan Scruton",
        "symbol": "N_Sc",
-       "value": "3.22495",
+       "value": "3.33855",
        "unit": "-",
        "source": "(6-8-1), ζ = 0.0005",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Kecepatan resonansi in-line",
        "symbol": "V_IR",
-       "value": "21.8035",
+       "value": "23.5439",
        "unit": "m/s",
        "source": "(6-8-3)/(6-8-5)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Faktor geometri G (titik tumpu)",
        "symbol": "G",
-       "value": "264.758",
+       "value": "109.544",
        "unit": "-",
        "source": "§6-10",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -579,52 +588,52 @@
        "value": "2.2",
        "unit": "-",
        "source": "§6-12.3",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Tegangan siklik di resonansi in-line (titik tumpu)",
        "symbol": "S_o,max",
-       "value": "149.248",
+       "value": "72.0025",
        "unit": "MPa",
        "source": "(6-12-3) dengan F'_M = 1/(2ζ)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Von Mises tunak (titik tumpu)",
        "symbol": "LHS",
-       "value": "0.458303",
+       "value": "0.205749",
        "unit": "MPa",
        "source": "(6-12-2)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Tegangan dinamis pada V desain (titik tumpu)",
        "symbol": "S_o,max",
-       "value": "0.756949",
+       "value": "0.306859",
        "unit": "MPa",
        "source": "(6-12-3)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Batas fatik terkoreksi",
        "symbol": "F_T·F_E·S_f",
-       "value": "57.5184",
+       "value": "86.0074",
        "unit": "MPa",
        "source": "(6-12-5), (6-12-6)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Rating tekanan eksternal",
        "symbol": "P_r",
-       "value": "47.498",
+       "value": "41.5757",
        "unit": "MPa",
        "source": "min(P_c (6-13-1), P_t (6-13-2))",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -633,7 +642,7 @@
        "value": "1.36868",
        "unit": "MPa",
        "source": "input",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -641,8 +650,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "f_s = 146.5 Hz vs 0.4 f_n^c = 179.1 Hz; §6-8.3 langkah 4: gagal tegangan siklik di resonansi in-line, f_s < 0,4 f_n^c [ASME PTC 19.3 TW-2016]",
-       "status": "PLACEHOLDER"
+       "source": "f_s = 127.2 Hz vs 0.8 f_n^c = 339.0 Hz; §6-8.3 langkah 3: lolos tegangan siklik di resonansi in-line, f_s < 0,8 f_n^c; §6-8.4: f_s < 0,4 f_n^c (6-8-8) atau 0,6 f_n^c < f_s < 0,8 f_n^c (6-8-9) [ASME PTC 19.3 TW-2016]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -650,8 +659,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "0.458 MPa ≤ 1,5 S = 172 MPa [(6-12-2)]",
-       "status": "PLACEHOLDER"
+       "source": "0.206 MPa ≤ 1,5 S = 139 MPa [(6-12-2)]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -659,8 +668,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "0.757 MPa ≤ 57.5 MPa [(6-12-5)]",
-       "status": "PLACEHOLDER"
+       "source": "0.307 MPa ≤ 86 MPa [(6-12-5)]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -668,8 +677,17 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "P_r = 47.5 MPa > P = 1.37 MPa [§6-13]",
-       "status": "PLACEHOLDER"
+       "source": "P_r = 41.6 MPa > P = 1.37 MPa [§6-13]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Batas dimensi dalam cakupan standar",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "semua batas terpenuhi [Tabel 4-1-1]",
+       "status": "ASUMSI"
       },
       {
        "section": "KESIMPULAN",
@@ -677,8 +695,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "Tanpa corrosion allowance (§6-2); dimensi Tabel 4-1-1 belum dicek otomatis",
-       "status": "PLACEHOLDER"
+       "source": "Tanpa corrosion allowance (§6-2); rating flens P_f (§6-13 langkah 3) dicek terpisah di companion .md",
+       "status": "ASUMSI"
       }
      ]
     }
@@ -688,19 +706,19 @@
    "file": "CALC_ISA75_ControlValve.csv",
    "items": [
     {
-     "tag": "FCV-101",
-     "description": "Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6\"-PL-101)",
+     "tag": "FV-101",
+     "description": "Control valve FV-101 pengatur laju umpan metanol cair (discharge P-101, line 2\"-P-102)",
      "result": "PASS",
-     "data_status": "PLACEHOLDER",
+     "data_status": "ASUMSI",
      "rows": [
       {
        "section": "INFO",
        "parameter": "Deskripsi",
        "symbol": "",
-       "value": "Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6\"-PL-101)",
+       "value": "Control valve FV-101 pengatur laju umpan metanol cair (discharge P-101, line 2\"-P-102)",
        "unit": "",
        "source": "IEC 60534-2-1 / ISA-75.01.01",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -823,16 +841,16 @@
        "section": "INPUT",
        "parameter": "Diameter dalam pipa",
        "symbol": "D",
-       "value": "154.08",
+       "value": "52.51",
        "unit": "mm",
-       "source": "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh)",
-       "status": "PLACEHOLDER"
+       "source": "CALC_LineSizing.csv S-102 → NPS 2 in Sch 40 (ASME B36.10M), LOG-036",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
        "parameter": "Ukuran katup",
        "symbol": "d",
-       "value": "154.08",
+       "value": "52.51",
        "unit": "mm",
        "source": "Sementara sama dengan pipa (tanpa reducer, Fp = 1); setelah Kv diketahui pilih ukuran katup lalu hitung ulang",
        "status": "ASUMSI"
@@ -844,7 +862,7 @@
        "value": "17.2352",
        "unit": "kPa",
        "source": "Persamaan Antoine (input LITERATUR)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -853,7 +871,7 @@
        "value": "10.5104",
        "unit": "m3/h",
        "source": "q_m / rho",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -862,7 +880,7 @@
        "value": "9.35618",
        "unit": "m3/h",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (1)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -871,7 +889,7 @@
        "value": "10.8157",
        "unit": "US gpm/psi^0.5",
        "source": "Cv = 1,156 Kv",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -880,16 +898,16 @@
        "value": "0.947084",
        "unit": "-",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (8)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Reynolds katup (normal)",
        "symbol": "Re_v",
-       "value": "169367",
+       "value": "169610",
        "unit": "-",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (23)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -898,7 +916,7 @@
        "value": "PASS",
        "unit": "",
        "source": "dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01]",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -906,8 +924,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "Re_v = 1.69e+05 [IEC 60534-2-1 / ISA-75.01.01]",
-       "status": "PLACEHOLDER"
+       "source": "Re_v = 1.7e+05 [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -916,7 +934,7 @@
        "value": "13.138",
        "unit": "m3/h",
        "source": "q_m / rho",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -925,7 +943,7 @@
        "value": "11.6952",
        "unit": "m3/h",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (1)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -934,7 +952,7 @@
        "value": "13.5197",
        "unit": "US gpm/psi^0.5",
        "source": "Cv = 1,156 Kv",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -943,16 +961,16 @@
        "value": "0.947084",
        "unit": "-",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (8)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Reynolds katup (maksimum)",
        "symbol": "Re_v",
-       "value": "189360",
+       "value": "189784",
        "unit": "-",
        "source": "IEC 60534-2-1 / ISA-75.01.01 pers. (23)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -961,7 +979,7 @@
        "value": "PASS",
        "unit": "",
        "source": "dP = 1.0 bar vs FL^2 (P1 - FF Pv) = 12.423 bar [IEC 60534-2-1 / ISA-75.01.01]",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -969,8 +987,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "Re_v = 1.89e+05 [IEC 60534-2-1 / ISA-75.01.01]",
-       "status": "PLACEHOLDER"
+       "source": "Re_v = 1.9e+05 [IEC 60534-2-1 / ISA-75.01.01]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -979,7 +997,7 @@
        "value": "PASS",
        "unit": "",
        "source": "P2 = 14.500 bar(a), Pv = 0.1724 bar(a) [IEC 60534-2-1 / ISA-75.01.01]",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "KESIMPULAN",
@@ -988,7 +1006,7 @@
        "value": "PASS",
        "unit": "",
        "source": "Kv dipakai memilih ukuran katup dari katalog vendor (bukan bagian skrip)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       }
      ]
     }
@@ -999,18 +1017,18 @@
    "items": [
     {
      "tag": "FE-101",
-     "description": "Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6\"-PL-101)",
+     "description": "Orifice plate FE-101 untuk FT-101/FIC-101, umpan metanol cair di discharge P-101 (line 2\"-P-102)",
      "result": "PASS",
-     "data_status": "PLACEHOLDER",
+     "data_status": "ASUMSI",
      "rows": [
       {
        "section": "INFO",
        "parameter": "Deskripsi",
        "symbol": "",
-       "value": "Orifice plate FE-101 untuk FIC-101, umpan metanol cair di discharge P-101 (jalur 6\"-PL-101)",
+       "value": "Orifice plate FE-101 untuk FT-101/FIC-101, umpan metanol cair di discharge P-101 (line 2\"-P-102)",
        "unit": "",
        "source": "ISO 5167-2:2022",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -1070,10 +1088,10 @@
        "section": "INPUT",
        "parameter": "Diameter dalam pipa",
        "symbol": "D",
-       "value": "154.08",
+       "value": "52.51",
        "unit": "mm",
-       "source": "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh, belum dari line sizing)",
-       "status": "PLACEHOLDER"
+       "source": "CALC_LineSizing.csv S-102 → NPS 2 in Sch 40 (ASME B36.10M), LOG-036",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -1097,28 +1115,28 @@
        "section": "HASIL",
        "parameter": "Diameter bore orifice",
        "symbol": "d",
-       "value": "27.9509",
+       "value": "27.2084",
        "unit": "mm",
        "source": "ISO 5167-2:2022 pers. (1), diselesaikan iteratif",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Rasio diameter",
        "symbol": "beta",
-       "value": "0.181405",
+       "value": "0.518157",
        "unit": "-",
        "source": "d/D",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Koefisien discharge",
        "symbol": "C",
-       "value": "0.59841",
+       "value": "0.608659",
        "unit": "-",
        "source": "Reader-Harris/Gallagher, ISO 5167-2:2022 pers. (4)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -1127,34 +1145,34 @@
        "value": "1",
        "unit": "-",
        "source": "1 untuk cairan",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Bilangan Reynolds pipa",
        "symbol": "Re_D",
-       "value": "34687.7",
+       "value": "101784",
        "unit": "-",
        "source": "4 q_m / (pi D mu)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Kecepatan di pipa",
        "symbol": "v",
-       "value": "0.156579",
+       "value": "1.34816",
        "unit": "m/s",
        "source": "q_m / (rho A)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Rugi tekanan permanen",
        "symbol": "dw",
-       "value": "24.0341",
+       "value": "17.8355",
        "unit": "kPa",
        "source": "ISO 5167-2:2022 pers. (7)",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
@@ -1163,7 +1181,7 @@
        "value": "8321.27",
        "unit": "kg/h",
        "source": "ISO 5167-1 pers. (1) dengan d, C, epsilon hasil",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -1171,8 +1189,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "d = 27.95 mm [ISO 5167-2:2022 §5.3.1]",
-       "status": "PLACEHOLDER"
+       "source": "d = 27.21 mm [ISO 5167-2:2022 §5.3.1]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -1180,8 +1198,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "D = 154.08 mm [ISO 5167-2:2022 §5.3.1]",
-       "status": "PLACEHOLDER"
+       "source": "D = 52.51 mm [ISO 5167-2:2022 §5.3.1]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -1189,8 +1207,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "beta = 0.1814 [ISO 5167-2:2022 §5.3.1]",
-       "status": "PLACEHOLDER"
+       "source": "beta = 0.5182 [ISO 5167-2:2022 §5.3.1]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -1198,8 +1216,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "Re_D = 34688 >= 5000 [ISO 5167-2:2022 §5.3.1 (flange taps)]",
-       "status": "PLACEHOLDER"
+       "source": "Re_D = 101784 >= 5000 [ISO 5167-2:2022 §5.3.1 (flange taps)]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -1207,8 +1225,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "selisih 1.92e-14 % [konsistensi]",
-       "status": "PLACEHOLDER"
+       "source": "selisih 5.78e-07 % [konsistensi]",
+       "status": "ASUMSI"
       },
       {
        "section": "KESIMPULAN",
@@ -1217,7 +1235,1724 @@
        "value": "PASS",
        "unit": "",
        "source": "Semua cek batas standar",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_LineSizing.csv",
+   "items": [
+    {
+     "tag": "S-101",
+     "description": "Line P-101: umpan metanol segar ke isap P-101 (cair 25 °C, 1 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-101: umpan metanol segar ke isap P-101 (cair 25 °C, 1 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "8321.27",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas",
+       "symbol": "ρ",
+       "value": "791.607",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.props.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas dinamis",
+       "symbol": "μ",
+       "value": "0.549633",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.props.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "liquid_suction",
+       "unit": "-",
+       "source": "HMB fasa cair; hulu P-101 (isap pompa)",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "1",
+       "unit": "m/s",
+       "source": "Jalur isap pompa ≤ 1 m/s (menjaga NPSH), aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.1",
+       "unit": "bar/100 m",
+       "source": "Jalur isap pompa, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "14.9 m/s; 146 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "8.49 m/s; 33.4 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "5.24 m/s; 9.54 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "2.22 m/s; 1.05 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.35 m/s; 0.297 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3\" Sch 40 (ID 77.92 mm)",
+       "symbol": "V; ΔP",
+       "value": "0.612 m/s; 0.0413 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "3\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "77.92",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "0.612336",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "68718.8",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0217076",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.0413449",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "296.817",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.612 ≤ 1 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.0413 ≤ 0.1 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-102",
+     "description": "Line P-102: discharge P-101 (cair 25 °C, 15,5 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-102: discharge P-101 (cair 25 °C, 15,5 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "8321.27",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas",
+       "symbol": "ρ",
+       "value": "791.72",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas dinamis",
+       "symbol": "μ",
+       "value": "0.55065",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "liquid_discharge",
+       "unit": "-",
+       "source": "HMB fasa cair; hilir P-101",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "3",
+       "unit": "m/s",
+       "source": "Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "14.9 m/s; 146 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "8.49 m/s; 33.4 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "5.24 m/s; 9.54 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "2.22 m/s; 1.05 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.35 m/s; 0.297 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "2\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "52.51",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "1.34816",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "101784",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0216421",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.296539",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "1438.98",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "1.35 ≤ 3 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.297 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-103",
+     "description": "Line P-103: umpan gabungan (segar + recycle) ke E-101 (cair 25 °C, 15,5 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-103: umpan gabungan (segar + recycle) ke E-101 (cair 25 °C, 15,5 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas",
+       "symbol": "ρ",
+       "value": "790.73",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.props.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas dinamis",
+       "symbol": "μ",
+       "value": "0.547583",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.props.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "liquid_discharge",
+       "unit": "-",
+       "source": "HMB fasa cair; hilir P-101",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "3",
+       "unit": "m/s",
+       "source": "Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "18.9 m/s; 234 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "10.8 m/s; 53.5 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "6.65 m/s; 15.2 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "2.82 m/s; 1.67 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.71 m/s; 0.467 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "2\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "52.51",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "1.7119",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "129807",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0211483",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.466649",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "2317.32",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "1.71 ≤ 3 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.467 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-104",
+     "description": "Line P-104: keluaran E-101 ke R-101 (uap 250 °C, 14,7 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-104: keluaran E-101 ke R-101 (uap 250 °C, 14,7 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas uap",
+       "symbol": "ρ",
+       "value": "10.7798",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas uap",
+       "symbol": "μ",
+       "value": "0.0177824",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "vapor",
+       "unit": "-",
+       "source": "HMB: fraksi uap 1,0",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "30",
+       "unit": "m/s",
+       "source": "Gas dan uap 15–30 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Uap proses ~15 bar, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.39e+03 m/s; 1.69e+04 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "790 m/s; 3.84e+03 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "488 m/s; 1.08e+03 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "207 m/s; 114 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "126 m/s; 30.8 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3\" Sch 40 (ID 77.92 mm)",
+       "symbol": "V; ΔP",
+       "value": "57 m/s; 3.92 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 4\" Sch 40 (ID 102.26 mm)",
+       "symbol": "V; ΔP",
+       "value": "33.1 m/s; 0.954 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 6\" Sch 40 (ID 154.06 mm)",
+       "symbol": "V; ΔP",
+       "value": "14.6 m/s; 0.115 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "6\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "154.06",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "14.5881",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "1362423",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0154096",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.114731",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "2294.09",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "14.6 ≤ 30 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.115 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-105",
+     "description": "Line P-105: efluen uap R-101 ke E-102 (uap 250 °C, 14,7 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-105: efluen uap R-101 ke E-102 (uap 250 °C, 14,7 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas uap",
+       "symbol": "ρ",
+       "value": "10.7798",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas uap",
+       "symbol": "μ",
+       "value": "0.0178657",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "vapor",
+       "unit": "-",
+       "source": "HMB: fraksi uap 1,0",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "30",
+       "unit": "m/s",
+       "source": "Gas dan uap 15–30 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Uap proses ~15 bar, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.39e+03 m/s; 1.69e+04 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "790 m/s; 3.84e+03 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "488 m/s; 1.08e+03 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "207 m/s; 114 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "126 m/s; 30.8 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3\" Sch 40 (ID 77.92 mm)",
+       "symbol": "V; ΔP",
+       "value": "57 m/s; 3.92 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 4\" Sch 40 (ID 102.26 mm)",
+       "symbol": "V; ΔP",
+       "value": "33.1 m/s; 0.954 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 6\" Sch 40 (ID 154.06 mm)",
+       "symbol": "V; ΔP",
+       "value": "14.6 m/s; 0.115 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "6\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "154.06",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "14.5881",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "1356067",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.015412",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.114749",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "2294.09",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "14.6 ≤ 30 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.115 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-107",
+     "description": "Line P-107: keluaran E-102 ke battery limit Area 2 (dua fase 89 °C, 10,4 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Line P-107: keluaran E-102 ke battery limit Area 2 (dua fase 89 °C, 10,4 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook; API RP 14E",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas campuran homogen",
+       "symbol": "ρ_m",
+       "value": "132.671",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Fraksi uap molar",
+       "symbol": "y_v",
+       "value": "0.0688601",
+       "unit": "-",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.vapor_fraction",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Massa molar uap",
+       "symbol": "M_v",
+       "value": "44.3578",
+       "unit": "kg/kmol",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.vapor.mw",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Massa molar total",
+       "symbol": "M",
+       "value": "31.8957",
+       "unit": "kg/kmol",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props.mw",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas uap",
+       "symbol": "μ_v",
+       "value": "0.0118945",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.vapor.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas cair",
+       "symbol": "μ_l",
+       "value": "0.248539",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.liquid.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "two_phase",
+       "unit": "-",
+       "source": "HMB: fraksi uap 0,069",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Konstanta erosi",
+       "symbol": "C",
+       "value": "100",
+       "unit": "-",
+       "source": "API RP 14E: C = 100 untuk layanan kontinu tanpa padatan",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "15",
+       "unit": "m/s",
+       "source": "Batas atas praktis dua fase; pembatas utama = V_e API RP 14E",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kualitas massa uap",
+       "symbol": "x",
+       "value": "0.0957649",
+       "unit": "-",
+       "source": "x = y_v · M_v / M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Viskositas campuran homogen",
+       "symbol": "μ_m",
+       "value": "0.0855474",
+       "unit": "cP",
+       "source": "McAdams 1/μ_m = x/μ_v + (1−x)/μ_l",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan erosi",
+       "symbol": "V_e",
+       "value": "10.591",
+       "unit": "m/s",
+       "source": "API RP 14E, C = 100",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "113 m/s; 1.38e+03 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "64.2 m/s; 313 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "39.6 m/s; 88.2 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "16.8 m/s; 9.34 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 2\" Sch 40 (ID 52.51 mm)",
+       "symbol": "V; ΔP",
+       "value": "10.2 m/s; 2.54 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3\" Sch 40 (ID 77.92 mm)",
+       "symbol": "V; ΔP",
+       "value": "4.63 m/s; 0.33 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "3\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "77.92",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "4.6336",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "559932",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0180416",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.329767",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "2848.48",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "4.63 ≤ 15 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.33 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ kecepatan erosi",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "4.63 ≤ 10.6 m/s [API RP 14E]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
+      }
+     ]
+    },
+    {
+     "tag": "S-114",
+     "description": "Recycle metanol dari Area 3 masuk battery limit Area 1 (cair 25 °C, 15,5 bar)",
+     "result": "PASS",
+     "data_status": "ASUMSI",
+     "rows": [
+      {
+       "section": "INFO",
+       "parameter": "Deskripsi",
+       "symbol": "",
+       "value": "Recycle metanol dari Area 3 masuk battery limit Area 1 (cair 25 °C, 15,5 bar)",
+       "unit": "",
+       "source": "ASME B36.10M; Darcy–Weisbach + Colebrook",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "2234.73",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas",
+       "symbol": "ρ",
+       "value": "786.881",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.props.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas dinamis",
+       "symbol": "μ",
+       "value": "0.534969",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.props.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis layanan",
+       "symbol": "",
+       "value": "liquid_discharge",
+       "unit": "-",
+       "source": "HMB fasa cair; hilir pompa recycle Area 3",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Schedule pipa",
+       "symbol": "",
+       "value": "40",
+       "unit": "-",
+       "source": "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kekasaran absolut",
+       "symbol": "ε",
+       "value": "0.045",
+       "unit": "mm",
+       "source": "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Kecepatan maksimum",
+       "symbol": "V_maks",
+       "value": "3",
+       "unit": "m/s",
+       "source": "Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Penurunan tekanan maksimum",
+       "symbol": "ΔP_maks",
+       "value": "0.5",
+       "unit": "bar/100 m",
+       "source": "Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1/2\" Sch 40 (ID 15.80 mm)",
+       "symbol": "V; ΔP",
+       "value": "4.02 m/s; 11 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 3/4\" Sch 40 (ID 20.93 mm)",
+       "symbol": "V; ΔP",
+       "value": "2.29 m/s; 2.58 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1\" Sch 40 (ID 26.64 mm)",
+       "symbol": "V; ΔP",
+       "value": "1.42 m/s; 0.755 bar/100 m",
+       "unit": "",
+       "source": "ditolak",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KANDIDAT",
+       "parameter": "NPS 1-1/2\" Sch 40 (ID 40.90 mm)",
+       "symbol": "V; ΔP",
+       "value": "0.6 m/s; 0.0882 bar/100 m",
+       "unit": "",
+       "source": "TERPILIH",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Ukuran pipa terpilih",
+       "symbol": "NPS",
+       "value": "1-1/2\" Sch 40",
+       "unit": "",
+       "source": "ASME B36.10M",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Diameter dalam",
+       "symbol": "D",
+       "value": "40.9",
+       "unit": "mm",
+       "source": "OD − 2 t (B36.10M)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan",
+       "symbol": "V",
+       "value": "0.600449",
+       "unit": "m/s",
+       "source": "ṁ / (ρ π D²/4)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds",
+       "symbol": "Re",
+       "value": "36122.7",
+       "unit": "-",
+       "source": "ρ V D / μ",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor gesek Darcy",
+       "symbol": "f",
+       "value": "0.0254388",
+       "unit": "-",
+       "source": "Colebrook (Clamond)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Penurunan tekanan per 100 m",
+       "symbol": "ΔP/L",
+       "value": "0.0882278",
+       "unit": "bar/100 m",
+       "source": "Darcy–Weisbach",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Momentum fluida",
+       "symbol": "ρV²",
+       "value": "283.702",
+       "unit": "kg/(m·s²)",
+       "source": "informasi",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Kecepatan ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.6 ≤ 3 m/s [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "CEK",
+       "parameter": "ΔP ≤ batas",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.0882 ≤ 0.5 bar/100 m [kriteria input]",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",
+       "status": "ASUMSI"
       }
      ]
     }

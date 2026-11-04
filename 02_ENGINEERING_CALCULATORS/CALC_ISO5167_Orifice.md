@@ -14,7 +14,7 @@ reviewer: ""
 status: "Draft"
 review_evidence: ""
 google_ref: ""
-last_updated: "2026-11-03"
+last_updated: "2026-11-04"
 tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 ---
 
@@ -22,10 +22,10 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 
 > 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/FE-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.
 >
-> ⚠️ **Status data: PLACEHOLDER** karena diameter pipa (6"-PL-101) masih data contoh dari index. Hasil belum boleh dikutip ke laporan. Status naik otomatis setelah input PLACEHOLDER diganti (status hasil = status input terlemah).
+> ⚠️ **Status data: ASUMSI.** Sejak LOG-036 diameter pipa diambil dari line sizing S-102 (2" Sch 40, line 2"-P-102), ΔP desain dan tapping masih ASUMSI. Hasil belum boleh dikutip ke laporan sebelum dikonfirmasi PIC.
 
 ## 1. Tujuan & Ruang Lingkup
-Menghitung diameter bore orifice ($d$), rasio diameter ($\beta = d/D$), koefisien debit ($C$), faktor ekspansi ($\varepsilon$), dan rugi tekanan permanen untuk **FE-101** (loop FIC-101), yaitu pengukuran laju umpan metanol **cair** di discharge pompa P-101 (aliran **S-102**, jalur 6"-PL-101). CSV lama memakai uap 250 °C di S-01, padahal FIC-101 menurut index berada di discharge pompa (cair); hal ini dikoreksi.
+Menghitung diameter bore orifice ($d$), rasio diameter ($\beta = d/D$), koefisien debit ($C$), faktor ekspansi ($\varepsilon$), dan rugi tekanan permanen untuk **FE-101** (loop FIC-101), yaitu pengukuran laju umpan metanol **cair** di discharge pompa P-101 (aliran **S-102**, line 2"-P-102; transmitter FT-101). CSV lama memakai uap 250 °C di S-01, padahal FIC-101 menurut index berada di discharge pompa (cair); hal ini dikoreksi.
 
 ## 2. Standar Acuan
 - **ISO 5167-1** — prinsip umum pengukuran aliran dengan alat beda tekanan.
@@ -41,7 +41,7 @@ Menghitung diameter bore orifice ($d$), rasio diameter ($\beta = d/D$), koefisie
 | Suhu hulu | $T_1$ | 25,3 °C | `hmb_streams.json` → S-102 | HMB |
 | Densitas cair | $\rho_1$ | 791,7 kg/m³ | `hmb_streams.json` → S-102 (NRTL) | HMB |
 | Viskositas cair | $\mu$ | 0,551 cP | `hmb_streams.json` → S-102 | HMB |
-| Diameter dalam pipa | $D$ | 154,08 mm | ASME B36.10M 6" Sch 40, dari nomor jalur di index (data contoh) | PLACEHOLDER |
+| Diameter dalam pipa | $D$ | 52,51 mm | CALC_LineSizing S-102 → 2" Sch 40 (ASME B36.10M), LOG-036 | ASUMSI |
 | ΔP desain | $\Delta p$ | 25 kPa | Rentang DP transmitter; tetapkan PIC | ASUMSI |
 | Jenis tapping | – | flange | ISO 5167-2 §5.2.1; konfirmasi spesifikasi | ASUMSI |
 
@@ -52,18 +52,18 @@ $$q_m = \frac{C}{\sqrt{1 - \beta^4}}\, \varepsilon\, \frac{\pi}{4} d^2 \sqrt{2\,
 
 Batas keberlakuan orifice (flange/corner/D–D/2 tappings): $0{,}1 \le \beta \le 0{,}75$, $d \ge 12{,}5$ mm, $50 \le D \le 1000$ mm, dan batas $Re_D$ minimum sesuai jenis tapping.
 
-## 5. Hasil Skrip (verifikasi silang, LOG-020)
+## 5. Hasil Skrip (verifikasi silang, LOG-036: D = 52,51 mm)
 
 | Hasil | Nilai | Cek ISO 5167-2 §5.3.1 |
 | :--- | ---: | :--- |
-| Diameter bore $d$ | 27,95 mm | ≥ 12,5 mm ✅ |
-| $\beta$ | 0,181 | 0,10–0,75 ✅ |
-| $C$ (Reader-Harris/Gallagher) | 0,5984 | – |
-| $Re_D$ | 34.688 | ≥ max(5000; 170 β² D) ✅ |
-| Kecepatan di pipa | 0,157 m/s | – |
-| Rugi tekanan permanen | 24,0 kPa | – |
+| Diameter bore $d$ | 27,21 mm | ≥ 12,5 mm ✅ |
+| $\beta$ | 0,518 | 0,10–0,75 ✅ |
+| $C$ (Reader-Harris/Gallagher) | 0,6087 | – |
+| $Re_D$ | 101.784 | ≥ max(5000; 170 β² D) ✅ |
+| Kecepatan di pipa | 1,35 m/s | – |
+| Rugi tekanan permanen | 17,8 kPa | – |
 
-**Temuan:** kecepatan cairan 0,16 m/s menunjukkan pipa 6" terlalu besar untuk 10,5 m³/h (kecepatan cairan lazim 1–2 m/s, kira-kira setara 2"). Ukuran jalur perlu ditetapkan lewat line sizing sebelum orifice dihitung final; β akan naik bila D mengecil.
+**Temuan (LOG-020) ditindaklanjuti di LOG-036:** pipa 6" terlalu besar (0,16 m/s, β 0,18). Line sizing menetapkan 2" Sch 40 (1,35 m/s), sehingga β = 0,52, di tengah rentang yang disarankan.
 
 **Uji verifikasi** (`tools/calc/test_verification.py`): $C$ dari skrip dibandingkan dengan implementasi **independen** persamaan (4) ISO 5167-2 yang ditulis langsung dari standar (3 kasus, selisih < 10⁻⁵), dan laju alir dihitung balik dengan persamaan dasar ISO 5167-1 (selisih < 10⁻⁴). Kasus β < 0,10 terbukti ditolak (FAIL).
 
@@ -86,3 +86,4 @@ Batas keberlakuan orifice (flange/corner/D–D/2 tappings): $0{,}1 \le \beta \le
 | 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan inkonsistensi (LOG-004). |
 | 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/orifice.py`; FE-101 di S-102 (cair); CSV generate; uji verifikasi (LOG-020). |
+| 1.1 | 2026-11-04 | Claude Code (AI) | D = 52,51 mm dari line sizing (2" Sch 40); β 0,518; status data PLACEHOLDER → ASUMSI (LOG-036). |

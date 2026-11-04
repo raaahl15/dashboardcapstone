@@ -1,0 +1,185 @@
+TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
+S-101,INFO,Deskripsi,,"Line P-101: umpan metanol segar ke isap P-101 (cair 25 °C, 1 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-101,INPUT,Laju alir massa,ṁ,8321.27,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.mass_flow",HMB
+S-101,INPUT,Densitas,ρ,791.607,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.props.rho",HMB
+S-101,INPUT,Viskositas dinamis,μ,0.549633,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-101.props.mu",HMB
+S-101,INPUT,Jenis layanan,,liquid_suction,-,HMB fasa cair; hulu P-101 (isap pompa),HMB
+S-101,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-101,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-101,INPUT,Kecepatan maksimum,V_maks,1,m/s,"Jalur isap pompa ≤ 1 m/s (menjaga NPSH), aturan praktis usulan agent (LOG-036)",ASUMSI
+S-101,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.1,bar/100 m,"Jalur isap pompa, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-101,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,14.9 m/s; 146 bar/100 m,,ditolak,ASUMSI
+S-101,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,8.49 m/s; 33.4 bar/100 m,,ditolak,ASUMSI
+S-101,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,5.24 m/s; 9.54 bar/100 m,,ditolak,ASUMSI
+S-101,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,2.22 m/s; 1.05 bar/100 m,,ditolak,ASUMSI
+S-101,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,1.35 m/s; 0.297 bar/100 m,,ditolak,ASUMSI
+S-101,KANDIDAT,"NPS 3"" Sch 40 (ID 77.92 mm)",V; ΔP,0.612 m/s; 0.0413 bar/100 m,,TERPILIH,ASUMSI
+S-101,HASIL,Ukuran pipa terpilih,NPS,"3"" Sch 40",,ASME B36.10M,ASUMSI
+S-101,HASIL,Diameter dalam,D,77.92,mm,OD − 2 t (B36.10M),ASUMSI
+S-101,HASIL,Kecepatan,V,0.612336,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-101,HASIL,Bilangan Reynolds,Re,68718.8,-,ρ V D / μ,ASUMSI
+S-101,HASIL,Faktor gesek Darcy,f,0.0217076,-,Colebrook (Clamond),ASUMSI
+S-101,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.0413449,bar/100 m,Darcy–Weisbach,ASUMSI
+S-101,HASIL,Momentum fluida,ρV²,296.817,kg/(m·s²),informasi,ASUMSI
+S-101,CEK,Kecepatan ≤ batas,,PASS,,0.612 ≤ 1 m/s [kriteria input],ASUMSI
+S-101,CEK,ΔP ≤ batas,,PASS,,0.0413 ≤ 0.1 bar/100 m [kriteria input],ASUMSI
+S-101,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-102,INFO,Deskripsi,,"Line P-102: discharge P-101 (cair 25 °C, 15,5 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-102,INPUT,Laju alir massa,ṁ,8321.27,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.mass_flow",HMB
+S-102,INPUT,Densitas,ρ,791.72,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props.rho",HMB
+S-102,INPUT,Viskositas dinamis,μ,0.55065,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-102.props.mu",HMB
+S-102,INPUT,Jenis layanan,,liquid_discharge,-,HMB fasa cair; hilir P-101,HMB
+S-102,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-102,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-102,INPUT,Kecepatan maksimum,V_maks,3,m/s,"Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",LITERATUR
+S-102,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,"Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-102,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,14.9 m/s; 146 bar/100 m,,ditolak,ASUMSI
+S-102,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,8.49 m/s; 33.4 bar/100 m,,ditolak,ASUMSI
+S-102,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,5.24 m/s; 9.54 bar/100 m,,ditolak,ASUMSI
+S-102,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,2.22 m/s; 1.05 bar/100 m,,ditolak,ASUMSI
+S-102,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,1.35 m/s; 0.297 bar/100 m,,TERPILIH,ASUMSI
+S-102,HASIL,Ukuran pipa terpilih,NPS,"2"" Sch 40",,ASME B36.10M,ASUMSI
+S-102,HASIL,Diameter dalam,D,52.51,mm,OD − 2 t (B36.10M),ASUMSI
+S-102,HASIL,Kecepatan,V,1.34816,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-102,HASIL,Bilangan Reynolds,Re,101784,-,ρ V D / μ,ASUMSI
+S-102,HASIL,Faktor gesek Darcy,f,0.0216421,-,Colebrook (Clamond),ASUMSI
+S-102,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.296539,bar/100 m,Darcy–Weisbach,ASUMSI
+S-102,HASIL,Momentum fluida,ρV²,1438.98,kg/(m·s²),informasi,ASUMSI
+S-102,CEK,Kecepatan ≤ batas,,PASS,,1.35 ≤ 3 m/s [kriteria input],ASUMSI
+S-102,CEK,ΔP ≤ batas,,PASS,,0.297 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-102,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-103,INFO,Deskripsi,,"Line P-103: umpan gabungan (segar + recycle) ke E-101 (cair 25 °C, 15,5 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-103,INPUT,Laju alir massa,ṁ,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.mass_flow",HMB
+S-103,INPUT,Densitas,ρ,790.73,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.props.rho",HMB
+S-103,INPUT,Viskositas dinamis,μ,0.547583,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-103.props.mu",HMB
+S-103,INPUT,Jenis layanan,,liquid_discharge,-,HMB fasa cair; hilir P-101,HMB
+S-103,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-103,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-103,INPUT,Kecepatan maksimum,V_maks,3,m/s,"Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",LITERATUR
+S-103,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,"Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-103,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,18.9 m/s; 234 bar/100 m,,ditolak,ASUMSI
+S-103,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,10.8 m/s; 53.5 bar/100 m,,ditolak,ASUMSI
+S-103,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,6.65 m/s; 15.2 bar/100 m,,ditolak,ASUMSI
+S-103,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,2.82 m/s; 1.67 bar/100 m,,ditolak,ASUMSI
+S-103,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,1.71 m/s; 0.467 bar/100 m,,TERPILIH,ASUMSI
+S-103,HASIL,Ukuran pipa terpilih,NPS,"2"" Sch 40",,ASME B36.10M,ASUMSI
+S-103,HASIL,Diameter dalam,D,52.51,mm,OD − 2 t (B36.10M),ASUMSI
+S-103,HASIL,Kecepatan,V,1.7119,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-103,HASIL,Bilangan Reynolds,Re,129807,-,ρ V D / μ,ASUMSI
+S-103,HASIL,Faktor gesek Darcy,f,0.0211483,-,Colebrook (Clamond),ASUMSI
+S-103,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.466649,bar/100 m,Darcy–Weisbach,ASUMSI
+S-103,HASIL,Momentum fluida,ρV²,2317.32,kg/(m·s²),informasi,ASUMSI
+S-103,CEK,Kecepatan ≤ batas,,PASS,,1.71 ≤ 3 m/s [kriteria input],ASUMSI
+S-103,CEK,ΔP ≤ batas,,PASS,,0.467 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-103,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-104,INFO,Deskripsi,,"Line P-104: keluaran E-101 ke R-101 (uap 250 °C, 14,7 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-104,INPUT,Laju alir massa,ṁ,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.mass_flow",HMB
+S-104,INPUT,Densitas uap,ρ,10.7798,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.rho",HMB
+S-104,INPUT,Viskositas uap,μ,0.0177824,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-104.props_by_phase.vapor.mu",HMB
+S-104,INPUT,Jenis layanan,,vapor,-,"HMB: fraksi uap 1,0",HMB
+S-104,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-104,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-104,INPUT,Kecepatan maksimum,V_maks,30,m/s,"Gas dan uap 15–30 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",LITERATUR
+S-104,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,"Uap proses ~15 bar, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-104,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,1.39e+03 m/s; 1.69e+04 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,790 m/s; 3.84e+03 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,488 m/s; 1.08e+03 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,207 m/s; 114 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,126 m/s; 30.8 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 3"" Sch 40 (ID 77.92 mm)",V; ΔP,57 m/s; 3.92 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 4"" Sch 40 (ID 102.26 mm)",V; ΔP,33.1 m/s; 0.954 bar/100 m,,ditolak,ASUMSI
+S-104,KANDIDAT,"NPS 6"" Sch 40 (ID 154.06 mm)",V; ΔP,14.6 m/s; 0.115 bar/100 m,,TERPILIH,ASUMSI
+S-104,HASIL,Ukuran pipa terpilih,NPS,"6"" Sch 40",,ASME B36.10M,ASUMSI
+S-104,HASIL,Diameter dalam,D,154.06,mm,OD − 2 t (B36.10M),ASUMSI
+S-104,HASIL,Kecepatan,V,14.5881,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-104,HASIL,Bilangan Reynolds,Re,1362423,-,ρ V D / μ,ASUMSI
+S-104,HASIL,Faktor gesek Darcy,f,0.0154096,-,Colebrook (Clamond),ASUMSI
+S-104,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.114731,bar/100 m,Darcy–Weisbach,ASUMSI
+S-104,HASIL,Momentum fluida,ρV²,2294.09,kg/(m·s²),informasi,ASUMSI
+S-104,CEK,Kecepatan ≤ batas,,PASS,,14.6 ≤ 30 m/s [kriteria input],ASUMSI
+S-104,CEK,ΔP ≤ batas,,PASS,,0.115 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-104,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-105,INFO,Deskripsi,,"Line P-105: efluen uap R-101 ke E-102 (uap 250 °C, 14,7 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-105,INPUT,Laju alir massa,ṁ,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.mass_flow",HMB
+S-105,INPUT,Densitas uap,ρ,10.7798,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.rho",HMB
+S-105,INPUT,Viskositas uap,μ,0.0178657,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.mu",HMB
+S-105,INPUT,Jenis layanan,,vapor,-,"HMB: fraksi uap 1,0",HMB
+S-105,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-105,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-105,INPUT,Kecepatan maksimum,V_maks,30,m/s,"Gas dan uap 15–30 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",LITERATUR
+S-105,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,"Uap proses ~15 bar, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-105,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,1.39e+03 m/s; 1.69e+04 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,790 m/s; 3.84e+03 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,488 m/s; 1.08e+03 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,207 m/s; 114 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,126 m/s; 30.8 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 3"" Sch 40 (ID 77.92 mm)",V; ΔP,57 m/s; 3.92 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 4"" Sch 40 (ID 102.26 mm)",V; ΔP,33.1 m/s; 0.954 bar/100 m,,ditolak,ASUMSI
+S-105,KANDIDAT,"NPS 6"" Sch 40 (ID 154.06 mm)",V; ΔP,14.6 m/s; 0.115 bar/100 m,,TERPILIH,ASUMSI
+S-105,HASIL,Ukuran pipa terpilih,NPS,"6"" Sch 40",,ASME B36.10M,ASUMSI
+S-105,HASIL,Diameter dalam,D,154.06,mm,OD − 2 t (B36.10M),ASUMSI
+S-105,HASIL,Kecepatan,V,14.5881,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-105,HASIL,Bilangan Reynolds,Re,1356067,-,ρ V D / μ,ASUMSI
+S-105,HASIL,Faktor gesek Darcy,f,0.015412,-,Colebrook (Clamond),ASUMSI
+S-105,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.114749,bar/100 m,Darcy–Weisbach,ASUMSI
+S-105,HASIL,Momentum fluida,ρV²,2294.09,kg/(m·s²),informasi,ASUMSI
+S-105,CEK,Kecepatan ≤ batas,,PASS,,14.6 ≤ 30 m/s [kriteria input],ASUMSI
+S-105,CEK,ΔP ≤ batas,,PASS,,0.115 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-105,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-107,INFO,Deskripsi,,"Line P-107: keluaran E-102 ke battery limit Area 2 (dua fase 89 °C, 10,4 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook; API RP 14E,ASUMSI
+S-107,INPUT,Laju alir massa,ṁ,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.mass_flow",HMB
+S-107,INPUT,Densitas campuran homogen,ρ_m,132.671,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props.rho",HMB
+S-107,INPUT,Fraksi uap molar,y_v,0.0688601,-,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.vapor_fraction",HMB
+S-107,INPUT,Massa molar uap,M_v,44.3578,kg/kmol,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.vapor.mw",HMB
+S-107,INPUT,Massa molar total,M,31.8957,kg/kmol,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props.mw",HMB
+S-107,INPUT,Viskositas uap,μ_v,0.0118945,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.vapor.mu",HMB
+S-107,INPUT,Viskositas cair,μ_l,0.248539,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-107.props_by_phase.liquid.mu",HMB
+S-107,INPUT,Jenis layanan,,two_phase,-,"HMB: fraksi uap 0,069",HMB
+S-107,INPUT,Konstanta erosi,C,100,-,API RP 14E: C = 100 untuk layanan kontinu tanpa padatan,LITERATUR
+S-107,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-107,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-107,INPUT,Kecepatan maksimum,V_maks,15,m/s,Batas atas praktis dua fase; pembatas utama = V_e API RP 14E,ASUMSI
+S-107,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,Aturan praktis usulan agent (LOG-036),ASUMSI
+S-107,HASIL,Kualitas massa uap,x,0.0957649,-,x = y_v · M_v / M,ASUMSI
+S-107,HASIL,Viskositas campuran homogen,μ_m,0.0855474,cP,McAdams 1/μ_m = x/μ_v + (1−x)/μ_l,ASUMSI
+S-107,HASIL,Kecepatan erosi,V_e,10.591,m/s,"API RP 14E, C = 100",ASUMSI
+S-107,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,113 m/s; 1.38e+03 bar/100 m,,ditolak,ASUMSI
+S-107,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,64.2 m/s; 313 bar/100 m,,ditolak,ASUMSI
+S-107,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,39.6 m/s; 88.2 bar/100 m,,ditolak,ASUMSI
+S-107,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,16.8 m/s; 9.34 bar/100 m,,ditolak,ASUMSI
+S-107,KANDIDAT,"NPS 2"" Sch 40 (ID 52.51 mm)",V; ΔP,10.2 m/s; 2.54 bar/100 m,,ditolak,ASUMSI
+S-107,KANDIDAT,"NPS 3"" Sch 40 (ID 77.92 mm)",V; ΔP,4.63 m/s; 0.33 bar/100 m,,TERPILIH,ASUMSI
+S-107,HASIL,Ukuran pipa terpilih,NPS,"3"" Sch 40",,ASME B36.10M,ASUMSI
+S-107,HASIL,Diameter dalam,D,77.92,mm,OD − 2 t (B36.10M),ASUMSI
+S-107,HASIL,Kecepatan,V,4.6336,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-107,HASIL,Bilangan Reynolds,Re,559932,-,ρ V D / μ,ASUMSI
+S-107,HASIL,Faktor gesek Darcy,f,0.0180416,-,Colebrook (Clamond),ASUMSI
+S-107,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.329767,bar/100 m,Darcy–Weisbach,ASUMSI
+S-107,HASIL,Momentum fluida,ρV²,2848.48,kg/(m·s²),informasi,ASUMSI
+S-107,CEK,Kecepatan ≤ batas,,PASS,,4.63 ≤ 15 m/s [kriteria input],ASUMSI
+S-107,CEK,ΔP ≤ batas,,PASS,,0.33 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-107,CEK,Kecepatan ≤ kecepatan erosi,,PASS,,4.63 ≤ 10.6 m/s [API RP 14E],ASUMSI
+S-107,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI
+S-114,INFO,Deskripsi,,"Recycle metanol dari Area 3 masuk battery limit Area 1 (cair 25 °C, 15,5 bar)",,ASME B36.10M; Darcy–Weisbach + Colebrook,ASUMSI
+S-114,INPUT,Laju alir massa,ṁ,2234.73,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.mass_flow",HMB
+S-114,INPUT,Densitas,ρ,786.881,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.props.rho",HMB
+S-114,INPUT,Viskositas dinamis,μ,0.534969,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-114.props.mu",HMB
+S-114,INPUT,Jenis layanan,,liquid_discharge,-,HMB fasa cair; hilir pompa recycle Area 3,HMB
+S-114,INPUT,Schedule pipa,,40,-,"Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A",ASUMSI
+S-114,INPUT,Kekasaran absolut,ε,0.045,mm,"Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat",LITERATUR
+S-114,INPUT,Kecepatan maksimum,V_maks,3,m/s,"Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)",LITERATUR
+S-114,INPUT,Penurunan tekanan maksimum,ΔP_maks,0.5,bar/100 m,"Jalur discharge cairan, aturan praktis usulan agent (LOG-036)",ASUMSI
+S-114,KANDIDAT,"NPS 1/2"" Sch 40 (ID 15.80 mm)",V; ΔP,4.02 m/s; 11 bar/100 m,,ditolak,ASUMSI
+S-114,KANDIDAT,"NPS 3/4"" Sch 40 (ID 20.93 mm)",V; ΔP,2.29 m/s; 2.58 bar/100 m,,ditolak,ASUMSI
+S-114,KANDIDAT,"NPS 1"" Sch 40 (ID 26.64 mm)",V; ΔP,1.42 m/s; 0.755 bar/100 m,,ditolak,ASUMSI
+S-114,KANDIDAT,"NPS 1-1/2"" Sch 40 (ID 40.90 mm)",V; ΔP,0.6 m/s; 0.0882 bar/100 m,,TERPILIH,ASUMSI
+S-114,HASIL,Ukuran pipa terpilih,NPS,"1-1/2"" Sch 40",,ASME B36.10M,ASUMSI
+S-114,HASIL,Diameter dalam,D,40.9,mm,OD − 2 t (B36.10M),ASUMSI
+S-114,HASIL,Kecepatan,V,0.600449,m/s,ṁ / (ρ π D²/4),ASUMSI
+S-114,HASIL,Bilangan Reynolds,Re,36122.7,-,ρ V D / μ,ASUMSI
+S-114,HASIL,Faktor gesek Darcy,f,0.0254388,-,Colebrook (Clamond),ASUMSI
+S-114,HASIL,Penurunan tekanan per 100 m,ΔP/L,0.0882278,bar/100 m,Darcy–Weisbach,ASUMSI
+S-114,HASIL,Momentum fluida,ρV²,283.702,kg/(m·s²),informasi,ASUMSI
+S-114,CEK,Kecepatan ≤ batas,,PASS,,0.6 ≤ 3 m/s [kriteria input],ASUMSI
+S-114,CEK,ΔP ≤ batas,,PASS,,0.0882 ≤ 0.5 bar/100 m [kriteria input],ASUMSI
+S-114,KESIMPULAN,Hasil,,PASS,,"Ukuran final dicek ulang terhadap NPSH pompa, rating kelas pipa, dan panjang ekuivalen nyata",ASUMSI

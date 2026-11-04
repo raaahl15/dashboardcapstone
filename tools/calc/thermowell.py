@@ -16,6 +16,8 @@ Langkah (nomor persamaan = nomor di standar):
   Tegangan tunak    (6-11-1)–(6-11-3), (6-10-4), (6-12-1), von Mises (6-12-2) ≤ 1,5 S
   Tegangan dinamis  (6-9-1), (6-9-2), (6-10-5), (6-10-6), (6-12-3), K_t (6-12-4), F_T (6-12-6), (6-12-5)
   Tekanan           (6-13-1) P_c (alternatif sederhana UG-28), (6-13-2) P_t; rating = min(P_c, P_t)
+  Pita operasi      §6-8.4 bila lolos resonansi in-line: f_s < 0,4 f_n^c atau 0,6 < f_s/f_n^c < 0,8
+  Dimensi           Tabel 4-1-1 / 4-2-1 (batas cakupan standar)
 
 Catatan verifikasi: G_RD dihitung dengan L_S² seperti pada contoh 8-2 (hasil 137,3); persamaan
 (6-10-10) tercetak dengan L², yang tidak mereproduksi contoh. Lihat test_verification.py.
@@ -181,8 +183,15 @@ def evaluate(g: dict) -> dict:
         limit_ratio, basis = 0.8, "§6-8.3 langkah 3: lolos tegangan siklik di resonansi in-line, f_s < 0,8 f_n^c"
     else:
         limit_ratio, basis = 0.4, "§6-8.3 langkah 4: gagal tegangan siklik di resonansi in-line, f_s < 0,4 f_n^c"
+    freq_ok = fs < limit_ratio * fnc
+    if inline_ok and not low_density:
+        # §6-8.4: lolos di resonansi in-line tetapi operasi tunak tidak boleh berdiam di pita lock-in:
+        # f_s < 0,4 f_n^c (6-8-8) atau 0,6 f_n^c < f_s < 0,8 f_n^c (6-8-9).
+        r_ss = fs / fnc
+        freq_ok = r_ss < 0.4 or 0.6 < r_ss < 0.8
+        basis += "; §6-8.4: f_s < 0,4 f_n^c (6-8-8) atau 0,6 f_n^c < f_s < 0,8 f_n^c (6-8-9)"
     out.update(VIR=VIR, Pd_IR=Pd_IR, low_density=low_density, inline_ok=inline_ok,
-               limit_ratio=limit_ratio, freq_basis=basis, freq_ok=fs < limit_ratio * fnc)
+               limit_ratio=limit_ratio, freq_basis=basis, freq_ok=freq_ok)
     if fs > fnc:
         raise CalcError("f_s > f_n^c: operasi superkritis (§6-12.5) di luar cakupan kalkulator ini")
 
@@ -216,9 +225,32 @@ def evaluate(g: dict) -> dict:
     # Kecepatan rendah §6-3.6 (informasi; rating tekanan tetap wajib)
     out["low_velocity_exempt"] = (V < 0.64 and A - d >= 9.55e-3 and L <= 0.61 and A >= B >= 12.7e-3
                                   and S >= 69e6 and Sf >= 21e6)
-    out["passed"] = (out["freq_ok"] and out["pressure_ok"]
+    out["dim_issues"] = dimension_issues(g)
+    out["passed"] = (out["freq_ok"] and out["pressure_ok"] and not out["dim_issues"]
                      and all(l["steady_ok"] and l["dynamic_ok"] for l in out["locations"]))
     return out
+
+
+def dimension_issues(g: dict) -> list[str]:
+    """Batas dimensi nominal Tabel 4-1-1 (lurus/tirus) dan Tabel 4-2-1 (step-shank). Kosong = dalam cakupan."""
+    A, B, d, L, t = g["A"], g["B"], g["d"], g["L"], g["t"]
+    mm = 1e-3
+    rules = [("L ≥ 63,5 mm" if g["shape"] != "step" else "L ≥ 127 mm", L >= (63.5 if g["shape"] != "step" else 127) * mm),
+             ("(B − d)/2 ≥ 3,0 mm", (B - d) / 2 >= 3.0 * mm - 1e-9),
+             ("t ≥ 3,0 mm", t >= 3.0 * mm - 1e-9)]
+    if g["shape"] == "step":
+        Ls = g.get("Ls", 0.0)
+        lo, hi = (0.5, 0.8) if abs(B - 0.0127) <= 2e-4 else (0.583, 0.875)
+        rules += [("6,1 ≤ d ≤ 6,7 mm", 6.1 * mm <= d <= 6.7 * mm),
+                  (f"{lo} ≤ B/A ≤ {hi}", lo <= B / A <= hi),
+                  ("L_S/L ≤ 0,6", 0 <= Ls / L <= 0.6)]
+    else:
+        rules += [("3,175 ≤ d ≤ 20,955 mm", 3.175 * mm <= d <= 20.955 * mm),
+                  ("9,2 ≤ B ≤ 46,5 mm", 9.2 * mm <= B <= 46.5 * mm),
+                  ("0,58 ≤ B/A ≤ 1", 0.58 <= B / A <= 1),
+                  ("0,16 ≤ d/B ≤ 0,71", 0.16 <= d / B <= 0.71),
+                  ("L/B ≥ 2", L / B >= 2)]
+    return [name for name, ok in rules if not ok]
 
 
 # ------------------------------------------------------------------ dari YAML
@@ -314,6 +346,9 @@ def run(path, hmb) -> Result:
               f"{loc['So'] / MPa:.3g} MPa ≤ {o['fatigue_limit'] / MPa:.3g} MPa", "(6-12-5)")
     check(res, "Rating tekanan eksternal", o["pressure_ok"],
           f"P_r = {o['Pr'] / MPa:.3g} MPa > P = {g['P'] / MPa:.3g} MPa", "§6-13")
+    table = "Tabel 4-2-1" if g["shape"] == "step" else "Tabel 4-1-1"
+    check(res, "Batas dimensi dalam cakupan standar", not o["dim_issues"],
+          "semua batas terpenuhi" if not o["dim_issues"] else "di luar batas: " + "; ".join(o["dim_issues"]), table)
     res.add("KESIMPULAN", "Hasil", "", "PASS" if res.passed else "FAIL", "",
-            "Tanpa corrosion allowance (§6-2); dimensi Tabel 4-1-1 belum dicek otomatis", s)
+            "Tanpa corrosion allowance (§6-2); rating flens P_f (§6-13 langkah 3) dicek terpisah di companion .md", s)
     return res

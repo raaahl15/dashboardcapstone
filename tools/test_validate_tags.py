@@ -23,6 +23,10 @@ def test_ekstraksi_tag_dengan_sufiks_dan_tanpa_menempel():
     assert vt.extract_tags("TT-101A; PUMP-01-TRIP; xTIC-101") == ["TT-101A", "PUMP-01"]
 
 
+def test_ekstraksi_singkatan_elemen_redundan():
+    assert sorted(vt.extract_tags("TE-102A/B/C (2oo3) -> TSHH-102")) == ["TE-102A", "TE-102B", "TE-102C", "TSHH-102"]
+
+
 def test_bagian_riwayat_dilewati():
     md = "---\nid: x\n---\n# Judul\nTIC-101\n## 8. Catatan Inkonsistensi\nREAC-01\n## 9. Log Revisi\nHEATER-01\n"
     body = vt.text_without_history(md)
@@ -82,3 +86,31 @@ def test_dokumen_proyek_bisa_divalidasi():
     report = vt.run([])
     assert report["meta"]["index_instruments"] >= 1
     assert {"ERROR", "WARNING"} <= set(report["summary"])
+
+
+def test_gelembung_dua_teks_dipasangkan():
+    # "LT" di atas "105" (tinggi 0,8, jarak 1,6) -> LT-105; nomor jauh / bergeser tidak dipasangkan
+    texts = [("LT", 163.8, 167.1, 0.8), ("105", 163.8, 165.4, 0.8),
+             ("PI", 57.4, 152.8, 0.8), ("107", 57.4, 151.2, 0.8),
+             ("TT", 10.0, 50.0, 0.8), ("109", 30.0, 49.0, 0.8),
+             ("FEED", 21.0, 146.4, 1.9), ("1", 21.0, 145.0, 1.0)]
+    assert sorted(vt.pair_bubbles(texts)) == ["LT-105", "PI-107"]
+
+
+def test_gelembung_dxf_dan_item_perpipaan(index, tmp_path):
+    doc = ezdxf.new()
+    msp = doc.modelspace()
+    msp.add_text("FIC", dxfattribs={"height": 0.8, "insert": (100, 186.8)})
+    msp.add_text("101", dxfattribs={"height": 0.8, "insert": (100, 185.2)})
+    msp.add_text("LG", dxfattribs={"height": 0.8, "insert": (170, 162.2)})
+    msp.add_text("105", dxfattribs={"height": 0.8, "insert": (170, 160.6)})
+    for tag in ("HV-101", "NRV-102", "ST-101", "TIC-101", "FCV-101", "PIC-105"):
+        msp.add_text(tag)
+    path = tmp_path / "bubble.dxf"
+    doc.saveas(path)
+    report = vt.run([path], index_path=index, tables=[], mirrors_dir=tmp_path / "tidak_ada")
+    assert ("PHANTOM_IN_DRAWING", "LG-105") in codes(report)          # gelembung terbaca
+    assert not codes(report, "FIC-101")                               # gelembung = tag index
+    for piping in ("HV-101", "NRV-102", "ST-101"):
+        assert not codes(report, piping), piping                       # bukan instrumen
+    assert report["summary"]["ERROR"] == 1

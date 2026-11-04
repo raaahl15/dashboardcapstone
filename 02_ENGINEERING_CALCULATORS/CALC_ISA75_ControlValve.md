@@ -5,27 +5,27 @@ category: "Engineering Calculator"
 standard: "ANSI/ISA-75.01.01 / IEC 60534-2-1"
 target_files:
   - "CALC_ISA75_ControlValve.csv"
-  - "inputs/FCV-101.yaml"
+  - "inputs/FV-101.yaml"
 generated_by: "tools/calc/control_valve.py (npm run calc)"
 source_data:
-  - "hmb_streams.json → S-102 (q_m, P, T, rho, mu fase cair); input lain di inputs/FCV-101.yaml"
+  - "hmb_streams.json → S-102 (q_m, P, T, rho, mu fase cair); input lain di inputs/FV-101.yaml"
 author: "Altaf Ramadhan Parvez (PIC)"
 reviewer: ""
 status: "Draft"
 review_evidence: ""
 google_ref: ""
-last_updated: "2026-11-03"
+last_updated: "2026-11-04"
 tags: ["Control Valve", "Cv", "Area-100", "Instrumentation"]
 ---
 
 # Panduan Penggunaan: CALC_ISA75_ControlValve.csv
 
-> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/FCV-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.
+> 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/FV-101.yaml` + `hmb_streams.json`. Jangan edit CSV; ubah input YAML.
 >
-> ⚠️ **Status data: PLACEHOLDER** (diameter pipa dari index masih data contoh; ΔP katup, faktor laju maksimum, FL/Fd, dan ukuran katup = ASUMSI). Belum boleh dikutip ke laporan.
+> ⚠️ **Status data: ASUMSI** (sejak LOG-036 diameter pipa dari line sizing S-102 = 2" Sch 40, berstatus ASUMSI; ΔP katup, faktor laju maksimum, FL/Fd, dan ukuran katup = ASUMSI). Belum boleh dikutip ke laporan sebelum dikonfirmasi PIC.
 
 ## 1. Cakupan
-Menghitung $K_v$/$C_v$ pada laju normal dan maksimum, serta memeriksa choked flow, laminar, dan flashing untuk katup kendali cair **Area 1**: saat ini **FCV-101** (umpan metanol, discharge P-101, S-102). Tag Area 2/3 di CSV lama (PCV-201, LCV-202) bukan lingkup firma Area 1 dan sudah dikeluarkan. TCV-102 (steam pemanas) belum dihitung karena utilitas steam belum ada di model DWSIM. Pemilihan ukuran bodi, trim, dan fail action tetap dari katalog vendor.
+Menghitung $K_v$/$C_v$ pada laju normal dan maksimum, serta memeriksa choked flow, laminar, dan flashing untuk katup kendali cair **Area 1**: saat ini **FV-101** (umpan metanol, discharge P-101, S-102; dulu bertag FCV-101, diganti mengikuti P&ID DME-PID-002, LOG-036). Tag Area 2/3 di CSV lama (PCV-201, LCV-202) bukan lingkup firma Area 1 dan sudah dikeluarkan. TCV-102 (steam pemanas) belum dihitung karena utilitas steam belum ada di model DWSIM. Pemilihan ukuran bodi, trim, dan fail action tetap dari katalog vendor.
 
 ## 2. Standar Acuan
 - **ISA-75.01.01 / IEC 60534-2-1** — persamaan aliran untuk sizing control valve.
@@ -35,7 +35,7 @@ Menghitung $K_v$/$C_v$ pada laju normal dan maksimum, serta memeriksa choked flo
 $$C_v = \frac{Q}{N_1 F_P} \sqrt{\frac{\rho_1/\rho_0}{\Delta p}}$$
 dengan pemeriksaan choked flow: $\Delta p_{choked} = F_L^2 \,(p_1 - F_F\, p_v)$. Untuk gas/uap memakai bentuk persamaan dengan faktor ekspansi $Y$ dan rasio $x_T$.
 
-## 4. Input & Hasil FCV-101 (LOG-020)
+## 4. Input & Hasil FV-101 (LOG-020, D diperbarui LOG-036)
 
 | Input | Nilai | Status |
 | :--- | ---: | :---: |
@@ -45,7 +45,7 @@ dengan pemeriksaan choked flow: $\Delta p_{choked} = F_L^2 \,(p_1 - F_F\, p_v)$.
 | $p_v$ | Antoine metanol NIST (pendekatan campuran x MeOH 0,983) | LITERATUR |
 | $p_c$ | 81 bar (NIST) | LITERATUR |
 | $F_L$ / $F_d$ | 0,90 / 0,46 (globe single-port tipikal) | ASUMSI (ganti data vendor) |
-| $D$ pipa / ukuran katup | 154,08 mm / sama dengan pipa | PLACEHOLDER / ASUMSI |
+| $D$ pipa / ukuran katup | 52,51 mm (2" Sch 40, CALC_LineSizing S-102) / sama dengan pipa | ASUMSI / ASUMSI |
 
 | Hasil | Normal | Maksimum |
 | :--- | ---: | ---: |
@@ -75,3 +75,4 @@ $p_v$ pada 25,3 °C = 17,2 kPa. Setelah ukuran katup dipilih dari katalog, ubah 
 | 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; catatan inkonsistensi (LOG-004). |
 | 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/control_valve.py`; FCV-101 dari HMB; tag Area 2/3 dikeluarkan; uji IEC (LOG-020). |
+| 1.1 | 2026-11-04 | Claude Code (AI) | Tag FCV-101 → FV-101 (P&ID); D = 52,51 mm dari line sizing (2" Sch 40); Kv tidak berubah (Fp = 1); status data PLACEHOLDER → ASUMSI (LOG-036). |

@@ -1,7 +1,8 @@
-# Input kalkulator control valve FCV-101 (loop FIC-101, umpan metanol cair di discharge P-101).
-tag: FCV-101
+# Input kalkulator control valve FV-101 (loop FIC-101, umpan metanol cair di discharge P-101).
+# Tag mengikuti DME-PID-002 (ISA-5.1: FV = katup kendali aliran); dulu FCV-101 (LOG-036).
+tag: FV-101
 calculator: control_valve_liquid
-description: Control valve FCV-101 pengatur laju umpan metanol cair (discharge P-101, jalur 6"-PL-101)
+description: Control valve FV-101 pengatur laju umpan metanol cair (discharge P-101, line 2"-P-102)
 standard: IEC 60534-2-1 / ISA-75.01.01
 inputs:
   q_m: {stream: S-102, field: mass_flow, symbol: q_m, label: Laju alir massa normal}
@@ -27,9 +28,9 @@ inputs:
   Fd:  {value: 0.46, unit: "-", symbol: Fd, label: Valve style modifier,
         source: "IEC 60534-2-1 Lampiran A, nilai tipikal globe single-port, plug parabolik, flow-to-open; ganti dengan data vendor",
         status: ASUMSI}
-  D:   {value: 154.08, unit: mm, symbol: D, label: Diameter dalam pipa,
-        source: "ASME B36.10M 6 in Sch 40; ukuran jalur dari nomor 6\"-PL-101 di Master Instrument Index (data contoh)",
-        status: PLACEHOLDER}
-  d_valve: {value: 154.08, unit: mm, symbol: d, label: Ukuran katup,
+  D:   {value: 52.51, unit: mm, symbol: D, label: Diameter dalam pipa,
+        source: "CALC_LineSizing.csv S-102 → NPS 2 in Sch 40 (ASME B36.10M), LOG-036",
+        status: ASUMSI}
+  d_valve: {value: 52.51, unit: mm, symbol: d, label: Ukuran katup,
         source: "Sementara sama dengan pipa (tanpa reducer, Fp = 1); setelah Kv diketahui pilih ukuran katup lalu hitung ulang",
         status: ASUMSI}

@@ -1,0 +1,14 @@
+# Line sizing S-102 (line P-102 di DME-PID-002), LOG-036.
+tag: S-102
+calculator: line_sizing
+description: "Line P-102: discharge P-101 (cair 25 °C, 15,5 bar)"
+standard: ASME B36.10M; Darcy–Weisbach + Colebrook
+inputs:
+  m_flow:  {stream: S-102, field: mass_flow, unit: kg/h, symbol: ṁ, label: Laju alir massa}
+  rho:     {stream: S-102, field: props.rho, unit: kg/m3, symbol: ρ, label: Densitas}
+  mu:      {stream: S-102, field: props.mu, unit: cP, symbol: μ, label: Viskositas dinamis}
+  service: {value: liquid_discharge, unit: "-", label: Jenis layanan, source: "HMB fasa cair; hilir P-101", status: HMB}
+  schedule:  {value: "40", unit: "-", label: Schedule pipa, source: "Sch 40 (ASME B36.10M), pilihan awal; tetapkan dari spesifikasi kelas pipa A1A", status: ASUMSI}
+  roughness: {value: 0.045, unit: mm, symbol: ε, label: Kekasaran absolut, source: "Baja komersial 0,045 mm (diagram Moody); konservatif untuk baja tahan karat", status: LITERATUR}
+  v_max:  {value: 3.0, unit: m/s, symbol: V_maks, label: Kecepatan maksimum, source: "Cairan dipompa 1–3 m/s (Towler & Sinnott, Chemical Engineering Design, Tabel 5.3)", status: LITERATUR}
+  dp_max: {value: 0.5, unit: bar/100 m, symbol: ΔP_maks, label: Penurunan tekanan maksimum, source: "Jalur discharge cairan, aturan praktis usulan agent (LOG-036)", status: ASUMSI}

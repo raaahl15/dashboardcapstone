@@ -61,6 +61,7 @@ Alur Area 1: `S-101 → P-101 → S-102 → M-101 (+ S-114) → S-103 → E-101 
 | 6 | Re-audit (LOG-002) mencatat "1 unit bertag kosong". Objek itu adalah `GO_MasterTable` (tabel tampilan DWSIM), bukan unit operasi; jumlah unit sebenarnya 10. | `hmb_streams.json` (diperbaiki di Fase 3) | IH |
 | 7 | Outlet cair reaktor S-06/S-106 tidak tersambung ke unit lain. Perlu dikonfirmasi apakah laju alirnya nol (reaktor fase gas) atau ada aliran yang belum dimodelkan. | DME.dwxmz | IH |
 | 8 | M-101 di P&ID kemungkinan hanya sambungan pipa (tee). Putuskan apakah tetap diberi tag peralatan. | P&ID, PFD | IH, JN |
+| 10 | **(LOG-036)** Draf P&ID `DME-PID-002` menggambar **T-101** (drum umpan metanol) sebagai titik masuk umpan segar dan recycle stream 14, artinya padanan fisik M-101. T-101 ditambahkan sebagai baris `USULAN` tanpa `dwsim_tag` (tidak dimodelkan di DWSIM). Konfirmasi IH + JN: pertahankan T-101 (dan M-101 hanya simbol DWSIM), atau tambahkan drum ke model DWSIM. Pendingin efluen yang di gambar ditulis `E-103` **diganti `E-102`** di P&ID Rev B sesuai baris FINAL `COOL-01 → E-102`; FEHE pada tabel PFD tidak ada di model DWSIM sehingga belum bertag. | tag_map.csv, P&ID, PFD, DME.dwxmz | IH, JN |
 
 ## 4. SOP Pembaruan
 1. Ubah `tag_map.csv` (master di Git) lalu `npm run check`.
@@ -77,3 +78,4 @@ Topologi dibaca dari XML di dalam `DME.dwxmz` (salinan di folder sementara; file
 | 0.1 | 2026-11-03 | Claude Code (AI) | Draf awal dari topologi DWSIM + keputusan lingkup PM (LOG-014). |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Pabrik 3 area (Area 2 distilasi 1, Area 3 distilasi 2); S-114 masuk dari Area 3; kode area 100/200/300 (LOG-015). |
 | 1.0 | 2026-11-03 | Ihsaan Z. T. Prawira / Jonathan P. M. Siahaan | Dikonfirmasi; status baris `FINAL`, dokumen `Review Internal` (LOG-016). |
+| 1.1 | 2026-11-04 | Claude Code (AI) | Tambah baris `T-101` (drum umpan dari P&ID, status `USULAN`, tanpa objek DWSIM); temuan 10 (LOG-036). Baris lain tetap `FINAL`. |

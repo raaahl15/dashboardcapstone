@@ -527,7 +527,7 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 │ FASE 1        │ Konsolidasi Monorepo & Companion .md                   │ via 1.5      │
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
 │ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
-│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ DoD 5/5      │
+│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ SELESAI      │
 │ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DIRILIS**    │
 │ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ BERJALAN     │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
@@ -582,13 +582,13 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
   - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner (LOG-023; `anyone: reader` dicabut PM → Dibatasi, terverifikasi LOG-028); (c) ⏳ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
 
-#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: DoD 5/5 TERPENUHI (2026-11-04, LOG-034/035), menunggu sign-off PM. Catatan: semua hasil kalkulator masih berstatus data PLACEHOLDER/ASUMSI (input desain belum final), dan P&ID belum selaras dengan index (56 ERROR validasi tag) — keduanya pekerjaan isi teknis tim, bukan syarat DoD Fase 3.
+#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: SELESAI (DoD 5/5, LOG-034/035; **sign-off PM 2026-11-04, LOG-036**). Catatan saat sign-off: hasil kalkulator berstatus data ASUMSI/PLACEHOLDER (input desain belum final). Penyelarasan P&ID ↔ index dikerjakan di LOG-036 (Rev B: 0 ERROR).
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
 * **Aktivitas:** `tools/dwsim/export_hmb.py` (skema §3.1); `tag_map.csv`; mesin kalkulator `tools/calc/` + input YAML; uji verifikasi per kalkulator; `validate_tags.py`.
 * **DoD:**
   - [x] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file. *(LOG-019: 14 stream; status diturunkan dari `Calculated`/`ErrorMessage` per objek karena DWSIM tidak menyimpan status global.)*
   - [x] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi. *(LOG-019: 10 unit, galat maks 0,027 % di M-101; divalidasi otomatis setiap ekstraksi.)*
-  - [x] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: orifice, control valve, PSV, NPV. LOG-035: thermowell `tools/calc/thermowell.py` dari ASME PTC 19.3 TW-2016 (salinan dari PM), uji contoh 8-1 & 8-2 standar terreproduksi; `npm run calc` menulis 5/5 CSV; `npm run test:py` 34 passed.)*
+  - [x] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: orifice, control valve, PSV, NPV. LOG-035: thermowell `tools/calc/thermowell.py` dari ASME PTC 19.3 TW-2016 (salinan dari PM), uji contoh 8-1 & 8-2 standar terreproduksi; `npm run calc` menulis 5/5 CSV; `npm run test:py` 34 passed. LOG-036: + kalkulator line sizing (`tools/calc/line_sizing.py`, 5 uji), thermowell + cek §6-8.4 & Tabel 4-1-1; 6/6 CSV; 45 passed.)*
   - [x] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-034: dijalankan pada Draf P&ID asli `DME-PID-002_Draft_PID_Area1.dxf` (sha256 `5eaa85cdc0103348`) → 56 ERROR, 40 WARNING; 49 temuan dari gambar, termasuk 34 instrumen di gambar yang belum ada di index (index masih PLACEHOLDER) dan 6 tag lama. Penyelarasan gambar ↔ index = pekerjaan JN, syarat DoD Fase 5.)*
   - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 
@@ -601,10 +601,10 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya). *(LOG-023: `build_manifest.js --check` membandingkan hash sumber; `npm run check`/`sync:push` menolak bila basi; tanggal ekstraksi tampil di modul.)*
 
 #### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: PERANGKAT LUNAK SIAP (LOG-023), kegiatan rilis & serah terima menunggu tim
-* **Perangkat lunak (LOG-023):** validasi tag menyeluruh (`npm run validate:tags`, LOG-021); ekspor logbook CSV (kolom Lampiran 2 Panduan; format unggah Simaster belum terdokumentasi, CSV umum); indikator ukuran `projectData/area1` di panel Kesehatan Data. **Kegiatan manusia:** merge ke `main` (rilis Vercel), `firebase deploy --only firestore:rules` (butuh login Firebase PM), login + WO percobaan oleh tiap anggota, kompilasi bundel Stage-Gate di Drive (Antigravity), re-audit akhir oleh agent/pihak **selain** pelaksana (§7.2). Langkah di README "Rilis Produksi & Serah Terima".
+* **Perangkat lunak (LOG-023):** validasi tag menyeluruh (`npm run validate:tags`, LOG-021); ekspor logbook CSV (kolom Lampiran 2 Panduan; format unggah Simaster belum terdokumentasi, CSV umum); indikator ukuran `projectData/area1` di panel Kesehatan Data. **Kegiatan manusia:** merge ke `main` (rilis Vercel), `firebase deploy --only firestore:rules` (butuh login Firebase PM; agent diblokir classifier "Production Deploy" pada LOG-029 dan LOG-036, jadi PM menjalankannya sendiri), login + WO percobaan oleh tiap anggota, kompilasi bundel Stage-Gate di Drive (Antigravity), re-audit akhir oleh agent/pihak **selain** pelaksana (§7.2). Langkah di README "Rilis Produksi & Serah Terima".
 * **Aktivitas:** validasi tag menyeluruh; ekspor Logbook ke format Simaster; kompilasi bundel Stage-Gate di Drive; rilis produksi di Vercel (push ke `main`) + deploy `firestore.rules`; serah terima ke tim; **(opsional)** gateway WhatsApp Baileys dengan nomor cadangan.
 * **DoD:**
-  - [ ] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`.
+  - [ ] Laporan validasi tag: 0 phantom tag pada P&ID yang berstatus `Diajukan`. *(PARSIAL, LOG-036: Draf P&ID `DME-PID-002` **Rev B** + index Sheets yang diturunkan dari gambar → **0 ERROR**, 1 WARNING (FE-101 belum digambar). **Syarat penutupan:** JN memeriksa Rev B di AutoCAD dan menambah FE-101, IH + JN mengonfirmasi T-101, lalu PM menetapkan gambar `Diajukan` dan validator dijalankan ulang tanpa ERROR.)*
   - [ ] Seluruh anggota tim berhasil login dan membuat WO percobaan di versi produksi.
   - [ ] Ukuran dokumen `projectData/area1` tercatat dan < 500 KB. *(LOG-023: indikator tersedia di panel Kesehatan Data; tinggal dibaca & dicatat PM setelah rilis.)*
   - [ ] Re-audit akhir tercatat di log riwayat.
