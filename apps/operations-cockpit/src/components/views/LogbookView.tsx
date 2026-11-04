@@ -68,10 +68,20 @@ export const LogbookView: React.FC = () => {
   const [formSolution, setFormSolution] = useState('');
   const [formVerified, setFormVerified] = useState(false);
 
-  // Arahan Bimbingan 4 (22 Okt 2026): logbook per orang, bukan per area. Target = 5 anggota.
-  // Entri lama berkategori 'kelompok' tetap tampil di tabel, tetapi tidak dihitung ke kuota.
+  // 6 logbook (keputusan PM, LOG-053): 1 logbook kelompok Area 1 + 5 logbook per anggota
+  // (arahan Bimbingan 4: tiap orang punya logbook sendiri).
   const entities: EntityMeta[] = useMemo(() => {
-    const list: EntityMeta[] = [];
+    const list: EntityMeta[] = [
+      {
+        id: 'team-area-1',
+        name: 'Area 1 (Kelompok)',
+        shortName: 'Kelompok A1',
+        roleTitle: 'Logbook kelompok',
+        category: 'kelompok',
+        avatarText: 'A1',
+        avatarBg: 'bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white',
+      },
+    ];
 
     users.forEach((u) => {
       list.push({
@@ -91,7 +101,7 @@ export const LogbookView: React.FC = () => {
   // Target constants (Panduan Lampiran 2: 12 baris per mahasiswa, diambil dari minggu proyek 1..18)
   const TARGET_PER_ENTITY = 12;
   const MAX_WEEK = 18;
-  const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 5 = 60
+  const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 6 = 72
 
   // Statistics per entity (menghitung minggu unik agar tidak terjadi false completion)
   const { statsByEntity, totalFilled } = useMemo(() => {
@@ -149,7 +159,7 @@ export const LogbookView: React.FC = () => {
   const overallVerifiedPercent = Math.min(100, Math.round((totalVerified / TOTAL_TARGET) * 100));
   const overallFilledPercent = Math.min(100, Math.round((totalFilled / TOTAL_TARGET) * 100));
 
-  // Aturan 1x24 jam (Panduan Lampiran 2): setiap anggota wajib punya entri untuk minggu MoM terbaru
+  // Aturan 1x24 jam (Panduan Lampiran 2): setiap logbook (kelompok + anggota) wajib punya entri untuk minggu MoM terbaru
   const momLogbookStatus = useMemo(() => {
     if (!meetingLogs || meetingLogs.length === 0) {
       return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM', missingNames: [] as string[] };
@@ -163,7 +173,14 @@ export const LogbookView: React.FC = () => {
       .filter(
         (ent) =>
           !logbooks.some((l) => {
-            const authorRef = getUser(l.authorId || l.authorName || l.authorCode)?.id || l.authorId;
+            const isTeamLog =
+              l.authorId === 'team-area-1' ||
+              l.authorId === 'kelompok' ||
+              l.authorId === 'area-1' ||
+              l.category === 'kelompok';
+            const authorRef = isTeamLog
+              ? 'team-area-1'
+              : (getUser(l.authorId || l.authorName || l.authorCode)?.id || l.authorId);
             return authorRef === ent.id && l.weekNumber === latestMom.week;
           })
       )
@@ -365,7 +382,7 @@ export const LogbookView: React.FC = () => {
               Logbook Kegiatan
             </h1>
             <p className="text-xs sm:text-sm text-[#4A5A72] mt-1">
-              Logbook <strong>per orang</strong> (arahan Bimbingan 4): <strong>12 baris per anggota</strong>, diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Setiap anggota mengisi logbooknya sendiri.
+              <strong>6 logbook</strong>: 1 logbook kelompok Area 1 + 5 logbook per anggota, masing-masing <strong>12 baris</strong>. Diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Format uraian: <em>Judul Uraian: Isi Uraian</em>.
             </p>
           </div>
 
@@ -427,7 +444,7 @@ export const LogbookView: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between text-[11px] text-[#4A5A72]">
-              <span>Target: {entities.length} anggota × 12 baris</span>
+              <span>Target: 1 kelompok + {entities.length - 1} anggota, × 12 baris</span>
               <span className="font-semibold text-[#047857]">
                 {totalVerified} / {TOTAL_TARGET} ACC ({overallVerifiedPercent}%)
               </span>
@@ -467,14 +484,14 @@ export const LogbookView: React.FC = () => {
           <div className="flex items-center justify-between mb-2.5">
             <span className="text-xs font-bold text-[#0B1B33] flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-[#0062CC]" />
-              KUOTA PER ANGGOTA ({entities.length} × 12 BARIS):
+              KUOTA 6 LOGBOOK (1 KELOMPOK + 5 ANGGOTA × 12 BARIS):
             </span>
             <span className="text-[11px] text-[#4A5A72]">
               Klik kartu untuk memfilter entri
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
             {entities.map((ent) => {
               const stat = statsByEntity[ent.id] || { total: 0, verified: 0, percent: 0, isCompleted: false };
               const isSelected = filterEntity === ent.id;
@@ -893,14 +910,13 @@ export const LogbookView: React.FC = () => {
                   className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
                   required
                 >
-                  {formAuthorId === 'team-area-1' && (
-                    <option value="team-area-1">[Format lama] Area 1 (Kelompok)</option>
-                  )}
                   {entities
-                    .filter((ent) => isPM || ent.id === currentUser.id)
+                    .filter((ent) => isPM || ent.id === 'team-area-1' || ent.id === currentUser.id)
                     .map((ent) => (
                       <option key={ent.id} value={ent.id}>
-                        {`${ent.name} (${ent.roleTitle})`}
+                        {ent.category === 'kelompok'
+                          ? `[Kelompok] ${ent.name}`
+                          : `[Anggota] ${ent.name} (${ent.roleTitle})`}
                       </option>
                     ))}
                 </select>
@@ -947,7 +963,7 @@ export const LogbookView: React.FC = () => {
                   rows={3}
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
-                  placeholder="Deskripsikan pekerjaan teknis rekayasa spesifik (simulasi DWSIM, piping P&ID, ISA-5.06, kalkulasi CAPEX/OPEX)..."
+                  placeholder="Judul Uraian: Isi Uraian (contoh: Sizing FV-101: menghitung Kv normal/maks. dengan ISA-75.01 ...)"
                   className="w-full p-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC] leading-relaxed"
                   required
                 />
