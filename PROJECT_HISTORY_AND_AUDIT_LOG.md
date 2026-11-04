@@ -264,6 +264,27 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-026] 2026-11-04 15:05 WIB — Unggah berkas PDF RFP (KAK-IC-DME-2026-001) ke Google Drive
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"unggah PDF RFP ke Drive 00_CORE_GUIDELINES/."*
+* **Fase**: 2 (tindak lanjut LOG-024/025)
+* **Tujuan**: Menutup tindak lanjut Antigravity di LOG-024 (mengunggah salinan PDF asli RFP/KAK ke Google Drive agar dapat diakses oleh tim dan dosen tanpa membebani Git monorepo).
+* **Perubahan**:
+  - **Google Drive**:
+    - Berkas `KAK-IC-DME-2026-001_RFP.pdf` (69,4 KB) dari direktori lokal staging `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\` diunggah ke subfolder `00_CORE_GUIDELINES` (ID: `1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y`).
+    - File ID yang terbentuk di Google Drive: **`1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn`**.
+* **Bukti / Verifikasi**:
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\KAK-IC-DME-2026-001_RFP.pdf" --parent 1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y` → `Uploaded: KAK-IC-DME-2026-001_RFP.pdf (ID: 1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn)`.
+  - `gdrive readonly ls 1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y` → folder kini memuat 2 file: `Panduan_Capstone_DTNTF_2026.pdf` (1.1 MB) dan `KAK-IC-DME-2026-001_RFP.pdf` (69.4 KB).
+  - `gdrive readonly permissions 1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` → seluruh 4 email UGM anggota tim otomatis mewarisi peran **writer**, dan `rahulghulam15@gmail.com` sebagai **owner**.
+  - `node tools/check_companions.js` → **PASS**.
+* **Keputusan**:
+  - Berkas PDF disimpan di Google Drive (sesuai Blueprint §2.2 kebijakan biner di luar Git). Repo Git hanya melacak companion Markdown `00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md`.
+  - `google_workspace_registry.json` tidak disentuh (dikelola oleh Claude Code).
+* **Tindak Lanjut**:
+  - [ ] **Claude Code**: catat ID file Drive `1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` ke dalam `google_workspace_registry.json` pada field `tor_rfp` (bila diperlukan).
+
+---
+
 ### [LOG-025] 2026-11-03 19:00 WIB — Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan; anggota ke-5; alat tulis opsi 1
 * **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"untuk struktur template tersebut salah sedikit, isi nya mengikuti panduan ya … laporan PSTF 1 hanya 4 bab saja. lalu tambahkan baris anggota kelima, untuk alat tulis laporan pakai opsi 1."*
 * **Fase**: laporan PSTF 1 (koreksi atas LOG-024)
@@ -282,7 +303,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - [ ] **Tim**: isi NIM lima anggota (Google Docs + `\nimA…\nimE`); PM setujui usulan `\judul`.
   - [ ] **PM**: konfirmasi ke Dosen Koordinator bahwa sampul/pengesahan 5 anggota diterima.
   - [ ] **Claude Code**: bundel ulang data cockpit di branch `fase-4-cockpit` (registry berubah) sebelum merge.
-  - [ ] Tindak lanjut LOG-024 lain tetap terbuka (unggah PDF RFP oleh Antigravity, `SIGNAL_TYPE` HART/FF oleh JN). Butir "PM putuskan alat tulis & format 5 anggota" **selesai** di entri ini.
+  - [ ] Tindak lanjut LOG-024 lain: unggah PDF RFP oleh Antigravity **selesai di LOG-026**; `SIGNAL_TYPE` HART/FF oleh JN tetap terbuka. Butir "PM putuskan alat tulis & format 5 anggota" **selesai** di entri ini.
 
 ---
 
@@ -302,7 +323,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - `npm run check` → PASS.
 * **Keputusan**: lihat Kronologi #14. Pembagian pengerja/reviewer bagian baru oleh agent (delegasi PM, LOG-016): 3.1 JN/HD, 3.4 AL/IH, 4.1 IH (+AL)/RG, 4.2 AL/JN, Ringkasan RG/HD; Lampiran A reviewer → AL (beban: HD 4, JN 4, IH 4, AL 3, RG 1 + cek akhir).
 * **Tindak Lanjut**:
-  - [ ] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log).
+  - [x] **Antigravity**: unggah `00_CORE_GUIDELINES/KAK-IC-DME-2026-001_RFP.pdf` dari staging ke Drive `00_CORE_GUIDELINES/` (catat ID di log; selesai di LOG-026).
   - [ ] **PM**: putuskan alat tulis laporan (Google Docs → LaTeX saat final, atau langsung LaTeX/Overleaf) dan format 5 anggota pada template (konfirmasi Dosen Koordinator).
   - [ ] **JN**: `SIGNAL_TYPE` index → transmitter HART/FF (RFP §2.3).
   - [ ] **Claude Code**: perbarui branch `fase-4-cockpit` (G4 = tenggat DED 30-06-2027; bundel ulang data cockpit).
