@@ -264,6 +264,17 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-048] 2026-11-05 — Verifikasi produksi pasca-merge: RACI, deliverable, WO-029, G1 29 Nov sesuai
+* **Pelaksana**: Claude Code (AI agent); PM (Rahul) login di browser uji. Atas pesan PM: *"lakukan pengecekan otomatis"*
+* **Bukti / Verifikasi** (`smoke_console.js --dump`, 14/14 modul, 0 error console):
+  - RACI Assignment Ringkas: nama penanggung jawab tampil (Bab 1 IH, Bab 2 AL+JN, Bab 3 IH, Lampiran A AL+JN, Bab 4 HD, antarmuka IH), validasi 6/6.
+  - Progress Dokumen FEED **24 %**: Bab 1 Revisi (bukti WO-029, target revisi W13), Bab 2 WIP W14, Bab 3 Draft W14, Lampiran A WIP W15, Bab 4 Draft W15 "Belum dimulai (jalur kritis)".
+  - Work Order: 29 kode (WO-001…029); "WO Aktif Tim 8, 1 terlambat". Logbook ACC 0/72 (entri uji "a" sudah terhapus).
+  - Stage-Gate: **G1 = 29 Nov 2026**, "akhir minggu efektif 13 PSTF 1 (tanpa 2 minggu UTS)".
+* **Sisa kecil**: judul baris RACI ke-6 masih "Penyelarasan Antarmuka Aliran Efluen S-07 ke Kolom Distilasi C-01 (Area 2)" (tag lama). Ubah lewat menu Tim & RACI menjadi S-107 → Area 2.
+* **Status**: tindak lanjut LOG-045…047 untuk G1, RACI, deliverable, dan logbook uji **selesai**.
+
+---
 ### [LOG-047] 2026-11-05 — Impor deliverable + WO-029 oleh PM; merge perbaikan RACI ke produksi
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"2. udah diupload, 3. merge"*
 * **Perubahan**:
