@@ -264,6 +264,31 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-049] 2026-11-05 — Bab 1 Rev 1 (revisi lengkap Bab 1 Ihsaan) di cockpit; koreksi lingkup WO-027
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"karena butuh cepat, lakukan semua revisi dibab 1, lalu letakkan hasilnya di website cockpit"* (setelah analisis Bab 1 Rev 0 dari Ihsaan)
+* **Perubahan**:
+  - **Baru** `07_FINAL_DELIVERABLES/reports/laporan_pstf1/BAB1_Konseptualisasi_Sistem.md` (Rev 1, status WIP, bukti WO-029). Tampil di cockpit: Dokumen → Companion .md, dengan rumus KaTeX. Struktur Rev 0 (1.1 RFP, 1.2 model, 1.3 URS) dipertahankan. Revisinya:
+    - **data proses dari HMB**: URS-011 dan URS-013 Rev 0 memakai angka aliran **S-09** (4.661,67 kg/jam; 101,325 kPa), diganti S-102/S-103 dan 14,7 bar(a); E-102 3.245,6 kW;
+    - **tag pabrik** menggantikan tag DWSIM;
+    - **rujukan pasal RFP** dicocokkan dengan PDF asli: rentang 250–280 °C, 99,99 %, dan 1oo2 tidak ada di RFP; pengecualian distilasi berasal dari pembagian area, bukan Pasal 1.3;
+    - **model**: basis isotermal DWSIM (panas dibuang 733 kW) dengan kasus adiabatik ΔT_ad ≈ 121 K (≈ 371 °C); ΔH efektif −20,6 kJ/mol; konversi 80,0 %; kinetika LH Berčič & Levec; model 2 keadaan dengan G_T,F(s) untuk kaskade TIC-101 → FIC-101; θ = 0,069 s/m pada line 6"; F·cp = 6,05 kW/K;
+    - **URS** bertaut instrumen P&ID; tambahan URS-015/025/035/044; PAHH dihapus menjadi PSV-101 + alarm PT-103, SIF tekanan hanya bila LOPA mensyaratkan;
+    - **matriks ketertelusuran** RFP → model → URS → instrumen; butir terbuka TBD-01…07; daftar pustaka; tabel *Catatan Revisi* (14 butir).
+  - Berkas impor `cockpit_import_wo027_029.json` (scratchpad agent):
+    - WO-029 → Dikerjakan, checklist 2/5, bukti = dokumen Rev 1;
+    - **WO-027 dikoreksi**: lingkup Bab 4 = CAPEX/OPEX **I&C** Class 2 (RFP §3.3.1, Tabel 3), bukan peralatan proses. Kesalahan ini berasal dari agent di LOG-044.
+  - `RENCANA_REKONSTRUKSI_W1-W18.md` Rev 0.4: lingkup Bab 4 dikoreksi.
+* **Bukti / Verifikasi**:
+  - Angka diturunkan dari `hmb_streams.json` (skrip): konversi (319,73 − 63,95)/319,73 = 80,0 %; DME 127,89 kmol/jam; 733,01 kW → 20,63 kJ/mol; ṁ·c̄p = 2,9314 × 2,0629 → ΔT_ad 121,2 K; v = 14,59 m/s di ID 154,06 mm.
+  - RFP PDF asli (7 halaman) dibaca untuk verifikasi pasal.
+  - **86/86 rumus** lolos render KaTeX versi cockpit (satu error `\cdotp` diperbaiki). Dokumen 32,5 rb karakter < batas 60 rb (tidak terpotong). `check_companions` PASS.
+* **Catatan integritas**: dokumen ditandai jelas sebagai revisi AI atas karya Ihsaan dan wajib direview serta dipahami penulis dan reviewer bagian sebelum diajukan. Nilai ΔH°298 dan rincian pustaka Berčič & Levec diminta dicek ke sumber asli.
+* **Tindak Lanjut**:
+  - [ ] PM: impor `cockpit_import_wo027_029.json`.
+  - [ ] Ihsaan + reviewer (HD 1.1, AL 1.2, JN 1.3): review Rev 1 sebelum Kamis 12 Nov; pindahkan ke Google Docs Laporan PSTF 1.
+  - [ ] Ihsaan (TBD-04/05): parameter kinetika, mekanisme pembuangan panas, dan volume R-101.
+
+---
 ### [LOG-048] 2026-11-05 — Verifikasi produksi pasca-merge: RACI, deliverable, WO-029, G1 29 Nov sesuai
 * **Pelaksana**: Claude Code (AI agent); PM (Rahul) login di browser uji. Atas pesan PM: *"lakukan pengecekan otomatis"*
 * **Bukti / Verifikasi** (`smoke_console.js --dump`, 14/14 modul, 0 error console):

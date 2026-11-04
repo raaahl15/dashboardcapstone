@@ -101,7 +101,7 @@ Kode: RG Rahul (PM), IH Ihsaan, AL Altaf, JN Jonathan, HD Heidi (kode cockpit).
 
 W1 dan W9 tidak punya WO (kelas pengantar / UTS); cukup dicatat di MoM. WO-019…022 dikerjakan PM bersama Claude Code, dengan anggota sebagai pendukung/reviewer. Assignee tidak diatribusikan ke anggota yang tidak mengerjakannya.
 
-**WO W13 (terbit 5 Nov, tenggat Kamis 12 Nov):** WO-024 FDS urutan operasi (AL) · WO-025 Bab 3.1–3.2 (IH) · WO-026 P&ID Rev C + konfirmasi data kalkulator (JN) · **WO-027 Bab 4 basis & CAPEX (HD, Kritis)** · WO-028 kerangka laporan + MoM W12 + pengingat logbook (RG).
+**WO W13 (terbit 5 Nov, tenggat Kamis 12 Nov):** WO-024 FDS urutan operasi (AL) · WO-025 Bab 3.1–3.2 (IH) · WO-026 P&ID Rev C + konfirmasi data kalkulator (JN) · **WO-027 Bab 4 asumsi & CAPEX I&C (HD, Kritis)** · WO-028 kerangka laporan + MoM W12 + pengingat logbook (RG).
 
 ## 4. Gantt (fase & tugas, minggu kalender 1–18)
 | Fase | Tugas | PIC | W mulai–akhir (target) | Status per 5 Nov |
@@ -130,7 +130,7 @@ W1 dan W9 tidak punya WO (kelas pengantar / UTS); cukup dicatat di MoM. WO-019�
 | W13 (B7, 12 Nov) | Bab 2 FDS: lengkapi urutan start-up / operasi normal / shutdown (Bab 5–7 FDS) | AL |
 |  | Bab 3.1–3.2: narasi PFD + tabel HMB dari `hmb_streams.json` | IH |
 |  | P&ID: simbol FE-101, cek Rev B di AutoCAD, konfirmasi T-101 → Rev C | JN (+IH) |
-|  | Bab 4 tekno-ekonomi (mulai dari nol, **jalur kritis**): basis desain & asumsi ekonomi (kapasitas, harga metanol/DME, umur pabrik, suku bunga), estimasi CAPEX peralatan Area 1 (P-101, E-101, R-101, E-102, T-101) | HF (+RG) |
+|  | Bab 4 tekno-ekonomi (mulai dari nol, **jalur kritis**): asumsi ekonomi + sumber, kuantitas instrumen dari Instrument Index, estimasi **CAPEX I&C Class 2** (hardware/software DCS/SIS/FGS, instrumen, katup, kabel, panel, jasa). Lingkup khusus I&C sesuai RFP §3.3.1 (koreksi LOG-049) | HF (+RG) |
 |  | MoM + logbook W12–W13; konfirmasi K1 ke dosen | RG |
 | W14 (B8, 19 Nov) | Bab 3.3 alur P&ID + logika SIS (TSHH-102 → XV-102) | JN, AL |
 |  | Bab 4: OPEX (bahan baku, utilitas dari duty HMB, tenaga kerja), arus kas, NPV/IRR/payback (`CALC_TeknoEkonomi_NPV`, ganti data PLACEHOLDER) | HF (+RG) |
@@ -178,3 +178,4 @@ Berkas `cockpit_import_rekonstruksi.json` (di luar repo, scratchpad sesi agent) 
 | 0.1 | 2026-11-05 | Claude Code (AI) | Draf dari perubahan.md: kalender W1–W18, rekonstruksi WO-001…023, Gantt, rencana W13–W18, keputusan K1–K6. |
 | 0.2 | 2026-11-05 | Claude Code (AI) | K1 diputuskan (minggu efektif, G1 29 Nov, dikonfirmasi dosen); K3: Bab 4 belum dimulai → WO tekno-ekonomi W13–W15 dirinci sebagai jalur kritis. |
 | 0.3 | 2026-11-05 | Claude Code (AI) | Disesuaikan dengan ekspor cockpit (UID, kode HD, projectStartDate sudah 17 Agu); WO-019…022 diatribusikan ke PM; WO W13 = WO-024…028; §9 isi berkas impor. |
+| 0.4 | 2026-11-05 | Claude Code (AI) | Koreksi lingkup Bab 4/WO-027: CAPEX/OPEX khusus I&C (RFP §3.3.1, Tabel 3), bukan peralatan proses (LOG-049). |
