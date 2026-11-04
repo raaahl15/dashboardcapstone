@@ -264,6 +264,17 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-047] 2026-11-05 — Impor deliverable + WO-029 oleh PM; merge perbaikan RACI ke produksi
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"2. udah diupload, 3. merge"*
+* **Perubahan**:
+  - PM mengimpor `cockpit_import_deliverables.json`: Bab 1 berstatus Revisi (WO-029), deliverable lain dengan target dan tautan baru (LOG-046).
+  - Merge `fix-raci-uid` → `main` (`0df8aef`, `--no-ff`): panel "RACI Assignment Ringkas" kini membaca peran lewat UID/`legacyId`/`legacyid`. Worktree & branch lokal dibersihkan.
+* **Bukti / Verifikasi**: `tsc --noEmit` exit 0 setelah merge. Impor deliverable atas laporan PM; belum diverifikasi agent di produksi (bisa dengan `node tools/smoke_console.js --url <prod> --dump`).
+* **Tindak Lanjut**:
+  - [ ] PM: setelah deploy Vercel, cek Beranda: RACI menampilkan nama penanggung jawab; Progress Dokumen FEED memakai status baru.
+  - [ ] W13: WO-024…029 dipaparkan pada Bimbingan 7 (Kamis 12 Nov); WO-027 Bab 4 = jalur kritis.
+
+---
 ### [LOG-046] 2026-11-05 — Merge G1 minggu efektif; Bab 1 = Revisi (WO-029) + pembaruan deliverable; perbaikan RACI di branch
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"1. merge, 2. Bab 1 revisi, 3. udah diperbaiki ya?, 4. udah kuhapus"*
 * **Perubahan**:
