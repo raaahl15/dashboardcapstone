@@ -534,6 +534,29 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-027] 2026-11-04 23:40 WIB — Unggah standar ASME PTC 19.3 TW-2016 & Draf P&ID Area 1 RevB DXF ke Drive
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"upload ke drive (ASME-PTC-19-3-TW-2016.pdf & DME-PID-002_Draft_PID_Area1_RevB.dxf)"*
+* **Fase**: 2–3 (tindak lanjut LOG-020 & LOG-021)
+* **Tujuan**: Mengunggah berkas standar rujukan perhitungan thermowell dan berkas gambar CAD Draf P&ID Area 1 RevB dari staging lokal ke Google Drive proyek agar dapat diakses seluruh tim.
+* **Perubahan**:
+  - **Google Drive**:
+    - Berkas `ASME-PTC-19-3-TW-2016.pdf` (8,26 MB) diunggah ke subfolder `00_CORE_GUIDELINES` (ID: `1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y`).
+      - File ID Google Drive: **`1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F`**.
+    - Berkas `DME-PID-002_Draft_PID_Area1_RevB.dxf` (205,7 KB) diunggah ke subfolder `03_CAD_DWG` (ID: `1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo`).
+      - File ID Google Drive: **`1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR`**.
+* **Bukti / Verifikasi**:
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\ASME-PTC-19-3-TW-2016.pdf" --parent 1yDYMVsBJB3qtGim9dEJzUR3VpZX-Am_y` → `Uploaded: ASME-PTC-19-3-TW-2016.pdf (ID: 1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F)`.
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB.dxf" --parent 1Kri4FOP8JjNkdQP5sHrPKeI8lrOVDFgo` → `Uploaded: DME-PID-002_Draft_PID_Area1_RevB.dxf (ID: 1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR)`.
+  - `gdrive readonly permissions` pada kedua berkas → seluruh 4 email UGM anggota tim (`ihsaan`, `altaf`, `jonathan`, `heidi`) otomatis mewarisi peran **writer (Editor)**, dan `rahulghulam15@gmail.com` sebagai **owner**.
+  - `node tools/check_companions.js` → **PASS**.
+* **Keputusan**:
+  - Sesuai kebijakan Blueprint §2.2, file biner/CAD besar (PDF standar dan drawing DXF) disimpan di Google Drive agar tidak membebani repositori Git monorepo.
+* **Tindak Lanjut**:
+  - [ ] **JN / AL**: jalankan validasi tag P&ID DXF RevB menggunakan `npm run validate:tags -- --dxf "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PID-002_Draft_PID_Area1_RevB.dxf"` untuk memeriksa konsistensi tag gambar terhadap master index (DoD Fase 3 butir 4).
+  - [ ] **JN**: gunakan rujukan `ASME-PTC-19-3-TW-2016.pdf` untuk menyelesaikan kalkulator sizing thermowell (DoD Fase 3 butir 3).
+
+---
+
 ### [LOG-026] 2026-11-04 15:05 WIB — Unggah berkas PDF RFP (KAK-IC-DME-2026-001) ke Google Drive
 * **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"unggah PDF RFP ke Drive 00_CORE_GUIDELINES/."*
 * **Fase**: 2 (tindak lanjut LOG-024/025)
