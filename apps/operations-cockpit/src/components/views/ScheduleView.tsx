@@ -119,6 +119,10 @@ export const ScheduleView: React.FC = () => {
   } | null>(null);
   const todayYmd = getTodayLocalYmd();
   const currentGanttWeek = getCurrentGanttWeek();
+  // Weekly Planner = tampilan Gantt minggu berjalan (P2, LOG-032)
+  const thisWeekTasks = ganttTasks.filter(
+    (t) => t.startWeek <= currentGanttWeek && t.endWeek >= currentGanttWeek
+  );
 
   // Modals
   const [showAddPlanModal, setShowAddPlanModal] = useState(false);
@@ -312,16 +316,16 @@ export const ScheduleView: React.FC = () => {
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
           <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
-            DME UNIT 01 • OPERATIONS
+            AREA 1 • PSTF 1
           </span>
           <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
-            Critical Path Baseline Rev-3.2
+            Gantt + Rencana Minggu Ini
           </span>
         </div>
 
         <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
           <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-            This is your team Schedule!
+            Jadwal Tim
           </h1>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -336,11 +340,11 @@ export const ScheduleView: React.FC = () => {
             {isPM && (
               <button
                 type="button"
-                onClick={openAddPlanModal}
+                onClick={openAddGanttModal}
                 className="min-h-[44px] px-4 py-2 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white shadow-xs flex items-center gap-1.5 transition-all"
               >
                 <Calendar className="w-3.5 h-3.5 text-[#0062CC]" />
-                Atur Jadwal
+                Tambah Task Gantt
               </button>
             )}
           </div>
@@ -351,31 +355,79 @@ export const ScheduleView: React.FC = () => {
       {/* STACKED LAYOUT: Weekly Planner (Top) & Interactive Gantt (Bottom) */}
       {/* ========================================================================= */}
       <div className="flex flex-col gap-5">
-        {/* ==================== TOP: Weekly Planner ==================== */}
+        {/* ==================== TOP: Rencana Minggu Ini (dari Gantt, P2 LOG-032) ==================== */}
         <div className="glass-card p-5 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 className="font-heading font-bold text-base text-[#0B1B33]">
-                Weekly Planner
+                Rencana Minggu Ini (W{currentGanttWeek})
               </h2>
               <p className="text-xs text-[#4A5A72]">
-                {GANTT_WEEK_COUNT} Minggu • Target tender 15 Des 2026
+                Diambil otomatis dari task Gantt yang berjalan di minggu ini. Tambah/ubah rencana lewat Gantt di bawah;
+                tugas harian dikerjakan sebagai Work Order yang ditautkan ke task Gantt.
               </p>
             </div>
-            {isPM && (
-              <button
-                type="button"
-                onClick={openAddPlanModal}
-                className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Tambah Plan
-              </button>
-            )}
           </div>
 
+          {thisWeekTasks.length === 0 ? (
+            <p className="text-xs text-[#4A5A72] py-2">Tidak ada task Gantt yang berjalan di W{currentGanttWeek}.</p>
+          ) : (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+              {thisWeekTasks.map((task) => {
+                const woProgress = getLinkedScheduleProgress(workOrders, 'gantt', task.id, todayYmd);
+                const picRef = task.pic || task.picCode;
+                return (
+                  <li key={task.id} className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs space-y-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="font-heading font-bold text-xs text-[#0B1B33]">{task.name}</p>
+                        <p className="text-[10px] text-[#4A5A72] truncate">{task.phaseName}</p>
+                      </div>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-white shrink-0 ${
+                          GANTT_STATUS_STYLES[task.status || 'Belum']
+                        }`}
+                      >
+                        {task.status || 'Belum'}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#4A5A72]">
+                      <span>
+                        W{task.startWeek}–W{task.endWeek}
+                        {task.isCritical ? ' · jalur kritis' : ''}
+                      </span>
+                      {picRef && picRef !== 'ALL' ? (
+                        <UserChip uid={picRef} variant="avatar-nama" size="xs" useNickname />
+                      ) : (
+                        <span>Semua anggota</span>
+                      )}
+                    </div>
+                    {woProgress.total > 0 && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setInspectLinkedTarget({ linkType: 'gantt', targetId: task.id, label: task.name })
+                        }
+                        className="min-h-[32px] px-2.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD]"
+                      >
+                        <ClipboardList className="w-3 h-3 shrink-0" />
+                        {woProgress.completed}/{woProgress.total} WO selesai
+                        {woProgress.overdue > 0 ? ` · ${woProgress.overdue} terlambat` : ''}
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+
+          {weeklyPlans.length > 0 && (
+            <details className="rounded-2xl bg-white/50 border border-white/80 p-3">
+              <summary className="cursor-pointer text-xs font-bold text-[#334155] min-h-[32px] flex items-center">
+                Arsip Weekly Plan lama ({weeklyPlans.length}) — tidak lagi ditambah; WO yang tertaut tetap berlaku
+              </summary>
           <div
-            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3"
+            className="mt-3 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3"
           >
             {weeklyPlans.map((plan) => {
               const picRef = plan.pic || plan.picCode;
@@ -518,6 +570,8 @@ export const ScheduleView: React.FC = () => {
               );
             })}
           </div>
+            </details>
+          )}
         </div>
 
         {/* ==================== BOTTOM: Full-width Interactive Gantt Chart ==================== */}

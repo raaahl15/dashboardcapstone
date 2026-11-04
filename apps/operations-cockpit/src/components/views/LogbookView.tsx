@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { consumeLogbookDraft } from '../../utils/logbookDraft';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { LogbookItem } from '../../types';
@@ -240,6 +241,18 @@ export const LogbookView: React.FC = () => {
     setShowAddModal(true);
   };
 
+  // Draf dari Meeting Log (tombol "Buat draf logbook dari MoM ini", P2 LOG-032): buka form logbook
+  // kelompok yang sudah terisi; tidak ada yang tersimpan sampai pengguna menekan Simpan.
+  useEffect(() => {
+    const draft = consumeLogbookDraft();
+    if (!draft) return;
+    handleOpenAdd('team-area-1', Math.min(12, Math.max(1, draft.weekNumber || 1)));
+    if (draft.date) setFormDate(draft.date);
+    setFormDesc(draft.workDescription);
+    setFormIssue(draft.issueSolution);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Close modal on Escape
   useEffect(() => {
     if (!showAddModal) return;
@@ -357,7 +370,7 @@ export const LogbookView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="font-heading text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-[-0.02em] leading-[1.1] text-[#0B1B33]">
-              Engineering Logbook
+              Logbook Kegiatan
             </h1>
             <p className="text-xs sm:text-sm text-[#4A5A72] mt-1">
               Audit kedisiplinan logbook &amp; pemenuhan kuota <strong>12 entri untuk Area 1 (Kelompok)</strong> dan <strong>12 entri per anggota</strong> (Total 72 entri).

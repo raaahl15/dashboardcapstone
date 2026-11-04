@@ -416,7 +416,7 @@ export const HomepageView: React.FC = () => {
       <div className="space-y-3">
         {/* ROW 1: Large Bold Welcome Heading Directly on Gradient Canvas */}
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Welcome in, {currentUser.nickname || currentUser.name.split(' ')[0]}
+          Selamat datang, {currentUser.nickname || currentUser.name.split(' ')[0]}
         </h1>
 
         {/* ROW 2: 2 Columns with Equal Stretched Height (Left: Desc + Pills, Right: 3 Metric Cards) */}
@@ -431,14 +431,14 @@ export const HomepageView: React.FC = () => {
 
             <div className="flex flex-wrap items-center gap-2">
               <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
-                CAPSTONE EP-2026
+                CAPSTONE DTNTF 2026/2027
               </span>
               <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#4CBAF5] shrink-0" />
-                <span>FEED Stage-Gate Status: In Progress</span>
+                <span>Area 1 Reaktor · PSTF 1 (FEED)</span>
               </span>
               <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold tracking-normal inline-flex items-center">
-                EPC Phase: Concept &amp; FEED Verification
+                Tenggat FEED: {config.tenderDeadline}
               </span>
             </div>
           </div>
@@ -466,11 +466,11 @@ export const HomepageView: React.FC = () => {
               </div>
             </div>
 
-            {/* Metric 2: Engineers */}
+            {/* Metric 2: WO aktif tim (menggantikan jumlah anggota yang statis, P2 LOG-032) */}
             <div className="glass-card px-4 py-3 h-full flex flex-col justify-between">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[12px] font-semibold text-[#0B1B33] leading-none truncate">
-                  Engineers
+                  WO Aktif Tim
                 </span>
                 <div className="w-7 h-7 rounded-full bg-white/70 flex items-center justify-center shrink-0">
                   <Users className="w-4 h-4 text-[#0062CC]" />
@@ -479,10 +479,10 @@ export const HomepageView: React.FC = () => {
 
               <div className="mt-1.5">
                 <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {users.length}
+                  {teamActiveWorkOrders.length}
                 </span>
                 <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
-                  anggota tim
+                  {teamOverdueCount} terlambat
                 </span>
               </div>
             </div>
@@ -600,7 +600,7 @@ export const HomepageView: React.FC = () => {
           <div className="glass-card p-5 text-center">
             <div className="flex items-center justify-between mb-1">
               <span className="font-heading font-bold text-xs text-[#0B1B33]">
-                Countdown Tender
+                Hitung Mundur Tenggat FEED (G2)
               </span>
               <Clock className="w-4 h-4 text-[#334155]" />
             </div>
@@ -643,7 +643,7 @@ export const HomepageView: React.FC = () => {
             </div>
 
             <p className="text-[10px] text-[#334155] font-semibold border-t border-[#C9DCEB] pt-2.5">
-              Critical Path Milestone 04: FEED Submittal
+              {config.tenderStatusText} · {config.tenderPhaseText}
             </p>
           </div>
 
@@ -1027,27 +1027,8 @@ export const HomepageView: React.FC = () => {
             </div>
           </div>
 
-          {/* Tender Deadline and Supervisor Approval Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 xl:h-full">
-            <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
-              <div>
-                <span className="text-[11px] text-[#334155] font-medium block">
-                  Batas Penyerahan Tender
-                </span>
-                <span className="font-heading text-lg font-bold text-[#0B1B33] block mt-1">
-                  {config.tenderDeadline.split(',')[0]}
-                </span>
-              </div>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="px-2 py-0.5 rounded-md bg-[#E2E8F0] text-[#334155] text-[10px] font-semibold">
-                  {config.tenderStatusText}
-                </span>
-                <span className="text-[10px] text-[#334155] font-medium">
-                  {config.tenderPhaseText}
-                </span>
-              </div>
-            </div>
-
+          {/* Kartu tenggat ganda dihapus (tenggat sudah di kartu Countdown); tersisa status ACC (P2, LOG-032) */}
+          <div className="grid grid-cols-1 gap-4 xl:h-full">
             <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
               <div>
                 <span className="text-[11px] text-[#334155] font-medium block">

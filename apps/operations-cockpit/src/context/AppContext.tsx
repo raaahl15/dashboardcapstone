@@ -1201,11 +1201,15 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setSlideDecks((prev) => prev.filter((d) => d.id !== id));
   };
 
-  const addTrackerAction = (item: Omit<TrackerActionItem, 'id' | 'code'>) => {
-    if (!isPM) return;
+  // Mengembalikan id & kode supaya action item bisa langsung dijadikan WO (P2: Action Item = WO, LOG-032)
+  const addTrackerAction = (
+    item: Omit<TrackerActionItem, 'id' | 'code'>
+  ): { id: string; code: string } | null => {
+    if (!isPM) return null;
     const rawRef = item.pic || item.picCode;
     const resolvedUid = getUser(rawRef)?.id || rawRef;
     const itemId = `act-${newId()}`;
+    const predictedCode = computeNextTrackerCode(trackerActions);
 
     commitSectionTransaction(
       'trackerActions',
@@ -1213,7 +1217,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       (list) => {
         const existing = list.find((a) => a.id === itemId);
         if (existing) return list;
-        const code = computeNextTrackerCode(list);
+        // Pakai kode yang sudah dilaporkan ke pemanggil kecuali bentrok dengan data server terbaru
+        const code = list.some((a) => a.code === predictedCode)
+          ? computeNextTrackerCode(list)
+          : predictedCode;
         const newItem: TrackerActionItem = {
           ...item,
           pic: resolvedUid,
@@ -1225,6 +1232,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       },
       setTrackerActions
     );
+    return { id: itemId, code: predictedCode };
   };
 
   const updateTrackerAction = (

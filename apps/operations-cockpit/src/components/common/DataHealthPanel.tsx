@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { Activity, Calculator, Tags, FileCheck2, HardDrive } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { useStaticData, fmtNum, fmtDateTime, daysSince, requestLibraryTab, LibraryTab } from '../../utils/staticData';
+import { useStaticData, fmtNum, fmtDateTime, daysSince } from '../../utils/staticData';
+import type { NavTab } from '../../context/AppContext';
 
 interface Health {
   generated_at: string;
@@ -19,7 +20,7 @@ const TONE: Record<Tone, string> = {
 };
 
 /** Panel "Kesehatan Data" (Blueprint BAB IV, tambahan v2.0). Data dari public/data/health.json. */
-/** Batas aturan proyek untuk dokumen projectData/area1 (Blueprint §3.6; batas keras Firestore 1 MiB). */
+/** Batas aturan proyek untuk dokumen projectData/area1 (Blueprint Â§3.6; batas keras Firestore 1 MiB). */
 const PROJECT_DOC_LIMIT_KB = 500;
 
 /**
@@ -55,16 +56,15 @@ export const DataHealthPanel: React.FC = () => {
     value: string;
     detail: string;
     tone: Tone;
-    tab: 'dwsim' | 'library' | 'homepage';
-    /** Tab Master Library yang dibuka langsung (LOG-030) */
-    libTab?: LibraryTab;
+    /** Sub-tab yang dibuka langsung (menu Data Rekayasa / Dokumen, LOG-032) */
+    tab: NavTab;
   }[] = [
     {
       key: 'hmb',
       icon: <Activity className="w-4 h-4" />,
       title: 'Umur HMB DWSIM',
       value: `${age} hari`,
-      detail: `${data.hmb.solver_status} · neraca maks ${fmtNum(data.hmb.mass_balance_max_error_pct, 3)} %`,
+      detail: `${data.hmb.solver_status} Â· neraca maks ${fmtNum(data.hmb.mass_balance_max_error_pct, 3)} %`,
       tone: data.hmb.solver_status !== 'AllObjectsCalculated' || data.hmb.mass_balance_max_error_pct > 0.5 ? 'bad' : age > 14 ? 'warn' : 'ok',
       tab: 'dwsim',
     },
@@ -73,37 +73,34 @@ export const DataHealthPanel: React.FC = () => {
       icon: <Calculator className="w-4 h-4" />,
       title: 'Kalkulator',
       value: `${data.calc.fail} FAIL`,
-      detail: `${data.calc.pass}/${data.calc.total} PASS · ${data.calc.placeholder} masih PLACEHOLDER · ${data.calc.not_calculated} belum dihitung`,
+      detail: `${data.calc.pass}/${data.calc.total} PASS Â· ${data.calc.placeholder} masih PLACEHOLDER Â· ${data.calc.not_calculated} belum dihitung`,
       tone: data.calc.fail > 0 ? 'bad' : data.calc.placeholder > 0 || data.calc.not_calculated > 0 ? 'warn' : 'ok',
-      tab: 'library',
-      libTab: 'calc',
+      tab: 'calc',
     },
     {
       key: 'tags',
       icon: <Tags className="w-4 h-4" />,
       title: 'Inkonsistensi tag',
       value: `${data.tags.ERROR} error`,
-      detail: `${data.tags.WARNING} peringatan · P&ID diperiksa: ${data.tags.pid_checked}`,
+      detail: `${data.tags.WARNING} peringatan Â· P&ID diperiksa: ${data.tags.pid_checked}`,
       tone: data.tags.ERROR > 0 ? 'bad' : data.tags.WARNING > 0 ? 'warn' : 'ok',
-      tab: 'library',
-      libTab: 'tags',
+      tab: 'tags',
     },
     {
       key: 'comp',
       icon: <FileCheck2 className="w-4 h-4" />,
       title: 'Companion .md',
-      value: data.companions.total ? `${data.companions.covered}/${data.companions.total}` : '–',
+      value: data.companions.total ? `${data.companions.covered}/${data.companions.total}` : 'â€“',
       detail: data.companions.pass ? 'npm run check: PASS' : 'npm run check: FAIL',
       tone: data.companions.pass ? 'ok' : 'bad',
       tab: 'library',
-      libTab: 'docs',
     },
     {
       key: 'doc',
       icon: <HardDrive className="w-4 h-4" />,
       title: 'Ukuran projectData/area1',
-      value: docKb === null ? '–' : `≈ ${fmtNum(docKb, 0)} KB`,
-      detail: `Batas aturan ${PROJECT_DOC_LIMIT_KB} KB (batas Firestore 1 MiB); lebih → pindah MoM/logbook ke koleksi sendiri`,
+      value: docKb === null ? 'â€“' : `â‰ˆ ${fmtNum(docKb, 0)} KB`,
+      detail: `Batas aturan ${PROJECT_DOC_LIMIT_KB} KB (batas Firestore 1 MiB); lebih â†’ pindah MoM/logbook ke koleksi sendiri`,
       tone: docKb === null ? 'warn' : docKb > PROJECT_DOC_LIMIT_KB ? 'bad' : docKb > PROJECT_DOC_LIMIT_KB * 0.7 ? 'warn' : 'ok',
       tab: 'homepage',
     },
@@ -120,10 +117,7 @@ export const DataHealthPanel: React.FC = () => {
           <button
             key={t.key}
             type="button"
-            onClick={() => {
-              if (t.libTab) requestLibraryTab(t.libTab);
-              setActiveTab(t.tab);
-            }}
+            onClick={() => setActiveTab(t.tab)}
             className="text-left min-h-[44px] p-3.5 rounded-2xl bg-white/80 border border-white hover:bg-white transition-all"
           >
             <div className="flex items-center justify-between gap-2">

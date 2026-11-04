@@ -108,7 +108,7 @@ export const LoginGateway: React.FC = () => {
             <rect fill="none" height="260" rx="35" stroke="currentColor" strokeWidth="2" width="110" x="1100" y="280"></rect>
             <path d="M 1100 330 L 1210 330 M 1100 490 L 1210 490" strokeDasharray="4 4"></path>
             <text fill="white" fontFamily="Plus Jakarta Sans" fontSize="13" fontWeight="700" opacity="0.6" textAnchor="middle" x="1155" y="415">
-              R-01
+              R-101
             </text>
             <text fill="white" fontFamily="Inter" fontSize="9" opacity="0.5" textAnchor="middle" x="1155" y="432">
               DME REACTOR
@@ -310,18 +310,18 @@ export const LoginGateway: React.FC = () => {
                   Feed Inlet
                 </text>
 
-                {/* Preheater E-01 */}
+                {/* Preheater E-101 */}
                 <circle cx="180" cy="140" fill="white" r="38" stroke="#0B1B33" strokeWidth="2"></circle>
                 <path d="M 152 140 L 208 140" stroke="#0B1B33" strokeWidth="2"></path>
                 <path d="M 160 120 C 170 120, 170 160, 180 160 C 190 160, 190 120, 200 120" fill="none" stroke="#0062CC" strokeWidth="2"></path>
                 <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="12" fontWeight="700" textAnchor="middle" x="180" y="92">
-                  E-01
+                  E-101
                 </text>
                 <text fill="#4A5A72" fontFamily="Inter" fontSize="11" textAnchor="middle" x="180" y="196">
                   Preheater
                 </text>
 
-                {/* Line from E-01 to R-01 */}
+                {/* Line from E-101 to R-101 */}
                 <path d="M 218 140 L 330 140" stroke="#0B1B33"></path>
                 <polygon fill="#0B1B33" points="275,136 287,140 275,144" stroke="none"></polygon>
                 <rect fill="white" height="20" rx="4" stroke="#0B1B33" strokeWidth="1.5" width="46" x="250" y="110"></rect>
@@ -329,14 +329,14 @@ export const LoginGateway: React.FC = () => {
                   S-02
                 </text>
 
-                {/* Fixed-Bed Reactor R-01 */}
+                {/* Fixed-Bed Reactor R-101 */}
                 <rect fill="white" height="160" rx="28" stroke="#0B1B33" strokeWidth="2" width="90" x="330" y="60"></rect>
                 <rect fill="#EAF6FD" height="70" stroke="#6B7F99" strokeDasharray="3 3" width="78" x="336" y="105"></rect>
                 <line stroke="#4CBAF5" strokeWidth="1.5" x1="344" x2="406" y1="120" y2="120"></line>
                 <line stroke="#4CBAF5" strokeWidth="1.5" x1="344" x2="406" y1="140" y2="140"></line>
                 <line stroke="#4CBAF5" strokeWidth="1.5" x1="344" x2="406" y1="160" y2="160"></line>
                 <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="13" fontWeight="700" textAnchor="middle" x="375" y="45">
-                  R-01
+                  R-101
                 </text>
                 <text fill="#4A5A72" fontFamily="Inter" fontSize="11" textAnchor="middle" x="375" y="238">
                   Fixed-Bed Reactor
@@ -396,7 +396,7 @@ export const LoginGateway: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* SCENE 2: ANTARMUKA S-07 KE AREA 2 */}
+      {/* SCENE 2: ANTARMUKA S-107 KE AREA 2 */}
       {/* ========================================================================= */}
       <section
         id="scene-2"
@@ -409,7 +409,7 @@ export const LoginGateway: React.FC = () => {
 
         <div className="relative z-10 flex flex-col items-center max-w-[1000px] w-full text-center">
           <h2 className="font-heading text-2xl sm:text-4xl font-extrabold text-[#0B1B33] tracking-tight mb-6">
-            Antarmuka S-07 ke Area 2
+            Antarmuka S-107 ke Area 2
           </h2>
 
           <div className="w-full max-w-[820px] bg-white/[0.3] backdrop-blur-md rounded-[24px] border border-white/60 p-4 sm:p-6 mb-6 shadow-sm overflow-x-auto">
@@ -436,7 +436,7 @@ export const LoginGateway: React.FC = () => {
                     Area 1
                   </text>
                   <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="14" fontWeight="800" textAnchor="middle" x="0" y="5">
-                    R-01
+                    R-101
                   </text>
                   <text fill="#4A5A72" fontFamily="Inter" fontSize="10" textAnchor="middle" x="0" y="24">
                     Reactor Vessel
@@ -453,9 +453,7 @@ export const LoginGateway: React.FC = () => {
                   <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="13" fontWeight="700" textAnchor="middle" x="0" y="-115">
                     Area 2
                   </text>
-                  <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="14" fontWeight="800" textAnchor="middle" x="0" y="5">
-                    C-01
-                  </text>
+                  <text fill="#0B1B33" fontFamily="Plus Jakarta Sans" fontSize="14" fontWeight="800" textAnchor="middle" x="0" y="5">\                  </text>
                   <text fill="#4A5A72" fontFamily="Inter" fontSize="10" textAnchor="middle" x="0" y="24">
                     Distillation Column
                   </text>
@@ -465,11 +463,11 @@ export const LoginGateway: React.FC = () => {
                 <path d="M 195 140 L 595 140" stroke="#0B1B33" strokeWidth="2.5"></path>
                 <polygon fill="#0B1B33" points="460,135 474,140 460,145" stroke="none"></polygon>
 
-                {/* Stream Tag Flag S-07 */}
+                {/* Stream Tag Flag S-107 */}
                 <g transform="translate(305, 140)">
                   <polygon fill="white" points="0,0 20,-16 70,-16 70,16 20,16" stroke="#0062CC" strokeWidth="2"></polygon>
                   <text fill="#0062CC" fontFamily="Inter" fontSize="12" fontWeight="800" textAnchor="middle" x="44" y="4">
-                    S-07
+                    S-107
                   </text>
                 </g>
 

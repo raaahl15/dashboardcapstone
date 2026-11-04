@@ -7,6 +7,7 @@ import { ProfileModal } from './components/layout/ProfileModal';
 import { LoginGateway } from './components/login/LoginGateway';
 import { WorkOrderFormModal } from './components/workorders/WorkOrderFormModal';
 import { WorkOrderDetailModal } from './components/workorders/WorkOrderDetailModal';
+import { groupOfTab } from './components/layout/navigation';
 
 const HomepageView = React.lazy(() =>
   import('./components/views/HomepageView').then((m) => ({ default: m.HomepageView }))
@@ -44,6 +45,45 @@ const MasterLibraryView = React.lazy(() =>
 const GoogleWorkspaceView = React.lazy(() =>
   import('./components/views/GoogleWorkspaceView').then((m) => ({ default: m.GoogleWorkspaceView }))
 );
+const CalcResultsView = React.lazy(() =>
+  import('./components/views/EngineeringDataViews').then((m) => ({ default: m.CalcResultsView }))
+);
+const TagValidationView = React.lazy(() =>
+  import('./components/views/EngineeringDataViews').then((m) => ({ default: m.TagValidationView }))
+);
+
+/** Bar sub-tab untuk menu yang menggabungkan beberapa modul (Blueprint v2.4, LOG-032). */
+const SubTabBar: React.FC = () => {
+  const { activeTab, setActiveTab } = useApp();
+  const group = groupOfTab(activeTab);
+  if (group.tabs.length < 2) return null;
+  return (
+    <div
+      className="mb-4 flex flex-wrap items-center gap-2"
+      role="tablist"
+      aria-label={`Sub-menu ${group.label}`}
+    >
+      <span className="text-[11px] font-bold uppercase tracking-wider text-[#4A5A72] mr-1">{group.label}</span>
+      {group.tabs.map((t) => {
+        const active = t.key === activeTab;
+        return (
+          <button
+            key={t.key}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            onClick={() => setActiveTab(t.key)}
+            className={`min-h-[44px] px-4 rounded-full text-xs font-bold transition-all ${
+              active ? 'bg-[#0062CC] text-white shadow-xs' : 'bg-white/80 text-[#334155] border border-white hover:bg-white'
+            }`}
+          >
+            {t.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 interface ChunkErrorBoundaryProps {
   children: React.ReactNode;
@@ -155,6 +195,7 @@ const MainApp: React.FC = () => {
 
       {/* Main Content Viewport */}
       <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-6">
+        <SubTabBar />
         <ChunkErrorBoundary>
           <React.Suspense
             fallback={
@@ -173,6 +214,8 @@ const MainApp: React.FC = () => {
             {activeTab === 'logbook' && <LogbookView />}
             {activeTab === 'stage-gate' && <StageGateView />}
             {activeTab === 'dwsim' && <DwsimStreamView />}
+            {activeTab === 'calc' && <CalcResultsView />}
+            {activeTab === 'tags' && <TagValidationView />}
             {activeTab === 'library' && <MasterLibraryView />}
             {activeTab === 'gworkspace' && <GoogleWorkspaceView />}
           </React.Suspense>

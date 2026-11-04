@@ -58,6 +58,8 @@ export type NavTab =
   | 'logbook'
   | 'stage-gate'
   | 'dwsim'
+  | 'calc'
+  | 'tags'
   | 'library'
   | 'gworkspace';
 
@@ -125,7 +127,7 @@ export interface AppContextType {
   deleteSlideDeck: (id: string) => void;
 
   trackerActions: TrackerActionItem[];
-  addTrackerAction: (item: Omit<TrackerActionItem, 'id' | 'code'>) => void;
+  addTrackerAction: (item: Omit<TrackerActionItem, 'id' | 'code'>) => { id: string; code: string } | null;
   updateTrackerAction: (id: string, patch: Partial<Omit<TrackerActionItem, 'id' | 'code'>>) => void;
   toggleTrackerActionStatus: (id: string) => void;
   deleteTrackerAction: (id: string) => void;
