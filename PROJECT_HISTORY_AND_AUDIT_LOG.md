@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); DoD total 13/20; deploy firestore.rules & uji console produksi menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); DoD total 13/20; firestore.rules sudah di-deploy PM (LOG-037); uji console produksi menunggu PM  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 23:30 WIB  
+**Terakhir Diperbarui:** 2026-11-04 23:45 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,17 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-037] 2026-11-04 23:45 WIB — `firestore.rules` sudah di-deploy ke produksi oleh PM
+* **Pelaksana**: PM (Rahul) menjalankan deploy; Claude Code (AI agent) mencatat, atas pesan PM: *"no 3 udah berhasil"*
+* **Fase**: 4/5 (rilis produksi)
+* **Perubahan**: `firebase deploy --only firestore:rules` (project `area1-dme-cockpit`) dijalankan PM dari PC. Aturan yang di-deploy = `apps/operations-cockpit/firestore.rules` di `main` (tidak berubah sejak dry-run lulus, LOG-029). Tindak lanjut yang terbuka sejak LOG-029/030 dan LOG-036 ditutup.
+* **Bukti / Verifikasi**: laporan PM (output CLI tidak dilampirkan). Agent tidak memverifikasi langsung karena deploy diblokir classifier untuk agent. Verifikasi fungsional menyusul lewat uji login + WO percobaan tiap anggota (DoD Fase 5 butir 2).
+* **Status DoD**: tidak ada butir DoD yang berubah (deploy rules bukan butir DoD tersendiri). Total tetap **13/20**.
+* **Tindak Lanjut**:
+  - [ ] **PM**: `node tools/smoke_console.js --url <URL produksi>` (DoD Fase 4 butir 2).
+  - [ ] **Tim**: login + buat WO percobaan di produksi (DoD Fase 5 butir 2). Bila ada penolakan izin, catat pesan error untuk dicek terhadap rules.
+
+---
 ### [LOG-036] 2026-11-04 23:30 WIB — Sign-off Fase 3; line sizing + thermowell TW-104; P&ID DME-PID-002 Rev B ↔ index selaras (0 ERROR); skrip uji console cockpit
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"1. sudah bisa di sign off, 2. kerjakan, 3. jalankan, 4. lakukan penyimpanan di gdrive, aku izin kan km megupload di gdrive, 9. lakukan sesuai rekomendasi mu, 10. langsung isi sesuai rekomendasi dan perhitungan mu."* (nomor merujuk daftar sisa pekerjaan yang diberikan agent di sesi yang sama).
 * **Fase**: 3 (sign-off), 4 (DoD butir 2), 5 (DoD butir 1)
@@ -303,7 +314,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Setpoint trip SIS & alarm = TBD (bukan angka contoh 320 °C / SIL-3) sampai HAZOP/LOPA PSTF 2.
 * **Status DoD**: Fase 3 **SELESAI** (sign-off PM). Fase 5 butir 1 **PARSIAL** (0 ERROR di Rev B; menunggu review JN + status `Diajukan`). Total tetap **13/20**.
 * **Tindak Lanjut**:
-  - [ ] **PM**: jalankan sendiri `cd apps/operations-cockpit; firebase deploy --only firestore:rules`.
+  - [x] **PM**: jalankan sendiri `cd apps/operations-cockpit; firebase deploy --only firestore:rules`. *(Selesai, dilaporkan PM 2026-11-04, LOG-037.)*
   - [ ] **PM**: dari PC dengan Chrome, `node tools/smoke_console.js --url <URL produksi Vercel>` → login di jendela yang terbuka → laporan PASS/FAIL (DoD Fase 4 butir 2).
   - [ ] **PM/Antigravity**: unggah dari staging ke Drive: `03_CAD_DWG/DME-PID-002_Draft_PID_Area1_RevB.dxf` dan `00_CORE_GUIDELINES/ASME-PTC-19-3-TW-2016.pdf` (akses terbatas; lisensi ASME).
   - [ ] **JN**: periksa Rev B di AutoCAD (teks pengganti, tabel revisi), tambah simbol FE-101, konfirmasi ukuran line & kelas pipa A1A, dimensi TW-104 & nozzle 150 mm; tetapkan E/S F316 dari salinan B31.3.
