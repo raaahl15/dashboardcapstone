@@ -264,6 +264,25 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-054] 2026-11-05 — Cek website pasca-impor; nama dosen pembimbing; tag S-07/C-01 lama direvisi
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM: *"okeey sekarang coba kamu check websitenya"* lalu *"6. berikut nama dosennya: Thomas Oka Pratama, S.T., M.Eng. 7. revisiin"*
+* **Cek website** (`smoke_console.js --dump`, PM login): 14/14 modul, 0 error. Impor 1–3 sudah masuk.
+  - Temuan logbook (diperbaiki PM manual di UI):
+    - entri B6 Heidi tercatat atas nama Ihsan di W01;
+    - label "Kendala:"/"Solusi:" ganda;
+    - `[arahan dosen]` belum diisi;
+    - entri B1–B5 berstatus Terverifikasi, padahal diimpor `false` (PM diminta memastikan paraf fisik).
+  - MoM Bimbingan 6 belum ada.
+* **Berkas impor** `import_4_dosen_s107.json` (generator `scripts/build_import_dosen_s107.py`, basis ekspor 01:36):
+  - `config.supervisorReviewer` = "Thomas Oka Pratama, S.T., M.Eng." (sebelumnya data contoh "Dr. Ir. Chemical Eng");
+  - S-07/C-01 → S-107 / kolom distilasi Area 2 (CSCOL-01) di `tasks[6]`, `raciRows` raci-6, `rubricParameters` 0 dan 2, dan `defenseQuestions[2]`;
+  - jawaban `defenseQuestions[2]` diganti dengan data HMB: 89 °C, 10,4 bar(a), 10.553,2 kg/jam, fraksi uap 0,069. Sebelumnya berisi angka contoh 115 °C / 1,2 MPa.
+* **Tindak Lanjut**:
+  - [ ] PM: impor `import_4_dosen_s107.json`. Seksi config, tasks, raciRows, rubricParameters, dan defenseQuestions ditimpa.
+  - [ ] Seed `initialData.ts` masih memuat S-07/"Chemical Eng". Seed ini tidak dipakai di production; dibereskan bersama perubahan kode berikutnya.
+
+---
+
 ### [LOG-053] 2026-11-05 — Logbook kembali 6 (kelompok + 5 anggota); isian Bimbingan 1–5
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"logbooknya tetap dibuat 6, 1 logbook kelompok area 1 dan 5 logbook setiap anggota, isilah logbook tersebut dimana untuk bimbingan 1-5 sama semua disetiap logbook, dengan format untuk uraian logbook yaitu Judul Uraian: Isi Uraian"*
 * **Perubahan kode** (branch `logbook-kelompok`, 9b029e5, tsc 0, menunggu preview lalu merge):
