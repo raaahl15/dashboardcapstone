@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated_at": "2026-11-04T23:22:01+07:00",
+  "generated_at": "2026-11-04T23:50:05+07:00",
   "validator": "tools/validate_tags.py",
   "firm_area": "1",
   "index_instruments": 30,
@@ -35,7 +35,7 @@
    },
    {
     "source": "P&ID DME-PID-002_Draft_PID_Area1_RevB.dxf",
-    "path": "C:\\Users\\QENUAR~1\\AppData\\Local\\Temp\\claude\\c1f0887e35dc121a\\2990002d-6efd-4776-8868-0f443b0c4b0f\\scratchpad\\pid\\DME-PID-002_Draft_PID_Area1_RevB.dxf",
+    "path": "D:\\rahul\\CAPSTONE_DME_AREA1\\03_CAD_DWG\\DME-PID-002_Draft_PID_Area1_RevB.dxf",
     "sha256": "92135c824e85",
     "tags_found": 45
    }
