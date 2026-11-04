@@ -222,7 +222,8 @@ const SECTION_ITEM_VALIDATORS: Record<
   slideDecks: (it) =>
     hasStrings(it, ['id', 'title', 'presenter', 'url']) &&
     (typeof it.week === 'number' || typeof it.week === 'string') &&
-    sanitizeExternalUrl(it.url) !== '#',
+    // '#' / kosong = link belum ada (LOG-052); selain itu harus URL http(s) yang valid
+    (['', '#'].includes(String(it.url).trim()) || sanitizeExternalUrl(it.url) !== '#'),
   trackerActions: (it) =>
     hasStrings(it, ['id', 'code', 'week', 'issue', 'deadline', 'progress']),
   meetingLogs: (it) =>

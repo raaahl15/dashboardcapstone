@@ -18,7 +18,6 @@ import {
   Layers,
   RotateCcw,
   Edit2,
-  Sparkles,
   CheckCircle2,
   X,
   BookOpen,
@@ -42,7 +41,6 @@ export const LogbookView: React.FC = () => {
     updateLogbook,
     toggleLogbookVerification,
     deleteLogbook,
-    resetLogbooksToDefault,
     currentUser,
     users,
     getUser,
@@ -70,19 +68,10 @@ export const LogbookView: React.FC = () => {
   const [formSolution, setFormSolution] = useState('');
   const [formVerified, setFormVerified] = useState(false);
 
-  // 6 Target Entities: 1 Kelompok + 5 Anggota
+  // Arahan Bimbingan 4 (22 Okt 2026): logbook per orang, bukan per area. Target = 5 anggota.
+  // Entri lama berkategori 'kelompok' tetap tampil di tabel, tetapi tidak dihitung ke kuota.
   const entities: EntityMeta[] = useMemo(() => {
-    const list: EntityMeta[] = [
-      {
-        id: 'team-area-1',
-        name: 'Area 1 (Kelompok)',
-        shortName: 'Kelompok A1',
-        roleTitle: 'Unit Dehidrasi Metanol',
-        category: 'kelompok',
-        avatarText: 'A1',
-        avatarBg: 'bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white',
-      },
-    ];
+    const list: EntityMeta[] = [];
 
     users.forEach((u) => {
       list.push({
@@ -99,11 +88,12 @@ export const LogbookView: React.FC = () => {
     return list;
   }, [users]);
 
-  // Target constants
+  // Target constants (Panduan Lampiran 2: 12 baris per mahasiswa, diambil dari minggu proyek 1..18)
   const TARGET_PER_ENTITY = 12;
-  const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 6 = 72
+  const MAX_WEEK = 18;
+  const TOTAL_TARGET = TARGET_PER_ENTITY * entities.length; // 12 * 5 = 60
 
-  // Statistics per entity (menghitung minggu unik 1..12 agar tidak terjadi false completion)
+  // Statistics per entity (menghitung minggu unik agar tidak terjadi false completion)
   const { statsByEntity, totalFilled } = useMemo(() => {
     const stats: Record<
       string,
@@ -129,7 +119,7 @@ export const LogbookView: React.FC = () => {
 
       if (stats[targetId]) {
         stats[targetId].total += 1;
-        if (typeof log.weekNumber === 'number' && log.weekNumber >= 1 && log.weekNumber <= 12) {
+        if (typeof log.weekNumber === 'number' && log.weekNumber >= 1 && log.weekNumber <= MAX_WEEK) {
           entityWeeks[targetId].add(log.weekNumber);
         }
         if (log.verifiedByLecturer) {
@@ -159,29 +149,31 @@ export const LogbookView: React.FC = () => {
   const overallVerifiedPercent = Math.min(100, Math.round((totalVerified / TOTAL_TARGET) * 100));
   const overallFilledPercent = Math.min(100, Math.round((totalFilled / TOTAL_TARGET) * 100));
 
-  // Dynamic 24-Hour Rule Alert Box from MoM: periksa apakah MoM terbaru memiliki entri logbook kelompok untuk minggu tersebut
+  // Aturan 1x24 jam (Panduan Lampiran 2): setiap anggota wajib punya entri untuk minggu MoM terbaru
   const momLogbookStatus = useMemo(() => {
     if (!meetingLogs || meetingLogs.length === 0) {
-      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
+      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM', missingNames: [] as string[] };
     }
     const sortedMoms = [...meetingLogs].sort((a, b) => (b.week || 0) - (a.week || 0));
     const latestMom = sortedMoms[0];
     if (!latestMom) {
-      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM' };
+      return { hasUnloggedMom: false, latestMomLabel: 'Belum ada MoM', missingNames: [] as string[] };
     }
-    const hasMatchingLogbook = logbooks.some((l) => {
-      const isTeam =
-        l.authorId === 'team-area-1' ||
-        l.authorId === 'kelompok' ||
-        l.authorId === 'area-1' ||
-        l.category === 'kelompok';
-      return isTeam && l.weekNumber === latestMom.week;
-    });
+    const missingNames = entities
+      .filter(
+        (ent) =>
+          !logbooks.some((l) => {
+            const authorRef = getUser(l.authorId || l.authorName || l.authorCode)?.id || l.authorId;
+            return authorRef === ent.id && l.weekNumber === latestMom.week;
+          })
+      )
+      .map((ent) => ent.shortName);
     return {
-      hasUnloggedMom: !hasMatchingLogbook,
+      hasUnloggedMom: missingNames.length > 0,
       latestMomLabel: latestMom.dayText || latestMom.weekLabel || `W${latestMom.week}`,
+      missingNames,
     };
-  }, [meetingLogs, logbooks]);
+  }, [meetingLogs, logbooks, entities, getUser]);
 
   // Filtered logbooks list
   const filteredLogbooks = useMemo(() => {
@@ -242,11 +234,11 @@ export const LogbookView: React.FC = () => {
   };
 
   // Draf dari Meeting Log (tombol "Buat draf logbook dari MoM ini", P2 LOG-032): buka form logbook
-  // kelompok yang sudah terisi; tidak ada yang tersimpan sampai pengguna menekan Simpan.
+  // milik pengguna yang login (logbook per orang); tidak ada yang tersimpan sampai pengguna menekan Simpan.
   useEffect(() => {
     const draft = consumeLogbookDraft();
     if (!draft) return;
-    handleOpenAdd('team-area-1', Math.min(12, Math.max(1, draft.weekNumber || 1)));
+    handleOpenAdd(currentUser.id, Math.min(MAX_WEEK, Math.max(1, draft.weekNumber || 1)));
     if (draft.date) setFormDate(draft.date);
     setFormDesc(draft.workDescription);
     setFormIssue(draft.issueSolution);
@@ -373,7 +365,7 @@ export const LogbookView: React.FC = () => {
               Logbook Kegiatan
             </h1>
             <p className="text-xs sm:text-sm text-[#4A5A72] mt-1">
-              Audit kedisiplinan logbook &amp; pemenuhan kuota <strong>12 entri untuk Area 1 (Kelompok)</strong> dan <strong>12 entri per anggota</strong> (Total 72 entri).
+              Logbook <strong>per orang</strong> (arahan Bimbingan 4): <strong>12 baris per anggota</strong>, diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Setiap anggota mengisi logbooknya sendiri.
             </p>
           </div>
 
@@ -393,25 +385,7 @@ export const LogbookView: React.FC = () => {
               <Download className="w-3.5 h-3.5 text-[#0062CC]" />
               Ekspor CSV ({filteredLogbooks.length})
             </button>
-            {isPM && totalFilled < TOTAL_TARGET && (
-              <button
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      `Apakah Anda ingin melengkapi data logbook ke kuota ${TOTAL_TARGET} entri (12 Kelompok + 12 per anggota)? Seluruh catatan yang sudah dibuat tetap aman.`
-                    )
-                  ) {
-                    resetLogbooksToDefault();
-                  }
-                }}
-                className="min-h-[40px] px-4 py-2 bg-white/80 hover:bg-white text-[#0062CC] border border-[#0062CC]/30 rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-                title="Lengkapi data logbook menjadi 72 entri standar"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-[#0062CC]" />
-                Sinkronkan 72 Entri
-              </button>
-            )}
-
+            {/* Tombol "Sinkronkan 72 Entri" dihapus (LOG-052): mengisi logbook dengan entri contoh sama dengan memalsukan logbook. */}
             <button
               onClick={() => handleOpenAdd()}
               className="min-h-[40px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
@@ -453,7 +427,7 @@ export const LogbookView: React.FC = () => {
             </div>
 
             <div className="flex items-center justify-between text-[11px] text-[#4A5A72]">
-              <span>Target: 12 Kelompok + 60 Anggota (5 × 12)</span>
+              <span>Target: {entities.length} anggota × 12 baris</span>
               <span className="font-semibold text-[#047857]">
                 {totalVerified} / {TOTAL_TARGET} ACC ({overallVerifiedPercent}%)
               </span>
@@ -476,31 +450,31 @@ export const LogbookView: React.FC = () => {
             <div>
               <p className="font-semibold leading-relaxed">
                 {momLogbookStatus.hasUnloggedMom
-                  ? `Pengingat: MoM ${momLogbookStatus.latestMomLabel} belum memiliki entri logbook dalam 24 jam.`
-                  : `Tersinkron: MoM mingguan terbaru (${momLogbookStatus.latestMomLabel}) telah memiliki entri logbook terkait.`}
+                  ? `Pengingat 1×24 jam: untuk MoM ${momLogbookStatus.latestMomLabel}, belum ada entri dari ${momLogbookStatus.missingNames.join(', ')}.`
+                  : `Lengkap: semua anggota sudah mengisi logbook untuk MoM terbaru (${momLogbookStatus.latestMomLabel}).`}
               </p>
               <p className="text-[11px] opacity-85 mt-0.5">
-                Struktur Capstone K2026 DTNTF mewajibkan setiap entri terparaf oleh dosen pembimbing resmi pada buku logbook fisik.
+                Gunakan tombol &quot;Buat draf logbook dari MoM ini&quot; di halaman Rapat, lalu lengkapi uraian spesifik pekerjaanmu sendiri. Paraf dosen tetap di buku logbook fisik.
               </p>
             </div>
           </div>
         </div>
 
         {/* ========================================================================= */}
-        {/* 6 ENTITY MATRIX CARDS (Kelompok + 5 Anggota) */}
+        {/* ENTITY MATRIX CARDS (per anggota) */}
         {/* ========================================================================= */}
         <div className="pt-3 border-t border-white/80">
           <div className="flex items-center justify-between mb-2.5">
             <span className="text-xs font-bold text-[#0B1B33] flex items-center gap-1.5">
               <Layers className="w-3.5 h-3.5 text-[#0062CC]" />
-              MATRIKS KUOTA 6 ENTITAS (1 KELOMPOK + 5 ANGGOTA × 12 ENTRI):
+              KUOTA PER ANGGOTA ({entities.length} × 12 BARIS):
             </span>
             <span className="text-[11px] text-[#4A5A72]">
               Klik kartu untuk memfilter entri
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
             {entities.map((ent) => {
               const stat = statsByEntity[ent.id] || { total: 0, verified: 0, percent: 0, isCompleted: false };
               const isSelected = filterEntity === ent.id;
@@ -637,7 +611,7 @@ export const LogbookView: React.FC = () => {
             >
               Semua
             </button>
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((w) => {
+            {Array.from({ length: MAX_WEEK }, (_, i) => i + 1).map((w) => {
               const isSelected = filterWeek === String(w);
               return (
                 <button
@@ -911,7 +885,7 @@ export const LogbookView: React.FC = () => {
               {/* Entitas / Pencatat */}
               <div>
                 <label className="block text-xs font-bold text-[#0B1B33] mb-1">
-                  Entitas Pencatat (Kelompok / Anggota)
+                  Pemilik Logbook
                 </label>
                 <select
                   value={formAuthorId}
@@ -919,13 +893,14 @@ export const LogbookView: React.FC = () => {
                   className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
                   required
                 >
+                  {formAuthorId === 'team-area-1' && (
+                    <option value="team-area-1">[Format lama] Area 1 (Kelompok)</option>
+                  )}
                   {entities
-                    .filter((ent) => isPM || ent.id === 'team-area-1' || ent.id === currentUser.id)
+                    .filter((ent) => isPM || ent.id === currentUser.id)
                     .map((ent) => (
                       <option key={ent.id} value={ent.id}>
-                        {ent.category === 'kelompok'
-                          ? `[Kelompok] ${ent.name} (Kuota 12)`
-                          : `[Anggota] ${ent.name} (${ent.roleTitle})`}
+                        {`${ent.name} (${ent.roleTitle})`}
                       </option>
                     ))}
                 </select>
@@ -942,7 +917,7 @@ export const LogbookView: React.FC = () => {
                     onChange={(e) => setFormWeekNumber(parseInt(e.target.value, 10))}
                     className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
                   >
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map((w) => (
+                    {Array.from({ length: MAX_WEEK }, (_, i) => i + 1).map((w) => (
                       <option key={w} value={w}>
                         Minggu {w} (W{w < 10 ? `0${w}` : w})
                       </option>

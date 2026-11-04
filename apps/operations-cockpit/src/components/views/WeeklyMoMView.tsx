@@ -53,6 +53,7 @@ export const WeeklyMoMView: React.FC = () => {
     setSelectedWorkOrderId,
     openWorkOrderForm,
     setActiveTab,
+    currentUser,
   } = useApp();
 
   const todayYmd = getTodayLocalYmd();
@@ -126,8 +127,8 @@ export const WeeklyMoMView: React.FC = () => {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${dayName}, ${formatted} - ${hours}:${minutes} WIB`;
   });
-  const [newMomLocation, setNewMomLocation] = useState('Ruang Asistensi DTNTF');
-  const [newMomEvaluator, setNewMomEvaluator] = useState('Dosen Pembimbing (Dr. Ir. Chemical Eng)');
+  const [newMomLocation, setNewMomLocation] = useState('');
+  const [newMomEvaluator, setNewMomEvaluator] = useState('Dosen Pembimbing');
   const [newMomMembers, setNewMomMembers] = useState<string[]>([]);
   const [newMomTopic, setNewMomTopic] = useState('');
   const [newMomSummary, setNewMomSummary] = useState('');
@@ -136,9 +137,9 @@ export const WeeklyMoMView: React.FC = () => {
 
   const openAddDeckModal = () => {
     setEditingDeckId(null);
-    setNewDeckWeek(5);
+    setNewDeckWeek(currentProjectWeek);
     setNewDeckTitle('');
-    setNewDeckPresenter('user-rahul');
+    setNewDeckPresenter(currentUser.id);
     setNewDeckDate(new Date().toLocaleDateString('id-ID', {
       day: 'numeric',
       month: 'short',
@@ -163,14 +164,14 @@ export const WeeklyMoMView: React.FC = () => {
     e.preventDefault();
     if (!newDeckTitle.trim()) return;
 
-    const originalDeck = slideDecks.find((deck) => deck.id === editingDeckId);
+    // Link kosong disimpan sebagai '#' (ditampilkan "Link belum ada"), bukan URL contoh palsu
     const deckData = {
       week: newDeckWeek,
       weekLabel: `Week ${newDeckWeek}`,
       title: newDeckTitle.trim(),
       presenter: newDeckPresenter,
       date: newDeckDate.trim(),
-      url: newDeckUrl.trim() || (originalDeck?.url ?? 'https://drive.google.com/presentation/d/new-deck'),
+      url: newDeckUrl.trim() || '#',
     };
 
     if (editingDeckId) updateSlideDeck(editingDeckId, deckData);
@@ -183,9 +184,9 @@ export const WeeklyMoMView: React.FC = () => {
 
   const openAddActionModal = () => {
     setEditingActionId(null);
-    setNewActionWeek('W5');
+    setNewActionWeek(`W${currentProjectWeek}`);
     setNewActionIssue('');
-    setNewActionPic('user-ihsan');
+    setNewActionPic(currentUser.id);
     setNewActionProgress('In Progress');
     setCreateWoForAction(true);
     const deadline = new Date();
@@ -250,10 +251,10 @@ export const WeeklyMoMView: React.FC = () => {
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     setEditingMomId(null);
-    setNewMomWeek(5);
+    setNewMomWeek(currentProjectWeek);
     setNewMomDate(`${days[now.getDay()]}, ${formatted} - ${hours}:${minutes} WIB`);
-    setNewMomLocation('Ruang Asistensi DTNTF');
-    setNewMomEvaluator('Dosen Pembimbing (Dr. Ir. Chemical Eng)');
+    setNewMomLocation('');
+    setNewMomEvaluator('Dosen Pembimbing');
     setNewMomMembers(users.map((user) => user.id));
     setNewMomTopic('');
     setNewMomSummary('');
@@ -338,11 +339,12 @@ export const WeeklyMoMView: React.FC = () => {
           <div className="flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-[#0062CC]" />
             <h3 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33]">
-              Format Slide Deck (15 menit)
+              Format Slide Deck Bimbingan (15 menit)
             </h3>
           </div>
+          {/* Panduan Capstone tidak mengatur format slide bimbingan: ini format internal tim (LOG-051/052) */}
           <span className="px-3 py-1 bg-white/70 text-[#0062CC] rounded-full text-[10px] font-bold flex items-center gap-1 border border-white">
-            <FileCheck2 className="w-3 h-3" /> Pedoman Asistensi Departemen
+            <FileCheck2 className="w-3 h-3" /> Format internal tim · template slide UGM (Canva)
           </span>
         </div>
 
@@ -357,14 +359,18 @@ export const WeeklyMoMView: React.FC = () => {
         </div>
 
         <div className="text-[11px] text-[#4A5A72] flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-bold text-[#0B1B33]">Struktur Wajib:</span>
-          <span>Slide 1 Status Capaian</span>
+          <span className="font-bold text-[#0B1B33]">Urutan:</span>
+          <span>1 Status capaian vs timeline</span>
           <span>•</span>
-          <span>Slide 2-3 Kepatuhan Standar ISA/ISO &amp; Termal</span>
+          <span>2 Tindak lanjut arahan bimbingan sebelumnya</span>
           <span>•</span>
-          <span>Slide 4 Hambatan Rekayasa</span>
+          <span>3–4 Hasil kerja per WO/anggota (+ standar)</span>
           <span>•</span>
-          <span>Slide 5 Rencana Mingguan</span>
+          <span>5 Risiko &amp; butir terbuka</span>
+          <span>•</span>
+          <span>6 Pertanyaan/keputusan untuk dosen</span>
+          <span>•</span>
+          <span>7 WO minggu depan</span>
         </div>
       </div>
 
@@ -592,7 +598,7 @@ export const WeeklyMoMView: React.FC = () => {
                 Your Slide Deck
               </h2>
               <p className="text-xs text-[#4A5A72]">
-                Materi tayang kompilasi tim
+                Slide paparan tiap bimbingan, terbaru di atas
               </p>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/70 text-[#0062CC]">
@@ -611,7 +617,7 @@ export const WeeklyMoMView: React.FC = () => {
           </div>
 
           <div className="space-y-3 max-h-[720px] overflow-y-auto pr-1">
-            {slideDecks.map((deck) => (
+            {[...slideDecks].sort((a, b) => (b.week || 0) - (a.week || 0)).map((deck) => (
               <div
                 key={deck.id}
                 className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs hover:shadow-sm transition-all"
@@ -662,14 +668,23 @@ export const WeeklyMoMView: React.FC = () => {
                         </button>
                       </>
                     )}
-                    <a
-                      href={deck.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-3 py-1 bg-white/70 hover:bg-[#0062CC] hover:text-white text-[#0062CC] rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
-                    >
-                      Buka <ExternalLink className="w-3 h-3" />
-                    </a>
+                    {deck.url && deck.url !== '#' ? (
+                      <a
+                        href={deck.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-3 py-1 bg-white/70 hover:bg-[#0062CC] hover:text-white text-[#0062CC] rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
+                      >
+                        Buka <ExternalLink className="w-3 h-3" />
+                      </a>
+                    ) : (
+                      <span
+                        className="px-3 py-1 bg-[#F1F5F9] text-[#64748B] rounded-full text-[11px] font-semibold"
+                        title="Link slide belum diisi; PM dapat menambahkannya lewat tombol edit"
+                      >
+                        Link belum ada
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
