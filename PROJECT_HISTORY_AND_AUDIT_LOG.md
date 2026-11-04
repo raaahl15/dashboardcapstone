@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode siap di branch `fase-4-cockpit` (LOG-023)  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul, P0 menunggu keputusan PM (LOG-027)  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-03 19:00 WIB  
+**Terakhir Diperbarui:** 2026-11-04 15:30 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,35 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-027] 2026-11-04 15:30 WIB — Fase 4: audit konsep, kelayakan, kegunaan & tumpang tindih fitur cockpit; bundel ulang data
+* **Pelaksana**: Claude Code (AI agent), atas permintaan PM (Rahul): *"lanjutkan fase 4, coba lakukan audit, kelayakan, dan pelaporan terkait konsep sistem websitenya, apakah sudah sesuai, friendly user, terdapat fitur yang sama atau tumpang tindih … baca semua file md dan jangan lupa catat history pengerjaan"*
+* **Fase**: 4
+* **Tujuan**: menilai apakah cockpit di branch `fase-4-cockpit` sesuai konsep Blueprint, layak di-merge, ramah pengguna, dan bebas fitur ganda; serta menutup tindak lanjut LOG-025 (bundel ulang data cockpit).
+* **Perubahan** (branch `fase-4-cockpit`, commit `279f97d`; working tree utama tetap di `main`, dikerjakan lewat `git worktree` di scratchpad):
+  - Merge `main` → `fase-4-cockpit` (membawa LOG-024/025: RFP, template LaTeX, registry 11 bagian).
+  - Bundel ulang `apps/operations-cockpit/public/data/*.json` (`node tools/build_manifest.js`).
+  - **Baru** `apps/operations-cockpit/docs/AUDIT_KONSEP_FASE4.md`: kesesuaian 12 modul vs Blueprint BAB IV, 7 klaster tumpang tindih, konten palsu/usang, kegunaan, usulan menu 12 → 8, rekomendasi P0/P1/P2.
+  - `apps/operations-cockpit/docs/audit-report.md`: catatan di awal bahwa skornya tidak berbasis penyebut (§9.2) dan dilengkapi audit baru.
+* **Bukti / Verifikasi**:
+  - `node tools/build_manifest.js --check` → sebelum: 6 sumber basi (Panduan, RFP, PSTF1_LaTeX, registry .json/.md, laporan_pstf1.md); sesudah bundel ulang: bersih. `node tools/check_companions.js` → **HASIL: PASS** (18/18 artefak, 22 companion).
+  - `tsc --noEmit` → exit 0. `vite build` → `✓ built in 1.92s` (total 5 s), 21 chunk.
+  - Pencarian email di `public/data/*.json` → 0 temuan; registry publik memuat 11 URL Google (R-13 tetap terbuka).
+  - Pembacaan: 27 file `.md` repo + 12 view, Header, App, `AppContext` (perhitungan), `initialData.ts`, `types`.
+  - Hasil: **4 PASS, 7 PARSIAL, 1 FAIL** (Workspaces) dari 12 modul. Bug terkonfirmasi: paraf logbook menyimpan `verifiedDate: 'Hari ini'` (`AppContext.tsx:1477`). Konten palsu: `alert` "Ekspor Paket FEED", footer Schedule "Peng-Robinson EOS (DWSIM v8.7)" (model = NRTL, DWSIM 6.5) + "Auto-saved 14:42:09", teks statis Stage-Gate ("100% Diselaraskan"), RACI ringkas *hardcode* struktur bab lama, URL *seed* palsu.
+  - **TIDAK DIUJI**: error console di browser, data live Firestore (temuan *seed* belum tentu sama dengan data live), tampilan ponsel, preview Vercel.
+  - `git push origin fase-4-cockpit` → exit 0.
+* **Keputusan** (usulan, menunggu PM):
+  - Sebelum G2 hanya P0 + sebagian P1 (hapus konten palsu, perbaiki bug, satukan status deliverable ke §1.4, tenggat satu sumber). Penyederhanaan menu 12 → 8 dan peleburan Tracker Action/Weekly Planner (P2) **ditunda sampai setelah G2** agar tim tidak belajar ulang aplikasi di minggu penulisan laporan; bila disetujui → Blueprint v2.4 (BAB IV).
+  - Audit ini bukan re-audit akhir Fase 5 (kode Fase 4 sebagian dibuat Claude Code; §9.2 butir 4).
+* **Tindak Lanjut**:
+  - [ ] **PM**: baca `AUDIT_KONSEP_FASE4.md` §6; setujui/tolak P0–P2, pemetaan status lama → §1.4 dan bobot progres (P1).
+  - [ ] **PM**: akses umum Drive `CAPSTONE_DME_AREA1` → **Dibatasi** (R-13, syarat merge); uji preview Vercel 12 modul.
+  - [ ] **Claude Code**: setelah PM setuju, kerjakan P0 kode di branch (konten palsu, bug `verifiedDate`).
+  - [ ] **Claude Code**: tindak lanjut LOG-026, catat ID Drive PDF RFP `1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn` di registry `tor_rfp` (lalu bundel ulang).
+  - [ ] Re-audit akhir Fase 5 oleh pihak selain Claude Code (tetap terbuka dari LOG-023).
 
 ---
 
