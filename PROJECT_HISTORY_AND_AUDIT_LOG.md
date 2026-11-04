@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 di branch `p2-konsolidasi` menunggu uji preview (LOG-032); deploy firestore.rules menunggu PM  
-**Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 19:00 WIB  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); DoD total 11/20; deploy firestore.rules menunggu PM  
+**Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
+**Terakhir Diperbarui:** 2026-11-04 19:20 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,18 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-033] 2026-11-04 19:20 WIB — Rilis produksi P2 + Blueprint v2.4 (merge `p2-konsolidasi` → `main`)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control: *"merge p2"*
+* **Fase**: 4 (P2 audit)
+* **Perubahan**: `git merge --no-ff origin/p2-konsolidasi` di `main` → commit `22c27ea` (31 file, +2.545/−489), `git push origin main` → deploy produksi Vercel otomatis. Isi: lihat LOG-032. Blueprint v2.4 kini berlaku di `main`.
+* **Bukti / Verifikasi**: di `main` hasil merge: `npm ci` (paket baru Markdown/KaTeX) → 256 paket; `tsc --noEmit` → exit 0; `vite build` → `✓ built in 2.42s`, exit 0; `node tools/check_companions.js` → **HASIL: PASS**; `git push` → exit 0. **TIDAK DIUJI**: status *Ready* Vercel dan tampilan produksi. Uji preview oleh PM tidak dinyatakan eksplisit sebelum perintah merge.
+* **Status DoD saat ini (dihitung atas permintaan PM)**: Fase 1.5 5/5, Fase 2 1/3, Fase 3 3/5, Fase 4 2/3, Fase 5 0/4 → **11/20 butir (55 %)**.
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek deployment `22c27ea` *Ready*; bila rusak → *Instant Rollback*. Beri tahu tim soal 8 menu baru.
+  - [ ] Tetap terbuka: deploy `firestore.rules` + uji Console dari PC (Fase 4/5); uji laptop, akses 3 URL, login + WO uji (Fase 2/5); P&ID DXF + standar thermowell dari JN (Fase 3); ukuran `projectData/area1`, milestone G1, re-audit pihak lain (Fase 5).
 
 ---
 
