@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029), deploy firestore.rules & keputusan P1 menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 di branch `p1-status-deliverable` menunggu uji preview (LOG-030); deploy firestore.rules menunggu PM  
 **Versi Blueprint Berlaku:** v2.3 (hosting Vercel, remote `raaahl15/dashboardcapstone`)  
-**Terakhir Diperbarui:** 2026-11-04 16:40 WIB  
+**Terakhir Diperbarui:** 2026-11-04 17:30 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,36 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-030] 2026-11-04 17:30 WIB — P1 audit Fase 4: status deliverable baku §1.4 + progres dihitung, tenggat satu sumber (branch `p1-status-deliverable`)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul) lewat Remote Control: *"lanjutkan P1"* (sebagai jawaban atas usulan bobot Draft 0 / WIP 40 / Review Internal 70 / Diajukan 90 / ACC Pembimbing 100)
+* **Fase**: 4 (P1 dari `AUDIT_KONSEP_FASE4.md` §6)
+* **Tujuan**: menghapus tumpang tindih klaster B–D audit (status dokumen 3 kosakata, kesiapan manual, tenggat di-*hardcode*).
+* **Perubahan** (branch `p1-status-deliverable` dari `main` `a9b3819`, commit `e554e86`, via `git worktree`; belum di `main`/produksi):
+  - **Baru** `src/utils/docStatus.ts`: 6 status baku §1.4, bobot progres, pemetaan kosakata lama, daftar status wajib bukti, kelas warna pil.
+  - `types/index.ts`: `DeliverableItem.status` menerima status baku + lama; field baru `reviewEvidence`.
+  - `AppContext.tsx`: `overallWeightedProgress` dihitung dari status (bukan persen manual).
+  - `WorkspacesView.tsx`: pilihan status = 6 status baku (dengan % progres), kolom **Bukti** wajib untuk Diajukan/ACC Pembimbing/Revisi, progres otomatis, peringatan bila masih ada status lama, jumlah deliverable & tenggat dari data (bukan "6 Core Deliverables"/"15 Des 2026" *hardcode*), dialog ber-ARIA.
+  - `HomepageView.tsx`: bar progres + pil status dari status baku; modal "Update Progres" manual dihapus (pensil → Workspaces); kartu "Status ACC Pembimbing" = jumlah deliverable ACC / total + jumlah "menunggu ACC" (bukan `config.supervisorStatus` dan teks tetap "Pending Review"); countdown & kartu tenggat dari `config.tenderDeadline`/`config.projectStartDate`.
+  - `StageGateView.tsx`: teks tenggat dari `config.tenderDeadline`.
+  - `DataHealthPanel.tsx` + `MasterLibraryView.tsx` + `staticData.ts`: kartu Kalkulator/Tag/Companion langsung membuka tab Library yang sesuai.
+  - `initialData.ts` (seed, hanya untuk dokumen Firestore kosong): 6 deliverable memakai URL Google Docs laporan PSTF 1 / folder Drive `03_CAD_DWG` dari registry, status baku, judul 4 bab Panduan, tag pabrik (R-101, S-107, S-114).
+  - `docs/AUDIT_KONSEP_FASE4.md` Rev 0.2: status pelaksanaan P0/P1.
+* **Bukti / Verifikasi**:
+  - `tsc --noEmit` → exit 0; `vite build` → `✓ built in 1.08s`, exit 0; `node tools/check_companions.js` → **HASIL: PASS**; `git push -u origin p1-status-deliverable` → exit 0.
+  - Aturan Firestore diperiksa: `deliverables` tidak divalidasi nilai statusnya (hanya PM yang boleh mengubah bagian ini), jadi **tidak perlu perubahan rules**.
+  - **TIDAK DIUJI**: tampilan di browser (preview Vercel branch ini), data live Firestore.
+* **Keputusan**:
+  - Bobot disetujui PM; **Revisi = 40** (setara WIP) ditetapkan agent karena tidak ada di usulan; PM boleh mengubah di `docStatus.ts`.
+  - **Tanpa migrasi otomatis**: status lama dipetakan saat dibaca. Menormalkan state saat dimuat akan memicu sinkronisasi tulis dari akun anggota non-PM yang ditolak rules (bagian `deliverables` khusus PM). Nilai baru tersimpan ketika PM menyimpan ulang tiap deliverable di Workspaces.
+  - Pemetaan `ACC Final` → **Diajukan** (bukan ACC Pembimbing) karena data lama tidak menyimpan bukti ACC (§1.4); PM menaikkan ke ACC Pembimbing dengan referensi MoM.
+  - Dua kartu tenggat di Homepage dipertahankan (countdown + kartu status tender), tetapi kini dari satu sumber data.
+* **Tindak Lanjut**:
+  - [ ] **PM**: cek preview branch `p1-status-deliverable` (Homepage, Workspaces, Stage-Gate, kartu Kesehatan Data → Library); bila OK minta merge.
+  - [ ] **PM (setelah merge)**: di Workspaces, buka Edit → Simpan untuk tiap deliverable berstatus lama; isi bukti untuk yang Diajukan/ACC; ganti tautan ke Google Docs/Drive asli.
+  - [ ] Tetap terbuka dari LOG-029: deploy `firestore.rules`, uji Console, milestone G1, uji tim. P2 menunggu keputusan PM (setelah G2).
 
 ---
 
