@@ -264,6 +264,38 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-052] 2026-11-05 — Rapat & Logbook mengikuti konsep: slide deck B1–B6, Action Item MoM → WO, logbook per orang
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"update bagian rapat dan logbook, untuk your slide deck tambahin slide deck bimbingan 1-5, tapi bimbingan 1-4 pakai link kosong dulu dan bimbingan 5 pakai link yang udah dibuat, susun juga Action Item MoM → Work Order sesuai konsep yang dibuat"*
+* **Perubahan kode** (branch `rapat-logbook-konsep`, ab5f392, tsc 0, menunggu preview PM lalu merge):
+  - **Rapat** (`WeeklyMoMView.tsx`):
+    - banner diberi label "Format internal tim · template slide UGM (Canva)", menggantikan klaim "Pedoman Asistensi Departemen" yang tidak bersumber;
+    - urutan slide 7 bagian mengikuti LOG-051;
+    - deck diurutkan dari minggu terbaru; link kosong disimpan `#` dan tampil "Link belum ada" (sebelumnya URL contoh palsu);
+    - default form memakai minggu proyek berjalan dan pengguna yang login (sebelumnya W5, `user-ihsan`, "Dr. Ir. Chemical Eng", "Ruang Asistensi DTNTF").
+  - **Logbook** (`LogbookView.tsx`):
+    - mengikuti arahan Bimbingan 4 ("logbook diubah per orang, bukan per area"): entitas Kelompok dihapus dari kuota, target 5 × 12 baris; entri kelompok lama tetap tampil;
+    - minggu 1–18;
+    - pengingat 1×24 jam kini menyebut anggota yang belum mengisi untuk MoM terbaru;
+    - draf dari MoM dibuka atas nama pengguna yang login;
+    - **tombol "Sinkronkan 72 Entri" dihapus**, karena tombol itu mengisi logbook dengan entri contoh (= memalsukan logbook).
+* **Berkas impor** `cockpit_import_rapat_actions.json` (scratchpad agent, generator `scripts/build_import_rapat.py`, basis ekspor PM 2026-11-05 01:36):
+  - `slideDecks`: Bimbingan 1–6.
+    - B1–B5 link kosong.
+    - B4 memakai id deck W10 lama; link folder Drive lamanya dikosongkan sesuai permintaan, nilai lamanya dicatat di laporan ke PM.
+    - B6 = deck artifact LOG-051. Agent memakai nomor kalender `perubahan.md` (5 Nov = Bimbingan 6), bukan "bimbingan 5" yang disebut PM.
+  - `trackerActions`: ACT-01…13 dari tugas/arahan dosen yang tercatat di MoM W2–W11, masing-masing tertaut ke satu WO (`origin.type = mom`). Progres mengikuti status WO. Action uji "v" lama tertimpa.
+  - `workOrders`:
+    - 13 WO tertaut diperbarui `origin`-nya;
+    - WO-027 versi koreksi I&C (LOG-049);
+    - WO-029 checklist "Pindahkan ke Google Docs" tercentang (LOG-050);
+    - **WO-030 baru**: logbook per orang, 5 anggota, tenggat 12 Nov, dari ACT-12 (B4).
+* **Catatan integritas**: agent tidak membuat entri logbook untuk siapa pun. Logbook diisi tiap anggota sendiri (WO-030).
+* **Tindak Lanjut**:
+  - [ ] PM: cek preview branch `rapat-logbook-konsep` → "merge".
+  - [ ] PM: impor `cockpit_import_rapat_actions.json` (Backup & Restore). Bila ada WO yang diubah setelah ekspor 01:36, ekspor ulang dulu dan kirim ke agent.
+
+---
+
 ### [LOG-051] 2026-11-05 — Slide deck Bimbingan 6 (8 slide) dan penilaian format slide deck cockpit
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"b dulu"* (opsi b: siapkan isi deck Bimbingan 6), setelah meminta penilaian format slide deck di menu Rapat.
 * **Perubahan**:
