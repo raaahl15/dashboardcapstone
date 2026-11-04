@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); DoD total 13/20; firestore.rules sudah di-deploy PM (LOG-037); uji console produksi menunggu PM  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 SELESAI (sign-off PM, LOG-036); P&ID Rev B ↔ index 0 ERROR (LOG-036, Fase 5 butir 1 parsial); firestore.rules di-deploy PM (LOG-037); uji console produksi 14/14 PASS → Fase 4 DoD 3/3 menunggu sign-off (LOG-038); DoD total 14/20  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 23:45 WIB  
+**Terakhir Diperbarui:** 2026-11-04 23:55 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -264,6 +264,25 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-038] 2026-11-04 23:55 WIB — Uji console produksi 14/14 modul PASS (DoD Fase 4 butir 2); file Drive terverifikasi
+* **Pelaksana**: Claude Code (AI agent) menjalankan skrip; PM (Rahul) login sendiri di jendela browser uji. Atas pesan PM: *"no. 4 sudah, ini link vercel nya https://dashboardcapstonearea1.vercel.app/"* lalu *"udah berhasil login"*.
+* **Fase**: 4 (DoD butir 2), 5 (penyimpanan Drive)
+* **Perubahan**:
+  - `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/` dijalankan di PC Desktop (Chrome, profil sementara). PM login di jendela itu, lalu skrip mengklik 8 menu / 14 modul (`navigation.ts`).
+  - Registry `google_workspace_registry.json` + `drive.files` (ID file P&ID Rev B & PDF ASME) dan companion Rev 0.6. URL produksi kini tercatat di log ini.
+  - Blueprint: DoD Fase 4 butir 2 dicentang; Fase 4 DoD 3/3, menunggu sign-off PM.
+* **Bukti / Verifikasi**:
+  - Output skrip: setiap modul `✓ … — 0 error`. *Modul diklik: 14/14; error setelah login: 0; sebelum login: 0*, **HASIL: PASS**, exit 0. Laporan `tools/out/smoke_console_2026-11-04T16-41-02-502Z.json` (lokal, di-ignore Git).
+  - Drive (konektor `search_files`): `DME-PID-002_Draft_PID_Area1_RevB.dxf` ID `1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR` di `03_CAD_DWG` (210 661 B = file staging); `ASME-PTC-19-3-TW-2016.pdf` ID `1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F` di `00_CORE_GUIDELINES` (8 657 561 B). Diunggah PM.
+  - `node tools/build_manifest.js` OK; `node tools/check_companions.js` → **HASIL: PASS**.
+* **Status DoD**: Fase 4 **3/3** (menunggu sign-off PM). Total **14/20 (70 %)** (1.5: 5/5, 2: 1/3, 3: 5/5, 4: 3/3, 5: 0/4).
+* **Tindak Lanjut**:
+  - [ ] **PM**: sign-off Fase 4.
+  - [ ] **PM**: catat ukuran `projectData/area1` dari panel Kesehatan Data (DoD Fase 5 butir 3, < 500 KB).
+  - [ ] **Tim**: login + WO percobaan tiap anggota (DoD Fase 5 butir 2); uji laptop & akses 3 URL (Fase 2).
+  - [ ] **JN/IH**: review P&ID Rev B, FE-101, T-101 → PM tetapkan `Diajukan` (DoD Fase 5 butir 1).
+
+---
 ### [LOG-037] 2026-11-04 23:45 WIB — `firestore.rules` sudah di-deploy ke produksi oleh PM
 * **Pelaksana**: PM (Rahul) menjalankan deploy; Claude Code (AI agent) mencatat, atas pesan PM: *"no 3 udah berhasil"*
 * **Fase**: 4/5 (rilis produksi)
@@ -271,7 +290,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 * **Bukti / Verifikasi**: laporan PM (output CLI tidak dilampirkan). Agent tidak memverifikasi langsung karena deploy diblokir classifier untuk agent. Verifikasi fungsional menyusul lewat uji login + WO percobaan tiap anggota (DoD Fase 5 butir 2).
 * **Status DoD**: tidak ada butir DoD yang berubah (deploy rules bukan butir DoD tersendiri). Total tetap **13/20**.
 * **Tindak Lanjut**:
-  - [ ] **PM**: `node tools/smoke_console.js --url <URL produksi>` (DoD Fase 4 butir 2).
+  - [x] **PM**: `node tools/smoke_console.js --url <URL produksi>` (DoD Fase 4 butir 2). *(PASS 14/14, LOG-038.)*
   - [ ] **Tim**: login + buat WO percobaan di produksi (DoD Fase 5 butir 2). Bila ada penolakan izin, catat pesan error untuk dicek terhadap rules.
 
 ---

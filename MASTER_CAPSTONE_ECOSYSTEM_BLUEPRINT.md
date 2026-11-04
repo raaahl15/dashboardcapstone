@@ -528,12 +528,12 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
 │ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
 │ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ SELESAI      │
-│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DIRILIS**    │
+│ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DoD 3/3**    │
 │ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ BERJALAN     │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
 ```
 \* Fase 2 ditutup dengan catatan: 2 butir DoD ditangguhkan atas keputusan PM (uji laptop, konfirmasi akses tim). Lihat Fase 2 dan LOG-018.
-\*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); belum ditutup karena DoD "tanpa error console" baru diuji visual dari iPad.
+\*\* Fase 4 dirilis ke produksi 2026-11-04 (LOG-029); DoD 3/3 terpenuhi (uji console 14/14 modul PASS, LOG-038), menunggu sign-off PM.
 
 Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD) terpenuhi dan dibuktikan** di log riwayat (BAB IX). Pengecualian hanya boleh diputuskan PM, harus menyebut butir yang ditangguhkan beserta syarat penutupannya, dan dicatat di log.
 
@@ -597,7 +597,7 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 * **Aktivitas:** `StageGateView` & Gantt mengikuti pemetaan G1–G4 (§1.7): milestone G1/G2 di jadwal PSTF 1, G3/G4 di jadwal PSTF 2, checklist bundel per gate. Data live ada di Firestore (seed `initialData.ts` hanya dipakai saat dokumen kosong), jadi perubahan harus lewat UI/migrasi data, bukan hanya mengubah seed. `DwsimStreamView`, `MasterLibraryView` (+ `build_manifest.js`), `GoogleWorkspaceView`, panel Kesehatan Data, tombol `wa.me` di WO & MoM, rute baru di `Header.tsx`/`App.tsx`, `npm run build` menyalin data rekayasa ke `public/data/`.
 * **DoD:**
   - [x] `tsc --noEmit` 0 error dan `npm run build` sukses (waktu build dicatat). *(LOG-023: tsc exit 0; build 1.710 modul, 4–8 detik di PC Desktop.)*
-  - [ ] 12 modul dapat dibuka tanpa error di console browser. *(PARSIAL, LOG-029: PM membuka preview dari iPad dan menyatakan modul tampil normal; DevTools Console tidak tersedia di Safari iPad. **Syarat penutupan:** buka produksi dari PC/laptop dengan Console terbuka, klik ke-12 modul, 0 error merah, catat di log.)*
+  - [x] 12 modul dapat dibuka tanpa error di console browser. *(LOG-038: `tools/smoke_console.js` pada produksi https://dashboardcapstonearea1.vercel.app/ di Chrome PC, login PM → **14/14 modul** (8 menu P2) diklik, **0 error** console/exception/log, HASIL: PASS. Sebelumnya PARSIAL dari iPad, LOG-029.)*
   - [x] Data HMB di web sama dengan `hmb_streams.json` terbaru (dicek tanggal ekstraksinya). *(LOG-023: `build_manifest.js --check` membandingkan hash sumber; `npm run check`/`sync:push` menolak bila basi; tanggal ekstraksi tampil di modul.)*
 
 #### FASE 5: Validasi Lintas Sistem, Otomasi Akademik & Rilis — Estimasi 3 hari — Status: PERANGKAT LUNAK SIAP (LOG-023), kegiatan rilis & serah terima menunggu tim

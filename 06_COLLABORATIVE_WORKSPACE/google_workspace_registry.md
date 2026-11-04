@@ -41,6 +41,7 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 ## 3. Skema
 - `drive.root`, `drive.folders[]`: `{key, title, id, url}`.
 - `drive.folders_pending[]`: nama folder Blueprint §3.3 yang belum ada di Drive.
+- `drive.files[]`: file biner penting di Drive (P&ID DXF, standar PDF) dengan `key`, `title`, `id`, `url`, `folder`, `note` (LOG-038).
 - `documents[]`: `{key, type (sheets|docs|slides), title, doc_no, id, url, target_folder, pic, status, data_status}`, ditambah `repo_snapshot` + `sync_direction` untuk Sheets yang disalin ke CSV, atau `repo_companion` untuk Docs yang punya companion di repo.
 
 ## 4. SOP Pembaruan
@@ -56,3 +57,4 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 | 0.3 | 2026-11-03 | Claude Code (AI) | Laporan PSTF 1 mengikuti template LaTeX 5 bab: struktur, `tor_rfp`, pengerja & reviewer 15 bagian (LOG-024). |
 | 0.4 | 2026-11-03 | Claude Code (AI) | Koreksi PM: laporan PSTF 1 kembali ke 4 bab Panduan (11 bagian); + `authoring`, `latex_working_copy`, `members` (5 orang) (LOG-025). |
 | 0.5 | 2026-11-04 | Claude Code (AI) | + `tor_rfp_pdf` (ID Drive PDF RFP dari unggahan Antigravity, LOG-026); akses umum Drive terverifikasi Dibatasi (LOG-028). |
+| 0.6 | 2026-11-04 | Claude Code (AI) | + `drive.files`: P&ID DME-PID-002 Rev B (03_CAD_DWG) dan ASME PTC 19.3 TW-2016 (00_CORE_GUIDELINES), diunggah PM, diverifikasi lewat konektor (LOG-038). |

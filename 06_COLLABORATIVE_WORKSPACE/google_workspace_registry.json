@@ -53,7 +53,26 @@
         "url": "https://drive.google.com/drive/folders/1frAZJSCsraZmYRPmekWcYXEvvpHv4zdf"
       }
     ],
-    "folders_pending": []
+    "folders_pending": [],
+    "files": [
+      {
+        "key": "pid_dme_pid_002_revB",
+        "title": "DME-PID-002_Draft_PID_Area1_RevB.dxf",
+        "id": "1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR",
+        "url": "https://drive.google.com/file/d/1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR/view",
+        "folder": "03_CAD_DWG",
+        "sha256_16": "92135c824e85225c",
+        "note": "Draf P&ID Area 1 Rev B (LOG-036); Rev A 1BVOyqj0szbffzpYt4y1oWs68yRcwS96G di folder 'aa' (arsip)"
+      },
+      {
+        "key": "asme_ptc_19_3_tw_2016",
+        "title": "ASME-PTC-19-3-TW-2016.pdf",
+        "id": "1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F",
+        "url": "https://drive.google.com/file/d/1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F/view",
+        "folder": "00_CORE_GUIDELINES",
+        "note": "Standar thermowell (hak cipta ASME, akses tim saja); dasar tools/calc/thermowell.py (LOG-035/036)"
+      }
+    ]
   },
   "documents": [
     {
