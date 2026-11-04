@@ -22,10 +22,12 @@ tags: ["Template", "LaTeX", "Laporan", "PSTF 1"]
 
 > ⚠️ File di `PSTF1_LaTeX/` adalah **template asli, jangan diubah**. Laporan kerja dibuat sebagai salinan (lihat §4). Isi teks contoh di template membahas "Proses ZXY pada Plant XYZ" dan **bukan** bahan untuk disalin ke laporan; angka contohnya (mis. 120 °C, CAPEX 116.000 USD) tidak boleh dikutip.
 
-## 1. Struktur Wajib
+## 1. Isi Template
+> **Keputusan PM (LOG-025):** template dipakai **hanya untuk format dan halaman awal**. Struktur isi laporan mengikuti **Panduan Lampiran 3A (4 bab)**: 1 Konseptualisasi · 2 FDS/Control Narrative · 3 Basic Engineering · 4 Tekno-ekonomi · Lampiran A Draf P&ID (A3) · Lampiran B Logbook. Tabel di bawah hanya mencatat isi contoh template.
+
 Halaman awal: sampul, lembar pengesahan (Dosen Koordinator + 2 Praktisi Industri, Kadep), pakta integritas (e-meterai), ringkasan eksekutif, daftar isi.
 
-| Bab | Subbab di template |
+| Bab | Subbab di contoh template |
 | :--- | :--- |
 | 1 Konseptualisasi | 1.1 Latar Belakang Dokumen Lelang TOR · 1.2 Penurunan Teori Model Sains Sistem · 1.3 Parameter Batas Operasional Teknis (URS) |
 | 2 Functional Design | 2.1 Logika Pergerakan Proses Kendali (ISA-5.06.01: startup, CV/MV/DV, interlock, FBD) |
@@ -36,20 +38,22 @@ Halaman awal: sampul, lembar pengesahan (Dosen Koordinator + 2 Praktisi Industri
 
 Format: A4, 12 pt, margin kiri 4 cm / atas 3 cm / kanan 3 cm / bawah 3 cm, `report`, babel Indonesia.
 
-## 2. Selisih dengan Struktur Lama Proyek
-Ringkasan Panduan (§9) menyebut 4 bab; template resmi menambah **Bab 4 Kajian Keselamatan** serta subbab 3.1 dan 3.4. Struktur Google Docs laporan disesuaikan ke template (LOG-024).
+## 2. Selisih Template dengan Panduan
+Contoh template berisi 5 bab: menambah **Bab 4 Kajian Keselamatan (HAZOP, SIL)** serta subbab 3.1 matriks pembobot dan 3.4 identifikasi CV/MV/DV. LOG-024 sempat mengikuti struktur ini; **LOG-025 mengembalikannya ke 4 bab Panduan**. HAZOP dan SIL masuk PSTF 2 (Panduan BAB IV), identifikasi CV/MV/DV dibahas di Bab 2 FDS (operasi normal), dan matriks pembobot opsi desain tidak menjadi subbab wajib.
 
-## 3. Hal yang Perlu Diputuskan
-1. **Jumlah anggota.** Template hanya punya makro `\namaA` s.d. `\namaD` (4 orang); tim berjumlah 5 (keputusan PM, LOG-005). Laporan kerja perlu makro `\namaE`/`\nimE` dan baris tambahan di sampul, pengesahan, pakta integritas, dan ringkasan eksekutif. Konfirmasi dengan Dosen Koordinator bila format dikunci.
-2. **Metode SIL.** Contoh template memakai *risk graph*; RFP §3.1.2 mensyaratkan **LOPA** → ikuti RFP.
-3. **Alat tulis.** Template berupa LaTeX (mis. Overleaf). Draf bab ditulis di Google Docs (master narasi, Blueprint §1.2) dengan struktur yang sama persis, lalu dipindah ke LaTeX saat finalisasi; atau tim menulis langsung di LaTeX. Pilihan PM.
+## 3. Keputusan (LOG-025)
+1. **Struktur isi**: 4 bab Panduan Lampiran 3A (lihat §1).
+2. **Anggota ke-5**: laporan kerja menambah makro `\namaE`/`\nimE` dan barisnya di sampul, pengesahan, pakta integritas, dan ringkasan eksekutif. Konfirmasi dengan Dosen Koordinator bila format dikunci.
+3. **Alat tulis: opsi 1.** Draf ditulis di Google Docs (master narasi) dengan struktur yang sama, lalu dipindah ke LaTeX saat finalisasi.
+4. **Metode SIL** (untuk PSTF 2): contoh template memakai *risk graph*; RFP §3.1.2 mensyaratkan **LOPA**, jadi ikuti RFP.
 
 ## 4. Cara Memakai
-1. Salin `PSTF1_LaTeX/` menjadi `07_FINAL_DELIVERABLES/reports/laporan_pstf1/` (laporan kerja).
-2. Isi data identitas (`\judul`, nama/NIM, penilai, tanggal) dan tambahkan anggota ke-5.
-3. Kompilasi dengan pdfLaTeX (paket: geometry, babel indonesian, titlesec, tabularx, graphicx, ulem, amsmath).
+1. Laporan kerja sudah dibuat di `07_FINAL_DELIVERABLES/reports/laporan_pstf1/` (companion `laporan_pstf1.md`); template di folder ini tetap asli.
+2. Isi data identitas (`\judul`, NIM, penilai, tanggal) di laporan kerja.
+3. Kompilasi dengan pdfLaTeX, mis. di Overleaf (paket: geometry, babel indonesian, setspace, titlesec, tabularx, graphicx, ulem, amsmath).
 
 ## 5. Log Revisi
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-03 | Claude Code (AI) | Template disimpan + catatan struktur dan keputusan (LOG-024). |
+| 0.2 | 2026-11-03 | Claude Code (AI) | Koreksi PM: isi mengikuti 4 bab Panduan, template hanya format; anggota ke-5 dan opsi 1 diputuskan; laporan kerja dibuat (LOG-025). |
