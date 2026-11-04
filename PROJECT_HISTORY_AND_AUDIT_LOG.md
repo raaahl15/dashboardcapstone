@@ -264,6 +264,20 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-050] 2026-11-05 — Bab 1 Rev 1 dipindahkan ke Google Docs Laporan PSTF 1 (tanpa riwayat revisi)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"okeey pindahkan ke gdocs, namun untuk history revisi jangan masuk ke gdocs ya, gdocs hanya berisi isian laporan aja"*
+* **Perubahan**:
+  - Google Doc Laporan PSTF 1 (`1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w`): placeholder Bab 1 diganti isi Bab 1 Rev 1 (1.1 RFP, 1.2 model + 15 persamaan tampilan dalam teks bersubskrip/superskrip, 1.3 URS, butir terbuka, matriks ketertelusuran, daftar pustaka) dan **11 tabel native** (Tabel 1.1–1.11, font 9 pt, header tebal). Judul bab: "Bab 1 Konseptualisasi Sistem (NAMUR Phase 1)".
+  - **Tidak dimasukkan**: kotak catatan revisi AI, tabel *Catatan Revisi*, dan "Catatan untuk penulis". Riwayat revisi tetap hanya di companion `.md` repo (LOG-049).
+  - Dikirim lewat 9 batchUpdate berurutan dengan `requiredRevisionId` (skrip generator di scratchpad agent: `gdoc_bab1.py`, `split_parts.py`).
+* **Bukti / Verifikasi**: dokumen dibaca ulang. Ada 11 tabel Bab 1 dengan dimensi sesuai sumber (6×4, 8×7, 12×3, 8×2, 6×6, 6×6, 6×5, 5×5, 5×5, 8×3, 11×4). Teks part 1 cocok persis (16.539 karakter). String `[[TABEL`, `Catatan Revisi`, `Catatan untuk penulis`, `hapus sebelum` = 0 kemunculan.
+* **Catatan integritas**: rumus di Google Docs adalah versi teks sederhana dari LaTeX. Versi acuan rumus tetap companion `.md` (KaTeX). Isi masih revisi AI yang wajib direview Ihsaan dan reviewer.
+* **Tindak Lanjut**:
+  - [ ] Ihsaan + reviewer: review di Google Docs sebelum Kamis 12 Nov; rapikan rumus dengan equation editor bila perlu.
+  - [ ] PM: centang checklist WO-029 "Pindahkan ke Google Docs"; impor `cockpit_import_wo027_029.json` bila belum.
+
+---
+
 ### [LOG-049] 2026-11-05 — Bab 1 Rev 1 (revisi lengkap Bab 1 Ihsaan) di cockpit; koreksi lingkup WO-027
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"karena butuh cepat, lakukan semua revisi dibab 1, lalu letakkan hasilnya di website cockpit"* (setelah analisis Bab 1 Rev 0 dari Ihsaan)
 * **Perubahan**:
