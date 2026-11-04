@@ -264,6 +264,21 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-051] 2026-11-05 — Slide deck Bimbingan 6 (8 slide) dan penilaian format slide deck cockpit
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"b dulu"* (opsi b: siapkan isi deck Bimbingan 6), setelah meminta penilaian format slide deck di menu Rapat.
+* **Perubahan**:
+  - Deck Bimbingan 6 dibuat sebagai artifact privat (https://claude.ai/artifact/LKzUPh7hSeigHMRd9AXhLP). Isinya 8 slide: sampul, status capaian, tindak lanjut Bimbingan 5, hasil W12 proses, hasil W12 I&C, risiko, pertanyaan untuk dosen, WO W13. Semua angka diambil dari HMB, Bab 1 Rev 1, dan rencana rekonstruksi. Kalkulasi diberi label data ASUMSI.
+  - Penilaian banner "Format Slide Deck (15 menit)" di `WeeklyMoMView.tsx`:
+    - label "Pedoman Asistensi Departemen" tidak bersumber, karena Panduan tidak mengatur format bimbingan;
+    - bagian "tindak lanjut arahan sebelumnya" dan "pertanyaan untuk dosen" tidak ada;
+    - arsip deck masih data contoh dengan kalender yang salah.
+  - Kode belum diubah (opsi a ditunda PM).
+* **Tindak Lanjut**:
+  - [ ] PM: bagikan/ekspor deck, tautkan di cockpit (Add Slide Deck, Week 12).
+  - [ ] Opsi a: perbaiki banner dan form deck di branch.
+
+---
+
 ### [LOG-050] 2026-11-05 — Bab 1 Rev 1 dipindahkan ke Google Docs Laporan PSTF 1 (tanpa riwayat revisi)
 * **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): *"okeey pindahkan ke gdocs, namun untuk history revisi jangan masuk ke gdocs ya, gdocs hanya berisi isian laporan aja"*
 * **Perubahan**:
