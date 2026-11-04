@@ -77,3 +77,18 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export const statusClass = (s: string): string => STATUS_STYLE[s] ?? 'bg-[#E2E8F0] text-[#334155]';
+
+/**
+ * Tautan langsung ke tab tertentu di Master Library (mis. dari panel Kesehatan Data).
+ * Disimpan di variabel modul: cukup untuk satu sesi SPA, tanpa URL/penyimpanan browser.
+ */
+export type LibraryTab = 'docs' | 'calc' | 'tags';
+let pendingLibraryTab: LibraryTab | null = null;
+export const requestLibraryTab = (tab: LibraryTab): void => {
+  pendingLibraryTab = tab;
+};
+export const consumeLibraryTab = (): LibraryTab | null => {
+  const t = pendingLibraryTab;
+  pendingLibraryTab = null;
+  return t;
+};

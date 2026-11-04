@@ -117,6 +117,7 @@ import {
   isExclusivelyAssignedToCurrentPM,
   isUserWorkOrderAssignee,
 } from '../utils/workOrderHelpers';
+import { deliverableProgress } from '../utils/docStatus';
 
 export type { NavTab, AppContextType };
 
@@ -2746,8 +2747,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     const coreDeliverables = deliverables.filter((d) => d.weight > 0);
     const totalWeight = coreDeliverables.reduce((acc, curr) => acc + curr.weight, 0);
     if (totalWeight === 0) return 0;
+    // Progres dihitung dari status baku §1.4, bukan persen yang diisi manual (P1 audit, LOG-030)
     const weightedSum = coreDeliverables.reduce(
-      (acc, curr) => acc + (curr.progress * curr.weight) / 100,
+      (acc, curr) => acc + (deliverableProgress(curr) * curr.weight) / 100,
       0
     );
     return Math.round((weightedSum / totalWeight) * 100);

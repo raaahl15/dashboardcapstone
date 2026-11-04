@@ -72,9 +72,26 @@ export interface DeliverableItem {
   key: string;
   title: string;
   subtitle: string;
+  /** Legacy: tidak lagi dipakai untuk tampilan; progres dihitung dari status (utils/docStatus.ts). */
   progress: number;
   targetWeek: string;
-  status: 'Draft' | 'In Review Pembimbing' | 'ACC Final' | 'Aktif' | 'Lewat target';
+  /**
+   * Status baku Blueprint §1.4. Nilai lama ('In Review Pembimbing', 'ACC Final', 'Aktif',
+   * 'Lewat target') bisa masih ada di Firestore dan dipetakan saat dibaca (normalizeDocStatus).
+   */
+  status:
+    | 'Draft'
+    | 'WIP'
+    | 'Review Internal'
+    | 'Diajukan'
+    | 'ACC Pembimbing'
+    | 'Revisi'
+    | 'In Review Pembimbing'
+    | 'ACC Final'
+    | 'Aktif'
+    | 'Lewat target';
+  /** Bukti wajib untuk Diajukan / ACC Pembimbing / Revisi: kode WO atau referensi MoM (§1.4). */
+  reviewEvidence?: string;
   badgeNote?: string;
   fileUrl: string;
   modelTag?: string;

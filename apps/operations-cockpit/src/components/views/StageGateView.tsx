@@ -181,7 +181,7 @@ export const StageGateView: React.FC = () => {
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
             <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
-              Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum sidang Stage-Gate 15 Des 2026
+              Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum G2 Evaluasi PSTF 1 ({config.tenderDeadline})
             </p>
           </div>
 

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Activity, Calculator, Tags, FileCheck2, HardDrive } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { useStaticData, fmtNum, fmtDateTime, daysSince } from '../../utils/staticData';
+import { useStaticData, fmtNum, fmtDateTime, daysSince, requestLibraryTab, LibraryTab } from '../../utils/staticData';
 
 interface Health {
   generated_at: string;
@@ -48,7 +48,17 @@ export const DataHealthPanel: React.FC = () => {
   if (!data) return null;
 
   const age = daysSince(data.hmb.extracted_at) ?? 0;
-  const tiles: { key: string; icon: React.ReactNode; title: string; value: string; detail: string; tone: Tone; tab: 'dwsim' | 'library' | 'homepage' }[] = [
+  const tiles: {
+    key: string;
+    icon: React.ReactNode;
+    title: string;
+    value: string;
+    detail: string;
+    tone: Tone;
+    tab: 'dwsim' | 'library' | 'homepage';
+    /** Tab Master Library yang dibuka langsung (LOG-030) */
+    libTab?: LibraryTab;
+  }[] = [
     {
       key: 'hmb',
       icon: <Activity className="w-4 h-4" />,
@@ -66,6 +76,7 @@ export const DataHealthPanel: React.FC = () => {
       detail: `${data.calc.pass}/${data.calc.total} PASS · ${data.calc.placeholder} masih PLACEHOLDER · ${data.calc.not_calculated} belum dihitung`,
       tone: data.calc.fail > 0 ? 'bad' : data.calc.placeholder > 0 || data.calc.not_calculated > 0 ? 'warn' : 'ok',
       tab: 'library',
+      libTab: 'calc',
     },
     {
       key: 'tags',
@@ -75,6 +86,7 @@ export const DataHealthPanel: React.FC = () => {
       detail: `${data.tags.WARNING} peringatan · P&ID diperiksa: ${data.tags.pid_checked}`,
       tone: data.tags.ERROR > 0 ? 'bad' : data.tags.WARNING > 0 ? 'warn' : 'ok',
       tab: 'library',
+      libTab: 'tags',
     },
     {
       key: 'comp',
@@ -84,6 +96,7 @@ export const DataHealthPanel: React.FC = () => {
       detail: data.companions.pass ? 'npm run check: PASS' : 'npm run check: FAIL',
       tone: data.companions.pass ? 'ok' : 'bad',
       tab: 'library',
+      libTab: 'docs',
     },
     {
       key: 'doc',
@@ -107,7 +120,10 @@ export const DataHealthPanel: React.FC = () => {
           <button
             key={t.key}
             type="button"
-            onClick={() => setActiveTab(t.tab)}
+            onClick={() => {
+              if (t.libTab) requestLibraryTab(t.libTab);
+              setActiveTab(t.tab);
+            }}
             className="text-left min-h-[44px] p-3.5 rounded-2xl bg-white/80 border border-white hover:bg-white transition-all"
           >
             <div className="flex items-center justify-between gap-2">

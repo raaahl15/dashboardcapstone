@@ -1,48 +1,54 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { UserChip } from '../common/UserChip';
-import {
-  Calendar,
-  Layers,
-  Upload,
-  ExternalLink,
-  Pencil,
-  FileText,
-  Clock,
-  CheckCircle2,
-} from 'lucide-react';
+import { Calendar, Layers, Upload, ExternalLink, Pencil, FileText, AlertTriangle } from 'lucide-react';
 import { DeliverableItem } from '../../types';
+import {
+  DOC_STATUSES,
+  DocStatus,
+  STATUS_NEEDS_EVIDENCE,
+  STATUS_PILL,
+  STATUS_PROGRESS,
+  deliverableProgress,
+  deliverableStatus,
+  isLegacyStatus,
+} from '../../utils/docStatus';
 
+/**
+ * Workspaces & Deliverables. Status memakai siklus baku Blueprint §1.4 dan progres dihitung dari
+ * status (bobot di utils/docStatus.ts), bukan diisi manual (P1 audit Fase 4, LOG-030).
+ */
 export const WorkspacesView: React.FC = () => {
-  const {
-    deliverables,
-    updateDeliverable,
-    isPM,
-  } = useApp();
+  const { deliverables, updateDeliverable, isPM, config } = useApp();
 
   const [selectedItem, setSelectedItem] = useState<DeliverableItem | null>(null);
-  const [editProgress, setEditProgress] = useState(0);
-  const [editStatus, setEditStatus] = useState<'Draft' | 'In Review Pembimbing' | 'ACC Final' | 'Aktif'>('Draft');
+  const [editStatus, setEditStatus] = useState<DocStatus>('Draft');
+  const [editEvidence, setEditEvidence] = useState('');
   const [editUrl, setEditUrl] = useState('');
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploadDeliverableId, setUploadDeliverableId] = useState<string>('');
   const [uploadTitle, setUploadTitle] = useState('');
   const [uploadUrl, setUploadUrl] = useState('');
 
+  const needsEvidence = STATUS_NEEDS_EVIDENCE.includes(editStatus);
+  const legacyCount = deliverables.filter((d) => isLegacyStatus(d.status)).length;
+
   const openEditModal = (item: DeliverableItem) => {
     setSelectedItem(item);
-    setEditProgress(item.progress);
-    setEditStatus(item.status as 'Draft' | 'In Review Pembimbing' | 'ACC Final' | 'Aktif');
+    setEditStatus(deliverableStatus(item));
+    setEditEvidence(item.reviewEvidence ?? '');
     setEditUrl(item.fileUrl);
   };
 
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedItem) return;
+    if (needsEvidence && !editEvidence.trim()) return;
 
     updateDeliverable(selectedItem.id, {
-      progress: Number(editProgress),
       status: editStatus,
+      // progress tetap ditulis (dipakai validasi impor/ekspor JSON), nilainya mengikuti status
+      progress: STATUS_PROGRESS[editStatus],
+      reviewEvidence: editEvidence.trim(),
       fileUrl: editUrl,
     });
     setSelectedItem(null);
@@ -64,9 +70,6 @@ export const WorkspacesView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, description, and workspace summary */}
-      {/* ========================================================================= */}
       <div className="space-y-3">
         <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
           Work-In-Progress Deliverables
@@ -75,7 +78,9 @@ export const WorkspacesView: React.FC = () => {
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
             <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
-              Repositori draf FEED/DED Area 1 • Status verifikasi disiplin proses &amp; instrumentasi
+              Status mengikuti siklus baku: Draft → WIP → Review Internal → Diajukan → ACC Pembimbing (atau Revisi).
+              Progres dihitung otomatis dari status. Diajukan, ACC Pembimbing, dan Revisi wajib disertai bukti (kode WO /
+              referensi MoM).
             </p>
           </div>
 
@@ -84,165 +89,171 @@ export const WorkspacesView: React.FC = () => {
               <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
                 WORKSPACES • FEED/DED AREA 1
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
-                STATUS VERIFIKASI
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <Layers className="w-3.5 h-3.5" /> {deliverables.length} Deliverable
+              </span>
+              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5" /> Tenggat FEED: {config.tenderDeadline}
               </span>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5" /> 6 Core Deliverables
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5" /> Target Tender: 15 Des 2026
-              </span>
-              {isPM && (
-                <button
-                  type="button"
-                  onClick={() => setShowUploadModal(true)}
-                  className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-                >
-                  <Upload className="w-3.5 h-3.5" />
-                  Upload Berkas Baru
-                </button>
-              )}
-            </div>
+            {isPM && (
+              <button
+                type="button"
+                onClick={() => setShowUploadModal(true)}
+                className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+              >
+                <Upload className="w-3.5 h-3.5" />
+                Perbarui Tautan Berkas
+              </button>
+            )}
           </div>
+
+          {isPM && legacyCount > 0 && (
+            <div className="glass-faint px-4 py-2.5 flex items-start gap-2 text-xs text-[#92400E]" role="status">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              <span>
+                {legacyCount} deliverable masih tersimpan dengan status lama (mis. "ACC Final"/"In Review Pembimbing").
+                Tampilan sudah memetakan ke status baku; buka Edit lalu Simpan agar nilai baru tersimpan. "ACC Final"
+                dipetakan ke Diajukan karena data lama tidak punya bukti ACC.
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* ========================================================================= */}
-      {/* 2-COLUMN X 3-ROW GRID OF 6 DELIVERABLES */}
-      {/* ========================================================================= */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        {deliverables.map((item) => (
-          <div
-            key={item.id}
-            className="glass-card p-6 flex flex-col justify-between hover:shadow-cockpit-pop transition-all space-y-4"
-          >
-            <div>
-              {/* Card Header: Title & Progress */}
-              <div className="flex items-start justify-between gap-3 mb-2">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <div className="w-8 h-8 rounded-xl bg-white/70 text-[#0062CC] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4" />
-                  </div>
-                  <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">
-                    {item.title}
-                  </h3>
-                  {isPM && (
-                    <button
-                      type="button"
-                      onClick={() => openEditModal(item)}
-                      className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#4A5A72] hover:text-[#0062CC] rounded-full hover:bg-black/5 transition-colors"
-                      title="Edit Progres & Status"
-                      aria-label={`Edit Progres & Status ${item.title}`}
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="text-right shrink-0">
-                  <span className="font-heading text-base font-extrabold text-[#0B1B33] tabular-nums">
-                    Progres: {item.progress}%
-                  </span>
-                </div>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full h-2 rounded-full bg-[#DCEBF7] overflow-hidden my-3">
-                <div
-                  className="h-full bg-[#007BFF] rounded-full transition-all duration-300"
-                  style={{ width: `${item.progress}%` }}
-                ></div>
-              </div>
-
-              {/* Description */}
-              <p className="text-xs text-[#4A5A72] leading-relaxed">
-                {item.subtitle}
-              </p>
-
-            </div>
-
-            {/* Bottom Row: Status Badge & Open Button */}
-            <div className="pt-3 border-t border-white/80 flex items-center justify-between">
+        {deliverables.map((item) => {
+          const status = deliverableStatus(item);
+          const progress = deliverableProgress(item);
+          return (
+            <div
+              key={item.id}
+              className="glass-card p-6 flex flex-col justify-between hover:shadow-cockpit-pop transition-all space-y-4"
+            >
               <div>
-                {item.status === 'In Review Pembimbing' ? (
-                  <span className="px-3 py-1 bg-[#FEF3C7] text-[#92400E] rounded-full text-[11px] font-bold flex items-center gap-1.5">
-                    <Clock className="w-3 h-3 text-[#B45309]" />
-                    IN REVIEW PEMBIMBING
-                  </span>
-                ) : item.status === 'ACC Final' ? (
-                  <span className="px-3 py-1 bg-[#D1FAE5] text-[#065F46] rounded-full text-[11px] font-bold flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3 h-3 text-[#047857]" />
-                    ACC FINAL
-                  </span>
-                ) : (
-                  <span className="px-3 py-1 bg-[#E2E8F0] text-[#334155] rounded-full text-[11px] font-bold flex items-center gap-1.5">
-                    <FileText className="w-3 h-3 text-[#4A5A72]" />
-                    DRAFT
-                  </span>
+                <div className="flex items-start justify-between gap-3 mb-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <div className="w-8 h-8 rounded-xl bg-white/70 text-[#0062CC] flex items-center justify-center shrink-0">
+                      <FileText className="w-4 h-4" />
+                    </div>
+                    <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">{item.title}</h3>
+                    {isPM && (
+                      <button
+                        type="button"
+                        onClick={() => openEditModal(item)}
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#4A5A72] hover:text-[#0062CC] rounded-full hover:bg-black/5 transition-colors"
+                        title="Ubah status & tautan"
+                        aria-label={`Ubah status dan tautan ${item.title}`}
+                      >
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="font-heading text-base font-extrabold text-[#0B1B33] tabular-nums">
+                      Progres: {progress}%
+                    </span>
+                  </div>
+                </div>
+
+                <div className="w-full h-2 rounded-full bg-[#DCEBF7] overflow-hidden my-3">
+                  <div
+                    className="h-full bg-[#007BFF] rounded-full transition-all duration-300"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+
+                <p className="text-xs text-[#4A5A72] leading-relaxed">{item.subtitle}</p>
+                {item.reviewEvidence && (
+                  <p className="mt-2 text-[11px] text-[#334155]">
+                    <span className="font-semibold">Bukti:</span> {item.reviewEvidence}
+                  </p>
                 )}
               </div>
 
-              <a
-                href={item.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-              >
-                Lihat <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
+              <div className="pt-3 border-t border-white/80 flex items-center justify-between gap-2">
+                <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${STATUS_PILL[status]}`}>
+                  {status.toUpperCase()}
+                  {isLegacyStatus(item.status) && (
+                    <span className="font-medium normal-case"> (dari "{item.status}")</span>
+                  )}
+                </span>
 
-          </div>
-        ))}
+                <a
+                  href={item.fileUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                >
+                  Lihat <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Edit Deliverable Modal */}
       {selectedItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+          <div
+            className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="edit-deliverable-title"
+          >
+            <h3
+              id="edit-deliverable-title"
+              className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]"
+            >
               Perbarui Deliverable: {selectedItem.title}
             </h3>
             <form onSubmit={handleSaveEdit} className="mt-4 space-y-3">
               <div>
-                <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span>Progres Persentase</span>
-                  <span className="font-bold text-[#0062CC]">{editProgress}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={editProgress}
-                  onChange={(e) => setEditProgress(Number(e.target.value))}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold mb-1">Status Dokumen</label>
+                <label htmlFor="deliv-status" className="block text-xs font-semibold mb-1">
+                  Status Dokumen (Blueprint §1.4)
+                </label>
                 <select
+                  id="deliv-status"
                   value={editStatus}
-                  onChange={(e) =>
-                    setEditStatus(
-                      e.target.value as 'Draft' | 'In Review Pembimbing' | 'ACC Final' | 'Aktif'
-                    )
-                  }
+                  onChange={(e) => setEditStatus(e.target.value as DocStatus)}
                   className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
                 >
-                  <option value="Draft">Draft</option>
-                  <option value="In Review Pembimbing">In Review Pembimbing</option>
-                  <option value="ACC Final">ACC Final</option>
+                  {DOC_STATUSES.map((s) => (
+                    <option key={s} value={s}>
+                      {s} — progres {STATUS_PROGRESS[s]}%
+                    </option>
+                  ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold mb-1">Tautan Berkas (Drive / Cloud)</label>
+                <label htmlFor="deliv-evidence" className="block text-xs font-semibold mb-1">
+                  Bukti {needsEvidence ? '(wajib)' : '(opsional)'}
+                </label>
                 <input
+                  id="deliv-evidence"
+                  type="text"
+                  value={editEvidence}
+                  onChange={(e) => setEditEvidence(e.target.value)}
+                  placeholder={
+                    editStatus === 'ACC Pembimbing' || editStatus === 'Revisi'
+                      ? 'Referensi MoM, mis. MoM Week 9 – 3 Nov 2026'
+                      : 'Kode WO + tanggal pengajuan, mis. WO-012, 4 Nov 2026'
+                  }
+                  required={needsEvidence}
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="deliv-url" className="block text-xs font-semibold mb-1">
+                  Tautan Berkas (Drive / Docs)
+                </label>
+                <input
+                  id="deliv-url"
                   type="url"
                   value={editUrl}
                   onChange={(e) => setEditUrl(e.target.value)}
@@ -259,10 +270,7 @@ export const WorkspacesView: React.FC = () => {
                 >
                   Batal
                 </button>
-                <button
-                  type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
-                >
+                <button type="submit" className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full">
                   Simpan Perubahan
                 </button>
               </div>
@@ -271,22 +279,31 @@ export const WorkspacesView: React.FC = () => {
         </div>
       )}
 
-      {/* Upload Berkas Modal */}
+      {/* Perbarui Tautan Berkas Modal */}
       {showUploadModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
-              Unggah Tautan Berkas Baru
+          <div
+            className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="upload-link-title"
+          >
+            <h3
+              id="upload-link-title"
+              className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]"
+            >
+              Perbarui Tautan Berkas
             </h3>
             <p className="text-xs text-[#4A5A72] mt-1 mb-4">
-              Dukungan integrasi dokumen Google Drive, naskah .docx/.pdf, DWSIM .dwxmz, dan lembar CAD P&amp;ID A3.
+              Tempel tautan Google Docs/Drive dari modul G-Workspace. File biner (CAD, PDF) tetap disimpan di Drive.
             </p>
             <form onSubmit={handleUploadSubmit} className="space-y-3">
               <div>
-                <label className="block text-xs font-semibold mb-1 text-[#0B1B33]">
+                <label htmlFor="upload-target" className="block text-xs font-semibold mb-1 text-[#0B1B33]">
                   Pilih Deliverable Target
                 </label>
                 <select
+                  id="upload-target"
                   value={uploadDeliverableId || deliverables[0]?.id || ''}
                   onChange={(e) => setUploadDeliverableId(e.target.value)}
                   className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
@@ -302,14 +319,16 @@ export const WorkspacesView: React.FC = () => {
                 type="text"
                 value={uploadTitle}
                 onChange={(e) => setUploadTitle(e.target.value)}
-                placeholder="Catatan Revisi / Judul Berkas (opsional)"
+                placeholder="Catatan singkat (opsional)"
+                aria-label="Catatan singkat"
                 className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
               />
               <input
                 type="url"
                 value={uploadUrl}
                 onChange={(e) => setUploadUrl(e.target.value)}
-                placeholder="URL Berkas Google Drive / Cloud (https://...)"
+                placeholder="URL Google Docs / Drive (https://...)"
+                aria-label="URL berkas"
                 className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
                 required
               />
@@ -321,10 +340,7 @@ export const WorkspacesView: React.FC = () => {
                 >
                   Batal
                 </button>
-                <button
-                  type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
-                >
+                <button type="submit" className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full">
                   Simpan Tautan
                 </button>
               </div>

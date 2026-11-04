@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Library, Search, Calculator, Tags, ExternalLink, FileText } from 'lucide-react';
-import { useStaticData, fmtDateTime, statusClass } from '../../utils/staticData';
+import { useStaticData, fmtDateTime, statusClass, consumeLibraryTab, LibraryTab } from '../../utils/staticData';
 
 interface Doc {
   path: string;
@@ -42,7 +42,7 @@ interface Finding {
   message: string;
 }
 
-type Tab = 'docs' | 'calc' | 'tags';
+type Tab = LibraryTab;
 
 const Pill: React.FC<{ label: string }> = ({ label }) => (
   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${statusClass(label)}`}>{label}</span>
@@ -54,7 +54,8 @@ export const MasterLibraryView: React.FC = () => {
   const tags = useStaticData<{ meta: { generated_at: string; pid_dxf_checked: string[] }; summary: Record<string, number>; findings: Finding[] }>(
     'tag_validation_report.json'
   );
-  const [tab, setTab] = useState<Tab>('docs');
+  // Tab awal bisa diminta dari luar (mis. kartu Kesehatan Data) lewat requestLibraryTab()
+  const [tab, setTab] = useState<Tab>(() => consumeLibraryTab() ?? 'docs');
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('Semua');
   const [selected, setSelected] = useState<string | null>(null);
