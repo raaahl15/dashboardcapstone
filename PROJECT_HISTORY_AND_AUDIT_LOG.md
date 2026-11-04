@@ -3,9 +3,9 @@
 **Program Studi:** Teknik Fisika, Departemen Teknik Nuklir dan Teknik Fisika (DTNTF FT UGM)  
 **Tahun Akademik:** 2026/2027  
 **No. Dokumen:** AUDIT-HIST-DME-2026-001  
-**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 validasi tag P&ID asli selesai (LOG-034); DoD total 12/20; thermowell & deploy firestore.rules menunggu  
+**Status Audit Terakhir:** Fase 2 ditutup dengan catatan (LOG-018); Fase 3 menunggu P&ID & standar thermowell; Fase 4–5 kode di branch `fase-4-cockpit` (LOG-023), audit konsep Fase 4: 4 PASS / 7 PARSIAL / 1 FAIL modul (LOG-027); P0 kode selesai + Drive Dibatasi (LOG-028); **cockpit dirilis ke produksi** `bbfcda1` (LOG-029); P1 dirilis `c4ba653` (LOG-030/031); P2 + Blueprint v2.4 dirilis `22c27ea` (LOG-032/033); Fase 3 DoD 5/5 (validasi P&ID asli LOG-034, thermowell LOG-035), menunggu sign-off PM; DoD total 13/20; deploy firestore.rules menunggu PM  
 **Versi Blueprint Berlaku:** v2.4 (v2.3 + cockpit 8 menu, LOG-032/033)  
-**Terakhir Diperbarui:** 2026-11-04 19:50 WIB  
+**Terakhir Diperbarui:** 2026-11-04 20:40 WIB  
 
 > **Aturan dokumen ini:** setiap sesi kerja yang mengubah repo, konsep, atau keputusan proyek **wajib** dicatat di BAB IV menggunakan format pada BAB VI. Entri lama tidak dihapus; koreksi ditulis sebagai entri baru yang merujuk entri lama.
 
@@ -261,6 +261,34 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-035] 2026-11-04 20:40 WIB — Fase 3: kalkulator thermowell ASME PTC 19.3 TW-2016 + verifikasi contoh standar (DoD Fase 3 5/5)
+* **Pelaksana**: Claude Code (AI agent), atas pesan PM (Rahul): mengunggah `ASME-PTC-19-3-TW-2016_compressed.pdf` (62 hal.) — *"ini file nya"*
+* **Fase**: 3
+* **Tujuan**: menutup DoD Fase 3 butir 3 (setiap kalkulator lulus minimal satu uji verifikasi).
+* **Perubahan**:
+  - **Baru** `tools/calc/thermowell.py`: fungsi inti `evaluate()` (SI murni) untuk Section 6 — Re & Strouhal (6-4-2/6-4-4), f_a/H_f/H_a,f/H_a,s/f_n (6-5-1…6-5-6; step-shank Tabel 6-5.3-1), H_c (6-6-5/6-7-1), N_Sc (6-8-1), batas frekuensi §6-8.2/§6-8.3 (V_IR 6-8-3/6-8-5, F'_M = 1/2ζ), G (6-10-7/8/9/11 + G_RD), tegangan tunak (6-11-x, 6-12-1/2), dinamis (6-9-x, 6-10-5/6, 6-12-3…6), tekanan (6-13-1/2); `run()` dari YAML → baris CSV. Kasus di luar cakupan (step-shank di luar tabel, superkritis, Re di luar korelasi) ditolak dengan pesan.
+  - `tools/calc/run_all.py` + kalkulator `thermowell` → `CALC_ASME_Thermowell.csv`.
+  - `tools/calc/test_verification.py` + 4 uji: contoh **8-2** (SI) dan **8-1** (US→SI) standar, kasus gagal frekuensi, penolakan step-shank di luar tabel.
+  - **Baru** `02_ENGINEERING_CALCULATORS/inputs/TW-103.yaml` (thermowell outlet uap R-101, S-105; HMB + dimensi/material ASUMSI, diameter pipa PLACEHOLDER).
+  - `CALC_ASME_Thermowell.md` Rev 1.0 (cakupan, persamaan, input & hasil, verifikasi, catatan salah ketik standar, SOP); CSV dibuat ulang; Blueprint Fase 3 DoD butir 3 dicentang + status fase; bundel ulang `public/data/`.
+  - PDF standar **tidak** disimpan di Git (kebijakan §2.2 + hak cipta ASME).
+* **Bukti / Verifikasi**:
+  - `pytest -k ptc193` → `4 passed` pada percobaan pertama; `npm run test:py` → **34 passed** (30 lama + 4 baru).
+  - Contoh 8-2 terreproduksi (toleransi 0,3 %): Re 3,690e5; N_S 0,2040; f_a 438,5 Hz; H_f 1,503; f_n 609,1; H_c 0,8948; f_n^c 545,0 Hz; N_Sc 0,02974; f_s 160,6; V_IR 16,01 m/s; G_SP 286,4; G_RD 137,3; K_t 2,3/1,231; S_o di resonansi 8 183/2 100 MPa; von Mises 19,42/9,317 MPa; S_o desain 35,29/9,056 MPa; P_c 35,20 MPa; P_t 496,4 MPa. Contoh 8-1 terreproduksi (0,5 %), termasuk f_n^c 2 176 Hz, V_IR 412 ft/s, S_o 58 430 psi, P_c 9 389 psi.
+  - Ketidaksesuaian standar yang ditemukan: (6-10-10) tercetak L² tetapi contoh 8-2 memakai L_S²; contoh 8-1 menulis H_a,f 0,9922 tetapi memakai 0,9995; contoh 8-2 memakai E 1,91e11 walau teks 1,93e11.
+  - `npm run calc` → 5/5 CSV ditulis; TW-103 dengan L asumsi awal 230 mm **FAIL** (f_s/f_n^c 0,427 > 0,4; S_o 88,3 > 57,5 MPa). Sensitivitas: L ≤ 220 mm lolos → input diset **200 mm** (ASUMSI, usulan agent, ditandai di YAML) → **PASS**, status data PLACEHOLDER.
+  - `node tools/build_manifest.js` → OK; `node tools/check_companions.js` → **HASIL: PASS** (sebelum commit).
+* **Keputusan**:
+  - TW-101/102 (di dalam bed katalis) tidak dihitung: PTC 19.3 TW memodelkan aliran bebas di pipa, bukan unggun katalis.
+  - Nilai E dan S F316 ditandai ASUMSI (dari pengetahuan umum tabel B31.1/B31.3, belum dicek terhadap salinan kode); wajib diganti dari tabel kode yang berlaku sebelum dikutip.
+* **Status DoD**: Fase 3 **5/5** (menunggu sign-off PM) → total **13/20 (65 %)**.
+* **Tindak Lanjut**:
+  - [ ] **PM**: sign-off Fase 3 (DoD 5/5), dengan catatan isi teknis masih PLACEHOLDER/ASUMSI.
+  - [ ] **JN**: diameter pipa S-105 (line sizing), dimensi thermowell & nozzle (L), konstruksi (S_f), E & S dari ASME B31.3; tambahkan YAML untuk thermowell lain di P&ID (TE-101, TE-102A, TT-104, dst.) bila berada di aliran pipa; hitung manual di laporan PSTF 2 Bab 2.
+  - [ ] **Antigravity/PM**: simpan PDF ASME PTC 19.3 TW-2016 di Drive `00_CORE_GUIDELINES/` (akses terbatas tim; perhatikan lisensi ASME).
 
 ---
 

@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T09:53:55.300Z",
+ "generated_at": "2026-11-04T10:15:21.849Z",
  "calculators": [
   {
    "file": "CALC_API520_PSV.csv",
@@ -234,79 +234,450 @@
    "file": "CALC_ASME_Thermowell.csv",
    "items": [
     {
-     "tag": "TW-101",
-     "description": "Thermowell bed katalis 1 R-101 (loop TIC-101)",
-     "result": "BELUM DIHITUNG",
-     "data_status": "PLACEHOLDER",
-     "rows": [
-      {
-       "section": "INFO",
-       "parameter": "Deskripsi",
-       "symbol": "",
-       "value": "Thermowell bed katalis 1 R-101 (loop TIC-101)",
-       "unit": "",
-       "source": "ASME PTC 19.3 TW-2016",
-       "status": "PLACEHOLDER"
-      },
-      {
-       "section": "HASIL",
-       "parameter": "Rasio frekuensi wake/alami",
-       "symbol": "fs/fn",
-       "value": "BELUM DIHITUNG",
-       "unit": "-",
-       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
-       "status": "PLACEHOLDER"
-      }
-     ]
-    },
-    {
-     "tag": "TW-102",
-     "description": "Thermowell bed katalis 2 R-101",
-     "result": "BELUM DIHITUNG",
-     "data_status": "PLACEHOLDER",
-     "rows": [
-      {
-       "section": "INFO",
-       "parameter": "Deskripsi",
-       "symbol": "",
-       "value": "Thermowell bed katalis 2 R-101",
-       "unit": "",
-       "source": "ASME PTC 19.3 TW-2016",
-       "status": "PLACEHOLDER"
-      },
-      {
-       "section": "HASIL",
-       "parameter": "Rasio frekuensi wake/alami",
-       "symbol": "fs/fn",
-       "value": "BELUM DIHITUNG",
-       "unit": "-",
-       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
-       "status": "PLACEHOLDER"
-      }
-     ]
-    },
-    {
      "tag": "TW-103",
-     "description": "Thermowell outlet uap R-101",
-     "result": "BELUM DIHITUNG",
+     "description": "TW-103 thermowell outlet uap R-101 (S-105), flanged tapered, uap metanol/DME/air 250 °C",
+     "result": "PASS",
      "data_status": "PLACEHOLDER",
      "rows": [
       {
        "section": "INFO",
        "parameter": "Deskripsi",
        "symbol": "",
-       "value": "Thermowell outlet uap R-101",
+       "value": "TW-103 thermowell outlet uap R-101 (S-105), flanged tapered, uap metanol/DME/air 250 °C",
        "unit": "",
        "source": "ASME PTC 19.3 TW-2016",
        "status": "PLACEHOLDER"
       },
       {
-       "section": "HASIL",
-       "parameter": "Rasio frekuensi wake/alami",
-       "symbol": "fs/fn",
-       "value": "BELUM DIHITUNG",
+       "section": "INPUT",
+       "parameter": "Densitas uap",
+       "symbol": "ρ",
+       "value": "10.7798",
+       "unit": "kg/m3",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.rho",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Viskositas dinamis uap",
+       "symbol": "μ",
+       "value": "0.0178657",
+       "unit": "cP",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.mu",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tekanan operasi",
+       "symbol": "P",
+       "value": "14.7",
+       "unit": "bar(a)",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.P",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Laju alir massa",
+       "symbol": "ṁ",
+       "value": "10553.2",
+       "unit": "kg/h",
+       "source": "hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.mass_flow",
+       "status": "HMB"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter dalam pipa S-105",
+       "symbol": "D_pipa",
+       "value": "154.08",
+       "unit": "mm",
+       "source": "Asumsi 6 in Sch 40 (ASME B36.10M); line sizing S-105 belum dilakukan",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Bentuk shank",
+       "symbol": "",
+       "value": "tapered",
        "unit": "-",
-       "source": "Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021)",
+       "source": "Flanged tapered (Fig. 4-1-4), pilihan desain awal",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Jenis pemasangan",
+       "symbol": "",
+       "value": "flanged",
+       "unit": "-",
+       "source": "Flens ke nozzle pipa (§6-7(a)); compliance basis semi-tak-hingga (6-6-5)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter akar",
+       "symbol": "A",
+       "value": "25.4",
+       "unit": "mm",
+       "source": "Ukuran tipikal 1 in; ganti dengan datasheet vendor",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter tip",
+       "symbol": "B",
+       "value": "19.1",
+       "unit": "mm",
+       "source": "Ukuran tipikal 3/4 in; ganti dengan datasheet vendor",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Diameter bor",
+       "symbol": "d",
+       "value": "6.6",
+       "unit": "mm",
+       "source": "Bor 0,26 in untuk sensor 1/4 in (Tabel 4-1-1)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Panjang tak tertumpu",
+       "symbol": "L",
+       "value": "200",
+       "unit": "mm",
+       "source": "Usulan agent (LOG-035): sensitivitas pada geometri ini → L ≤ 220 mm lolos, 230 mm GAGAL (f_s > 0,4 f_n^c); 200 mm memberi margin. Tetapkan dari nozzle/piping oleh JN",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tebal tip minimum",
+       "symbol": "t",
+       "value": "6.4",
+       "unit": "mm",
+       "source": "Tipikal 1/4 in",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Radius fillet akar",
+       "symbol": "b",
+       "value": "0",
+       "unit": "mm",
+       "source": "Tidak diketahui → 0 (§6-6)",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Modulus elastisitas 250 °C",
+       "symbol": "E",
+       "value": "178.6",
+       "unit": "GPa",
+       "source": "Tipikal austenitik ASME B31.1 Tabel C-1 (interpolasi 482 °F ≈ 25,9e6 psi); konfirmasi dari tabel kode yang berlaku",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Modulus referensi kelas B",
+       "symbol": "E_ref",
+       "value": "195",
+       "unit": "GPa",
+       "source": "§6-12.3 (material kelas B)",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas material",
+       "symbol": "ρ_m",
+       "value": "8000",
+       "unit": "kg/m3",
+       "source": "Densitas F316 (ref. [19] standar, seperti contoh 8-2)",
+       "status": "LITERATUR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Densitas sensor",
+       "symbol": "ρ_s",
+       "value": "2700",
+       "unit": "kg/m3",
+       "source": "Nilai bawaan sensor MI (§6-5.3 langkah 5)",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Tegangan izin maksimum 250 °C",
+       "symbol": "S",
+       "value": "115",
+       "unit": "MPa",
+       "source": "Perkiraan F316 pada 250 °C; ambil dari ASME B31.3 Tabel A-1 (kode pipa proses) sebelum dikutip",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Batas amplitudo fatik",
+       "symbol": "S_f",
+       "value": "62.8",
+       "unit": "MPa",
+       "source": "Tabel 6-12.3-1 kelas B 'welded, then machined' (thermowell flens)",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor lingkungan",
+       "symbol": "F_E",
+       "value": "1",
+       "unit": "-",
+       "source": "Uap metanol/DME/air tanpa korosi khusus; tinjau ulang di HAZOP",
+       "status": "ASUMSI"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Faktor redaman",
+       "symbol": "ζ",
+       "value": "0.0005",
+       "unit": "-",
+       "source": "§6-8.2 nilai konservatif",
+       "status": "STANDAR"
+      },
+      {
+       "section": "INPUT",
+       "parameter": "Metode Strouhal",
+       "symbol": "",
+       "value": "correlation",
+       "unit": "-",
+       "source": "(6-4-2)",
+       "status": "STANDAR"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan fluida desain",
+       "symbol": "V",
+       "value": "14.5843",
+       "unit": "m/s",
+       "source": "V = ṁ / (ρ · π D_pipa² / 4)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Reynolds (diameter tip)",
+       "symbol": "Re",
+       "value": "168078",
+       "unit": "-",
+       "source": "(6-4-3)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Strouhal",
+       "symbol": "N_S",
+       "value": "0.191865",
+       "unit": "-",
+       "source": "(6-4-2)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Frekuensi natural pendekatan",
+       "symbol": "f_a",
+       "value": "383.478",
+       "unit": "Hz",
+       "source": "(6-5-1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor koreksi bentuk",
+       "symbol": "H_f",
+       "value": "1.28715",
+       "unit": "-",
+       "source": "(6-5-2)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koreksi massa fluida",
+       "symbol": "H_a,f",
+       "value": "0.999326",
+       "unit": "-",
+       "source": "(6-5-4)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Koreksi massa sensor",
+       "symbol": "H_a,s",
+       "value": "0.983719",
+       "unit": "-",
+       "source": "(6-5-5)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor compliance tumpuan",
+       "symbol": "H_c",
+       "value": "0.92253",
+       "unit": "-",
+       "source": "(6-6-5)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Frekuensi natural terpasang",
+       "symbol": "f_n^c",
+       "value": "447.639",
+       "unit": "Hz",
+       "source": "(6-5-6), (6-6-1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Frekuensi Strouhal",
+       "symbol": "f_s",
+       "value": "146.504",
+       "unit": "Hz",
+       "source": "(6-4-1)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rasio frekuensi",
+       "symbol": "f_s/f_n^c",
+       "value": "0.327281",
+       "unit": "-",
+       "source": "batas 0.4",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Bilangan Scruton",
+       "symbol": "N_Sc",
+       "value": "3.22495",
+       "unit": "-",
+       "source": "(6-8-1), ζ = 0.0005",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Kecepatan resonansi in-line",
+       "symbol": "V_IR",
+       "value": "21.8035",
+       "unit": "m/s",
+       "source": "(6-8-3)/(6-8-5)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor geometri G (titik tumpu)",
+       "symbol": "G",
+       "value": "264.758",
+       "unit": "-",
+       "source": "§6-10",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Faktor konsentrasi tegangan (titik tumpu)",
+       "symbol": "K_t",
+       "value": "2.2",
+       "unit": "-",
+       "source": "§6-12.3",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tegangan siklik di resonansi in-line (titik tumpu)",
+       "symbol": "S_o,max",
+       "value": "149.248",
+       "unit": "MPa",
+       "source": "(6-12-3) dengan F'_M = 1/(2ζ)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Von Mises tunak (titik tumpu)",
+       "symbol": "LHS",
+       "value": "0.458303",
+       "unit": "MPa",
+       "source": "(6-12-2)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tegangan dinamis pada V desain (titik tumpu)",
+       "symbol": "S_o,max",
+       "value": "0.756949",
+       "unit": "MPa",
+       "source": "(6-12-3)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Batas fatik terkoreksi",
+       "symbol": "F_T·F_E·S_f",
+       "value": "57.5184",
+       "unit": "MPa",
+       "source": "(6-12-5), (6-12-6)",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Rating tekanan eksternal",
+       "symbol": "P_r",
+       "value": "47.498",
+       "unit": "MPa",
+       "source": "min(P_c (6-13-1), P_t (6-13-2))",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "HASIL",
+       "parameter": "Tekanan operasi (gauge)",
+       "symbol": "P",
+       "value": "1.36868",
+       "unit": "MPa",
+       "source": "input",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Batas frekuensi",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "f_s = 146.5 Hz vs 0.4 f_n^c = 179.1 Hz; §6-8.3 langkah 4: gagal tegangan siklik di resonansi in-line, f_s < 0,4 f_n^c [ASME PTC 19.3 TW-2016]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Tegangan tunak von Mises (titik tumpu)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.458 MPa ≤ 1,5 S = 172 MPa [(6-12-2)]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Tegangan dinamis (titik tumpu)",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "0.757 MPa ≤ 57.5 MPa [(6-12-5)]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "CEK",
+       "parameter": "Rating tekanan eksternal",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "P_r = 47.5 MPa > P = 1.37 MPa [§6-13]",
+       "status": "PLACEHOLDER"
+      },
+      {
+       "section": "KESIMPULAN",
+       "parameter": "Hasil",
+       "symbol": "",
+       "value": "PASS",
+       "unit": "",
+       "source": "Tanpa corrosion allowance (§6-2); dimensi Tabel 4-1-1 belum dicek otomatis",
        "status": "PLACEHOLDER"
       }
      ]

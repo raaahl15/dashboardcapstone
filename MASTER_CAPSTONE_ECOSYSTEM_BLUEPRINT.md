@@ -527,7 +527,7 @@ tags: ["Flow", "Orifice", "Area-100", "Instrumentation"]
 │ FASE 1        │ Konsolidasi Monorepo & Companion .md                   │ via 1.5      │
 │ FASE 1.5      │ Remediasi Fondasi (BARU)                               │ SELESAI      │
 │ FASE 2        │ Cloud Backbone: GitHub, Google Drive & Workspace       │ DITUTUP*     │
-│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ BERJALAN     │
+│ FASE 3        │ Pipeline Data: DWSIM → Kalkulator → Validasi Tag       │ DoD 5/5      │
 │ FASE 4        │ Upgrade Cockpit: 3 Modul Baru + Panel Kesehatan Data   │ DIRILIS**    │
 │ FASE 5        │ Validasi Lintas Sistem, Otomasi Akademik & Rilis       │ BERJALAN     │
 └───────────────┴────────────────────────────────────────────────────────┴──────────────┘
@@ -582,13 +582,13 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
   - [x] `pull_sheets` menghasilkan CSV yang sama kolomnya dengan Sheets (versi Node `pull_sheets.js`, 15 kolom, LOG-012).
   - [ ] **DITANGGUHKAN:** Semua URL di registry bisa dibuka oleh seluruh anggota tim. **Syarat penutupan:** (a) ✅ Antigravity membagikan folder `CAPSTONE_DME_AREA1` ke 4 email UGM anggota sebagai Editor (LOG-022); (b) ✅ Claude Code memverifikasi izin lewat konektor: 4 writer + owner (LOG-023; `anyone: reader` dicabut PM → Dibatasi, terverifikasi LOG-028); (c) ⏳ minimal satu anggota membuka ketiga URL dokumen dengan akun UGM. Akses dosen menyusul (ditunda PM).
 
-#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: BERJALAN (mulai 2026-11-03)
+#### FASE 3: Pipeline Data DWSIM → Kalkulator → Validasi Tag — Estimasi 4–5 hari — Status: DoD 5/5 TERPENUHI (2026-11-04, LOG-034/035), menunggu sign-off PM. Catatan: semua hasil kalkulator masih berstatus data PLACEHOLDER/ASUMSI (input desain belum final), dan P&ID belum selaras dengan index (56 ERROR validasi tag) — keduanya pekerjaan isi teknis tim, bukan syarat DoD Fase 3.
 * **Prasyarat:** ✅ Python 3.13.17 terpasang di PC Desktop (per-user, winget) + virtual env `.venv` dari `tools/requirements.txt` (numpy, fluids, numpy-financial, ezdxf, PyYAML, pytest), uji asap lulus (LOG-016). ✅ `tag_map.csv` FINAL (LOG-016).
 * **Aktivitas:** `tools/dwsim/export_hmb.py` (skema §3.1); `tag_map.csv`; mesin kalkulator `tools/calc/` + input YAML; uji verifikasi per kalkulator; `validate_tags.py`.
 * **DoD:**
   - [x] `hmb_streams.json` memuat T, P, flow, komposisi, dan properti untuk seluruh stream; status solver dibaca dari file. *(LOG-019: 14 stream; status diturunkan dari `Calculated`/`ErrorMessage` per objek karena DWSIM tidak menyimpan status global.)*
   - [x] Neraca massa tertutup ≤ 0,5% untuk semua unit operasi. *(LOG-019: 10 unit, galat maks 0,027 % di M-101; divalidasi otomatis setiap ekstraksi.)*
-  - [ ] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: 4 dari 5 selesai (orifice, control valve, PSV, NPV) dengan uji ISO 5167-2 independen, IEC 60534-2-1 contoh 1–2, API 520 contoh 1–2, dan contoh NPV. **Thermowell ASME PTC 19.3 TW belum**: menunggu salinan standar + contoh soal.)*
+  - [x] `npm run calc` menghasilkan ulang semua `CALC_*.csv` dari nol; setiap kalkulator lulus minimal satu uji verifikasi. *(LOG-020: orifice, control valve, PSV, NPV. LOG-035: thermowell `tools/calc/thermowell.py` dari ASME PTC 19.3 TW-2016 (salinan dari PM), uji contoh 8-1 & 8-2 standar terreproduksi; `npm run calc` menulis 5/5 CSV; `npm run test:py` 34 passed.)*
   - [x] `validate_tags.py` berjalan pada minimal satu P&ID DXF dan menghasilkan laporan. *(LOG-034: dijalankan pada Draf P&ID asli `DME-PID-002_Draft_PID_Area1.dxf` (sha256 `5eaa85cdc0103348`) → 56 ERROR, 40 WARNING; 49 temuan dari gambar, termasuk 34 instrumen di gambar yang belum ada di index (index masih PLACEHOLDER) dan 6 tag lama. Penyelarasan gambar ↔ index = pekerjaan JN, syarat DoD Fase 5.)*
   - [x] Tidak ada nilai di CSV hasil yang tidak bisa ditelusuri ke HMB, YAML, atau standar. *(LOG-021: 4 CSV kalkulator dari YAML bersumber; angka bootstrap thermowell dihapus, berstatus BELUM DIHITUNG.)*
 

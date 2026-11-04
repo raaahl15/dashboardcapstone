@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-04T09:53:55.300Z",
+ "generated_at": "2026-11-04T10:15:21.849Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -9,11 +9,11 @@
   "warnings": 1
  },
  "calc": {
-  "total": 7,
-  "pass": 4,
+  "total": 5,
+  "pass": 5,
   "fail": 0,
-  "not_calculated": 3,
-  "placeholder": 7
+  "not_calculated": 0,
+  "placeholder": 5
  },
  "tags": {
   "generated_at": "2026-11-04T16:51:53+07:00",
@@ -22,8 +22,8 @@
   "pid_checked": 1
  },
  "companions": {
-  "covered": 18,
-  "total": 18,
+  "covered": 19,
+  "total": 19,
   "pass": true,
   "status_distribution": {
    "WIP": 11,
@@ -43,8 +43,8 @@
   "01_PROCESS_SIMULATION_DWSIM/tag_map.md": "8d965b2cb900cb7530bbb8fdec74e2095ce5fc7552360d2cadb9945238b3ea8e",
   "02_ENGINEERING_CALCULATORS/CALC_API520_PSV.csv": "5cd080a4c842b5a4b801f7af743f0b7a5ae91e39dd58b139d13609c10d1cd53a",
   "02_ENGINEERING_CALCULATORS/CALC_API520_PSV.md": "a01a475273ad755142535b81f22d3b288d0069e375c4b68e48dee6da5cde9dc3",
-  "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.csv": "8d770853892662adf1521b83c6a38e43d154bef35590a4448214a8b398fa90b6",
-  "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.md": "92792b68ea0bb0015d93f5a32eaef291cbc071523205e93295c7c9b6b48442c7",
+  "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.csv": "c09ec41c3fb91d34617b69a8936fea8537a22c616f701ea59909e5020fd7c13d",
+  "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.md": "5a6254e2c0a7ef30fabfe2f1824e120e3f15bedb1464112d80a1aa62687aeb65",
   "02_ENGINEERING_CALCULATORS/CALC_ISA75_ControlValve.csv": "1d6ec48b6097b1f4ef9cbf16cdaee7b34903d3450716f00beaab0bcf62f218ff",
   "02_ENGINEERING_CALCULATORS/CALC_ISA75_ControlValve.md": "2b99307c22a0eeed3f3e2b3a0749538739cf9e3044b91cf66463c56acd4c1865",
   "02_ENGINEERING_CALCULATORS/CALC_ISO5167_Orifice.csv": "0f01dd75166a0fc24255400cd41681fdf0f1c73bf29c8f54578305bca62cc53e",

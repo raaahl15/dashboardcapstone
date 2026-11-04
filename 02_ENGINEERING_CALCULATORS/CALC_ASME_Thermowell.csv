@@ -1,7 +1,50 @@
 TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
-TW-101,INFO,Deskripsi,,Thermowell bed katalis 1 R-101 (loop TIC-101),,ASME PTC 19.3 TW-2016,PLACEHOLDER
-TW-101,HASIL,Rasio frekuensi wake/alami,fs/fn,BELUM DIHITUNG,-,Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021),PLACEHOLDER
-TW-102,INFO,Deskripsi,,Thermowell bed katalis 2 R-101,,ASME PTC 19.3 TW-2016,PLACEHOLDER
-TW-102,HASIL,Rasio frekuensi wake/alami,fs/fn,BELUM DIHITUNG,-,Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021),PLACEHOLDER
-TW-103,INFO,Deskripsi,,Thermowell outlet uap R-101,,ASME PTC 19.3 TW-2016,PLACEHOLDER
-TW-103,HASIL,Rasio frekuensi wake/alami,fs/fn,BELUM DIHITUNG,-,Menunggu salinan ASME PTC 19.3 TW-2016 + contoh verifikasi (LOG-021),PLACEHOLDER
+TW-103,INFO,Deskripsi,,"TW-103 thermowell outlet uap R-101 (S-105), flanged tapered, uap metanol/DME/air 250 °C",,ASME PTC 19.3 TW-2016,PLACEHOLDER
+TW-103,INPUT,Densitas uap,ρ,10.7798,kg/m3,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.rho",HMB
+TW-103,INPUT,Viskositas dinamis uap,μ,0.0178657,cP,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.props_by_phase.vapor.mu",HMB
+TW-103,INPUT,Tekanan operasi,P,14.7,bar(a),"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.P",HMB
+TW-103,INPUT,Laju alir massa,ṁ,10553.2,kg/h,"hmb_streams.json (extracted_at 2026-11-03T13:09:55+07:00, model sha256 5a03365ee9fa) → S-105.mass_flow",HMB
+TW-103,INPUT,Diameter dalam pipa S-105,D_pipa,154.08,mm,Asumsi 6 in Sch 40 (ASME B36.10M); line sizing S-105 belum dilakukan,PLACEHOLDER
+TW-103,INPUT,Bentuk shank,,tapered,-,"Flanged tapered (Fig. 4-1-4), pilihan desain awal",ASUMSI
+TW-103,INPUT,Jenis pemasangan,,flanged,-,Flens ke nozzle pipa (§6-7(a)); compliance basis semi-tak-hingga (6-6-5),ASUMSI
+TW-103,INPUT,Diameter akar,A,25.4,mm,Ukuran tipikal 1 in; ganti dengan datasheet vendor,ASUMSI
+TW-103,INPUT,Diameter tip,B,19.1,mm,Ukuran tipikal 3/4 in; ganti dengan datasheet vendor,ASUMSI
+TW-103,INPUT,Diameter bor,d,6.6,mm,"Bor 0,26 in untuk sensor 1/4 in (Tabel 4-1-1)",ASUMSI
+TW-103,INPUT,Panjang tak tertumpu,L,200,mm,"Usulan agent (LOG-035): sensitivitas pada geometri ini → L ≤ 220 mm lolos, 230 mm GAGAL (f_s > 0,4 f_n^c); 200 mm memberi margin. Tetapkan dari nozzle/piping oleh JN",ASUMSI
+TW-103,INPUT,Tebal tip minimum,t,6.4,mm,Tipikal 1/4 in,ASUMSI
+TW-103,INPUT,Radius fillet akar,b,0,mm,Tidak diketahui → 0 (§6-6),STANDAR
+TW-103,INPUT,Modulus elastisitas 250 °C,E,178.6,GPa,"Tipikal austenitik ASME B31.1 Tabel C-1 (interpolasi 482 °F ≈ 25,9e6 psi); konfirmasi dari tabel kode yang berlaku",ASUMSI
+TW-103,INPUT,Modulus referensi kelas B,E_ref,195,GPa,§6-12.3 (material kelas B),STANDAR
+TW-103,INPUT,Densitas material,ρ_m,8000,kg/m3,"Densitas F316 (ref. [19] standar, seperti contoh 8-2)",LITERATUR
+TW-103,INPUT,Densitas sensor,ρ_s,2700,kg/m3,Nilai bawaan sensor MI (§6-5.3 langkah 5),STANDAR
+TW-103,INPUT,Tegangan izin maksimum 250 °C,S,115,MPa,Perkiraan F316 pada 250 °C; ambil dari ASME B31.3 Tabel A-1 (kode pipa proses) sebelum dikutip,ASUMSI
+TW-103,INPUT,Batas amplitudo fatik,S_f,62.8,MPa,"Tabel 6-12.3-1 kelas B 'welded, then machined' (thermowell flens)",ASUMSI
+TW-103,INPUT,Faktor lingkungan,F_E,1,-,Uap metanol/DME/air tanpa korosi khusus; tinjau ulang di HAZOP,ASUMSI
+TW-103,INPUT,Faktor redaman,ζ,0.0005,-,§6-8.2 nilai konservatif,STANDAR
+TW-103,INPUT,Metode Strouhal,,correlation,-,(6-4-2),STANDAR
+TW-103,HASIL,Kecepatan fluida desain,V,14.5843,m/s,V = ṁ / (ρ · π D_pipa² / 4),PLACEHOLDER
+TW-103,HASIL,Bilangan Reynolds (diameter tip),Re,168078,-,(6-4-3),PLACEHOLDER
+TW-103,HASIL,Bilangan Strouhal,N_S,0.191865,-,(6-4-2),PLACEHOLDER
+TW-103,HASIL,Frekuensi natural pendekatan,f_a,383.478,Hz,(6-5-1),PLACEHOLDER
+TW-103,HASIL,Faktor koreksi bentuk,H_f,1.28715,-,(6-5-2),PLACEHOLDER
+TW-103,HASIL,Koreksi massa fluida,"H_a,f",0.999326,-,(6-5-4),PLACEHOLDER
+TW-103,HASIL,Koreksi massa sensor,"H_a,s",0.983719,-,(6-5-5),PLACEHOLDER
+TW-103,HASIL,Faktor compliance tumpuan,H_c,0.92253,-,(6-6-5),PLACEHOLDER
+TW-103,HASIL,Frekuensi natural terpasang,f_n^c,447.639,Hz,"(6-5-6), (6-6-1)",PLACEHOLDER
+TW-103,HASIL,Frekuensi Strouhal,f_s,146.504,Hz,(6-4-1),PLACEHOLDER
+TW-103,HASIL,Rasio frekuensi,f_s/f_n^c,0.327281,-,batas 0.4,PLACEHOLDER
+TW-103,HASIL,Bilangan Scruton,N_Sc,3.22495,-,"(6-8-1), ζ = 0.0005",PLACEHOLDER
+TW-103,HASIL,Kecepatan resonansi in-line,V_IR,21.8035,m/s,(6-8-3)/(6-8-5),PLACEHOLDER
+TW-103,HASIL,Faktor geometri G (titik tumpu),G,264.758,-,§6-10,PLACEHOLDER
+TW-103,HASIL,Faktor konsentrasi tegangan (titik tumpu),K_t,2.2,-,§6-12.3,PLACEHOLDER
+TW-103,HASIL,Tegangan siklik di resonansi in-line (titik tumpu),"S_o,max",149.248,MPa,(6-12-3) dengan F'_M = 1/(2ζ),PLACEHOLDER
+TW-103,HASIL,Von Mises tunak (titik tumpu),LHS,0.458303,MPa,(6-12-2),PLACEHOLDER
+TW-103,HASIL,Tegangan dinamis pada V desain (titik tumpu),"S_o,max",0.756949,MPa,(6-12-3),PLACEHOLDER
+TW-103,HASIL,Batas fatik terkoreksi,F_T·F_E·S_f,57.5184,MPa,"(6-12-5), (6-12-6)",PLACEHOLDER
+TW-103,HASIL,Rating tekanan eksternal,P_r,47.498,MPa,"min(P_c (6-13-1), P_t (6-13-2))",PLACEHOLDER
+TW-103,HASIL,Tekanan operasi (gauge),P,1.36868,MPa,input,PLACEHOLDER
+TW-103,CEK,Batas frekuensi,,PASS,,"f_s = 146.5 Hz vs 0.4 f_n^c = 179.1 Hz; §6-8.3 langkah 4: gagal tegangan siklik di resonansi in-line, f_s < 0,4 f_n^c [ASME PTC 19.3 TW-2016]",PLACEHOLDER
+TW-103,CEK,Tegangan tunak von Mises (titik tumpu),,PASS,,"0.458 MPa ≤ 1,5 S = 172 MPa [(6-12-2)]",PLACEHOLDER
+TW-103,CEK,Tegangan dinamis (titik tumpu),,PASS,,0.757 MPa ≤ 57.5 MPa [(6-12-5)],PLACEHOLDER
+TW-103,CEK,Rating tekanan eksternal,,PASS,,P_r = 47.5 MPa > P = 1.37 MPa [§6-13],PLACEHOLDER
+TW-103,KESIMPULAN,Hasil,,PASS,,Tanpa corrosion allowance (§6-2); dimensi Tabel 4-1-1 belum dicek otomatis,PLACEHOLDER

@@ -19,6 +19,7 @@ import control_valve  # noqa: E402
 import npv  # noqa: E402
 import orifice  # noqa: E402
 import psv  # noqa: E402
+import thermowell  # noqa: E402
 from common import CALC_DIR, INPUT_DIR, CalcError, load_hmb, write_csv  # noqa: E402
 
 CALCULATORS = {
@@ -26,6 +27,7 @@ CALCULATORS = {
     "control_valve_liquid": (control_valve, "CALC_ISA75_ControlValve.csv"),
     "psv_gas": (psv, "CALC_API520_PSV.csv"),
     "npv": (npv, "CALC_TeknoEkonomi_NPV.csv"),
+    "thermowell": (thermowell, "CALC_ASME_Thermowell.csv"),
 }
 
 

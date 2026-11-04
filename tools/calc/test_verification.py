@@ -22,6 +22,7 @@ import npv
 import orifice
 import psv
 import run_all
+import thermowell
 
 
 @pytest.fixture(scope="module")
@@ -139,6 +140,69 @@ def test_npv_contoh_buku_teks(tmp_path, hmb):
     assert sum(c / (1 + irr) ** t for t, c in enumerate([-1000, 500, 500, 500])) == pytest.approx(0, abs=1e-3)
     assert val(res, "Payback sederhana") == pytest.approx(2.0)
     assert val(res, "Payback terdiskonto") == pytest.approx(2.352, abs=1e-3)
+
+
+# ---------------------------------------------------------------- thermowell (ASME PTC 19.3 TW-2016 Section 8)
+# Nilai acuan = angka antara yang dicetak di contoh standar (dibulatkan 4 angka penting) → toleransi 0,3–0,5 %.
+EX_8_2 = dict(  # 8-2: step-shank berulir, air panas, satuan SI
+    shape="step", support="threaded", A=0.0222, B=0.0127, d=0.0066, L=0.19, Ls=0.0635, b=0.0, bs=0.0032,
+    t=0.0048, V=10.0, rho=968.8, mu=3.334e-4, P=0.400e6,
+    E=1.91e11,  # nilai yang dipakai dalam perhitungan contoh (f_a, F_T); teks 8-2.1.3 menyebut 1,93e11
+    E_ref=1.95e11, rho_m=8000.0, rho_s=2700.0, S=122e6, Sf=37.2e6, FE=1.0, zeta=0.0005, strouhal="correlation")
+
+IN, FT_, LB, PSI = 0.0254, 0.3048, 0.45359237, 6894.757293
+EX_8_1 = dict(  # 8-1: tirus dilas, uap, satuan US → SI
+    shape="tapered", support="welded", A=1.5 * IN, B=1.0 * IN, d=0.26 * IN, L=4.06 * IN, b=0.0,
+    t=0.188 * IN, V=295 * FT_, rho=0.499 * LB / FT_**3, mu=1.149e-5 * LB / FT_, P=235 * PSI,
+    E=27.5e6 * PSI, E_ref=29.3e6 * PSI, rho_m=0.284 * LB / IN**3, rho_s=169 * LB / FT_**3,
+    S=19800 * PSI, Sf=3000 * PSI, FE=1.0, zeta=0.0005, strouhal="correlation")
+
+
+def test_ptc193_contoh_8_2_step_shank_si():
+    o = thermowell.evaluate(EX_8_2)
+    ap = lambda x, ref, rel=3e-3: x == pytest.approx(ref, rel=rel)  # noqa: E731
+    assert ap(o["Re"], 3.690e5) and ap(o["Ns"], 0.2040)
+    assert ap(o["fa"], 438.5) and ap(o["Hf"], 1.503) and ap(o["Haf"], 0.9395) and ap(o["Has"], 0.9836)
+    assert ap(o["fn"], 609.1) and ap(o["Hc"], 0.8948) and ap(o["fnc"], 545.0)
+    assert ap(o["Nsc"], 0.02974) and ap(o["fs"], 160.6) and ap(o["VIR"], 16.01) and ap(o["Pd_IR"], 12420)
+    sp, rd = o["locations"]
+    assert ap(sp["G"], 286.4) and sp["Kt"] == 2.3 and ap(sp["Sd_IR"], 3558e6) and ap(sp["So_IR"], 8183e6)
+    assert ap(rd["G"], 137.3) and ap(rd["Kt"], 1.231) and ap(rd["So_IR"], 2100e6)
+    assert ap(o["FT"], 0.9795) and ap(o["fatigue_limit"], 36.44e6)
+    assert o["inline_ok"] is False and o["limit_ratio"] == 0.4 and o["freq_ok"] is True  # 160,6 < 218,0 Hz
+    assert ap(sp["St"], 0.4776e6) and ap(sp["Sa"], 0.4388e6) and ap(o["PD"], 0.06782e6)
+    assert ap(sp["SD"], 19.42e6) and ap(sp["von_mises"], 19.42e6) and ap(rd["von_mises"], 9.317e6)
+    assert ap(o["FM"], 1.095) and ap(o["FMp"], 1.532)
+    assert ap(sp["Sd"], 2.126e6) and ap(sp["SL"], 15.19e6) and ap(sp["So"], 35.29e6)
+    assert ap(rd["Sd"], 1.020e6) and ap(rd["SL"], 7.286e6) and ap(rd["So"], 9.056e6)
+    assert ap(o["Pc"], 35.20e6) and ap(o["Pt"], 496.4e6) and o["passed"] is True
+
+
+def test_ptc193_contoh_8_1_tirus_dilas_us_ke_si():
+    o = thermowell.evaluate(EX_8_1)
+    ap = lambda x, ref, rel=5e-3: x == pytest.approx(ref, rel=rel)  # noqa: E731
+    assert ap(o["Re"], 1.068e6) and o["Ns"] == 0.22
+    assert ap(o["fa"], 2095) and ap(o["Hf"], 1.352) and ap(o["Haf"], 0.9995) and ap(o["Has"], 0.9922)
+    assert ap(o["fn"], 2809) and ap(o["Hc"], 0.7746) and ap(o["fnc"], 2176)
+    assert ap(o["Nsc"], 4.525) and ap(o["fs"], 778.8) and ap(o["VIR"], 412.0 * FT_)
+    (sp,) = o["locations"]
+    assert ap(sp["G"], 29.05) and sp["Kt"] == 2.2
+    assert ap(sp["Sd_IR"], 26560 * PSI) and ap(sp["So_IR"], 58430 * PSI) and ap(o["fatigue_limit"], 2816 * PSI)
+    assert o["inline_ok"] is False and o["freq_ok"] is True  # 778,8 Hz < 870,2 Hz = 0,4 f_n^c
+    assert ap(sp["SD"], 190.6 * PSI) and ap(sp["von_mises"], 191.0 * PSI)
+    assert ap(o["FM"], 1.147) and ap(o["FMp"], 2.052) and ap(sp["So"], 348.9 * PSI)
+    assert ap(o["Pc"], 9389 * PSI) and ap(o["Pt"], 79630 * PSI) and o["passed"] is True
+
+
+def test_ptc193_gagal_bila_frekuensi_terlalu_dekat():
+    # kecepatan dinaikkan sehingga f_s melewati 0,4 f_n^c pada contoh 8-2 → FAIL batas frekuensi
+    o = thermowell.evaluate({**EX_8_2, "V": 30.0})
+    assert o["freq_ok"] is False and o["passed"] is False
+
+
+def test_ptc193_step_shank_di_luar_tabel_ditolak():
+    with pytest.raises(common.CalcError, match="Tabel 6-5.3-1"):
+        thermowell.evaluate({**EX_8_2, "B": 0.016})
 
 
 # ---------------------------------------------------------------- mesin
