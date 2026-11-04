@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-03T08:18:53.967Z",
+ "generated_at": "2026-11-04T08:02:57.564Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -26,15 +26,15 @@
   "total": 18,
   "pass": true,
   "status_distribution": {
-   "WIP": 10,
+   "WIP": 11,
    "Review Internal": 1,
    "Draft": 10
   }
  },
  "sources": {
-  "00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md": "3197c01915d234e366b9fda4ac04b823b5a710e18d1b2ba0003bfe9e0095495f",
-  "00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md": "ee6115fd885fbb930b54d21cde0698262cf41305cf37ca22c9ab43e43883fe98",
-  "00_CORE_GUIDELINES/templates/PSTF1_LaTeX.md": "c1563c67b0ac87dffc8ffb952f3d0aa78f351bd0f3bbb2266f2c89e922d34115",
+  "00_CORE_GUIDELINES/Panduan_Capstone_DTNTF_2026.md": "a8b307d82662c64bda1caa79dddf64299964027361d7b89f2e390dd46b288c87",
+  "00_CORE_GUIDELINES/RFP_KAK-IC-DME-2026-001.md": "e5c2dfcd27fcf4c7863e35865e258fb8bb7aea9554e0937cd35a4ce13a3a7ae8",
+  "00_CORE_GUIDELINES/templates/PSTF1_LaTeX.md": "4c8b85f19d2ad26e7a635bf6f47c52025f40fb2510c682eb00744d80b74611e9",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.json": "1f19430f27ed3907a8ce9d8e32ae1034705dc1f0bedaf8790ddb6e7e8cb4fcdf",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.md": "b42aff7037bf6a7728ef0be9135a96d318673433a85a3277f13be4e4b587b9d0",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.json": "8fdbde03953c599377cc3245e86c3e6ce187503c1d93e06a2ca5e1194c4a6bbd",
@@ -58,8 +58,9 @@
   "05_SAFETY_AND_CONTROL/Cause_and_Effect_Matrix_ESD.md": "369aeb89e0e146a30c5321cf1bfa5a36a0654f193fa4cb125e83a76666e68246",
   "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md": "c3238d5f60d4ea7c34c82b2b904095a90cadd24e5fbdcf6fd8e7b69ee69f6620",
   "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "07c02a678b5a743f165a20bbe47a999abef35f369b3ec70c5cab467afa3becca",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "0224550bad99e2275d3edf07ac394f7e9dd2b1ca1f18c8bbcc27da3c183a56d8",
-  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "b93c54c8f05392ceaf97267200e0603fe61477ba1387d7357ac1ce3d33b9df88",
-  "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "8b51d022199557577dae9b4a26337cf8aecd79369424525330eea3a7a0388440"
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "712d6d6afcf576217bf13ea8821d9c426e123b91d6c422e11d70e08e6b48d330",
+  "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "bf12f59b293c9239b71c0da42a4946aa88e5bd7f058c1092771827e708671a5c",
+  "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "8b51d022199557577dae9b4a26337cf8aecd79369424525330eea3a7a0388440",
+  "07_FINAL_DELIVERABLES/reports/laporan_pstf1.md": "0b3fae1aa03c40114945506c02e32e4de287d5febf2bd925b5fa63d045858759"
  }
 }
