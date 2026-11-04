@@ -195,6 +195,23 @@ export function getRaciRoleForUser(row: RaciRow, userId: string): RaciRoleValue 
 }
 
 /**
+ * Peran RACI untuk satu profil pengguna. Profil di Firestore ber-ID UID Firebase, sedangkan
+ * `assignments` lama memakai ID kanonik ('user-rahul', ...), jadi coba UID lalu legacyId.
+ * Beberapa dokumen lama menulis field `legacyid` (huruf kecil); ikut diperiksa (LOG-046).
+ */
+export function getRaciRoleForUserRecord(
+  row: RaciRow,
+  user: Pick<User, 'id' | 'legacyId'> & { legacyid?: string }
+): RaciRoleValue {
+  for (const key of [user.id, user.legacyId, user.legacyid]) {
+    if (!key) continue;
+    const role = getRaciRoleForUser(row, key);
+    if (role) return role;
+  }
+  return '';
+}
+
+/**
  * Menghitung preview dan hasil migrasi referensi nama pengguna lama ke UID secara idempotent.
  * Field lama TIDAK dihapus agar tetap kompatibel sebelum penghapusan disetujui.
  */

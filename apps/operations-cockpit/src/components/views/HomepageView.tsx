@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { DataHealthPanel } from '../common/DataHealthPanel';
-import { getRaciRoleForUser } from '../../utils/migrateUserRefs';
+import { getRaciRoleForUserRecord } from '../../utils/migrateUserRefs';
 import { STATUS_PILL, deliverableProgress, deliverableStatus } from '../../utils/docStatus';
 import { parseIndoDate } from '../common/StageGateTimeline';
 import {
@@ -1158,7 +1158,7 @@ export const HomepageView: React.FC = () => {
               {/* Dihitung dari matriks Team RACI (Firestore), bukan teks tetap (audit Fase 4 / LOG-028) */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                 {raciRows.slice(0, 6).map((row) => {
-                  const responsible = users.filter((u) => getRaciRoleForUser(row, u.id) === 'R');
+                  const responsible = users.filter((u) => getRaciRoleForUserRecord(row, u) === 'R');
                   return (
                     <div
                       key={row.id}
