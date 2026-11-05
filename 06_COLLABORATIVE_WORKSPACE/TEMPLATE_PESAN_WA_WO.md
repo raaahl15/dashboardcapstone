@@ -214,7 +214,58 @@ Status revisi diumumkan Minggu, 8 Nov pukul 07.00 bersama WO minggu 7.
 — Rakai, atas nama Rahul (PM)
 ```
 
+---
+
+## T0 · Sekali kirim — Onboarding grup (link + panduan kerja)
+
+Dikirim ke grup WA tim bersama lampiran **Panduan_Kerja_Capstone_DME_Area1.pdf** (Drive `00_CORE_GUIDELINES`). Pesan WO per PIC (Ditugaskan / Direvisi / Disetujui) dikirim dari tombol WhatsApp di detail WO di cockpit (LOG-063/065).
+
+```
+Halo, aku *Rakai*, agen AI Claude Code sekaligus asisten AI Rahul (PM Area 1) 👋
+
+Halo tim Area 1! Mulai minggu ini semua kerja capstone kita jalan lewat satu sistem. Simpan link-link ini ya:
+
+🌐 *Website cockpit* (Work Order, jadwal, MoM, logbook)
+https://dashboardcapstonearea1.vercel.app/
+
+💻 *GitHub* (aturan & dokumentasi proyek, publik)
+https://github.com/raaahl15/dashboardcapstone
+
+📁 *Google Drive* (AutoCAD, PDF, Docs, Sheets, bukti WO)
+https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod
+
+📝 *Laporan PSTF 1* (Google Docs)
+https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit
+
+⚙️ *FDS* (Google Docs)
+https://docs.google.com/document/d/1PFiIfHzHZzQxRegLekQ-NUGTXEvloy-lQOi0O3T34wg/edit
+
+📊 *Master Instrument Index* (Google Sheets)
+https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit
+
+📎 *Panduan kerja lengkap* ada di PDF terlampir (13 halaman).
+
+✅ *Yang perlu dilakukan hari ini:*
+1. Login website pakai email UGM. Belum punya akun atau lupa password? Japri Rahul.
+2. Klik avatar → *Profil* → isi nama panggilan & nomor WA (nomor biasa, misalnya 0812…).
+3. Buka Drive. Kalau belum bisa, klik *Minta akses* pakai email UGM.
+4. Baca PDF panduan, minimal bab 1 (Mulai Cepat), bab 6 (Work Order), dan bab 9 (kerja dengan AI).
+
+🔁 *Siklus mingguan WO*
+• *Minggu 07.00* – WO baru dikirim ke WA masing-masing
+• *Selasa 19.00* – batas klik *Ajukan* di website
+• Selasa malam – review PM. Kalau revisi: tenggat Rabu 23.59, toleransi Kamis 07.00
+• *Kamis* – bimbingan, semua WO dipaparkan
+• Kamis 12.00 – revisi dari dosen, tenggat Sabtu 19.00
+
+🤖 Boleh dibantu AI (Claude, Gemini, ChatGPT). Prompt-nya sudah ada di setiap pesan WO. Ingat: angka wajib dicek manual dan jangan pakai nilai PLACEHOLDER.
+
+Kalau ada yang bingung, tanya di grup ya. Semangat! 🙏
+— Rakai, atas nama Rahul (PM)
+```
+
 ## Log Revisi
 | Rev | Tanggal | Penulis | Deskripsi |
 | :--- | :--- | :--- | :--- |
 | 0.1 | 2026-11-05 | Rakai / Claude Code (AI) | Template T1–T6 + contoh terisi T5 Bimbingan 6 (LOG-062). |
+| 0.2 | 2026-11-05 | Rakai / Claude Code (AI) | Tambah T0 onboarding grup (link + panduan kerja PDF) (LOG-068). |

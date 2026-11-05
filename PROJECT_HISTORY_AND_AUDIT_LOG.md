@@ -293,6 +293,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-068] 2026-11-05 12:40 WIB — Panduan kerja tim (PDF) + template pesan onboarding grup WA
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Menyiapkan panduan lengkap untuk anggota tim sebelum PM membagikan semua link (website, GitHub, Drive, Docs, Sheets), plus pesan pengantar untuk grup WA.
+* **Perubahan**:
+  - **Baru (staging Drive, bukan Git)** `D:\rahul\CAPSTONE_DME_AREA1\00_CORE_GUIDELINES\Panduan_Kerja_Capstone_DME_Area1.pdf` (13 halaman A4, 151 147 B, sha256 `4BB51479CFB00349…`).
+    - Isi 13 bab: mulai cepat & link penting, tentang proyek & Stage-Gate, tim & RACI, peta ekosistem (master tiap data), website cockpit (8 menu, Profil), Work Order (status, langkah, siklus mingguan, pesan WA), Drive/Docs/Sheets, GitHub, kerja dengan AI (Prompt 1/2/revisi + aturan), aturan mutu dokumen (status, tag, nomor line 6 segmen, companion), bimbingan & logbook, FAQ, daftar singkatan.
+    - Sumber: Blueprint v2.5, README, ringkasan Panduan PSTF, registry Google Workspace. Nomor WA anggota tidak dicantumkan.
+    - Generator: skrip reportlab di scratchpad sesi (tidak di repo).
+  - `TEMPLATE_PESAN_WA_WO.md` rev 0.2: **T0 onboarding grup** (semua link + 4 langkah awal + siklus WO + aturan AI).
+  - `README.md`: keterangan repo diperbarui menjadi publik (LOG-066). Blueprint §2/§3.6/§7.3 masih menyebut "privat" → diperbarui pada revisi blueprint berikutnya.
+* **Bukti / Verifikasi**:
+  - PDF dirender ulang ke PNG dan dicek per halaman: daftar isi 1 halaman, tanpa halaman kosong, link bisa diklik, bookmark per bab.
+  - `npm run check` PASS (lewat `sync:push`), data cockpit dibundel ulang.
+* **Tindak Lanjut**:
+  - [ ] **Antigravity / PM**: unggah PDF dari staging ke Drive `00_CORE_GUIDELINES`.
+  - [ ] **PM**: kirim T0 ke grup WA dengan PDF terlampir.
+
+---
+
 ### [LOG-067] 2026-11-05 12:05 WIB — Cek website pasca-fitur WA WO
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM
 * **Fase**: operasional (pasca-roadmap)

@@ -25,7 +25,7 @@ Monorepo proyek Capstone **FEED Pabrik Dimethyl Ether (DME)**, Teknik Fisika DTN
 
 ## Setup Perangkat Baru (laptop)
 
-Prasyarat: **Git** dan **Node.js 24 LTS** (minimal 24.12; paket Firebase memintanya). Akses ke repo privat `raaahl15/dashboardcapstone` (login GitHub saat clone).
+Prasyarat: **Git** dan **Node.js 24 LTS** (minimal 24.12; paket Firebase memintanya). Repo `raaahl15/dashboardcapstone` publik sejak 2026-11-05 (clone tanpa login; push butuh akses kolaborator).
 
 ```bash
 git clone https://github.com/raaahl15/dashboardcapstone.git dme-capstone-master
