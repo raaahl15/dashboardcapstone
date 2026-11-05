@@ -30,6 +30,8 @@ export interface WaPerson {
   nickname?: string;
   name?: string;
   phone?: string;
+  /** Jabatan di tim (User.title), dipakai untuk {posisi} di prompt AI. */
+  title?: string;
 }
 
 export interface WaContext {
@@ -41,7 +43,25 @@ export interface WaContext {
   projectStartDate: string; // 'YYYY-MM-DD'
   pmName?: string;
   cockpitUrl?: string;
+  /** Sertakan tutorial kerja dengan bantuan AI (default: ya). */
+  includeAiGuide?: boolean;
 }
+
+/** Sumber proyek yang dibaca AI (Blueprint §3.3; registry Google Workspace). */
+export const PROJECT_GITHUB_URL = 'https://github.com/raaahl15/dashboardcapstone';
+export const PROJECT_DRIVE_URL = 'https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod';
+
+/** Token yang diganti per PIC saat tombol WA ditekan. */
+export const TOKEN_NAME = '{nama}';
+export const TOKEN_POSITION = '{posisi}';
+
+/** Ganti {nama} dan {posisi} dengan data PIC penerima. */
+export const personalizeForRecipient = (text: string, person?: WaPerson): string =>
+  text
+    .split(TOKEN_NAME)
+    .join(person?.nickname || person?.name || 'kamu')
+    .split(TOKEN_POSITION)
+    .join((person?.title || '').trim() || 'anggota tim');
 
 export const RAKAI_INTRO = (pmName = 'Rahul') =>
   `Halo, aku *Rakai*, agen AI Claude Code sekaligus asisten AI ${pmName} (PM Area 1) 👋`;
@@ -109,11 +129,6 @@ export const waLinkTo = (phoneDigits: string, text: string) =>
 
 const nameOf = (id: string, ctx: WaContext) => ctx.getUser(id)?.nickname || ctx.getUser(id)?.name || id;
 const names = (ids: string[], ctx: WaContext) => ids.map((id) => nameOf(id, ctx)).join(', ');
-const greetNames = (ids: string[], ctx: WaContext) => {
-  const list = ids.map((id) => nameOf(id, ctx));
-  if (list.length <= 1) return list[0] || 'tim';
-  return `${list.slice(0, -1).join(', ')} & ${list[list.length - 1]}`;
-};
 
 const tidy = (s: string) => (s || '').replace(/[ \t]+/g, ' ').trim();
 
@@ -132,26 +147,74 @@ const taskLines = (wo: WorkOrder, label: string): string[] => {
   return [];
 };
 
+/** Prompt 1: AI membaca dan merangkum proyek dulu sebelum mengerjakan apa pun. */
+const PROMPT_READ_PROJECT = [
+  'Kamu membantu tim Capstone Pabrik Dimetil Eter (DME) Area 1, DTNTF UGM 2026. Baca dulu proyek kami:',
+  `- GitHub: ${PROJECT_GITHUB_URL}`,
+  `- Google Drive: ${PROJECT_DRIVE_URL}`,
+  'Baca semua file .md, mulai dari README.md, MASTER_CAPSTONE_ECOSYSTEM_BLUEPRINT.md, dan PROJECT_HISTORY_AND_AUDIT_LOG.md. Analisis lalu rangkum: tujuan proyek, struktur folder, status terkini, aturan kerja tim, dan istilah penting.',
+  'Jangan mengerjakan tugas apa pun dulu. Balas hanya dengan rangkumanmu.',
+];
+
+const aiGuideAssignment = (wo: WorkOrder, dueText: string): string[] => {
+  const todo = wo.checklist.filter((c) => !c.done).map((c) => `- ${tidy(c.text)}`);
+  const instr = todo.length ? todo : tidy(wo.description) ? [tidy(wo.description)] : ['- (lihat detail WO di cockpit)'];
+  return [
+    '',
+    '🤖 *CARA MENGERJAKAN DENGAN BANTUAN AI*',
+    '_(Claude, Gemini, ChatGPT, atau agen AI lain)_',
+    '1️⃣ Buka chat baru, kirim *Prompt 1*. Tunggu AI selesai membaca dan merangkum proyek.',
+    '2️⃣ Cek rangkumannya. Kalau AI tidak bisa membuka link, hubungkan akun GitHub/Google Drive di pengaturan AI-nya, atau unggah file .md yang diminta.',
+    '3️⃣ Kirim *Prompt 2* (sudah berisi nama, posisi, dan WO kamu).',
+    '4️⃣ Cek ulang hasil AI: angka wajib diverifikasi manual, jangan memakai nilai PLACEHOLDER, dan status dokumen maksimal *Review Internal*.',
+    '',
+    '*Prompt 1* (salin isi kotak):',
+    '```',
+    ...PROMPT_READ_PROJECT,
+    '```',
+    '',
+    '*Prompt 2* (kirim setelah AI membalas):',
+    '```',
+    `Aku ${TOKEN_NAME}, posisi ${TOKEN_POSITION} di tim Area 1 DME. Aku ditugaskan Work Order berikut:`,
+    `${wo.code} – ${tidy(wo.title)} (prioritas ${wo.priority})`,
+    'Instruksi:',
+    ...instr,
+    ...(tidy(wo.outputText || '') ? [`Output yang diserahkan: ${tidy(wo.outputText || '')}`] : []),
+    ...(tidy(wo.fileUrl || '') ? [`File kerja: ${tidy(wo.fileUrl || '')}`] : []),
+    `Tenggat: ${dueText}`,
+    'Bantu aku mengerjakan WO ini langkah demi langkah sesuai aturan proyek yang sudah kamu baca. Mulai dengan rencana kerja singkat, lalu tanyakan data yang kamu butuhkan.',
+    '```',
+  ];
+};
+
+const aiGuideRevision = (wo: WorkOrder, note: string, dueText: string): string[] => [
+  '',
+  '🤖 *KALAU DIBANTU AI*',
+  'Lanjutkan di chat AI yang sama. Kalau memakai chat baru, kirim dulu Prompt 1 dari pesan penugasan WO ini. Lalu kirim:',
+  '```',
+  `Aku ${TOKEN_NAME} (${TOKEN_POSITION}). ${wo.code} – ${tidy(wo.title)} perlu revisi.`,
+  `Catatan revisi: ${note}`,
+  `Tenggat revisi: ${dueText}`,
+  'Perbaiki hasil sebelumnya sesuai catatan ini dan tunjukkan bagian mana saja yang berubah.',
+  '```',
+];
+
 const outputLines = (wo: WorkOrder): string[] => [
   ...(tidy(wo.outputText || '') ? [`📦 Output: ${tidy(wo.outputText || '')}`] : []),
   ...(tidy(wo.fileUrl || '') ? [`📁 File: ${tidy(wo.fileUrl || '')}`] : []),
 ];
 
 /**
- * Susun pesan WhatsApp untuk satu WO. `recipientIds` = PIC yang disapa
- * (default semua penanggung jawab WO).
+ * Susun pesan WhatsApp untuk satu WO. Sapaan memakai token {nama} (dan prompt AI
+ * memakai {posisi}); keduanya diganti per PIC lewat personalizeForRecipient saat dikirim.
  */
-export function buildWoMessage(
-  key: WaTemplateKey,
-  wo: WorkOrder,
-  ctx: WaContext,
-  recipientIds: string[] = wo.assigneeIds
-): string {
+export function buildWoMessage(key: WaTemplateKey, wo: WorkOrder, ctx: WaContext): string {
   const today = atMidnight(ctx.today);
   const url = ctx.cockpitUrl || DEFAULT_COCKPIT_URL;
   const pm = ctx.pmName || 'Rahul';
+  const withAi = ctx.includeAiGuide !== false;
   const sup = wo.supporterIds.length ? ` | Pendukung: ${names(wo.supporterIds, ctx)}` : '';
-  const out: string[] = [RAKAI_INTRO(pm), '', `Halo ${greetNames(recipientIds, ctx)},`];
+  const out: string[] = [RAKAI_INTRO(pm), '', `Halo ${TOKEN_NAME},`];
 
   if (key === 'ditugaskan') {
     const due = parseYmd(wo.dueDate) || nextWeekdayOnOrAfter(today, 2);
@@ -168,6 +231,7 @@ export function buildWoMessage(
     out.push('');
     out.push(`Kalau sudah selesai, ubah status WO di cockpit menjadi *Diajukan* sebelum tenggat.`);
     out.push(`📌 Detail & checklist: ${url} → Work Order`);
+    if (withAi) out.push(...aiGuideAssignment(wo, `${formatDayDate(due)} pukul 19.00`));
     out.push('', 'Semangat, terima kasih! 🙏', RAKAI_SIGN(pm));
     return out.join('\n');
   }
@@ -178,21 +242,27 @@ export function buildWoMessage(
     out.push(`Work Order kamu perlu *revisi*${fromLecturer ? ' (hasil bimbingan)' : ' (review PM)'}:`, '');
     out.push(`🔁 *${wo.code} – ${tidy(wo.title)}*`);
     out.push(`👤 PIC: ${names(wo.assigneeIds, ctx)}${sup}`);
-    out.push(`🗒️ ${fromLecturer ? 'Arahan dosen' : 'Catatan revisi'}: ${tidy(wo.revisionNote) || '[isi catatan revisi]'}`);
+    const note = tidy(wo.revisionNote) || '[isi catatan revisi]';
+    out.push(`🗒️ ${fromLecturer ? 'Arahan dosen' : 'Catatan revisi'}: ${note}`);
     out.push(...taskLines(wo, 'Yang perlu diperbaiki'));
     out.push(...outputLines(wo));
     out.push('', 'Status: *REVISI*');
+    let dueText: string;
     if (fromLecturer) {
       const saturday = nextWeekdayOnOrAfter(today, 6);
-      out.push(`⏰ Tenggat revisi: *${formatDayDate(saturday)} pukul 19.00* (review PM s.d. 22.00)`);
+      dueText = `${formatDayDate(saturday)} pukul 19.00`;
+      out.push(`⏰ Tenggat revisi: *${dueText}* (review PM s.d. 22.00)`);
       out.push(`Status revisi diumumkan ${formatDayDate(addDays(saturday, 1))} pukul 07.00.`);
     } else {
       const wednesday = nextWeekdayOnOrAfter(today, 3);
-      out.push(`⏰ Tenggat revisi: *${formatDayDate(wednesday)} pukul 23.59*`);
+      dueText = `${formatDayDate(wednesday)} pukul 23.59`;
+      out.push(`⏰ Tenggat revisi: *${dueText}*`);
       out.push(`⚠️ Toleransi terakhir: *${formatDayDate(addDays(wednesday, 1))} pukul 07.00* (sebelum bimbingan)`);
     }
     out.push('', 'Setelah diperbaiki, ajukan lagi di cockpit (status *Diajukan*).');
-    out.push(`📌 ${url} → Work Order`, '', RAKAI_SIGN(pm));
+    out.push(`📌 ${url} → Work Order`);
+    if (withAi) out.push(...aiGuideRevision(wo, note, dueText));
+    out.push('', RAKAI_SIGN(pm));
     return out.join('\n');
   }
 
