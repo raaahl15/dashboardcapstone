@@ -293,6 +293,29 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-065] 2026-11-05 14:15 WIB — Tutorial kerja dengan AI di template WA WO (branch `wa-ai-tutorial`, belum merge)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (Rahul)
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Setiap pesan penugasan WO memuat cara mengerjakan dengan bantuan AI (Claude, Gemini, ChatGPT, atau agen AI): AI membaca proyek lebih dulu, lalu PIC memperkenalkan diri dan memberikan WO-nya.
+* **Perubahan** (`waTemplates.ts`, `WaComposerModal.tsx`; commit `a49d510`):
+  - Template **Ditugaskan** berisi 4 langkah, **Prompt 1** dan **Prompt 2**:
+    - Prompt 1: baca GitHub `raaahl15/dashboardcapstone` dan folder induk Drive capstone, analisis semua `.md` (mulai dari README, Blueprint, dan log), lalu balas dengan rangkuman tanpa mengerjakan apa pun dulu.
+    - Prompt 2: "Aku {nama}, posisi {posisi}…", berisi WO, instruksi (checklist), output, file, tenggat, dan permintaan rencana kerja.
+  - Template **Direvisi** berisi prompt lanjutan: catatan revisi, tenggat, dan permintaan menunjukkan bagian yang berubah.
+  - `{nama}` dan `{posisi}` diganti per PIC saat tombol WA ditekan (nama panggilan dan jabatan dari Profil; bila jabatan kosong menjadi "anggota tim").
+  - Panel WA punya centang "Sertakan tutorial AI" (default aktif).
+  - Langkah 4 tutorial mengingatkan: angka wajib diverifikasi manual, jangan memakai PLACEHOLDER, dan status dokumen maksimal Review Internal.
+* **Bukti / Verifikasi**:
+  - Uji Node: pesan per PIC tersusun dan tidak ada token tersisa. Pesan penugasan ±2.250 karakter, URL wa.me ±3.400 karakter.
+  - `tsc` PASS, `vite build` PASS, `npm run check` PASS.
+* **Temuan**: repo GitHub **privat** (API GitHub tanpa login → 404). Chat AI tidak bisa membukanya hanya dari link; anggota perlu menghubungkan akun GitHub (sebagai kolaborator) di AI-nya, atau PM menjadikan repo publik. Folder Drive bisa dibaca bila sudah di-share ke anggota dan AI-nya terhubung ke Google Drive.
+* **Tindak Lanjut**:
+  - [ ] **PM**: putuskan akses repo untuk AI anggota (publik atau kolaborator).
+  - [ ] **PM**: isi jabatan anggota di Profil agar `{posisi}` terisi.
+  - [ ] **PM**: cek preview branch `wa-ai-tutorial`, lalu beri perintah merge.
+
+---
+
 ### [LOG-064] 2026-11-05 13:45 WIB — Merge `wa-template-wo` ke main (produksi)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("langsung merge")
 * **Fase**: operasional (pasca-roadmap)
