@@ -24,6 +24,7 @@ import {
   formatYmdToIndonesian,
   getDefaultDueDateYmd,
 } from '../../utils/workOrderHelpers';
+import { formatWaPhone, markWaAutoOpen, normalizeWaPhone } from '../../utils/waTemplates';
 
 export const WorkOrderFormModal: React.FC = () => {
   const {
@@ -62,6 +63,8 @@ export const WorkOrderFormModal: React.FC = () => {
   const [checklist, setChecklist] = useState<WorkOrderChecklistItem[]>([]);
   const [newStepText, setNewStepText] = useState('');
   const [requireEvidence, setRequireEvidence] = useState(false);
+  const [outputText, setOutputText] = useState('');
+  const [fileUrl, setFileUrl] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
@@ -91,6 +94,8 @@ export const WorkOrderFormModal: React.FC = () => {
       setOrigin(editingWo.origin);
       setChecklist(editingWo.checklist);
       setRequireEvidence(editingWo.requireEvidence);
+      setOutputText(editingWo.outputText || '');
+      setFileUrl(editingWo.fileUrl || '');
     } else {
       const draft = workOrderFormDraft;
       setTitle(draft?.title || '');
@@ -120,6 +125,8 @@ export const WorkOrderFormModal: React.FC = () => {
       setChecklist(draft?.checklist || []);
       // Default bukti wajib = false (opsional per WO)
       setRequireEvidence(Boolean(draft?.requireEvidence));
+      setOutputText('');
+      setFileUrl('');
     }
 
     setNewStepText('');
@@ -234,6 +241,8 @@ export const WorkOrderFormModal: React.FC = () => {
           scheduleLink,
           checklist: finalChecklist,
           requireEvidence,
+          outputText,
+          fileUrl,
         });
         closeWorkOrderForm();
       } else {
@@ -248,9 +257,12 @@ export const WorkOrderFormModal: React.FC = () => {
           origin,
           checklist: finalChecklist,
           requireEvidence,
+          outputText,
+          fileUrl,
         });
         closeWorkOrderForm();
         if (created && origin.type !== 'mom') {
+          markWaAutoOpen(created.id); // panel WA "Ditugaskan" langsung terbuka
           openWorkOrderDetail(created.id);
         }
       }
@@ -344,6 +356,39 @@ export const WorkOrderFormModal: React.FC = () => {
                 className="w-full p-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
               />
             </div>
+
+            {/* Output & Link file (opsional, ikut ke template pesan WA) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                  Output yang Diserahkan
+                </label>
+                <input
+                  type="text"
+                  value={outputText}
+                  onChange={(e) => setOutputText(e.target.value)}
+                  maxLength={1000}
+                  placeholder="Contoh: Bab 2 rev1 (.docx) + tabel neraca massa"
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                  Link File Kerja (Drive/Docs/Sheets)
+                </label>
+                <input
+                  type="url"
+                  value={fileUrl}
+                  onChange={(e) => setFileUrl(e.target.value)}
+                  maxLength={1000}
+                  placeholder="https://docs.google.com/..."
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                />
+              </div>
+            </div>
+            <p className="text-[11px] text-[#4A5A72] -mt-1">
+              Opsional. Output dan link file ikut tampil di pesan WhatsApp Work Order.
+            </p>
           </div>
 
           {/* Penanggung Jawab (Multi-select setara) */}
@@ -387,6 +432,19 @@ export const WorkOrderFormModal: React.FC = () => {
                   );
                 })}
               </div>
+              {assigneeIds.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px]">
+                  {assigneeIds.map((uid) => {
+                    const u = users.find((x) => x.id === uid);
+                    const wa = normalizeWaPhone(u?.phone);
+                    return (
+                      <span key={uid} className={wa ? 'text-[#166534] font-semibold' : 'text-[#92400E] font-semibold'}>
+                        WA {u?.nickname || uid}: {wa ? formatWaPhone(wa) : 'belum ada (isi di Profil)'}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Pendukung (Opsional) */}

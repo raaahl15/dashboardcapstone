@@ -313,8 +313,13 @@ service cloud.firestore {
           'createdBy',
           'updatedAt',
           'updatedBy',
-          'history'
+          'history',
+          // opsional (LOG-063): output & link file untuk template pesan WA
+          'outputText',
+          'fileUrl'
         ])
+        && (!('outputText' in data) || (data.outputText is string && data.outputText.size() <= 1000))
+        && (!('fileUrl' in data) || (data.fileUrl is string && data.fileUrl.size() <= 1000))
         && data.id is string
         && data.code is string
         && data.title is string
