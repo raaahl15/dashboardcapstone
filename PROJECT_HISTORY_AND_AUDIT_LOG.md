@@ -277,6 +277,28 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-058] 2026-11-05 09:35 WIB — Impor cockpit Bimbingan 6 (MoM, action item, WO, logbook)
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: konten PSTF 1 (pasca-roadmap)
+* **Tujuan**: Memasukkan hasil Bimbingan 6 (Kronologi #16) ke cockpit.
+* **Keputusan PM baru**: **hadir 5/5**; komponen SIS **opsi (a)**: tidak dihapus, ditandai "lingkup PSTF 2" (TSHH-102 2oo3 → XV-102, trip P-101, C&E, alarm trip, URS-021). Di P&ID PSTF 1 jalurnya tetap dihapus sesuai arahan dosen.
+* **Perubahan** — berkas impor `import_5_bimbingan6.json` (scratchpad agent, generator `build_import_b6.js`, basis **ekspor PM 2026-11-05 09:14 WIB**):
+  - `meetingLogs`: + `mom-w12-b6` (Bimbingan 6, 5/5 hadir, ringkasan arahan + keputusan).
+  - `trackerActions`: + ACT-14…ACT-19 (W12, tenggat 12 Nov) yang menaut ke WO.
+  - `workOrders` (hanya 7 dokumen): WO-024 (SIS → PSTF 2, ACT-19), WO-025 (neraca manual, ACT-14), WO-026 (judul baru: hapus jalur SIS, indikator L/H/HH, FE-101; checklist T-101 ✔ diterima dosen, ACT-15), WO-027 (basis penjualan produk, per area dulu, ACT-17), WO-028 (checklist MoM B6 ✔), WO-029 (kirim Bab 1 via email, URS-021 PSTF 2, ACT-18), **WO-031 baru** (IH + JN: batas suhu reaktor/katalis untuk L/H/HH, ACT-16). Setiap WO diberi entri riwayat "Diperbarui (MoM Bimbingan 6)". `lastSeq` → 31.
+  - `logbooks`: 6 entri B6 yang sudah ada (1 kelompok + 5 anggota) **dilengkapi** — placeholder `[arahan dosen: …]` diisi arahan nyata, solusi disesuaikan dengan jawaban dosen, "Kendala: Kendala:"/"Solusi: Solusi:"/".." dirapikan, entri HD minggu 1 → **12**. Status paraf B6 tidak diubah (`verifiedByLecturer: false`).
+  - `deliverables` (subjudul Bab 2 & Lampiran A), `weeklyPlans` (W12 → Done + arahan; W13 keluaran), `config` (agenda Bimbingan 7, fokus minggu).
+* **Bukti / Verifikasi**:
+  - Validator **asli** cockpit `parseAndValidateImportJson` dijalankan pada berkas (TS → JS via `node:module` `stripTypeScriptTypes`, skrip `validate.mjs` di scratchpad): **LOLOS**. Kontrol: berkas dengan prioritas WO tidak sah → **DITOLAK**; ekspor asli PM → **LOLOS**.
+  - Generator gagal keras bila MoM/ACT/WO-031 sudah ada, placeholder tidak ditemukan, atau entri B6 ≠ 6.
+  - Belum diimpor; belum diverifikasi di produksi.
+* **Tindak Lanjut**:
+  - [ ] **PM**: impor `import_5_bimbingan6.json` (Backup & Restore). Seksi config, deliverables, weeklyPlans, trackerActions, meetingLogs, logbooks **ditimpa**; bila ada perubahan lewat website setelah ekspor 09:14, ekspor ulang dulu dan kirim ke agent.
+  - [ ] Setelah impor: cek Rapat (MoM B6, ACT-14…19), WO-031 muncul, logbook B6 lengkap.
+  - [ ] Dokumen repo/Google untuk opsi (a) dikerjakan PIC lewat WO: FDS Docs (AL, WO-024), Bab 1 URS-021 (RG, WO-029), C&E/alarm (AL), P&ID Rev C (JN, WO-026).
+
+---
+
 ### [LOG-057] 2026-11-05 09:15 WIB — Bimbingan 6: deck PDF, naskah, transkripsi rekaman, dan keputusan
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
 * **Fase**: konten PSTF 1 (pasca-roadmap)
