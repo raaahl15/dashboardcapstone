@@ -306,7 +306,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Tidak ada nomor WA anggota lain di file ter-track.
 * **Catatan**: nomor anggota tadi **masih ada di riwayat commit `7522c2d`**. Bila repo dibuka publik tanpa penulisan ulang riwayat, nomor itu bisa dilihat lewat riwayat commit.
 * **Tindak Lanjut**:
-  - [ ] **PM**: putuskan tulis ulang riwayat (hapus nomor dari `7522c2d`, perlu force-push `main`) atau terima apa adanya, lalu ubah repo menjadi publik di GitHub (Settings → General → Danger Zone → Change visibility). `gh` CLI tidak terpasang di laptop ini.
+  - [x] **PM**: riwayat dibiarkan apa adanya (keputusan PM). Repo sudah **publik**; diverifikasi lewat API GitHub tanpa login (`visibility: public`, 2026-11-05).
 
 ---
 
