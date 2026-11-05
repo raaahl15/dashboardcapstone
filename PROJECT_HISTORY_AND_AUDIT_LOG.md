@@ -148,6 +148,19 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Halaman awal memuat **5 anggota** (makro `\namaE`/`\nimE`).
   - **Alat tulis opsi 1**: draf di Google Docs (master narasi), dipindah ke LaTeX saat finalisasi.
 
+### 16. Arahan Bimbingan 6 (Kamis 5 Nov 2026, Pak Thomas Oka Pratama)
+* **Konteks**: bimbingan ±9 menit, dipaparkan PM; rekaman ditranskripsi otomatis, lalu butir yang tidak terekam dikonfirmasi PM (LOG-057).
+* **Arahan dosen**:
+  1. Angka hasil DWSIM (neraca massa, persamaan Bab 1) **dihitung manual** sebagai verifikasi (rujukan dosen: jawaban Pak Awang).
+  2. **Jalur merah sensor suhu reaktor → sistem keselamatan dihapus dari P&ID PSTF 1**; keterkaitan SIS masuk PSTF 2. Sensor suhu cukup jadi **indikator**, dengan penanda batas alarm (L/H/HH) bila ada spesifikasi batas; tim mencari batas suhu reaktor/katalis.
+  3. Basis ekonomi Bab 4: anggaran CAPEX/OPEX vs **penjualan produk** → selisih keuntungan; asumsikan porsi operasional (sistem, gaji, dll.), sisanya keuntungan bersih → NPV/IRR dan lama balik modal.
+  4. Review Bab 1 **boleh per bab lewat email** ke dosen.
+* **Konfirmasi PM** (butir yang tidak terjawab di rekaman):
+  - Lingkup ekonomi **dikerjakan per area dulu, lalu didiskusikan bersama semua area**.
+  - **Drum umpan T-101 diterima**: T-101 adalah penggambaran mixer M-101 DWSIM di P&ID.
+  - Bab 1 dikirim PM ke dosen lewat email untuk direview.
+  - **Logbook sudah ditandatangani semua** → aman.
+
 ---
 
 ## BAB II: [ARSIP] Laporan Audit Fase 1 v1.0 oleh Antigravity
@@ -261,6 +274,30 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-057] 2026-11-05 09:15 WIB — Bimbingan 6: deck PDF, naskah, transkripsi rekaman, dan keputusan
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: konten PSTF 1 (pasca-roadmap)
+* **Tujuan**: Menyiapkan bahan Bimbingan 6 dan mencatat hasilnya.
+* **Perubahan**:
+  - **Deck → PDF** (sebelum bimbingan): 9 slide artifact Bimbingan 6 dirender ke PDF 1920×1080 dengan Edge headless (scratchpad agent; `[Nama Dosen Pembimbing]` diisi nama dosen hanya di PDF, artifact tidak diubah). Naskah presentasi + penjelasan 5 pertanyaan + daftar singkatan diberikan di chat.
+  - **Transkripsi rekaman** `New_Recording_10.m4a` (9 min 18 s) secara offline: faster-whisper 1.2.1 model *medium* int8 (CPU, ±17 menit; dekode audio manual karena `av` 19 tidak cocok dengan argumen `metadata_errors`). Transkrip mentah di scratchpad agent, dikirim ke PM; **audio & transkrip tidak masuk repo** (berisi suara dosen).
+  - Kronologi #16 (BAB I): arahan dosen + konfirmasi PM.
+  - Percobaan pratinjau 47 lembar library simbol & template (ezdxf → SVG → PNG) **dihentikan atas permintaan PM** (PM membuat pratinjau manual); tidak ada berkas yang diunggah/di-commit.
+* **Bukti / Verifikasi**:
+  - Transkrip: 79 baris berstempel waktu; butir yang tidak tertangkap (jawaban lingkup ekonomi, T-101, review Bab 1, logbook) **dikonfirmasi PM di chat**.
+  - PDF deck: 9 halaman (hitung `/Type /Page`), cek visual contact sheet.
+* **Keputusan**: lihat Kronologi #16. Rekomendasi agent (belum diputuskan PM): komponen SIS (TSHH-102 2oo3, XV-102, C&E, URS-021) **tidak dihapus**, tetapi ditandai "lingkup PSTF 2" agar pekerjaan tidak hilang.
+* **Tindak Lanjut**:
+  - [ ] **PM**: ekspor cockpit terbaru (Backup) → agent menyusun impor MoM Bimbingan 6 + pembaruan WO-024…029 + WO baru batas suhu + logbook B6. Ekspor 01:36 sudah usang (impor 1–4 setelahnya).
+  - [ ] **PM**: kirim Bab 1 ke dosen lewat email.
+  - [ ] **JN** (WO-026): P&ID Rev C — hapus jalur merah ke SIS, sensor suhu reaktor jadi indikator + penanda L/H/HH; FE-101.
+  - [ ] **AL** (WO-024): FDS diselaraskan dengan arahan nomor 2.
+  - [ ] **IH** (WO-025): neraca massa manual verifikasi DWSIM; cari batas suhu reaktor/katalis (TBD-04).
+  - [ ] **HD** (WO-027): Bab 4 basis penjualan produk, per Area 1 dulu.
+  - [ ] `tag_map.csv` baris T-101 (USULAN) dapat dinaikkan ke FINAL setelah IH + JN mengonfirmasi (dosen sudah menerima).
 
 ---
 
