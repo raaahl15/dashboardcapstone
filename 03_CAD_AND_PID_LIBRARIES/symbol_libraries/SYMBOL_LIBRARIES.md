@@ -41,7 +41,7 @@ author: "Jonathan Pangihutan Michael Siahaan (PIC)"
 reviewer: ""
 status: "WIP"
 review_evidence: ""
-google_ref: ""
+google_ref: "https://drive.google.com/drive/folders/1mjqrYazKd5EayS3p7Ney5ejfR8fEvyMl"
 last_updated: "2026-11-05"
 tags: ["AutoCAD", "Symbol Library", "Block"]
 ---
@@ -103,3 +103,4 @@ Format **6 segmen** `SIZE-FLUID-AREA-SEQ-CLASS-INSUL`, contoh `6"-EFF-10-1005-S3
 | 0.1 | 2026-11-03 | Claude Code (AI) | Companion kolektif dibuat; file dipindah ke Drive; hash dicatat (LOG-004). |
 | 0.2 | 2026-11-03 | Claude Code (AI) | `ISO10628_Equipment_recover.dwg` dihapus atas keputusan PM (LOG-005). |
 | 0.3 | 2026-11-05 | Claude Code (AI) | Legend Rev 1 (arahan dosen Bimbingan 6): seluruh teks ke bahasa Inggris, kunci penomoran jalur 6 segmen + arti tiap segmen, tag pabrik (R-101, E-101, E-102, P-101, T-101, CSCOL-01/02), area 10/20/30 = Area 1/2/3, item SIS diberi label PSTF 2 (LOG-059). |
+| 0.4 | 2026-11-05 | Antigravity (AI) | Unggah `DME_PID_Master_Legend_Rev1.dxf` & `_preview.png` ke Google Drive `03_CAD_DWG/symbol_libraries` (LOG-060). |

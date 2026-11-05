@@ -284,6 +284,35 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-060] 2026-11-05 10:10 WIB — Unggah Master Legend P&ID Rev 1 DXF & gambar pratinjau PNG ke Drive
+* **Pelaksana**: Antigravity (AI agent), atas instruksi PM (Rahul): *"unggah DME_PID_Master_Legend_Rev1.dxf dan _preview.png dari folder salinan lokal ke Drive."*
+* **Fase**: konten PSTF 1 (tindak lanjut LOG-059)
+* **Tujuan**: Menutup tindak lanjut Antigravity di LOG-059 (mengunggah berkas Master Legend P&ID Rev 1 berstandar ISO 10628 & ISA-5.1 beserta berkas gambar pratinjau PNG ke Google Drive proyek agar dapat diakses oleh tim dan dosen pembimbing).
+* **Perubahan**:
+  - **Google Drive**:
+    - Berkas `DME_PID_Master_Legend_Rev1.dxf` (4.241 KB, sha256 `eb57e78bc4461434...`) diunggah ke subfolder `03_CAD_DWG/symbol_libraries` (ID: `1mjqrYazKd5EayS3p7Ney5ejfR8fEvyMl`).
+      - File ID Google Drive: **`1hnvC0CsV48WBpg0njxHQGbFbc3ahjBfR`**.
+    - Berkas `DME_PID_Master_Legend_Rev1_preview.png` (616 KB, sha256 `cb61e77cc425591e...`) diunggah ke subfolder `03_CAD_DWG/symbol_libraries` (ID: `1mjqrYazKd5EayS3p7Ney5ejfR8fEvyMl`).
+      - File ID Google Drive: **`1CmgqaIOxzk_QPcWwotjv0aUJ6JLn8GUf`**.
+    - Berkas Rev 0 (`DME_PID_Master_Legend.dxf`, ID `1DiefJLwTikEm81RciKIy-I2e88vyEy5Q`) tetap dipertahankan sebagai arsip di Drive.
+  - **Registry & Manifest**:
+    - `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json` diperbarui dengan menambahkan kedua berkas pada `drive.files` (key: `legend_dme_pid_master_legend_rev1` & `legend_dme_pid_master_legend_rev1_preview`).
+    - `06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md` dinaikkan ke Rev 0.8.
+    - `03_CAD_AND_PID_LIBRARIES/symbol_libraries/SYMBOL_LIBRARIES.md` dinaikkan ke Rev 0.4 (+ URL `google_ref`).
+    - `node tools/build_manifest.js` dijalankan ulang untuk menyinkronkan data statis ke `apps/operations-cockpit/public/data/`.
+* **Bukti / Verifikasi**:
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\symbol_libraries\DME_PID_Master_Legend_Rev1.dxf" --parent 1mjqrYazKd5EayS3p7Ney5ejfR8fEvyMl` → `Uploaded: DME_PID_Master_Legend_Rev1.dxf (ID: 1hnvC0CsV48WBpg0njxHQGbFbc3ahjBfR)`.
+  - `gdrive mutate upload "D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\symbol_libraries\DME_PID_Master_Legend_Rev1_preview.png" --parent 1mjqrYazKd5EayS3p7Ney5ejfR8fEvyMl` → `Uploaded: DME_PID_Master_Legend_Rev1_preview.png (ID: 1CmgqaIOxzk_QPcWwotjv0aUJ6JLn8GUf)`.
+  - `gdrive readonly permissions` pada kedua berkas → 4 email UGM anggota tim (`ihsaanzauhairtsaqifprawira`, `altaframadhanparvez`, `jonathanpangihutanms`, `heidifalinabrilian`) otomatis mewarisi peran **writer (Editor)**, dan `rahulghulam15@gmail.com` sebagai **owner**.
+  - `npm run check` (`node tools/check_companions.js`) → **PASS** (27/27 artefak berpasangan).
+* **Keputusan**:
+  - Berkas Master Legend Rev 1 menjadi acuan resmi notasi, simbol, dan format penomoran jalur pipa 6 segmen untuk draf P&ID Rev C Area 1.
+* **Tindak Lanjut**:
+  - [ ] **JN**: buka Rev 1 di AutoCAD, periksa visual/plot; P&ID Rev C: ganti 6 line tag ke format 6 segmen; verifikasi kelas pipa S-104/S-105 (ASME B16.5).
+  - [ ] **PM**: lakukan impor `import_5_bimbingan6.json` (atau `import_6_wo026_legend.json`) di Operations Cockpit.
+
+---
+
 ### [LOG-059] 2026-11-05 09:55 WIB — Legend P&ID Rev 1 (bahasa Inggris + penomoran jalur 6 segmen)
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul) meneruskan catatan dosen
 * **Fase**: konten PSTF 1 (Lampiran A)
@@ -310,7 +339,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - **Belum dibuka di AutoCAD**; pratinjau = render ezdxf, bukan plot AutoCAD.
 * **Keputusan**: lihat Kronologi #17.
 * **Tindak Lanjut**:
-  - [ ] **Antigravity**: unggah `DME_PID_Master_Legend_Rev1.dxf` + `_preview.png` ke Drive `03_CAD_DWG/symbol_libraries` (Rev 0 tetap sebagai arsip), daftarkan di registry.
+  - [x] **Antigravity**: unggah `DME_PID_Master_Legend_Rev1.dxf` + `_preview.png` ke Drive `03_CAD_DWG/symbol_libraries` (Rev 0 tetap sebagai arsip), daftarkan di registry (selesai di LOG-060).
   - [ ] **JN**: buka Rev 1 di AutoCAD, cek tampilan/plot; P&ID Rev C: ganti 6 line tag ke format 6 segmen; cek kelas pipa S-104/S-105 (ASME B16.5).
   - [ ] **PM**: impor `import_5_bimbingan6.json` (versi terbaru) — atau `import_6_wo026_legend.json` bila versi awal sudah diimpor.
 

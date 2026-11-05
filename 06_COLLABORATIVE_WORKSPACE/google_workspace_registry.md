@@ -59,3 +59,4 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 | 0.5 | 2026-11-04 | Claude Code (AI) | + `tor_rfp_pdf` (ID Drive PDF RFP dari unggahan Antigravity, LOG-026); akses umum Drive terverifikasi Dibatasi (LOG-028). |
 | 0.6 | 2026-11-04 | Claude Code (AI) | + `drive.files`: P&ID DME-PID-002 Rev B (03_CAD_DWG) dan ASME PTC 19.3 TW-2016 (00_CORE_GUIDELINES), diunggah PM, diverifikasi lewat konektor (LOG-038). |
 | 0.7 | 2026-11-05 | Antigravity (AI) | + `drive.files`: P&ID DME-PID-002 Rev B A3 DXF & gambar pratinjau PNG (03_CAD_DWG) diunggah ke Drive (LOG-056). |
+| 0.8 | 2026-11-05 | Antigravity (AI) | + `drive.files`: Master Legend P&ID Rev 1 DXF & gambar pratinjau PNG (`03_CAD_DWG/symbol_libraries`) diunggah ke Drive (LOG-060). |

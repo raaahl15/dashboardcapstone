@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-11-05T06:45:00+07:00",
-  "updated_by": "Antigravity (LOG-056)",
+  "updated_at": "2026-11-05T10:10:00+07:00",
+  "updated_by": "Antigravity (LOG-060)",
   "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
   "drive": {
     "root": {
@@ -89,6 +89,24 @@
         "folder": "03_CAD_DWG",
         "sha256_16": "165e03a959a4515b",
         "note": "Gambar pratinjau Draf P&ID Area 1 Rev B A3 (LOG-055)"
+      },
+      {
+        "key": "legend_dme_pid_master_legend_rev1",
+        "title": "DME_PID_Master_Legend_Rev1.dxf",
+        "id": "1hnvC0CsV48WBpg0njxHQGbFbc3ahjBfR",
+        "url": "https://drive.google.com/file/d/1hnvC0CsV48WBpg0njxHQGbFbc3ahjBfR/view",
+        "folder": "03_CAD_DWG/symbol_libraries",
+        "sha256_16": "eb57e78bc4461434",
+        "note": "Master Legend P&ID Rev 1 (bahasa Inggris, penomoran jalur 6 segmen, title block IFR, LOG-059/060)"
+      },
+      {
+        "key": "legend_dme_pid_master_legend_rev1_preview",
+        "title": "DME_PID_Master_Legend_Rev1_preview.png",
+        "id": "1CmgqaIOxzk_QPcWwotjv0aUJ6JLn8GUf",
+        "url": "https://drive.google.com/file/d/1CmgqaIOxzk_QPcWwotjv0aUJ6JLn8GUf/view",
+        "folder": "03_CAD_DWG/symbol_libraries",
+        "sha256_16": "cb61e77cc425591e",
+        "note": "Gambar pratinjau Master Legend P&ID Rev 1 (LOG-059/060)"
       }
     ]
   },
