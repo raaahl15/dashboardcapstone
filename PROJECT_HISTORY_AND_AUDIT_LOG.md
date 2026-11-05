@@ -293,6 +293,20 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-067] 2026-11-05 12:05 WIB — Cek website pasca-fitur WA WO
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Memastikan produksi sehat setelah LOG-063…066, dan PM sudah mencoba fitur WA.
+* **Bukti / Verifikasi**:
+  - `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/ --dump` (PM login) → **14/14 modul, 0 error**. Laporan: `tools/out/smoke_console_2026-11-05T05-03-42-019Z.json`.
+  - Bundle JS produksi memuat teks fitur baru ("CARA MENGERJAKAN DENGAN BANTUAN AI", "Sertakan tutorial kerja", "Kirim ke PIC", "Output yang Diserahkan", link GitHub) → deploy terbaru sudah tayang. Nomor anggota tidak ada di bundle.
+  - Halaman Work Order: WO-001…WO-031 tampil, tidak ada WO baru.
+  - Panel WA (modal di detail WO) tidak bisa diklik oleh smoke test; dicoba langsung oleh PM.
+* **Tindak Lanjut**:
+  - [ ] Status deploy `firestore.rules` (field `outputText`/`fileUrl`) belum dikonfirmasi PM.
+
+---
+
 ### [LOG-066] 2026-11-05 14:30 WIB — Merge `wa-ai-tutorial`; persiapan repo publik
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("langsung merge"; repo dijadikan publik)
 * **Fase**: operasional (pasca-roadmap)
