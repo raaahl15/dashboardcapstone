@@ -293,6 +293,29 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-063] 2026-11-05 13:30 WIB — Tombol WhatsApp WO langsung ke nomor PIC (branch `wa-template-wo`, belum merge)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (Rahul)
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: PM membuat/membuka WO, memilih template, klik ikon WA, chat PIC terbuka dengan pesan terisi, lalu tinggal tekan Kirim.
+* **Perubahan** (cockpit, branch `wa-template-wo`, commit `7522c2d`):
+  - **Baru** `src/utils/waTemplates.ts`: 3 template per WO, yaitu **Ditugaskan** (tugas/checklist, output, link file, tenggat = tanggal WO pukul 19.00, bimbingan Kamis berikutnya), **Direvisi** (Kamis–Sabtu = arahan dosen, tenggat Sabtu 19.00; selain itu revisi PM, tenggat Rabu 23.59, toleransi Kamis 07.00) dan **Disetujui**. Template disarankan otomatis dari status WO. Juga berisi normalisasi nomor ke format `wa.me` (62…).
+  - **Baru** `WaComposerModal.tsx`: pilihan template, pratinjau yang bisa diedit, dan satu tombol `wa.me/<nomor>` per PIC. Nomor diambil dari **Profil anggota (`User.phone`)**, bukan dari kode, agar nomor pribadi tidak masuk repo GitHub.
+  - Panel detail WO: tombol WhatsApp (khusus PM) membuka panel ini. Anggota tetap memakai tombol bagikan lama. WO yang baru dibuat langsung membuka panel dengan template Ditugaskan.
+  - Form WO: field opsional **Output** dan **Link file kerja**, plus tampilan nomor WA PIC terpilih.
+  - `firestore.rules`: izinkan `outputText` dan `fileUrl` (string, maksimal 1000 karakter).
+  - Rancangan awal (penyusun gabungan T1–T6 untuk banyak WO + tombol "Pesan WA") **diganti** atas arahan PM menjadi pesan per WO langsung ke nomor PIC.
+* **Bukti / Verifikasi**:
+  - `tsc --noEmit` PASS dan `vite build` PASS di worktree.
+  - Uji Node atas `waTemplates.ts`: 5 nomor dari PM ternormalisasi benar (termasuk tanda hubung U+2011), keempat varian pesan tersusun dengan tanggal benar, dan saran template benar.
+  - `npm run check` PASS.
+* **Keputusan**: nomor WA anggota disimpan di Profil cockpit (Firestore), bukan di kode.
+* **Tindak Lanjut**:
+  - [ ] **PM**: deploy rules **sebelum merge**: `cd apps/operations-cockpit; npx firebase-tools deploy --only firestore:rules`.
+  - [ ] **PM**: isi nomor WA 5 anggota di menu Profil (kolom Kontak / No. Telepon). Konfirmasi juga pemilik nomor kelima (diasumsikan Althaf).
+  - [ ] **PM**: cek preview Vercel branch `wa-template-wo`, lalu beri perintah merge.
+
+---
+
 ### [LOG-062] 2026-11-05 11:00 WIB — Template pesan WhatsApp WO; agent bernama "Rakai"
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
 * **Fase**: operasional (pasca-roadmap)
