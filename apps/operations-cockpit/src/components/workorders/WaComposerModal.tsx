@@ -8,6 +8,7 @@ import {
   buildWoMessage,
   formatWaPhone,
   normalizeWaPhone,
+  personalizeForRecipient,
   suggestTemplate,
   waLinkTo,
 } from '../../utils/waTemplates';
@@ -32,12 +33,14 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
   const [text, setText] = useState('');
   const [edited, setEdited] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [includeAiGuide, setIncludeAiGuide] = useState(true);
 
   useEffect(() => {
     if (!open) return;
     setTemplateKey(initialTemplate || suggestTemplate(wo));
     setEdited(false);
     setCopied(false);
+    setIncludeAiGuide(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, wo.id]);
 
@@ -49,8 +52,9 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
         weeklyPlans,
         projectStartDate: config.projectStartDate,
         pmName: currentUser.nickname || 'Rahul',
+        includeAiGuide,
       }),
-    [templateKey, wo, getUser, weeklyPlans, config.projectStartDate, currentUser.nickname]
+    [templateKey, wo, getUser, weeklyPlans, config.projectStartDate, currentUser.nickname, includeAiGuide]
   );
 
   // Pratinjau mengikuti template selama PM belum mengedit manual
@@ -72,7 +76,7 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
   const recipients = wo.assigneeIds.map((id) => {
     const u = getUser(id);
     const phone = normalizeWaPhone(u?.phone);
-    return { id, name: u?.nickname || u?.name || id, phone };
+    return { id, person: u, name: u?.nickname || u?.name || id, phone };
   });
   const missing = recipients.filter((r) => !r.phone);
 
@@ -168,6 +172,20 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
                 </button>
               )}
             </div>
+            {templateKey !== 'disetujui' && (
+              <label className="flex items-center gap-2 mb-2 text-[11px] font-semibold text-[#0B1B33] cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={includeAiGuide}
+                  onChange={(e) => {
+                    setIncludeAiGuide(e.target.checked);
+                    setEdited(false);
+                  }}
+                  className="w-4 h-4 accent-[#0062CC]"
+                />
+                Sertakan tutorial kerja dengan bantuan AI (prompt baca proyek + prompt WO)
+              </label>
+            )}
             <textarea
               id="wa-composer-text"
               value={text}
@@ -188,7 +206,7 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
                 r.phone ? (
                   <a
                     key={r.id}
-                    href={text.trim() ? waLinkTo(r.phone, text) : undefined}
+                    href={text.trim() ? waLinkTo(r.phone, personalizeForRecipient(text, r.person)) : undefined}
                     target="_blank"
                     rel="noreferrer"
                     className="min-h-[44px] px-4 rounded-full bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold inline-flex items-center gap-2 shadow-xs"
@@ -218,7 +236,9 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
               </p>
             )}
             <p className="text-[11px] text-[#4A5A72]">
-              Tombol membuka chat PIC dengan pesan sudah terisi. Tinggal tekan Kirim.
+              Tombol membuka chat PIC dengan pesan sudah terisi. Tinggal tekan Kirim.{' '}
+              <code>{'{nama}'}</code> dan <code>{'{posisi}'}</code> di pratinjau otomatis diganti dengan nama dan jabatan
+              tiap PIC (jabatan dari Profil).
             </p>
           </div>
         </div>
