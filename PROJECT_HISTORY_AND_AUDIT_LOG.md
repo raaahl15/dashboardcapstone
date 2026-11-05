@@ -293,6 +293,20 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-064] 2026-11-05 13:45 WIB — Merge `wa-template-wo` ke main (produksi)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("langsung merge")
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Menayangkan tombol WhatsApp WO (LOG-063) di produksi.
+* **Perubahan**: merge `--no-ff` branch `wa-template-wo` ke `main` (commit `63cb8dd`), push → deploy Vercel produksi.
+* **Bukti / Verifikasi**: `npm run check` PASS setelah merge; push `9ee95d3..63cb8dd`. Belum ada uji di website produksi.
+* **Catatan**: belum ada konfirmasi PM bahwa `firestore.rules` sudah di-deploy. Sampai rules di-deploy, WO tetap bisa dibuat/diubah selama kolom **Output** dan **Link file** dikosongkan (field hanya ditulis bila diisi); bila diisi, penyimpanan akan ditolak rules.
+* **Tindak Lanjut**:
+  - [ ] **PM**: `cd apps/operations-cockpit; npx firebase-tools deploy --only firestore:rules`.
+  - [ ] **PM**: isi nomor WA 5 anggota di Profil; konfirmasi nomor kelima = Althaf.
+  - [ ] Uji di produksi: buat WO uji → panel WA terbuka → tombol PIC membuka chat yang benar.
+
+---
+
 ### [LOG-063] 2026-11-05 13:30 WIB — Tombol WhatsApp WO langsung ke nomor PIC (branch `wa-template-wo`, belum merge)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (Rahul)
 * **Fase**: operasional (pasca-roadmap)
