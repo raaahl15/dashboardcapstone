@@ -331,6 +331,10 @@ export interface WorkOrder {
   updatedAt: string;
   updatedBy: string;
   history: WorkOrderHistoryEntry[];
+  /** Hasil yang diserahkan PIC (opsional; dipakai template pesan WA, LOG-063). */
+  outputText?: string;
+  /** Link file kerja di Drive/Docs/Sheets (opsional; dipakai template pesan WA, LOG-063). */
+  fileUrl?: string;
 }
 
 export interface CreateWorkOrderInput {
@@ -344,6 +348,8 @@ export interface CreateWorkOrderInput {
   origin?: WorkOrderOrigin;
   checklist?: WorkOrderChecklistItem[];
   requireEvidence?: boolean;
+  outputText?: string;
+  fileUrl?: string;
 }
 
 export interface UpdateWorkOrderMetaInput {
@@ -356,6 +362,8 @@ export interface UpdateWorkOrderMetaInput {
   scheduleLink?: WorkOrderScheduleLink;
   checklist?: WorkOrderChecklistItem[];
   requireEvidence?: boolean;
+  outputText?: string;
+  fileUrl?: string;
 }
 
 export interface WorkOrderDraft {

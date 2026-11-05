@@ -1880,6 +1880,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         }))
         .filter((c) => c.text.length > 0);
 
+      const newOutputText = (input.outputText || '').trim().slice(0, 1000);
+      const rawFileUrl = (input.fileUrl || '').trim();
+      const newFileUrl =
+        rawFileUrl && sanitizeExternalUrl(rawFileUrl) !== '#' ? sanitizeExternalUrl(rawFileUrl) : '';
+
       const nowIso = new Date().toISOString();
       const actorId = currentUser.id;
       const woId = `wo-${newId()}`;
@@ -1933,6 +1938,9 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           updatedAt: nowIso,
           updatedBy: actorId,
           history: [initialHistory],
+          // Field opsional (LOG-063): hanya ditulis bila diisi agar kompatibel dengan data lama
+          ...(newOutputText ? { outputText: newOutputText } : {}),
+          ...(newFileUrl ? { fileUrl: newFileUrl } : {}),
         };
       };
 
@@ -2137,6 +2145,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         updatedBy: actorId,
         history: nextHistory,
       };
+      // Field opsional (LOG-063): ditulis hanya bila diisi atau sebelumnya sudah ada
+      if (input.outputText !== undefined) {
+        const v = input.outputText.trim().slice(0, 1000);
+        if (v || existing.outputText !== undefined) patchFields.outputText = v;
+      }
+      if (input.fileUrl !== undefined) {
+        const raw = input.fileUrl.trim();
+        const v = raw && sanitizeExternalUrl(raw) !== '#' ? sanitizeExternalUrl(raw) : '';
+        if (v || existing.fileUrl !== undefined) patchFields.fileUrl = v;
+      }
 
       const nextWo: WorkOrder = { ...existing, ...patchFields };
       await commitWorkOrderPatch(id, patchFields, nextWo);

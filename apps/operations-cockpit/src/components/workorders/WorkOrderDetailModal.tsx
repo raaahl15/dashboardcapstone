@@ -8,6 +8,7 @@ import {
   ExternalLink,
   History,
   Link2,
+  MessageCircle,
   PauseCircle,
   Pencil,
   Play,
@@ -20,6 +21,8 @@ import {
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { WhatsAppShareButton } from '../common/WhatsAppShareButton';
+import { WaComposerModal } from './WaComposerModal';
+import { consumeWaAutoOpen, suggestTemplate } from '../../utils/waTemplates';
 import { sanitizeExternalUrl } from '../../context/appContextHelpers';
 import {
   computeProjectWeekFromDate,
@@ -75,6 +78,13 @@ export const WorkOrderDetailModal: React.FC = () => {
   const [actionError, setActionError] = useState('');
   const [actionInfo, setActionInfo] = useState('');
   const [isBusy, setIsBusy] = useState(false);
+  const [waOpen, setWaOpen] = useState(false);
+
+  // WO yang baru dibuat PM langsung membuka panel WA (template Ditugaskan)
+  useEffect(() => {
+    setWaOpen(Boolean(wo && isPM && consumeWaAutoOpen(wo.id)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [wo?.id]);
 
   useEffect(() => {
     if (!wo) return;
@@ -88,7 +98,7 @@ export const WorkOrderDetailModal: React.FC = () => {
   }, [wo?.id, wo?.evidenceUrl, wo?.evidenceNote]);
 
   useEffect(() => {
-    if (!wo) return;
+    if (!wo || waOpen) return; // Escape saat penyusun WA terbuka hanya menutup penyusun
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         if (reasonMode) {
@@ -100,7 +110,7 @@ export const WorkOrderDetailModal: React.FC = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [wo, reasonMode, setSelectedWorkOrderId]);
+  }, [wo, reasonMode, waOpen, setSelectedWorkOrderId]);
 
   if (!wo) return null;
 
@@ -259,6 +269,18 @@ export const WorkOrderDetailModal: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
+            {isPM ? (
+              <button
+                type="button"
+                onClick={() => setWaOpen(true)}
+                title={`Kirim pesan WhatsApp ${wo.code} (template Rakai)`}
+                aria-label={`Kirim pesan WhatsApp ${wo.code}`}
+                className="min-h-[44px] px-3.5 rounded-full bg-[#DCFCE7] hover:bg-[#BBF7D0] text-[#166534] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+              >
+                <MessageCircle className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">WhatsApp</span>
+              </button>
+            ) : (
             <WhatsAppShareButton
               label={`Bagikan ${wo.code} ke WhatsApp`}
               text={[
@@ -272,6 +294,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 .filter(Boolean)
                 .join('\n')}
             />
+            )}
             {isPM && wo.status !== 'Dibatalkan' && (
               <button
                 type="button"
@@ -358,6 +381,27 @@ export const WorkOrderDetailModal: React.FC = () => {
             <p className="text-xs text-[#0B1B33] leading-relaxed whitespace-pre-line">
               {wo.description || 'Tidak ada catatan instruksi tambahan.'}
             </p>
+            {(wo.outputText || wo.fileUrl) && (
+              <div className="pt-2 mt-1 border-t border-[#DCEBF7] space-y-1 text-xs">
+                {wo.outputText && (
+                  <p className="text-[#0B1B33]">
+                    <span className="font-bold">Output: </span>
+                    {wo.outputText}
+                  </p>
+                )}
+                {wo.fileUrl && sanitizeExternalUrl(wo.fileUrl) !== '#' && (
+                  <a
+                    href={sanitizeExternalUrl(wo.fileUrl)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 font-bold text-[#0062CC] hover:underline break-all"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 shrink-0" />
+                    Buka file kerja
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Grid Metadata: Penanggung Jawab, Pendukung, Waktu, Asal & Tautan Jadwal */}
@@ -873,6 +917,15 @@ export const WorkOrderDetailModal: React.FC = () => {
           )}
         </div>
       </div>
+
+      {isPM && (
+        <WaComposerModal
+          open={waOpen}
+          onClose={() => setWaOpen(false)}
+          wo={wo}
+          initialTemplate={suggestTemplate(wo)}
+        />
+      )}
     </div>
   );
 };
