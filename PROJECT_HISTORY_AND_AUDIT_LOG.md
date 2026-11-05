@@ -148,6 +148,15 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Halaman awal memuat **5 anggota** (makro `\namaE`/`\nimE`).
   - **Alat tulis opsi 1**: draf di Google Docs (master narasi), dipindah ke LaTeX saat finalisasi.
 
+### 18. Siklus Mingguan Work Order & Rencana Update Cockpit (2026-11-05)
+* **Keputusan PM** (Blueprint §7.4):
+  1. WO baru diunggah **Minggu 07.00**; dikerjakan sampai **Selasa 19.00**, lalu PIC mengajukan ke PM.
+  2. PM me-review **Selasa 19.30–22.00**. Tanpa revisi → selesai, dipaparkan Kamis, WA "WO disetujui PM". Ada revisi → WA "WO revisi", tenggat **Rabu 23.59**, toleransi sampai **Kamis 07.00**.
+  3. Semua WO dipaparkan di bimbingan Kamis. Revisi dosen → WA status revisi **Kamis 12.00**; tanpa revisi → selesai + WA status.
+  4. Revisi dosen dikerjakan sampai **Sabtu 19.00**, di-review PM sampai **22.00**.
+  5. **Minggu 07.00**: WA status revisi Sabtu + unggah WO baru. Siklus berulang.
+* **Rencana update** (Blueprint §7.5): UPD-01 status "Revisi", UPD-02 tenggat dengan jam + tenggat revisi terpisah — sementara keduanya **ditulis di pesan WhatsApp**; UPD-03 pesan WA terjadwal/otomatis; UPD-04 halaman Google Workspace menampilkan subfolder & file penting.
+
 ### 17. Format Nomor Jalur Pipa 6 Segmen & Legend Bahasa Inggris (2026-11-05)
 * **Konteks**: catatan dosen (Pak Oka) atas `DME_PID_Master_Legend.dxf`: penamaan lebih baik berbahasa Inggris, dan sertakan arti tiap segmen nomor jalur `xx-xx-xx-xx-xx-xx`. Agent menemukan format legend (6 segmen `4"-ME-10-1001-A1A-H`) berbeda dengan P&ID Rev B (5 segmen `6"-P-105-A1A-IH`).
 * **Keputusan PM**:
@@ -281,6 +290,26 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-061] 2026-11-05 10:50 WIB — Cek website pasca-impor B6; daftar WO; siklus mingguan WO
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Memverifikasi impor Bimbingan 6 di produksi, menyusun daftar WO aktif, dan mencatat alur kerja WO.
+* **Perubahan**:
+  - Blueprint **v2.5**: §7.4 siklus mingguan WO, §7.5 rencana update cockpit UPD-01…04 (belum dikerjakan).
+  - Kronologi #18 (BAB I).
+  - Daftar 10 WO aktif (PIC, instruksi, output, link Drive, status), dibagi **WO Minggu 6** (revisi dosen B6, tenggat **Sabtu 7 Nov 19.00**: WO-026, bagian SIS WO-024, WO-029, WO-030, penutupan WO-023/WO-006) dan **WO Minggu 7** (unggah **Minggu 8 Nov 07.00**: WO-027, WO-025, WO-031, lanjutan WO-024/WO-028) — diberikan di chat, tidak diubah di cockpit atas permintaan PM.
+* **Bukti / Verifikasi**:
+  - `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/ --dump` (PM login) → **14/14 modul, 0 error**, laporan `tools/out/smoke_console_2026-11-05T03-15-42-486Z.json`.
+  - Pemeriksaan isi teks halaman: MoM B6 (5/5), ACT-14 & ACT-19, WO-031, judul baru WO-026, logbook B6 terisi tanpa placeholder, agenda Bimbingan 7, subjudul Lampiran A → **semua tampil**. Legend Rev 1 terdaftar di registry (LOG-060) tetapi **tidak tampil** di halaman Google Workspace (halaman belum menampilkan `drive.files`) → UPD-04.
+  - Status 10 WO aktif dibaca dari halaman Work Order produksi.
+* **Keputusan**: lihat Kronologi #18.
+* **Tindak Lanjut**:
+  - [ ] **PM**: Kamis 5 Nov 12.00 kirim WA "WO revisi" untuk WO-026, WO-024 (bagian SIS), WO-029 (tenggat Sabtu 19.00, ditulis di pesan).
+  - [ ] **PM**: Minggu 8 Nov 07.00 umumkan status revisi Sabtu + WO Minggu 7.
+  - [ ] Rencana update UPD-01…04 menunggu keputusan PM untuk dikerjakan.
 
 ---
 

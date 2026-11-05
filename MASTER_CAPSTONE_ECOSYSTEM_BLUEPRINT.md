@@ -4,7 +4,7 @@
 **Tahun Akademik:** 2026/2027  
 **Dokumen Kontrol:** DOC-CAPSTONE-DME-2026-MASTER-001  
 **Status Anggaran:** Bebas biaya (Rp 0), berbasis FOSS, free tier, dan akun UGM — lihat batasan di BAB VII  
-**Versi:** 2.4 (v2.3 + konsolidasi cockpit 12 modul → 8 menu, audit Fase 4)  
+**Versi:** 2.5 (v2.4 + siklus mingguan Work Order & rencana update cockpit)  
 **Status Dokumen:** Disetujui PM (2026-11-03); v2.4 atas instruksi PM "lanjutkan P2" (2026-11-04)  
 **Catatan Riwayat Pengerjaan:** [`PROJECT_HISTORY_AND_AUDIT_LOG.md`](PROJECT_HISTORY_AND_AUDIT_LOG.md)
 
@@ -14,6 +14,7 @@
 
 | Versi | Tanggal | Penyusun | Ringkasan |
 | :--- | :--- | :--- | :--- |
+| 2.5 | 2026-11-05 | Claude Code (AI agent) + PM | §7.4 siklus mingguan Work Order (Minggu 07.00 → Selasa 19.00 → review PM → bimbingan Kamis → revisi Sabtu 19.00); §7.5 rencana update cockpit UPD-01…04 (LOG-061). |
 | 2.4 | 2026-11-04 | Claude Code (AI agent) + PM | BAB IV: 12 modul diringkas menjadi 8 menu dalam 3 grup; Action Item MoM = WO; Weekly Planner = tampilan Gantt; status deliverable §1.4 dengan progres dihitung (audit Fase 4 P1–P2, LOG-030/032). |
 | 1.0 | 2026-11-02 | Antigravity (AI agent) + PM | Konsep awal 8 bab, 5 pilar, roadmap 5 fase. |
 | 2.0 | 2026-11-03 | Claude Code (AI agent) + PM | Revisi konsep berdasarkan re-audit Fase 1: matriks kepemilikan data (SSOT), siklus status dokumen, aturan companion `.md` yang bisa diaudit, mesin kalkulator berbasis skrip, kebijakan penyimpanan Git vs Drive, pemisahan folder Git dan Drive, WhatsApp gateway dijadikan opsional, Fase 1.5 Remediasi, dan Definition of Done per fase. |
@@ -645,6 +646,32 @@ Setiap fase dinyatakan selesai **hanya jika semua butir Definition of Done (DoD)
 | WhatsApp | `wa.me` (utama); Baileys (opsional) | Baileys tidak resmi → risiko blokir nomor |
 | AutoCAD | Lisensi Autodesk Education | Hanya untuk keperluan pendidikan, non-komersial |
 | ODA File Converter (opsional) | Gratis | Diperlukan hanya jika ekspor DXF tidak dilakukan dari AutoCAD |
+
+### 7.4 Siklus Mingguan Work Order (keputusan PM 2026-11-05, v2.5)
+
+| Waktu | Kejadian | Status WO di cockpit | Pesan WhatsApp |
+| :--- | :--- | :--- | :--- |
+| **Minggu 07.00** | WO baru diunggah (penugasan) + status revisi Sabtu diumumkan | `Ditugaskan` | WO baru + status WO revisi Sabtu |
+| Minggu – **Selasa 19.00** | PIC mengerjakan | `Dikerjakan` | — |
+| **Selasa 19.00** | PIC mengajukan ke PM | `Diajukan` | — |
+| **Selasa 19.30–22.00** | PM me-review | — | — |
+| ↳ tanpa revisi | Dianggap selesai, dipaparkan di bimbingan | `Selesai` | "WO disetujui PM" |
+| ↳ ada revisi PM | Tenggat **Rabu 23.59**; toleransi sampai **Kamis 07.00** | `Dikerjakan` + tanda *perlu revisi* | "WO revisi" + tenggat |
+| **Kamis** (bimbingan) | Semua WO dipaparkan | — | — |
+| ↳ tanpa revisi dosen | WO final | `Selesai` | Status WO |
+| ↳ ada revisi dosen | WO dibuka ulang; tenggat **Sabtu 19.00** | dibuka ulang + *perlu revisi* | "WO revisi" pada **Kamis 12.00** |
+| **Sabtu 19.00–22.00** | PM me-review revisi | `Selesai` / tetap revisi | Diumumkan Minggu 07.00 |
+
+Siklus berulang setiap minggu. **Sementara**: status "Revisi" dan jam tenggat (19.00 / 23.59 / toleransi 07.00 / tenggat revisi) **ditulis di pesan WhatsApp**, karena cockpit belum mendukungnya (lihat §7.5).
+
+### 7.5 Rencana Update Cockpit (backlog, belum dikerjakan)
+
+| ID | Rencana | Alasan | Sementara |
+| :--- | :--- | :--- | :--- |
+| UPD-01 | Status WO **"Revisi"** tersendiri (kolom board) | Kini revisi = `Dikerjakan` + tanda *perlu revisi* | Status revisi ditulis di pesan WA |
+| UPD-02 | Tenggat **tanggal + jam**, plus **tenggat revisi terpisah** (Rabu 23.59 / Sabtu 19.00, toleransi Kamis 07.00) | `dueDate` hanya tanggal | Jam & tenggat revisi ditulis di pesan WA |
+| UPD-03 | **Pesan WhatsApp terjadwal/otomatis** sesuai siklus §7.4 (Minggu 07.00, Selasa malam, Kamis 12.00) | Kini manual lewat tombol bagikan WA di detail WO | Dikirim manual oleh PM |
+| UPD-04 | Halaman Google Workspace menampilkan subfolder (`symbol_libraries`, `templates`) dan daftar file penting (`drive.files`) | Registry sudah berisi data, tetapi halaman belum menampilkannya | Buka folder lewat Drive |
 
 ---
 
