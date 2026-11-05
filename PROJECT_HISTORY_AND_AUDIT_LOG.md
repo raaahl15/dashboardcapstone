@@ -148,6 +148,13 @@ Bagian ini merekam setiap tonggak penting (*milestone*), diskusi arsitektur, dan
   - Halaman awal memuat **5 anggota** (makro `\namaE`/`\nimE`).
   - **Alat tulis opsi 1**: draf di Google Docs (master narasi), dipindah ke LaTeX saat finalisasi.
 
+### 17. Format Nomor Jalur Pipa 6 Segmen & Legend Bahasa Inggris (2026-11-05)
+* **Konteks**: catatan dosen (Pak Oka) atas `DME_PID_Master_Legend.dxf`: penamaan lebih baik berbahasa Inggris, dan sertakan arti tiap segmen nomor jalur `xx-xx-xx-xx-xx-xx`. Agent menemukan format legend (6 segmen `4"-ME-10-1001-A1A-H`) berbeda dengan P&ID Rev B (5 segmen `6"-P-105-A1A-IH`).
+* **Keputusan PM**:
+  - Standar nomor jalur = **6 segmen** `SIZE-FLUID-AREA-SEQ-CLASS-INSUL` (bukan rekomendasi agent, yaitu 5 segmen + kode fluida). Konsekuensi: 6 line tag P&ID diganti di Rev C (WO-026).
+  - Legend direvisi menyeluruh: semua teks deskriptif berbahasa Inggris (nama resmi UGM/Departemen tetap), tag diselaraskan ke tag pabrik, penomoran area mengikuti konvensi proyek (10/20/30 = Area 1/2/3; 1xx/2xx/3xx untuk tag).
+* **Turunan (agent)**: SEQ = digit area + nomor stream (S-105 → 1005); kode insulasi mengikuti P&ID (IH/IC/PP/NI); kode fluida tanpa tanda hubung (`DME`, `DMV`).
+
 ### 16. Arahan Bimbingan 6 (Kamis 5 Nov 2026, Pak Thomas Oka Pratama)
 * **Konteks**: bimbingan ±9 menit, dipaparkan PM; rekaman ditranskripsi otomatis, lalu butir yang tidak terekam dikonfirmasi PM (LOG-057).
 * **Arahan dosen**:
@@ -274,6 +281,38 @@ Berdasarkan seluruh hasil audit di atas, kriteria keberhasilan Fase 1 dievaluasi
 ## BAB IV: Log Riwayat Pengerjaan (Living Changelog)
 
 Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB VI.
+
+---
+
+### [LOG-059] 2026-11-05 09:55 WIB — Legend P&ID Rev 1 (bahasa Inggris + penomoran jalur 6 segmen)
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul) meneruskan catatan dosen
+* **Fase**: konten PSTF 1 (Lampiran A)
+* **Tujuan**: Menindaklanjuti catatan dosen atas `DME_PID_Master_Legend.dxf` (Kronologi #17).
+* **Perubahan**:
+  - **Berkas baru (staging Drive, bukan Git)** `D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\symbol_libraries\`:
+    - `DME_PID_Master_Legend_Rev1.dxf` (sha256 `eb57e78bc4461434`, 4.241 KB, AC1009 sama dengan asli);
+    - `DME_PID_Master_Legend_Rev1_preview.png` (sha256 `cb61e77cc425591e`).
+    - Rev 0 (`bfeec58dd8355ff4`) **tidak ditimpa**.
+  - Isi Rev 1 (skrip `revise_legend.py` di scratchpad agent, ezdxf 1.4.5, edit teks saja):
+    - 97 teks diganti + 2 teks di blok (`S-04` → `S-104`, `SIL-2` → `SIL-n`) + 10 teks ditambah.
+    - Blok 01-A: anatomi `3"-ME-10-1001-A1A-NI` (S-101) dengan keterangan 6 segmen + baris kunci kode area/urutan & kelas/insulasi.
+    - Blok 01-B: 5 contoh jalur dengan uraian per segmen.
+    - Seluruh teks Indonesia → Inggris; tag lama → tag pabrik; area 10/20/30; label "PSTF 2" pada item SIS (opsi a).
+    - Title block: revisi baru **1 · 05-11-26 · IFR**; REV 0 → 1; STATUS AFC → **IFR**; kolom CHK/APP dikosongkan (belum diperiksa).
+    - Label R-101 & CSCOL-01/02 digeser keluar dari simbol (tumpang-tindih sejak Rev 0).
+  - Repo: `SYMBOL_LIBRARIES.md` Rev 0.3 (berkas Rev 1, §1a tabel arti 6 segmen, temuan kelas pipa).
+  - Cockpit: `import_5_bimbingan6.json` dibuat ulang (WO-026 + checklist ck-026-6 ganti line tag ke 6 segmen, ck-026-7 cek kelas pipa S-104/S-105) + berkas kecil `import_6_wo026_legend.json` (WO-026 & WO-031 saja, untuk bila import_5 versi awal sudah diimpor; WO-031 ikut agar `lastSeq` tetap 31).
+* **Bukti / Verifikasi**:
+  - `ezdxf` audit Rev 0 dan Rev 1: 0 error; entitas 1.133 → 1.143.
+  - Pemindaian teks Rev 1: tidak ada kata Indonesia / tag lama tersisa (kecuali nama resmi UGM/Departemen).
+  - Render SVG 1:1 → PNG (Edge headless): seluruh lembar + zoom blok 01, 06-A, title block dicek visual; tidak ada teks meluber.
+  - Kedua berkas impor: **LOLOS** validator asli cockpit.
+  - **Belum dibuka di AutoCAD**; pratinjau = render ezdxf, bukan plot AutoCAD.
+* **Keputusan**: lihat Kronologi #17.
+* **Tindak Lanjut**:
+  - [ ] **Antigravity**: unggah `DME_PID_Master_Legend_Rev1.dxf` + `_preview.png` ke Drive `03_CAD_DWG/symbol_libraries` (Rev 0 tetap sebagai arsip), daftarkan di registry.
+  - [ ] **JN**: buka Rev 1 di AutoCAD, cek tampilan/plot; P&ID Rev C: ganti 6 line tag ke format 6 segmen; cek kelas pipa S-104/S-105 (ASME B16.5).
+  - [ ] **PM**: impor `import_5_bimbingan6.json` (versi terbaru) — atau `import_6_wo026_legend.json` bila versi awal sudah diimpor.
 
 ---
 
