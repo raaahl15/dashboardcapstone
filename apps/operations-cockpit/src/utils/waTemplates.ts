@@ -106,7 +106,7 @@ export const bimbinganLabel = (thursday: Date, ctx: WaContext): string => {
 
 /**
  * Normalisasi nomor WA ke format wa.me (hanya angka, kode negara 62).
- * "+62 813-9279-2724" → "6281392792724"; "0813…" → "62813…"; "813…" → "62813…".
+ * "+62 812-3456-7890" → "6281234567890"; "0812…" → "62812…"; "812…" → "62812…".
  * Mengembalikan '' bila nomor tidak terbaca.
  */
 export const normalizeWaPhone = (raw?: string): string => {
@@ -116,7 +116,7 @@ export const normalizeWaPhone = (raw?: string): string => {
   return d.length >= 10 && d.length <= 15 ? d : '';
 };
 
-/** Tampilan nomor yang ramah dibaca: +62 813-9279-2724. */
+/** Tampilan nomor yang ramah dibaca: +62 812-3456-7890. */
 export const formatWaPhone = (digits: string): string => {
   if (!digits.startsWith('62')) return digits;
   const rest = digits.slice(2);

@@ -293,6 +293,23 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-066] 2026-11-05 14:30 WIB — Merge `wa-ai-tutorial`; persiapan repo publik
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("langsung merge"; repo dijadikan publik)
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Menayangkan tutorial AI (LOG-065) dan memastikan repo aman sebelum dijadikan publik.
+* **Perubahan**:
+  - Merge `--no-ff` branch `wa-ai-tutorial` ke `main` (commit `8fa2202`), deploy Vercel produksi.
+  - `waTemplates.ts`: contoh nomor di 2 komentar diganti nomor palsu (`+62 812-3456-7890`). Sebelumnya contoh itu memakai **nomor asli seorang anggota**; kesalahan agent di commit `7522c2d` (LOG-063). Hanya komentar, perilaku tidak berubah, langsung di `main`.
+* **Bukti / Verifikasi**:
+  - `npm run check` PASS setelah merge.
+  - Pemindaian kredensial seluruh riwayat git (private key, token GitHub/OpenAI/Anthropic/Slack, API key Google, `client_secret`, `refresh_token`): **0 file** di luar log ini. File `.env` yang ter-track hanya `.env.example` berisi placeholder.
+  - Tidak ada nomor WA anggota lain di file ter-track.
+* **Catatan**: nomor anggota tadi **masih ada di riwayat commit `7522c2d`**. Bila repo dibuka publik tanpa penulisan ulang riwayat, nomor itu bisa dilihat lewat riwayat commit.
+* **Tindak Lanjut**:
+  - [ ] **PM**: putuskan tulis ulang riwayat (hapus nomor dari `7522c2d`, perlu force-push `main`) atau terima apa adanya, lalu ubah repo menjadi publik di GitHub (Settings → General → Danger Zone → Change visibility). `gh` CLI tidak terpasang di laptop ini.
+
+---
+
 ### [LOG-065] 2026-11-05 14:15 WIB — Tutorial kerja dengan AI di template WA WO (branch `wa-ai-tutorial`, belum merge)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (Rahul)
 * **Fase**: operasional (pasca-roadmap)
