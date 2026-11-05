@@ -293,6 +293,20 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-062] 2026-11-05 11:00 WIB — Template pesan WhatsApp WO; agent bernama "Rakai"
+* **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Menyiapkan template pesan WA untuk setiap titik siklus mingguan WO (Blueprint §7.4).
+* **Perubahan**:
+  - **Baru** `06_COLLABORATIVE_WORKSPACE/TEMPLATE_PESAN_WA_WO.md` (status WIP): T1 Minggu 07.00 (status revisi Sabtu + WO baru), T2 Selasa 12.00 pengingat (opsional), T3 WO disetujui PM, T4 WO revisi PM (tenggat Rabu 23.59, toleransi Kamis 07.00), T5 WO revisi dosen (Kamis 12.00, tenggat Sabtu 19.00), T6 WO selesai tanpa revisi dosen; plus **contoh terisi T5 Bimbingan 6** (WO-026, WO-024 bagian SIS, WO-029).
+  - **Keputusan PM**: Claude Code diberi nama **Rakai** (sapaan "Rakai"/"Kai"). Setiap pesan WA dibuka dengan "Halo, aku *Rakai*, agen AI Claude Code sekaligus asisten AI Rahul (PM Area 1)" dan ditutup "— Rakai, atas nama Rahul (PM)". Status revisi & jam tenggat ditulis di pesan (UPD-01/02).
+  - Data cockpit dibundel ulang (`build_manifest.js`) karena companion `.md` baru.
+* **Bukti / Verifikasi**: `npm run check` PASS (lewat `sync:push`).
+* **Tindak Lanjut**:
+  - [ ] **PM**: kirim contoh T5 Bimbingan 6 hari ini pukul 12.00.
+
+---
+
 ### [LOG-061] 2026-11-05 10:50 WIB — Cek website pasca-impor B6; daftar WO; siklus mingguan WO
 * **Pelaksana**: Claude Code (AI agent), atas instruksi PM (Rahul)
 * **Fase**: operasional (pasca-roadmap)
