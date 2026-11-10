@@ -293,6 +293,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-071] 2026-11-11 WIB — Desain UI/UX cockpit v2.0 (FigCraft) + arsip v1
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("menu & fitur tetap, UI/UX berubah semua; ikuti panduan personal web; arsipkan desain sebelumnya; review via PDF di iPad")
+* **Fase**: operasional (pasca-roadmap) — tahap desain, belum implementasi kode
+* **Tujuan**: Redesain total tampilan Operations Cockpit memakai design system Personal Web v1.0, tanpa mengubah menu/fitur (8 menu, 14 modul).
+* **Sumber panduan**: repo `raaahl15/personal-web` `MASTER.md` §6 (K-09–K-24: Sky Blue monokrom, glassmorphism, Outfit + Inter + Instrument Serif Italic, dark/light), file `2026-11-10_personal-web-ui-v1.0.figcraft` (lokal + Drive `06 - Design Files/2026-11-10_ui-v1.0`), referensi Drive `02 - Design References`.
+* **Perubahan**:
+  - **Arsip v1**: git tag `cockpit-ui-v1` di commit `915f09f` (di-push ke GitHub). Cockpit v1 tidak punya file desain; cara kembali: `git checkout cockpit-ui-v1 -- apps/operations-cockpit/src`. Produksi tetap v1 sampai v2.0 disetujui & diimplementasi.
+  - **File desain baru** (di luar repo): `D:\rahul\dme-cockpit-design\2026-11-11_cockpit-ui-v2.0.figcraft`. Salinan design system Personal Web dihapus dari file ini setelah dipastikan aslinya ada di Drive; diganti Cover & Foundations khusus Cockpit v2.0 (palet 16, token Light/Dark, tipografi, semantik status WO/prioritas/siklus dokumen, aturan layout & gerak) + komponen Sidebar/Cockpit, BottomNav/Cockpit, WOCard, RaciCell A/R/C/I, DeliverableCard.
+  - **01 Desktop (17 layar)**: Login, Beranda Light & Dark, Work Order board, detail WO (drawer + kirim WA ke PIC), Jadwal Gantt, Tim & RACI, Data Rekayasa (Neraca HMB, Kalkulator, Validasi Tag), Dokumen (Deliverable, Google Workspace, Companion .md, Standar & Regulasi), Rapat & Logbook (MoM, Logbook), Stage-Gate. Isi memakai data asli cockpit (smoke dump 10 Nov, `tag_validation_report.json`).
+  - **02 Mobile (3 layar)**: Beranda Light & Dark, detail WO (bottom sheet). **99**: halaman arsip v1.
+* **Bukti / Verifikasi**:
+  - Font Outfit & Instrument Serif diunduh di FigCraft (izin dari PM), `text.missingFonts` = kosong; teks di-refit.
+  - PDF review di `D:\rahul\dme-cockpit-design\export\`: `00_cover-design-system.pdf` (3 hlm), `01_cockpit-desktop.pdf` (17 hlm), `02_cockpit-mobile.pdf` (3 hlm), `99_arsip-v1.pdf` (1 hlm). Pratinjau halaman 1–3 desktop dicek: font ter-embed, urutan sesuai alur menu.
+* **Catatan**: Inter yang terpasang di FigCraft tidak punya bobot Medium (tampil Regular). Email anggota tidak dipakai di desain (field login memakai contoh `nama@mail.ugm.ac.id`).
+* **Tindak Lanjut**:
+  - [ ] PM: review PDF di iPad, beri catatan revisi.
+  - [ ] Setelah disetujui: implementasi v2.0 di `apps/operations-cockpit` bertahap per menu (token tema → shell/sidebar → per halaman), tiap tahap lewat `npm run check` + smoke test.
+
+---
+
 ### [LOG-070] 2026-11-11 WIB — Akun Ihsan tampil sebagai Rahul (bug identitas pengguna)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas laporan PM ("akun ihsan bermasalah")
 * **Fase**: operasional (pasca-roadmap)
