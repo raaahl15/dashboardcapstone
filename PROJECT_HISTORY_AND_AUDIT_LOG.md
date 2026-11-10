@@ -293,6 +293,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-070] 2026-11-11 WIB — Akun Ihsan tampil sebagai Rahul (bug identitas pengguna)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas laporan PM ("akun ihsan bermasalah")
+* **Fase**: operasional (pasca-roadmap)
+* **Gejala**: login dengan akun Ihsan → beranda "Selamat datang, Rahul", widget "Tugas Saya" berisi WO milik PM (WO-006, WO-023, WO-028); tombol "Buat Work Order" tidak muncul (hak PM tidak bocor).
+* **Akar masalah**:
+  - Data: dokumen `users/ZrDyqd…` (Ihsan, ID = UID Firebase) menyimpan field **`legacyid`** (salah huruf), bukan `legacyId`. Aplikasi tidak menemukan dokumen ber-ID/legacyId `user-ihsan`.
+  - Kode: `currentUser` di `AppContext.tsx` jatuh ke `users[0]` (Rahul) bila pencarian ID gagal, sehingga sesi tampil sebagai anggota lain; simpan profil/logbook berisiko tercatat atas nama Rahul.
+* **Perubahan**:
+  - Data (oleh PM di Firestore Console): field dokumen Ihsan dibetulkan menjadi `legacyId` = `user-ihsan`.
+  - `appContextHelpers.ts`: `sortAndNormalizeUsers` menentukan `legacyId` dari `legacyId` → salah ketik `legacyid` → pemetaan email resmi anggota; key `legacyid` dibuang dari state.
+  - `AppContext.tsx`: pencocokan pengguna aktif juga lewat email login Firebase (`currentUserEmail`); sesi login yang tidak cocok tidak lagi memakai `users[0]`, melainkan entri `INITIAL_USERS` sesuai ID.
+* **Bukti / Verifikasi**:
+  - `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/ --dump` (login akun Ihsan) → 14/14 modul, 0 error console, tetapi teks beranda "Selamat datang, Rahul" → bug terkonfirmasi. Laporan: `tools/out/smoke_console_2026-11-10T17-31-33-418Z.json`.
+  - Tes normalisasi (skrip sementara, data tiruan: `legacyId` benar / `legacyid` salah ketik / tanpa legacy) → PASS. `tsc --noEmit` PASS, `vite build` PASS, `npm run check` PASS.
+* **Tindak Lanjut**:
+  - [ ] Smoke test ulang pasca-deploy dengan akun Ihsan (beranda harus "Selamat datang, Ihsan").
+  - [ ] PM: cek 4 dokumen `users` lain untuk salah ketik field serupa.
+
+---
+
 ### [LOG-069] 2026-11-10 12:30 WIB — WO-031 langkah 1: penelusuran sumber batas suhu katalis & kinetika (TBD-04)
 * **Pelaksana**: Claude Code (AI), atas instruksi PM
 * **Fase**: operasional (pasca-roadmap)

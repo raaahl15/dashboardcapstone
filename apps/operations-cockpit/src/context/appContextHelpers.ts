@@ -120,9 +120,39 @@ export function translateAuthError(err: unknown): string {
   return `Gagal masuk (${code || 'unknown'}). Periksa koneksi dan coba lagi.`;
 }
 
+const CANONICAL_ID_BY_EMAIL = new Map<string, string>(
+  INITIAL_USERS.map((u) => [u.email.toLowerCase(), u.id])
+);
+
+/**
+ * Tentukan legacyId (ID kanonik 'user-...') untuk dokumen users ber-ID UID.
+ * Urutan: field `legacyId` → salah ketik `legacyid` (pernah terjadi di dokumen Ihsan, LOG-069)
+ * → pemetaan email resmi anggota. Dokumen yang ID-nya sudah kanonik tidak diberi legacyId.
+ */
+function resolveLegacyId(u: User): string | undefined {
+  const raw = u as User & { legacyid?: unknown };
+  const explicit =
+    typeof u.legacyId === 'string' && u.legacyId.trim()
+      ? u.legacyId.trim()
+      : typeof raw.legacyid === 'string' && raw.legacyid.trim()
+        ? raw.legacyid.trim()
+        : undefined;
+  if (explicit) return explicit;
+  const byEmail =
+    typeof u.email === 'string' ? CANONICAL_ID_BY_EMAIL.get(u.email.trim().toLowerCase()) : undefined;
+  return byEmail && byEmail !== u.id ? byEmail : undefined;
+}
+
 export function sortAndNormalizeUsers(rawUsers: User[]): User[] {
   const validIncoming = Array.isArray(rawUsers)
-    ? rawUsers.filter((u): u is User => Boolean(u && u.id))
+    ? rawUsers
+        .filter((u): u is User => Boolean(u && u.id))
+        .map((u) => {
+          const { legacyid: _typo, ...rest } = u as User & { legacyid?: unknown };
+          void _typo;
+          const legacyId = resolveLegacyId(u);
+          return legacyId ? { ...rest, legacyId } : rest;
+        })
     : [];
 
   if (validIncoming.length === 0) {

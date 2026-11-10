@@ -147,6 +147,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return INITIAL_USERS;
   });
   const [currentUserId, setCurrentUserId] = useState('');
+  const [currentUserEmail, setCurrentUserEmail] = useState('');
   const [config, setConfig] = useState<Config>(INITIAL_CONFIG);
   const [tasks, setTasks] = useState<TaskItem[]>(INITIAL_TASKS);
   const [deliverables, setDeliverables] = useState<DeliverableItem[]>(INITIAL_DELIVERABLES);
@@ -199,16 +200,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   // Matched active user from single source of truth `users` (matches id or legacyId)
   const matchedCurrentUser = useMemo(() => {
     if (!currentUserId) return undefined;
-    return users.find(
+    const byId = users.find(
       (u) =>
         u.id === currentUserId ||
         (Boolean(u.legacyId) && u.legacyId === currentUserId)
     );
-  }, [users, currentUserId]);
+    if (byId) return byId;
+    // Cadangan: cocokkan lewat email login Firebase bila ID dokumen tidak cocok (LOG-069)
+    const email = currentUserEmail.trim().toLowerCase();
+    return email
+      ? users.find((u) => typeof u.email === 'string' && u.email.trim().toLowerCase() === email)
+      : undefined;
+  }, [users, currentUserId, currentUserEmail]);
 
   const currentUser = useMemo(() => {
-    return matchedCurrentUser || users[0];
-  }, [matchedCurrentUser, users]);
+    if (matchedCurrentUser) return matchedCurrentUser;
+    // Jangan pernah menampilkan anggota lain (users[0] = PM) untuk sesi yang sudah login (LOG-069)
+    if (currentUserId) {
+      const fromInitial = INITIAL_USERS.find((u) => u.id === currentUserId);
+      if (fromInitial) return fromInitial;
+    }
+    return users[0];
+  }, [matchedCurrentUser, currentUserId, users]);
 
   // Jangan pernah memberikan hak isPM dari fallback users[0] saat currentUserId kosong/tidak cocok
   const isPM = Boolean(
@@ -475,6 +488,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setIsWorkOrdersLoaded(true);
       setIsLoggedIn(false);
       setCurrentUserId('');
+      setCurrentUserEmail('');
       setIsLoading(false);
       return;
     }
@@ -501,6 +515,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         if (!firebaseUser) {
           setIsLoggedIn(false);
           setCurrentUserId('');
+          setCurrentUserEmail('');
           setWorkOrders([]);
           setIsUsersLoaded(true);
           setIsWorkOrdersLoaded(true);
@@ -520,6 +535,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           setAuthError('Akun ini tidak terdaftar sebagai anggota tim Area 1.');
           setIsLoggedIn(false);
           setCurrentUserId('');
+          setCurrentUserEmail('');
           setIsUsersLoaded(true);
           setIsLoading(false);
           void signOut(firebaseAuth).catch((error: unknown) => {
@@ -533,6 +549,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         setAuthError(null);
         setSyncError(null);
         setCurrentUserId(matchedUser.id);
+        setCurrentUserEmail(firebaseUser.email ?? '');
         setIsLoggedIn(true);
         setIsLoading(true);
 
@@ -918,6 +935,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setIsDataLoaded(false);
     setIsWorkOrdersLoaded(false);
     setCurrentUserId('');
+    setCurrentUserEmail('');
     setActiveTab('homepage');
     setSelectedWorkOrderId(null);
     setIsWorkOrderFormOpen(false);
