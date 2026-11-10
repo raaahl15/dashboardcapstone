@@ -308,7 +308,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/ --dump` (login akun Ihsan) → 14/14 modul, 0 error console, tetapi teks beranda "Selamat datang, Rahul" → bug terkonfirmasi. Laporan: `tools/out/smoke_console_2026-11-10T17-31-33-418Z.json`.
   - Tes normalisasi (skrip sementara, data tiruan: `legacyId` benar / `legacyid` salah ketik / tanpa legacy) → PASS. `tsc --noEmit` PASS, `vite build` PASS, `npm run check` PASS.
 * **Tindak Lanjut**:
-  - [ ] Smoke test ulang pasca-deploy dengan akun Ihsan (beranda harus "Selamat datang, Ihsan").
+  - [x] Smoke test ulang pasca-deploy (`cb463ff`, bundle `AppContext-DpC8LjST.js` = build lokal) dengan akun Ihsan → 14/14 modul, 0 error; beranda "Selamat datang, Ihsan"; "Tugas Saya" = WO-025, WO-030, WO-031; tombol "Buat Work Order" tidak tampil. Laporan: `tools/out/smoke_console_2026-11-10T17-49-41-082Z.json`.
   - [ ] PM: cek 4 dokumen `users` lain untuk salah ketik field serupa.
 
 ---
