@@ -14,9 +14,9 @@ interface Health {
 
 type Tone = 'ok' | 'warn' | 'bad';
 const TONE: Record<Tone, string> = {
-  ok: 'text-[#047857] bg-[#D1FAE5]',
-  warn: 'text-[#92400E] bg-[#FEF3C7]',
-  bad: 'text-[#991B1B] bg-[#FEE2E2]',
+  ok: 'text-success bg-success-soft',
+  warn: 'text-warm bg-warm-soft',
+  bad: 'text-danger bg-danger-soft',
 };
 
 /** Panel "Kesehatan Data" (Blueprint BAB IV, tambahan v2.0). Data dari public/data/health.json. */
@@ -45,7 +45,7 @@ export const DataHealthPanel: React.FC = () => {
     }
   }, [exportDataToJson]);
 
-  if (error) return <div className="glass-card p-4 text-xs text-[#991B1B]">Panel Kesehatan Data: {error}</div>;
+  if (error) return <div className="glass-card p-4 text-xs text-danger">Panel Kesehatan Data: {error}</div>;
   if (!data) return null;
 
   const age = daysSince(data.hmb.extracted_at) ?? 0;
@@ -109,8 +109,8 @@ export const DataHealthPanel: React.FC = () => {
   return (
     <section className="glass-card p-4 sm:p-5" aria-label="Kesehatan Data">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-        <h2 className="font-heading font-bold text-base text-[#0B1B33]">Kesehatan Data Rekayasa</h2>
-        <span className="text-[11px] text-[#4A5A72]">Dibundel {fmtDateTime(data.generated_at)}</span>
+        <h2 className="font-heading font-bold text-base text-fg">Kesehatan Data Rekayasa</h2>
+        <span className="text-[11px] text-fg-3">Dibundel {fmtDateTime(data.generated_at)}</span>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-3">
         {tiles.map((t) => (
@@ -118,16 +118,16 @@ export const DataHealthPanel: React.FC = () => {
             key={t.key}
             type="button"
             onClick={() => setActiveTab(t.tab)}
-            className="text-left min-h-[44px] p-3.5 rounded-2xl bg-white/80 border border-white hover:bg-white transition-all"
+            className="text-left min-h-[44px] p-3.5 rounded-2xl bg-surface/80 border border-glass-stroke hover:bg-surface transition-all"
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="text-[11px] font-semibold text-[#4A5A72] inline-flex items-center gap-1.5">
+              <span className="text-[11px] font-semibold text-fg-3 inline-flex items-center gap-1.5">
                 {t.icon} {t.title}
               </span>
               <span className={`w-2.5 h-2.5 rounded-full ${TONE[t.tone].split(' ')[1]}`} aria-hidden />
             </div>
             <p className={`mt-1 inline-block px-2 py-0.5 rounded-full font-heading font-bold text-sm ${TONE[t.tone]}`}>{t.value}</p>
-            <p className="mt-1 text-[11px] text-[#4A5A72] leading-snug">{t.detail}</p>
+            <p className="mt-1 text-[11px] text-fg-3 leading-snug">{t.detail}</p>
           </button>
         ))}
       </div>

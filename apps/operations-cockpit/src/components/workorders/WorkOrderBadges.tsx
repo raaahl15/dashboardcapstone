@@ -22,45 +22,45 @@ export const STATUS_BADGE_CONFIG: Record<
   }
 > = {
   Ditugaskan: {
-    bg: 'bg-[#E2E8F0]',
-    text: 'text-[#334155]',
-    border: 'border-[#CBD5E1]',
-    dot: 'bg-[#64748B]',
+    bg: 'bg-muted',
+    text: 'text-fg-2',
+    border: 'border-line-strong',
+    dot: 'bg-fg-3',
     Icon: Clock,
   },
   Dikerjakan: {
-    bg: 'bg-[#DBEAFE]',
-    text: 'text-[#1E3A8A]',
-    border: 'border-[#93C5FD]',
-    dot: 'bg-[#1D4ED8]',
+    bg: 'bg-primary-soft',
+    text: 'text-fg-2',
+    border: 'border-line',
+    dot: 'bg-primary',
     Icon: PlayCircle,
   },
   Blocked: {
-    bg: 'bg-[#FEE2E2]',
-    text: 'text-[#991B1B]',
-    border: 'border-[#FCA5A5]',
-    dot: 'bg-[#B91C1C]',
+    bg: 'bg-danger-soft',
+    text: 'text-danger',
+    border: 'border-danger-line',
+    dot: 'bg-danger-solid',
     Icon: PauseCircle,
   },
   Diajukan: {
-    bg: 'bg-[#FEF3C7]',
-    text: 'text-[#92400E]',
-    border: 'border-[#FCD34D]',
-    dot: 'bg-[#B45309]',
+    bg: 'bg-warm-soft',
+    text: 'text-warm',
+    border: 'border-warm-line',
+    dot: 'bg-warm-solid',
     Icon: Send,
   },
   Selesai: {
-    bg: 'bg-[#D1FAE5]',
-    text: 'text-[#065F46]',
-    border: 'border-[#6EE7B7]',
-    dot: 'bg-[#047857]',
+    bg: 'bg-success-soft',
+    text: 'text-success',
+    border: 'border-success-line',
+    dot: 'bg-success-solid',
     Icon: CheckCircle2,
   },
   Dibatalkan: {
-    bg: 'bg-[#F1F5F9]',
-    text: 'text-[#475569]',
-    border: 'border-[#CBD5E1]',
-    dot: 'bg-[#94A3B8]',
+    bg: 'bg-muted',
+    text: 'text-fg-3',
+    border: 'border-line-strong',
+    dot: 'bg-fg-3',
     Icon: Ban,
   },
 };
@@ -74,24 +74,24 @@ export const PRIORITY_BADGE_CONFIG: Record<
   }
 > = {
   Rendah: {
-    bg: 'bg-[#F1F5F9]',
-    text: 'text-[#334155]',
-    border: 'border-[#CBD5E1]',
+    bg: 'bg-muted',
+    text: 'text-fg-2',
+    border: 'border-line-strong',
   },
   Normal: {
-    bg: 'bg-[#EAF6FD]',
-    text: 'text-[#0062CC]',
-    border: 'border-[#BAE6FD]',
+    bg: 'bg-muted',
+    text: 'text-primary',
+    border: 'border-line',
   },
   Tinggi: {
-    bg: 'bg-[#FEF3C7]',
-    text: 'text-[#92400E]',
-    border: 'border-[#FDE68A]',
+    bg: 'bg-warm-soft',
+    text: 'text-warm',
+    border: 'border-warm-line',
   },
   Kritis: {
-    bg: 'bg-[#FEE2E2]',
-    text: 'text-[#991B1B]',
-    border: 'border-[#FECACA]',
+    bg: 'bg-danger-soft',
+    text: 'text-danger',
+    border: 'border-danger-line',
   },
 };
 
@@ -115,7 +115,7 @@ export const WorkOrderStatusBadge: React.FC<{
       </span>
       {needsRevision && status === 'Dikerjakan' && (
         <span
-          className={`inline-flex items-center gap-1 rounded-full font-bold border bg-[#FEF3C7] text-[#92400E] border-[#FCD34D] ${sizeCls}`}
+          className={`inline-flex items-center gap-1 rounded-full font-bold border bg-warm-soft text-warm border-warm-line ${sizeCls}`}
         >
           <RotateCcw className="w-2.5 h-2.5 shrink-0" />
           <span>Revisi</span>
@@ -149,7 +149,7 @@ export const WorkOrderOverdueBadge: React.FC<{
     size === 'sm' ? 'px-2.5 py-0.5 text-[11px]' : 'px-2 py-0.5 text-[10px]';
   return (
     <span
-      className={`inline-flex items-center gap-1 rounded-full font-bold bg-[#B91C1C] text-white ${sizeCls}`}
+      className={`inline-flex items-center gap-1 rounded-full font-bold bg-danger-solid text-on-ink ${sizeCls}`}
     >
       <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
       <span>

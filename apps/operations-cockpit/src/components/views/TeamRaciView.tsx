@@ -91,11 +91,11 @@ export const TeamRaciView: React.FC = () => {
   ) => {
     const isClickable = isPM && isEditMode;
 
-    let bg = 'bg-[#E2E8F0] text-[#334155]';
-    if (val === 'R') bg = 'bg-[#D1FAE5] text-[#065F46] font-bold';
-    else if (val === 'A') bg = 'bg-[#DBEAFE] text-[#1E3A8A] font-extrabold';
-    else if (val === 'C') bg = 'bg-[#FEF3C7] text-[#92400E] font-bold';
-    else if (val === 'I') bg = 'bg-[#E2E8F0] text-[#4A5A72] font-semibold';
+    let bg = 'bg-muted text-fg-2';
+    if (val === 'R') bg = 'bg-success-soft text-success font-bold';
+    else if (val === 'A') bg = 'bg-primary-soft text-fg-2 font-extrabold';
+    else if (val === 'C') bg = 'bg-warm-soft text-warm font-bold';
+    else if (val === 'I') bg = 'bg-muted text-fg-3 font-semibold';
 
     return (
       <button
@@ -104,7 +104,7 @@ export const TeamRaciView: React.FC = () => {
         onClick={() => cycleRaciValue(rowId, userUid, val)}
         className={`w-11 h-11 rounded-xl flex items-center justify-center font-heading text-xs transition-all ${bg} ${
           isClickable
-            ? 'cursor-pointer hover:scale-105 active:scale-95 hover:ring-2 hover:ring-[#0062CC]'
+            ? 'cursor-pointer hover:scale-105 active:scale-95 hover:ring-2 hover:ring-focus'
             : 'cursor-default'
         }`}
         title={isClickable ? 'Klik untuk menggilir status RACI (R -> A -> C -> I)' : undefined}
@@ -132,37 +132,37 @@ export const TeamRaciView: React.FC = () => {
     <div className="space-y-4 animate-in fade-in duration-200">
       {/* Header */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
           Tim &amp; Matriks RACI
         </h1>
 
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
           <div className="xl:col-span-7 flex flex-col justify-between gap-2.5">
             <div className="glass-faint px-4 py-2.5 flex items-center">
-              <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+              <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
                 Struktur tata kelola EPC dan akuntabilitas deliverable sesuai KAK-IC-DME-2026-001
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
                 EPC WORK PACKAGE 1.0
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
                 Revisi Dokumen: Rev.03
               </span>
             </div>
           </div>
 
           <div className="xl:col-span-5 flex flex-wrap items-end gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
               <Users className="w-3.5 h-3.5" /> {users.length} Engineers
             </span>
-            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
               <FileText className="w-3.5 h-3.5" /> 6 Core Deliverables
             </span>
-            <span className="h-8 px-3.5 rounded-full bg-[#D1FAE5] border border-white/70 text-[#065F46] text-[12px] font-semibold inline-flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> PM AUTHORIZATION ACTIVE
+            <span className="h-8 px-3.5 rounded-full bg-success-soft border border-glass-stroke text-success text-[12px] font-semibold inline-flex items-center gap-2">
+              <ShieldCheck className="w-3.5 h-3.5 text-success" /> PM AUTHORIZATION ACTIVE
             </span>
           </div>
         </div>
@@ -173,11 +173,11 @@ export const TeamRaciView: React.FC = () => {
         {/* ==================== LEFT: Struktur Tim Operasional (5 cols) ==================== */}
         <div className="lg:col-span-5 glass-card p-5 sm:p-6 space-y-4 lg:flex lg:flex-col">
           <div className="flex items-center justify-between">
-            <h2 className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#0062CC]" />
+            <h2 className="font-heading font-bold text-base text-fg flex items-center gap-2">
+              <Users className="w-4 h-4 text-primary" />
               Struktur Tim Operasional
             </h2>
-            <span className="text-[11px] text-[#4A5A72] font-medium">
+            <span className="text-[11px] text-fg-3 font-medium">
               Klik kartu untuk flip rincian
             </span>
           </div>
@@ -201,7 +201,7 @@ export const TeamRaciView: React.FC = () => {
 
             {/* Connecting Tree Line */}
             <div className="flex w-full justify-center">
-              <div className="h-full w-0.5 bg-[#C9DCEB]"></div>
+              <div className="h-full w-0.5 bg-line"></div>
             </div>
 
             {/* Level 2: Ihsan & Althaf */}
@@ -228,7 +228,7 @@ export const TeamRaciView: React.FC = () => {
 
             {/* Connecting Tree Line */}
             <div className="flex w-full justify-center">
-              <div className="h-full w-0.5 bg-[#C9DCEB]"></div>
+              <div className="h-full w-0.5 bg-line"></div>
             </div>
 
             {/* Level 3: Jonathan & Heidi */}
@@ -259,10 +259,10 @@ export const TeamRaciView: React.FC = () => {
         <div className="lg:col-span-7 glass-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="font-heading font-bold text-base text-[#0B1B33]">
+              <h2 className="font-heading font-bold text-base text-fg">
                 Matriks RACI Capstone FEED &amp; DED
               </h2>
-              <p className="text-xs text-[#4A5A72]">
+              <p className="text-xs text-fg-3">
                 Pemetaan peran tanggung jawab per paket dokumen rekayasa
               </p>
             </div>
@@ -275,17 +275,17 @@ export const TeamRaciView: React.FC = () => {
                     onClick={() => setIsEditMode(!isEditMode)}
                     className={`min-h-[44px] px-4 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
                       isEditMode
-                        ? 'bg-[#0B1B33] text-white shadow-xs'
-                        : 'bg-white hover:bg-[#EAF6FD] text-[#0B1B33] border border-[#C9DCEB]'
+                        ? 'bg-ink text-on-ink shadow-xs'
+                        : 'bg-surface hover:bg-muted text-fg border border-line'
                     }`}
                   >
-                    <Edit3 className="w-3.5 h-3.5 text-[#0062CC]" />
+                    <Edit3 className="w-3.5 h-3.5 text-primary" />
                     {isEditMode ? 'Selesai Edit' : 'Mode Edit'}
                   </button>
                   <button
                     type="button"
                     onClick={() => setShowAddRowModal(true)}
-                    className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                    className="min-h-[44px] px-4 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Tambah Baris
@@ -296,36 +296,36 @@ export const TeamRaciView: React.FC = () => {
           </div>
 
           {/* Rule Warning Callout */}
-          <div className="p-3.5 bg-[#FEF3C7]/80 rounded-2xl border border-[#B45309]/20 flex items-start gap-2.5 text-xs text-[#92400E]">
-            <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-warm-soft/80 rounded-2xl border border-warm-line/20 flex items-start gap-2.5 text-xs text-warm">
+            <AlertTriangle className="w-4 h-4 text-warm shrink-0 mt-0.5" />
             <p className="leading-snug">
               Tiap baris sebaiknya punya tepat satu <strong>A (Accountable)</strong> dan minimal satu <strong>R (Responsible)</strong> untuk menjamin ketertelusuran dokumen.
             </p>
           </div>
 
           {/* RACI Legend */}
-          <div className="flex flex-wrap items-center gap-3 p-2.5 bg-white/50 rounded-2xl border border-white/80 text-xs">
-            <span className="font-bold text-[#0B1B33] text-[11px] uppercase">LEGENDA RACI:</span>
-            <span className="flex items-center gap-1.5 text-[#065F46] font-semibold text-[11px]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#047857]"></span> R Responsible
+          <div className="flex flex-wrap items-center gap-3 p-2.5 bg-surface/50 rounded-2xl border border-glass-stroke text-xs">
+            <span className="font-bold text-fg text-[11px] uppercase">LEGENDA RACI:</span>
+            <span className="flex items-center gap-1.5 text-success font-semibold text-[11px]">
+              <span className="w-2.5 h-2.5 rounded-full bg-success-solid"></span> R Responsible
             </span>
-            <span className="flex items-center gap-1.5 text-[#1E3A8A] font-semibold text-[11px]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#007BFF]"></span> A Accountable
+            <span className="flex items-center gap-1.5 text-fg-2 font-semibold text-[11px]">
+              <span className="w-2.5 h-2.5 rounded-full bg-primary"></span> A Accountable
             </span>
-            <span className="flex items-center gap-1.5 text-[#92400E] font-semibold text-[11px]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#B45309]"></span> C Consulted
+            <span className="flex items-center gap-1.5 text-warm font-semibold text-[11px]">
+              <span className="w-2.5 h-2.5 rounded-full bg-warm-solid"></span> C Consulted
             </span>
-            <span className="flex items-center gap-1.5 text-[#334155] font-semibold text-[11px]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#64748B]"></span> I Informed
+            <span className="flex items-center gap-1.5 text-fg-2 font-semibold text-[11px]">
+              <span className="w-2.5 h-2.5 rounded-full bg-fg-3"></span> I Informed
             </span>
           </div>
 
           {/* RACI Matrix Table */}
-          <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
+          <div className="overflow-x-auto rounded-2xl border border-glass-stroke bg-surface/60">
             <table className="w-full text-left border-collapse min-w-[620px]">
               <thead>
-                <tr className="border-b border-white/80 bg-white/70 text-[11px] font-heading font-bold text-[#4A5A72]">
-                  <th className="p-3 text-[#0B1B33]">Deliverable Dokumen</th>
+                <tr className="border-b border-glass-stroke bg-surface/70 text-[11px] font-heading font-bold text-fg-3">
+                  <th className="p-3 text-fg">Deliverable Dokumen</th>
                   {memberOrderUids.map((uid) => (
                     <th key={uid} className="p-3 text-center">
                       <div className="flex justify-center">
@@ -335,8 +335,8 @@ export const TeamRaciView: React.FC = () => {
                           size="xs"
                           useNickname
                           avatarClassName="hidden"
-                          nameClassName="!text-[11px] font-heading !font-bold !text-[#4A5A72] text-center"
-                          titleClassName="!text-[9px] font-normal font-sans !text-[#4A5A72] text-center"
+                          nameClassName="!text-[11px] font-heading !font-bold !text-fg-3 text-center"
+                          titleClassName="!text-[9px] font-normal font-sans !text-fg-3 text-center"
                         />
                       </div>
                     </th>
@@ -344,14 +344,14 @@ export const TeamRaciView: React.FC = () => {
                   <th className="p-3 text-center">Validasi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#EAF6FD] text-xs">
+              <tbody className="divide-y divide-line text-xs">
                 {raciRows.map((row) => (
-                  <tr key={row.id} className="hover:bg-white/70 transition-colors">
+                  <tr key={row.id} className="hover:bg-surface/70 transition-colors">
                     <td className="p-3 max-w-[200px]">
-                      <p className="font-heading font-bold text-xs text-[#0B1B33] leading-snug">
+                      <p className="font-heading font-bold text-xs text-fg leading-snug">
                         {row.deliverable}
                       </p>
-                      <p className="text-[11px] text-[#4A5A72] mt-0.5 leading-snug">
+                      <p className="text-[11px] text-fg-3 mt-0.5 leading-snug">
                         {row.subtitle}
                       </p>
                     </td>
@@ -366,14 +366,14 @@ export const TeamRaciView: React.FC = () => {
                       <span
                         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold ${
                           row.validationStatus.includes('Valid')
-                            ? 'bg-[#D1FAE5] text-[#065F46]'
-                            : 'bg-[#FEF3C7] text-[#92400E]'
+                            ? 'bg-success-soft text-success'
+                            : 'bg-warm-soft text-warm'
                         }`}
                       >
                         {row.validationStatus.includes('Valid') ? (
-                          <CheckCircle2 className="w-3 h-3 text-[#047857]" />
+                          <CheckCircle2 className="w-3 h-3 text-success" />
                         ) : (
-                          <AlertTriangle className="w-3 h-3 text-[#B45309]" />
+                          <AlertTriangle className="w-3 h-3 text-warm" />
                         )}
                         {row.validationStatus}
                       </span>
@@ -384,9 +384,9 @@ export const TeamRaciView: React.FC = () => {
             </table>
           </div>
 
-          <div className="pt-2 flex flex-wrap items-center justify-between text-[11px] text-[#4A5A72] border-t border-[#EAF6FD]">
+          <div className="pt-2 flex flex-wrap items-center justify-between text-[11px] text-fg-3 border-t border-line">
             <span className="flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-[#047857]"></span>
+              <span className="w-2 h-2 rounded-full bg-success-solid"></span>
               Sesuai Standar Tata Kelola EPC DTNTF K2026
             </span>
             <span className="inline-flex items-center gap-1">
@@ -397,7 +397,7 @@ export const TeamRaciView: React.FC = () => {
                 size="xs"
                 useNickname
                 avatarClassName="hidden"
-                nameClassName="!text-[11px] !font-semibold !text-[#0B1B33]"
+                nameClassName="!text-[11px] !font-semibold !text-fg"
               />
               )
             </span>
@@ -414,9 +414,9 @@ export const TeamRaciView: React.FC = () => {
 
       {/* Add Row Modal */}
       {showAddRowModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               Tambah Baris Deliverable RACI
             </h3>
             <form onSubmit={handleAddDeliverable} className="mt-4 space-y-3">
@@ -427,7 +427,7 @@ export const TeamRaciView: React.FC = () => {
                   value={newDeliverableTitle}
                   onChange={(e) => setNewDeliverableTitle(e.target.value)}
                   placeholder="Contoh: Lampiran B: Datasheet Pompa & Vessel"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -438,20 +438,20 @@ export const TeamRaciView: React.FC = () => {
                   value={newDeliverableSub}
                   onChange={(e) => setNewDeliverableSub(e.target.value)}
                   placeholder="Keterangan cakupan paket kerja..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowAddRowModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan Deliverable
                 </button>
@@ -478,7 +478,7 @@ const FlipCard: React.FC<{
       className="cursor-pointer perspective-1000 min-h-[180px] w-full lg:h-full lg:min-h-0"
     >
       <div
-        className={`relative h-full min-h-[180px] w-full rounded-[22px] border border-white/80 transition-transform duration-500 transform-style-preserve-3d shadow-xs hover:shadow-sm ${
+        className={`relative h-full min-h-[180px] w-full rounded-[22px] border border-glass-stroke transition-transform duration-500 transform-style-preserve-3d shadow-xs hover:shadow-sm ${
           isFlipped ? 'rotate-y-180' : ''
         }`}
       >
@@ -495,7 +495,7 @@ const FlipCard: React.FC<{
               className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#0B1B33] via-[#004A9E] to-[#007BFF] bg-tech-grid text-4xl font-extrabold text-white">
+            <div className="absolute inset-0 flex items-center justify-center bg-hero text-4xl font-extrabold text-on-ink">
               {user.avatarInitial || user.code}
             </div>
           )}
@@ -506,7 +506,7 @@ const FlipCard: React.FC<{
                 type="button"
                 onClick={onEdit}
                 title="Edit Profil"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/45 text-white backdrop-blur-md transition-colors hover:bg-black/65"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/45 text-on-ink backdrop-blur-md transition-colors hover:bg-black/65"
               >
                 <Pencil className="w-3.5 h-3.5" />
               </button>
@@ -516,16 +516,16 @@ const FlipCard: React.FC<{
           <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/90 via-black/55 to-transparent px-4 pb-4 pt-14">
             <div className="flex items-end justify-between gap-2">
               <div className="min-w-0">
-                <h3 className="truncate font-heading text-sm font-extrabold leading-tight text-white drop-shadow-sm">
+                <h3 className="truncate font-heading text-sm font-extrabold leading-tight text-on-ink drop-shadow-sm">
                   {user.name}
                 </h3>
-                <p className="mt-0.5 truncate text-[11px] font-medium text-white/80 drop-shadow-xs">
+                <p className="mt-0.5 truncate text-[11px] font-medium text-on-ink/80 drop-shadow-xs">
                   {user.title}
-                  <span className="text-white/40"> • </span>
-                  <span className="font-semibold text-[#93C5FD]">@{user.nickname}</span>
+                  <span className="text-on-ink/40"> • </span>
+                  <span className="font-semibold text-on-ink-accent">@{user.nickname}</span>
                 </p>
               </div>
-              <span className="shrink-0 rounded-full border border-white/60 bg-white/15 px-2.5 py-1 text-[10px] font-extrabold text-white backdrop-blur-md">
+              <span className="shrink-0 rounded-full border border-glass-stroke bg-white/15 px-2.5 py-1 text-[10px] font-extrabold text-on-ink backdrop-blur-md">
                 {user.raciTag}
               </span>
             </div>
@@ -534,27 +534,27 @@ const FlipCard: React.FC<{
 
         {/* BACK SIDE */}
         <div
-          className={`backface-hidden absolute inset-0 overflow-y-auto rounded-[22px] bg-[#0B1B33] p-4.5 text-white rotate-y-180 ${
+          className={`backface-hidden absolute inset-0 overflow-y-auto rounded-[22px] bg-ink p-4.5 text-on-ink rotate-y-180 ${
             !isFlipped ? 'hidden' : 'block'
           }`}
         >
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-white/15">
-            <span className="font-heading font-bold text-xs text-[#4CBAF5] uppercase tracking-wider">
+            <span className="font-heading font-bold text-xs text-on-ink-accent uppercase tracking-wider">
               {user.title}
             </span>
-            <span className="text-[10px] font-mono text-[#9FB3C8]">{user.code}</span>
+            <span className="text-[10px] font-mono text-on-ink-2">{user.code}</span>
           </div>
 
-          <ul className="space-y-1 text-[10.5px] text-white/90 leading-tight">
+          <ul className="space-y-1 text-[10.5px] text-on-ink/90 leading-tight">
             {user.jobdesk.map((jd, idx) => (
               <li key={idx} className="flex items-start gap-1.5">
-                <span className="text-[#4CBAF5] font-bold">•</span>
+                <span className="text-on-ink-accent font-bold">•</span>
                 <span>{jd}</span>
               </li>
             ))}
           </ul>
 
-          <div className="mt-3 pt-2 border-t border-white/15 flex items-center justify-between text-[10px] text-[#4CBAF5]">
+          <div className="mt-3 pt-2 border-t border-white/15 flex items-center justify-between text-[10px] text-on-ink-accent">
             <span className="flex items-center gap-1 font-semibold">
               <RotateCcw className="w-3 h-3" /> Kembali ke Tampilan Profil
             </span>

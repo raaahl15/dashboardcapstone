@@ -118,35 +118,35 @@ export const StandardsView: React.FC = () => {
       {/* TOP ZONE: Heading, description, and standards summary */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
           Standar &amp; Regulasi
         </h1>
 
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
               Pedoman kepatuhan regulasi Capstone DTNTF dan direktori standar internasional
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
                 GOVERNANCE &amp; STANDARDISASI
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
                 CAPSTONE DTNTF
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
                 <BookOpen className="w-3.5 h-3.5" /> 3 Regulasi Utama
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
                 <FileText className="w-3.5 h-3.5" /> {standards.length} Standar Industri
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-[#D1FAE5] border border-white/70 text-[#065F46] text-[12px] font-semibold inline-flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" /> EPC Compliance Active
+              <span className="h-8 px-3.5 rounded-full bg-success-soft border border-glass-stroke text-success text-[12px] font-semibold inline-flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-success" /> EPC Compliance Active
               </span>
             </div>
           </div>
@@ -164,7 +164,7 @@ export const StandardsView: React.FC = () => {
           >
             <div>
               <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-white/70 text-[#0062CC] flex items-center justify-center shadow-xs">
+                <div className="w-10 h-10 rounded-2xl bg-surface/70 text-primary flex items-center justify-center shadow-xs">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div className="flex items-center gap-2">
@@ -174,7 +174,7 @@ export const StandardsView: React.FC = () => {
                       onClick={() => openEditRegulationModal(reg)}
                       aria-label={`Edit regulasi ${reg.title}`}
                       title="Edit Regulasi"
-                      className="w-10 h-10 rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] transition-colors flex items-center justify-center"
+                      className="w-10 h-10 rounded-full text-fg-3 hover:bg-muted hover:text-primary transition-colors flex items-center justify-center"
                     >
                       <Pencil className="w-4 h-4" />
                     </button>
@@ -184,24 +184,24 @@ export const StandardsView: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Buka dokumen ${reg.title}`}
-                    className="text-[#4A5A72] hover:text-[#0062CC] transition-colors"
+                    className="text-fg-3 hover:text-primary transition-colors"
                   >
                     <ExternalLink className="w-4 h-4" />
                   </a>
                 </div>
               </div>
 
-              <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33] mb-1.5 leading-snug">
+              <h3 className="font-heading font-bold text-sm sm:text-base text-fg mb-1.5 leading-snug">
                 {reg.title}
               </h3>
-              <p className="text-xs text-[#4A5A72] mb-5 leading-relaxed">
+              <p className="text-xs text-fg-3 mb-5 leading-relaxed">
                 {reg.subtitle}
               </p>
             </div>
 
             <div>
-              <div className="p-2.5 rounded-xl bg-white/50 text-center mb-4 border border-white/80">
-                <span className="text-[11px] font-bold text-[#0062CC]">
+              <div className="p-2.5 rounded-xl bg-surface/50 text-center mb-4 border border-glass-stroke">
+                <span className="text-[11px] font-bold text-primary">
                   {reg.badge}
                 </span>
               </div>
@@ -210,7 +210,7 @@ export const StandardsView: React.FC = () => {
                 href={reg.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full h-11 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
+                className="w-full h-11 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
               >
                 Buka <ExternalLink className="w-3.5 h-3.5" />
               </a>
@@ -225,10 +225,10 @@ export const StandardsView: React.FC = () => {
       <div className="glass-card p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
+            <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
               Standard References
             </h2>
-            <p className="text-xs text-[#4A5A72]">
+            <p className="text-xs text-fg-3">
               Direktori standar desain rekayasa kimia dan instrumentasi proses
             </p>
           </div>
@@ -236,7 +236,7 @@ export const StandardsView: React.FC = () => {
           {isPM && (
             <button
               onClick={openAddModal}
-              className="px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+              className="px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
             >
               <Plus className="w-3.5 h-3.5" />
               Add
@@ -249,19 +249,19 @@ export const StandardsView: React.FC = () => {
           {standards.map((std) => (
             <div
               key={std.id}
-              className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
+              className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="w-10 h-10 rounded-xl bg-white/70 text-[#0062CC] font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-white/80">
+                  <span className="w-10 h-10 rounded-xl bg-surface/70 text-primary font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-glass-stroke">
                     {std.subCode}
                   </span>
-                  <div className="flex items-center gap-1 text-[#4A5A72]">
+                  <div className="flex items-center gap-1 text-fg-3">
                     {isPM && (
                       <>
                         <button
                           onClick={() => openEditModal(std)}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-[#EAF6FD] hover:text-[#0062CC] transition-colors"
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-muted hover:text-primary transition-colors"
                           title="Edit Standar"
                           aria-label={`Edit Standar ${std.subCode} - ${std.title}`}
                         >
@@ -269,7 +269,7 @@ export const StandardsView: React.FC = () => {
                         </button>
                         <button
                           onClick={() => deleteStandard(std.id)}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-[#B91C1C] transition-colors"
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-danger transition-colors"
                           title="Hapus Standar"
                           aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
                         >
@@ -280,10 +280,10 @@ export const StandardsView: React.FC = () => {
                   </div>
                 </div>
 
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33] mb-1">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-fg mb-1">
                   {std.title}
                 </h4>
-                <p className="text-[11px] text-[#4A5A72] leading-snug mb-4">
+                <p className="text-[11px] text-fg-3 leading-snug mb-4">
                   {std.subtitle}
                 </p>
               </div>
@@ -292,7 +292,7 @@ export const StandardsView: React.FC = () => {
                 href={std.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2 bg-[#F8FAFC] hover:bg-[#EAF6FD] text-[#0062CC] rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-[#EAF6FD]"
+                className="w-full py-2 bg-muted hover:bg-muted text-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-line"
               >
                 Buka <ExternalLink className="w-3 h-3" />
               </a>
@@ -303,9 +303,9 @@ export const StandardsView: React.FC = () => {
 
       {/* Edit Regulation Modal */}
       {editingRegulationId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               Edit Regulasi Utama
             </h3>
             <form onSubmit={handleSaveRegulation} className="mt-4 space-y-3">
@@ -315,7 +315,7 @@ export const StandardsView: React.FC = () => {
                   type="text"
                   value={regulationTitle}
                   onChange={(e) => setRegulationTitle(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -326,7 +326,7 @@ export const StandardsView: React.FC = () => {
                   rows={3}
                   value={regulationSubtitle}
                   onChange={(e) => setRegulationSubtitle(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -336,7 +336,7 @@ export const StandardsView: React.FC = () => {
                   type="text"
                   value={regulationBadge}
                   onChange={(e) => setRegulationBadge(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -347,7 +347,7 @@ export const StandardsView: React.FC = () => {
                   value={regulationUrl}
                   onChange={(e) => setRegulationUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -355,13 +355,13 @@ export const StandardsView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setEditingRegulationId(null)}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                  className="px-4 py-2 text-xs font-semibold text-fg-3"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan Perubahan
                 </button>
@@ -373,9 +373,9 @@ export const StandardsView: React.FC = () => {
 
       {/* Add/Edit Standard Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingStandardId ? 'Edit Standar Rujukan' : 'Tambah Standar Rujukan Baru'}
             </h3>
             <form onSubmit={handleSaveStandard} className="mt-4 space-y-3">
@@ -387,7 +387,7 @@ export const StandardsView: React.FC = () => {
                     value={newCode}
                     onChange={(e) => setNewCode(e.target.value)}
                     placeholder="Contoh: API 650"
-                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -398,7 +398,7 @@ export const StandardsView: React.FC = () => {
                     value={newSubCode}
                     onChange={(e) => setNewSubCode(e.target.value)}
                     placeholder="Contoh: API / ISO / ISA"
-                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -411,7 +411,7 @@ export const StandardsView: React.FC = () => {
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
                   placeholder="Contoh: Welded Tanks for Oil Storage"
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -423,7 +423,7 @@ export const StandardsView: React.FC = () => {
                   value={newSubtitle}
                   onChange={(e) => setNewSubtitle(e.target.value)}
                   placeholder="Spesifikasi tangki atmosferik..."
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -434,7 +434,7 @@ export const StandardsView: React.FC = () => {
                   value={newUrl}
                   onChange={(e) => setNewUrl(e.target.value)}
                   placeholder="https://..."
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -445,13 +445,13 @@ export const StandardsView: React.FC = () => {
                     setShowAddModal(false);
                     setEditingStandardId(null);
                   }}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                  className="px-4 py-2 text-xs font-semibold text-fg-3"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingStandardId ? 'Simpan Perubahan' : 'Simpan Standar'}
                 </button>

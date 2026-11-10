@@ -107,12 +107,12 @@ export const StageGateTimeline: React.FC = () => {
     <section className="glass-card p-4 sm:p-6 space-y-4" aria-label="Pemetaan Stage-Gate G1 sampai G4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
-          <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">Stage-Gate G1–G4</h2>
-          <p className="text-xs text-[#4A5A72]">
+          <h2 className="font-heading font-bold text-base sm:text-lg text-fg">Stage-Gate G1–G4</h2>
+          <p className="text-xs text-fg-3">
             Pemetaan ke titik kontrol Panduan Capstone (Blueprint §1.7). Gate berikutnya baru terbuka setelah gate sebelumnya lolos.
           </p>
         </div>
-        <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[12px] font-semibold text-[#0062CC] inline-flex items-center">
+        <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-[12px] font-semibold text-primary inline-flex items-center">
           {lib.data ? `${ready} artefak berstatus Diajukan/ACC (syarat masuk bundel)` : 'Memuat status artefak...'}
         </span>
       </div>
@@ -124,41 +124,41 @@ export const StageGateTimeline: React.FC = () => {
           return (
             <li
               key={g.id}
-              className={`p-4 rounded-2xl border space-y-2 ${active ? 'bg-white border-[#0062CC] shadow-xs' : 'bg-white/60 border-white'}`}
+              className={`p-4 rounded-2xl border space-y-2 ${active ? 'bg-surface border-primary shadow-xs' : 'bg-surface/60 border-glass-stroke'}`}
               aria-current={active ? 'step' : undefined}
             >
               <div className="flex items-center justify-between gap-2">
-                <span className="font-heading font-extrabold text-sm text-[#0B1B33] inline-flex items-center gap-1.5">
+                <span className="font-heading font-extrabold text-sm text-fg inline-flex items-center gap-1.5">
                   {past ? (
-                    <CheckCircle2 className="w-4 h-4 text-[#047857]" />
+                    <CheckCircle2 className="w-4 h-4 text-success" />
                   ) : active ? (
-                    <Flag className="w-4 h-4 text-[#0062CC]" />
+                    <Flag className="w-4 h-4 text-primary" />
                   ) : (
-                    <Lock className="w-4 h-4 text-[#94A3B8]" />
+                    <Lock className="w-4 h-4 text-fg-3" />
                   )}
                   {g.id}
                 </span>
-                <span className="text-[11px] font-semibold text-[#4A5A72] text-right leading-tight">
+                <span className="text-[11px] font-semibold text-fg-3 text-right leading-tight">
                   {fmt(date)}
                   <span className="block text-[10px] font-normal">{DATE_NOTE[g.id]}</span>
                 </span>
               </div>
-              <p className="text-xs font-bold text-[#0B1B33] leading-snug">{g.title}</p>
-              <p className="text-[11px] text-[#4A5A72]">{g.control}</p>
+              <p className="text-xs font-bold text-fg leading-snug">{g.title}</p>
+              <p className="text-[11px] text-fg-3">{g.control}</p>
               <p className="text-[11px]">
-                <span className="text-[#4A5A72]">Penentu: </span>
+                <span className="text-fg-3">Penentu: </span>
                 {g.decider}
               </p>
               <p className="text-[11px]">
-                <span className="text-[#4A5A72]">Bukti: </span>
+                <span className="text-fg-3">Bukti: </span>
                 {g.evidence}
               </p>
-              <ul className="text-[11px] text-[#0B1B33] list-disc pl-4">
+              <ul className="text-[11px] text-fg list-disc pl-4">
                 {g.bundle.map((b) => (
                   <li key={b}>{b}</li>
                 ))}
               </ul>
-              {past && <p className="text-[10px] text-[#92400E]">Tanggal lewat; konfirmasi status lolos lewat MoM/berita acara.</p>}
+              {past && <p className="text-[10px] text-warm">Tanggal lewat; konfirmasi status lolos lewat MoM/berita acara.</p>}
             </li>
           );
         })}

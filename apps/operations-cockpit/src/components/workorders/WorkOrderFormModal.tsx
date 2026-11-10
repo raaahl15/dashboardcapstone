@@ -277,28 +277,28 @@ export const WorkOrderFormModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/50 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/50 backdrop-blur-xs"
       role="dialog"
       aria-modal="true"
       aria-labelledby="wo-form-modal-title"
     >
-      <div className="w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
+      <div className="w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 pb-4 border-b border-[#EAF6FD]">
+        <div className="flex items-start justify-between gap-3 pb-4 border-b border-line">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#0B1B33] text-white">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-ink text-on-ink">
                 {isEditMode && editingWo ? editingWo.code : 'WORK ORDER BARU'}
               </span>
               {origin.type === 'mom' && (
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary">
                   Asal: MoM {origin.trackerActionCode}
                 </span>
               )}
             </div>
             <h2
               id="wo-form-modal-title"
-              className="font-heading font-bold text-base text-[#0B1B33] mt-1.5"
+              className="font-heading font-bold text-base text-fg mt-1.5"
             >
               {isEditMode
                 ? `Ubah Konfigurasi ${editingWo?.code}`
@@ -309,7 +309,7 @@ export const WorkOrderFormModal: React.FC = () => {
           <button
             type="button"
             onClick={closeWorkOrderForm}
-            className="w-11 h-11 rounded-full hover:bg-[#EAF6FD] text-[#4A5A72] hover:text-[#0B1B33] flex items-center justify-center transition-colors shrink-0"
+            className="w-11 h-11 rounded-full hover:bg-muted text-fg-3 hover:text-fg flex items-center justify-center transition-colors shrink-0"
             aria-label="Tutup modal form Work Order"
           >
             <X className="w-4 h-4" />
@@ -320,7 +320,7 @@ export const WorkOrderFormModal: React.FC = () => {
           {errorMsg && (
             <div
               role="alert"
-              className="p-3 rounded-2xl bg-[#FEE2E2] border border-[#FCA5A5] text-xs font-semibold text-[#991B1B] flex items-center gap-2"
+              className="p-3 rounded-2xl bg-danger-soft border border-danger-line text-xs font-semibold text-danger flex items-center gap-2"
             >
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
@@ -330,8 +330,8 @@ export const WorkOrderFormModal: React.FC = () => {
           {/* Judul & Instruksi */}
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-bold text-[#0B1B33] mb-1">
-                Judul Work Order <span className="text-[#B91C1C]">*</span>
+              <label className="block text-xs font-bold text-fg mb-1">
+                Judul Work Order <span className="text-danger">*</span>
               </label>
               <input
                 type="text"
@@ -339,13 +339,13 @@ export const WorkOrderFormModal: React.FC = () => {
                 onChange={(e) => setTitle(e.target.value)}
                 maxLength={240}
                 placeholder="Contoh: Validasi neraca energi reaktor R-101 di DWSIM"
-                className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary focus:ring-2 focus:ring-focus/20"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+              <label className="block text-xs font-bold text-fg mb-1">
                 Instruksi / Deskripsi Teknis
               </label>
               <textarea
@@ -353,14 +353,14 @@ export const WorkOrderFormModal: React.FC = () => {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Rincian deliverable, acuan standar (ISO/ISA), atau kriteria penerimaan oleh PM..."
-                className="w-full p-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                className="w-full p-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary focus:ring-2 focus:ring-focus/20"
               />
             </div>
 
             {/* Output & Link file (opsional, ikut ke template pesan WA) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-bold text-fg mb-1">
                   Output yang Diserahkan
                 </label>
                 <input
@@ -369,11 +369,11 @@ export const WorkOrderFormModal: React.FC = () => {
                   onChange={(e) => setOutputText(e.target.value)}
                   maxLength={1000}
                   placeholder="Contoh: Bab 2 rev1 (.docx) + tabel neraca massa"
-                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary focus:ring-2 focus:ring-focus/20"
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-bold text-fg mb-1">
                   Link File Kerja (Drive/Docs/Sheets)
                 </label>
                 <input
@@ -382,23 +382,23 @@ export const WorkOrderFormModal: React.FC = () => {
                   onChange={(e) => setFileUrl(e.target.value)}
                   maxLength={1000}
                   placeholder="https://docs.google.com/..."
-                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC] focus:ring-2 focus:ring-[#0062CC]/20"
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary focus:ring-2 focus:ring-focus/20"
                 />
               </div>
             </div>
-            <p className="text-[11px] text-[#4A5A72] -mt-1">
+            <p className="text-[11px] text-fg-3 -mt-1">
               Opsional. Output dan link file ikut tampil di pesan WhatsApp Work Order.
             </p>
           </div>
 
           {/* Penanggung Jawab (Multi-select setara) */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#DCEBF7] space-y-3">
+          <div className="p-4 rounded-2xl bg-muted border border-line space-y-3">
             <div>
               <div className="flex items-center justify-between gap-2 mb-1.5">
-                <label className="text-xs font-bold text-[#0B1B33]">
-                  Penanggung Jawab (boleh lebih dari satu) <span className="text-[#B91C1C]">*</span>
+                <label className="text-xs font-bold text-fg">
+                  Penanggung Jawab (boleh lebih dari satu) <span className="text-danger">*</span>
                 </label>
-                <span className="text-[11px] font-semibold text-[#0062CC]">
+                <span className="text-[11px] font-semibold text-primary">
                   {assigneeIds.length} dipilih
                 </span>
               </div>
@@ -412,8 +412,8 @@ export const WorkOrderFormModal: React.FC = () => {
                       onClick={() => toggleAssignee(u.id)}
                       className={`min-h-[44px] px-3 rounded-full text-xs font-semibold border flex items-center gap-2 transition-all ${
                         selected
-                          ? 'bg-[#0B1B33] text-white border-[#0B1B33] shadow-xs'
-                          : 'bg-white text-[#334155] border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                          ? 'bg-ink text-on-ink border-fg shadow-xs'
+                          : 'bg-surface text-fg-2 border-line hover:bg-muted'
                       }`}
                     >
                       <UserChip
@@ -423,11 +423,11 @@ export const WorkOrderFormModal: React.FC = () => {
                         useNickname
                         nameClassName={
                           selected
-                            ? '!text-white !font-bold'
-                            : '!text-[#0B1B33] !font-semibold'
+                            ? '!text-on-ink !font-bold'
+                            : '!text-fg !font-semibold'
                         }
                       />
-                      {selected && <Check className="w-3.5 h-3.5 text-[#4CBAF5]" />}
+                      {selected && <Check className="w-3.5 h-3.5 text-on-ink-accent" />}
                     </button>
                   );
                 })}
@@ -438,7 +438,7 @@ export const WorkOrderFormModal: React.FC = () => {
                     const u = users.find((x) => x.id === uid);
                     const wa = normalizeWaPhone(u?.phone);
                     return (
-                      <span key={uid} className={wa ? 'text-[#166534] font-semibold' : 'text-[#92400E] font-semibold'}>
+                      <span key={uid} className={wa ? 'text-success font-semibold' : 'text-warm font-semibold'}>
                         WA {u?.nickname || uid}: {wa ? formatWaPhone(wa) : 'belum ada (isi di Profil)'}
                       </span>
                     );
@@ -448,8 +448,8 @@ export const WorkOrderFormModal: React.FC = () => {
             </div>
 
             {/* Pendukung (Opsional) */}
-            <div className="pt-2.5 border-t border-[#DCEBF7]">
-              <label className="block text-[11px] font-bold text-[#4A5A72] mb-1.5">
+            <div className="pt-2.5 border-t border-line">
+              <label className="block text-[11px] font-bold text-fg-3 mb-1.5">
                 Anggota Pendukung (Opsional — tidak memegang kewajiban submit)
               </label>
               <div className="flex flex-wrap gap-1.5">
@@ -464,17 +464,17 @@ export const WorkOrderFormModal: React.FC = () => {
                         onClick={() => toggleSupporter(u.id)}
                         className={`min-h-[38px] px-3 rounded-full text-[11px] font-semibold border flex items-center gap-1.5 transition-all ${
                           selected
-                            ? 'bg-[#EAF6FD] text-[#0062CC] border-[#0062CC]'
-                            : 'bg-white text-[#4A5A72] border-[#C9DCEB] hover:bg-white/90'
+                            ? 'bg-muted text-primary border-primary'
+                            : 'bg-surface text-fg-3 border-line hover:bg-surface/90'
                         }`}
                       >
                         <span>{u.nickname}</span>
-                        {selected && <Check className="w-3 h-3 text-[#0062CC]" />}
+                        {selected && <Check className="w-3 h-3 text-primary" />}
                       </button>
                     );
                   })}
                 {users.filter((u) => !assigneeIds.includes(u.id)).length === 0 && (
-                  <span className="text-[11px] text-[#4A5A72] italic">
+                  <span className="text-[11px] text-fg-3 italic">
                     Seluruh anggota telah dipilih sebagai penanggung jawab.
                   </span>
                 )}
@@ -485,13 +485,13 @@ export const WorkOrderFormModal: React.FC = () => {
           {/* Prioritas & Tenggat Waktu */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+              <label className="block text-xs font-bold text-fg mb-1">
                 Prioritas
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as WorkOrderPriority)}
-                className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs font-semibold text-[#0B1B33] bg-white outline-none focus:border-[#0062CC]"
+                className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs font-semibold text-fg bg-surface outline-none focus:border-primary"
               >
                 {WO_PRIORITIES.map((p) => (
                   <option key={p} value={p}>
@@ -502,14 +502,14 @@ export const WorkOrderFormModal: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#0B1B33] mb-1">
-                Tenggat Waktu <span className="text-[#B91C1C]">*</span>
+              <label className="block text-xs font-bold text-fg mb-1">
+                Tenggat Waktu <span className="text-danger">*</span>
               </label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs font-semibold text-[#0B1B33] bg-white outline-none focus:border-[#0062CC]"
+                className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs font-semibold text-fg bg-surface outline-none focus:border-primary"
                 required
               />
             </div>
@@ -519,15 +519,15 @@ export const WorkOrderFormModal: React.FC = () => {
           <div
             className={`p-3 rounded-2xl border text-xs flex flex-wrap items-center justify-between gap-2 ${
               weekInfo.isOutOfRange
-                ? 'bg-[#FEF3C7] border-[#FCD34D] text-[#92400E]'
-                : 'bg-[#EAF6FD] border-[#BAE6FD] text-[#0B1B33]'
+                ? 'bg-warm-soft border-warm-line text-warm'
+                : 'bg-muted border-line text-fg'
             }`}
           >
             <div className="flex items-center gap-2">
               {weekInfo.isOutOfRange ? (
-                <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-warm shrink-0" />
               ) : (
-                <Calendar className="w-4 h-4 text-[#0062CC] shrink-0" />
+                <Calendar className="w-4 h-4 text-primary shrink-0" />
               )}
               <span className="font-semibold">
                 Tenggat {formatYmdToIndonesian(dueDate)} jatuh pada{' '}
@@ -544,16 +544,16 @@ export const WorkOrderFormModal: React.FC = () => {
           </div>
 
           {/* Tautan Jadwal Eksklusif (Tidak ditautkan | Gantt Task | Weekly Plan) */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#DCEBF7] space-y-3">
+          <div className="p-4 rounded-2xl bg-muted border border-line space-y-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
-                <Link2 className="w-3.5 h-3.5 text-[#0062CC]" />
-                <span className="text-xs font-bold text-[#0B1B33]">
+                <Link2 className="w-3.5 h-3.5 text-primary" />
+                <span className="text-xs font-bold text-fg">
                   Tautan Jadwal (Opsional, pilih salah satu)
                 </span>
               </div>
               {isScheduleLocked && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E2E8F0] text-[#334155]">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-muted text-fg-2">
                   Terkunci karena WO sudah Selesai
                 </span>
               )}
@@ -577,8 +577,8 @@ export const WorkOrderFormModal: React.FC = () => {
                     onClick={() => setLinkMode(opt.key)}
                     className={`min-h-[44px] px-3 rounded-xl text-xs font-bold border transition-all disabled:opacity-60 ${
                       active
-                        ? 'bg-[#0062CC] text-white border-[#0062CC]'
-                        : 'bg-white text-[#334155] border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                        ? 'bg-primary text-on-primary border-primary'
+                        : 'bg-surface text-fg-2 border-line hover:bg-muted'
                     }`}
                   >
                     {opt.label}
@@ -589,14 +589,14 @@ export const WorkOrderFormModal: React.FC = () => {
 
             {linkMode === 'gantt' && (
               <div>
-                <label className="block text-[11px] font-semibold text-[#4A5A72] mb-1">
+                <label className="block text-[11px] font-semibold text-fg-3 mb-1">
                   Pilih Item Gantt Chart
                 </label>
                 <select
                   value={linkedGanttId}
                   disabled={isScheduleLocked}
                   onChange={(e) => setLinkedGanttId(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] bg-white outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs text-fg bg-surface outline-none"
                 >
                   {ganttTasks.map((gt) => (
                     <option key={gt.id} value={gt.id}>
@@ -609,14 +609,14 @@ export const WorkOrderFormModal: React.FC = () => {
 
             {linkMode === 'weeklyPlan' && (
               <div>
-                <label className="block text-[11px] font-semibold text-[#4A5A72] mb-1">
+                <label className="block text-[11px] font-semibold text-fg-3 mb-1">
                   Pilih Item Weekly Planner
                 </label>
                 <select
                   value={linkedPlanId}
                   disabled={isScheduleLocked}
                   onChange={(e) => setLinkedPlanId(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] bg-white outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs text-fg bg-surface outline-none"
                 >
                   {weeklyPlans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
@@ -629,10 +629,10 @@ export const WorkOrderFormModal: React.FC = () => {
           </div>
 
           {/* Checklist Langkah Kerja */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#DCEBF7] space-y-2.5">
+          <div className="p-4 rounded-2xl bg-muted border border-line space-y-2.5">
             <div className="flex items-center gap-1.5">
-              <ListChecks className="w-3.5 h-3.5 text-[#0062CC]" />
-              <span className="text-xs font-bold text-[#0B1B33]">
+              <ListChecks className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-bold text-fg">
                 Checklist Langkah Kerja (Opsional)
               </span>
             </div>
@@ -642,15 +642,15 @@ export const WorkOrderFormModal: React.FC = () => {
                 {checklist.map((item, idx) => (
                   <div
                     key={item.id}
-                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-white border border-[#DCEBF7] text-xs"
+                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-surface border border-line text-xs"
                   >
-                    <span className="text-[#0B1B33] font-medium">
+                    <span className="text-fg font-medium">
                       {idx + 1}. {item.text}
                     </span>
                     <button
                       type="button"
                       onClick={() => handleRemoveChecklistStep(item.id)}
-                      className="w-8 h-8 rounded-full text-[#4A5A72] hover:bg-[#FEE2E2] hover:text-[#B91C1C] flex items-center justify-center shrink-0"
+                      className="w-8 h-8 rounded-full text-fg-3 hover:bg-danger-soft hover:text-danger flex items-center justify-center shrink-0"
                       aria-label={`Hapus langkah ${item.text}`}
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -672,12 +672,12 @@ export const WorkOrderFormModal: React.FC = () => {
                   }
                 }}
                 placeholder="Tambah sub-langkah teknis lalu klik Tambah..."
-                className="flex-1 min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs bg-white outline-none"
+                className="flex-1 min-h-[44px] px-3 rounded-xl border border-line-strong text-xs bg-surface outline-none"
               />
               <button
                 type="button"
                 onClick={handleAddChecklistStep}
-                className="min-h-[44px] px-4 rounded-xl bg-white hover:bg-[#EAF6FD] text-[#0062CC] border border-[#C9DCEB] text-xs font-bold inline-flex items-center gap-1 shrink-0"
+                className="min-h-[44px] px-4 rounded-xl bg-surface hover:bg-muted text-primary border border-line text-xs font-bold inline-flex items-center gap-1 shrink-0"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Tambah</span>
@@ -686,14 +686,14 @@ export const WorkOrderFormModal: React.FC = () => {
           </div>
 
           {/* Toggle Bukti Wajib Saat Submit (Opsional per WO, default mati) */}
-          <label className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-[#EAF6FD]/60 border border-[#C9DCEB] cursor-pointer">
+          <label className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-muted/60 border border-line cursor-pointer">
             <div className="flex items-start gap-2.5">
-              <FileText className="w-4 h-4 text-[#0062CC] mt-0.5 shrink-0" />
+              <FileText className="w-4 h-4 text-primary mt-0.5 shrink-0" />
               <div>
-                <span className="text-xs font-bold text-[#0B1B33] block">
+                <span className="text-xs font-bold text-fg block">
                   Wajibkan Tautan Bukti Hasil Saat Submit
                 </span>
-                <span className="text-[11px] text-[#4A5A72]">
+                <span className="text-[11px] text-fg-3">
                   Jika aktif, penanggung jawab wajib melampirkan URL bukti (Drive/dokumen) sebelum mengajukan review ke PM.
                 </span>
               </div>
@@ -702,23 +702,23 @@ export const WorkOrderFormModal: React.FC = () => {
               type="checkbox"
               checked={requireEvidence}
               onChange={(e) => setRequireEvidence(e.target.checked)}
-              className="w-5 h-5 accent-[#0062CC] rounded cursor-pointer shrink-0"
+              className="w-5 h-5 accent-primary rounded cursor-pointer shrink-0"
             />
           </label>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#EAF6FD]">
+          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-line">
             <button
               type="button"
               onClick={closeWorkOrderForm}
-              className="min-h-[44px] px-5 rounded-full text-xs font-bold text-[#4A5A72] hover:bg-[#F1F5F9] transition-colors"
+              className="min-h-[44px] px-5 rounded-full text-xs font-bold text-fg-3 hover:bg-muted transition-colors"
             >
               Batal
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="min-h-[44px] px-6 rounded-full bg-[#0062CC] hover:bg-[#0057B8] disabled:opacity-60 text-white text-xs font-bold shadow-xs transition-all"
+              className="min-h-[44px] px-6 rounded-full bg-primary hover:bg-primary-hover disabled:opacity-60 text-on-primary text-xs font-bold shadow-xs transition-all"
             >
               {isSaving
                 ? 'Menyimpan...'

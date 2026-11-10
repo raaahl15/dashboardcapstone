@@ -67,47 +67,47 @@ interface StatusStyleConfig {
 const PROJECT_STATUS_MAP: Record<ProjectStatusKey, StatusStyleConfig> = {
   'ON TRACK': {
     label: 'ON TRACK',
-    cardBg: 'bg-[#D1FAE5]',
-    cardBorder: 'border-[#065F46]/25',
-    accentStrip: 'bg-[#065F46]',
-    badgeBg: 'bg-[#D1FAE5]',
-    badgeText: 'text-[#065F46]',
-    badgeBorder: 'border-[#065F46]/35',
-    iconColor: 'text-[#065F46]',
-    headingText: 'text-[#065F46]',
-    subText: 'text-[#065F46]/85',
-    dividerBorder: 'border-[#065F46]/20',
-    editBtnHover: 'hover:bg-white/70 text-[#065F46]',
+    cardBg: 'bg-success-soft',
+    cardBorder: 'border-success-line/25',
+    accentStrip: 'bg-success-solid',
+    badgeBg: 'bg-success-soft',
+    badgeText: 'text-success',
+    badgeBorder: 'border-success-line/35',
+    iconColor: 'text-success',
+    headingText: 'text-success',
+    subText: 'text-success/85',
+    dividerBorder: 'border-success-line/20',
+    editBtnHover: 'hover:bg-surface/70 text-success',
     IconComponent: CheckCircle2,
   },
   'NEEDS ATTENTION': {
     label: 'NEEDS ATTENTION',
-    cardBg: 'bg-[#FEF3C7]',
-    cardBorder: 'border-[#92400E]/25',
-    accentStrip: 'bg-[#92400E]',
-    badgeBg: 'bg-[#FEF3C7]',
-    badgeText: 'text-[#92400E]',
-    badgeBorder: 'border-[#92400E]/35',
-    iconColor: 'text-[#92400E]',
-    headingText: 'text-[#92400E]',
-    subText: 'text-[#92400E]/85',
-    dividerBorder: 'border-[#92400E]/20',
-    editBtnHover: 'hover:bg-white/70 text-[#92400E]',
+    cardBg: 'bg-warm-soft',
+    cardBorder: 'border-warm-line/25',
+    accentStrip: 'bg-warm-solid',
+    badgeBg: 'bg-warm-soft',
+    badgeText: 'text-warm',
+    badgeBorder: 'border-warm-line/35',
+    iconColor: 'text-warm',
+    headingText: 'text-warm',
+    subText: 'text-warm/85',
+    dividerBorder: 'border-warm-line/20',
+    editBtnHover: 'hover:bg-surface/70 text-warm',
     IconComponent: AlertTriangle,
   },
   CRITICAL: {
     label: 'CRITICAL',
-    cardBg: 'bg-[#FEE2E2]',
-    cardBorder: 'border-[#991B1B]/25',
-    accentStrip: 'bg-[#991B1B]',
-    badgeBg: 'bg-[#FEE2E2]',
-    badgeText: 'text-[#991B1B]',
-    badgeBorder: 'border-[#991B1B]/35',
-    iconColor: 'text-[#991B1B]',
-    headingText: 'text-[#991B1B]',
-    subText: 'text-[#991B1B]/85',
-    dividerBorder: 'border-[#991B1B]/20',
-    editBtnHover: 'hover:bg-white/70 text-[#991B1B]',
+    cardBg: 'bg-danger-soft',
+    cardBorder: 'border-danger-line/25',
+    accentStrip: 'bg-danger-solid',
+    badgeBg: 'bg-danger-soft',
+    badgeText: 'text-danger',
+    badgeBorder: 'border-danger-line/35',
+    iconColor: 'text-danger',
+    headingText: 'text-danger',
+    subText: 'text-danger/85',
+    dividerBorder: 'border-danger-line/20',
+    editBtnHover: 'hover:bg-surface/70 text-danger',
     IconComponent: XCircle,
   },
 };
@@ -410,123 +410,105 @@ export const HomepageView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Large Bold Welcome Heading + Compact Description/Pills & 3 Metric Cards */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
-        {/* ROW 1: Large Bold Welcome Heading Directly on Gradient Canvas */}
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
-          Selamat datang, {currentUser.nickname || currentUser.name.split(' ')[0]}
+      {/* TOP ZONE v2.0: sapaan + kartu hero tenggat FEED + 4 ubin metrik */}
+      <div className="space-y-4">
+        <h1 className="font-heading text-3xl sm:text-4xl font-normal leading-tight text-fg">
+          Selamat datang, {currentUser.nickname || currentUser.name.split(' ')[0]}{' '}
+          <span className="font-accent text-primary text-[0.8em] whitespace-nowrap">
+            — {tenderCountdown.days} hari menuju FEED
+          </span>
         </h1>
 
-        {/* ROW 2: 2 Columns with Equal Stretched Height (Left: Desc + Pills, Right: 3 Metric Cards) */}
         <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
-          {/* LEFT (col-span-7): Compact Faint Glass Description Box + 3 Pills */}
-          <div className="xl:col-span-7 flex flex-col justify-between gap-2.5 h-full">
-            <div className="glass-faint px-4 py-2.5 flex items-center">
-              <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33] line-clamp-2">
-                Area 1 Methanol Dehydration to Di-Methyl Ether (DME). Lead operations control, milestone track, and RACI distribution.
+          <div className="xl:col-span-5 bg-hero rounded-[32px] p-6 sm:p-7 shadow-cockpit-pop flex flex-col justify-between gap-5 min-h-[280px]">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-on-ink-2">
+                Tenggat FEED · Gate G2
+              </p>
+              <p className="mt-3 flex items-baseline gap-3">
+                <span className="font-heading text-7xl sm:text-8xl font-extralight leading-none tabular-nums">
+                  {tenderCountdown.days}
+                </span>
+                <span className="font-heading text-2xl font-light">hari</span>
+              </p>
+              <p className="mt-2 text-sm text-on-ink-2 tabular-nums">
+                {tenderCountdown.hours} jam {tenderCountdown.minutes} menit lagi · {config.tenderDeadline}
               </p>
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
-                CAPSTONE DTNTF 2026/2027
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#4CBAF5] shrink-0" />
-                <span>Area 1 Reaktor · PSTF 1 (FEED)</span>
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold tracking-normal inline-flex items-center">
-                Tenggat FEED: {config.tenderDeadline}
-              </span>
+            <div>
+              <div className="flex items-center justify-between text-sm">
+                <span>Progress dokumen FEED</span>
+                <span className="font-semibold tabular-nums">{overallWeightedProgress}%</span>
+              </div>
+              <div className="mt-2 h-1.5 rounded-full bg-white/20 overflow-hidden">
+                <div className="h-full rounded-full bg-on-ink" style={{ width: `${overallWeightedProgress}%` }} />
+              </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium">{config.tenderStatusText}</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium">{config.tenderPhaseText}</span>
+                <span className="px-3 py-1 rounded-full bg-white/15 text-xs font-medium">Area 1 Reaktor · PSTF 1</span>
+              </div>
             </div>
           </div>
 
-          {/* RIGHT (col-span-5): 3 Compact Glass Metric Cards Matched to Left Block Height */}
-          <div className="xl:col-span-5 grid grid-cols-1 sm:grid-cols-3 gap-3.5 items-stretch h-full">
-            {/* Metric 1: Logbook ACC */}
-            <div className="glass-card px-4 py-3 h-full flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[12px] font-semibold text-[#0B1B33] leading-none truncate">
-                  Logbook ACC
-                </span>
-                <div className="w-7 h-7 rounded-full bg-white/70 flex items-center justify-center shrink-0">
-                  <ClipboardCheck className="w-4 h-4 text-[#0062CC]" />
-                </div>
-              </div>
-
-              <div className="mt-1.5">
-                <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {verifiedLogbooksCount} / {logbookTarget}
-                </span>
-                <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
-                  Target 72 (12 Kelompok + 60 Anggota)
-                </span>
-              </div>
+          <div className="xl:col-span-7 grid grid-cols-2 gap-4">
+            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Logbook ACC</span>
+              <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
+                {verifiedLogbooksCount}
+                <span className="text-xl font-normal text-fg-3"> / {logbookTarget}</span>
+              </span>
+              <span className="text-xs text-fg-2">12 kelompok + 60 anggota</span>
             </div>
-
-            {/* Metric 2: WO aktif tim (menggantikan jumlah anggota yang statis, P2 LOG-032) */}
-            <div className="glass-card px-4 py-3 h-full flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[12px] font-semibold text-[#0B1B33] leading-none truncate">
-                  WO Aktif Tim
-                </span>
-                <div className="w-7 h-7 rounded-full bg-white/70 flex items-center justify-center shrink-0">
-                  <Users className="w-4 h-4 text-[#0062CC]" />
-                </div>
-              </div>
-
-              <div className="mt-1.5">
-                <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {teamActiveWorkOrders.length}
-                </span>
-                <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
-                  {teamOverdueCount} terlambat
-                </span>
-              </div>
+            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">WO aktif tim</span>
+              <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
+                {teamActiveWorkOrders.length}
+              </span>
+              <span
+                className={`self-start px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${
+                  teamOverdueCount > 0 ? 'bg-warm-soft text-warm' : 'bg-success-soft text-success'
+                }`}
+              >
+                {teamOverdueCount} terlambat
+              </span>
             </div>
-
-            {/* Metric 3: Weekly Reviews */}
-            <div className="glass-card px-4 py-3 h-full flex flex-col justify-between">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[12px] font-semibold text-[#0B1B33] leading-none truncate">
-                  Weekly Reviews
-                </span>
-                <div className="w-7 h-7 rounded-full bg-white/70 flex items-center justify-center shrink-0">
-                  <CalendarCheck className="w-4 h-4 text-[#0062CC]" />
-                </div>
-              </div>
-
-              <div className="mt-1.5">
-                <span className="font-heading text-2xl xl:text-[28px] font-bold leading-none tabular-nums text-[#0B1B33] block">
-                  {meetingLogs.length}
-                </span>
-                <span className="text-[11px] text-[#334155] leading-tight block mt-1 truncate">
-                  sesi asistensi
-                </span>
-              </div>
+            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Sesi asistensi</span>
+              <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
+                {meetingLogs.length}
+              </span>
+              <span className="text-xs text-fg-2">weekly review tercatat</span>
+            </div>
+            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">ACC pembimbing</span>
+              <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
+                {accSummary.acc}
+                <span className="text-xl font-normal text-fg-3"> / {accSummary.total} bab</span>
+              </span>
+              <span className="self-start px-2.5 py-0.5 rounded-full bg-primary-soft text-fg-2 text-[11px] font-semibold">
+                {accSummary.submitted} menunggu ACC
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ========================================================================= */}
       {/* NOTICE BANNER ("INFORMASI PENTING! - PM") */}
       {/* ========================================================================= */}
       <div className="glass-card px-5 sm:px-6 py-3.5 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-10 h-10 rounded-full bg-[#FEE2E2] text-[#B91C1C] flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5 text-[#B91C1C]" />
+          <div className="w-10 h-10 rounded-full bg-danger-soft text-danger flex items-center justify-center shrink-0">
+            <AlertTriangle className="w-5 h-5 text-danger" />
           </div>
           <div className="flex flex-wrap items-center gap-2 min-w-0">
-            <span className="font-heading text-xs font-bold text-[#0B1B33]">
+            <span className="font-heading text-xs font-bold text-fg">
               {config.noticeBanner.title}
             </span>
-            <span className="px-2.5 py-0.5 bg-[#FEF3C7] text-[#92400E] rounded-full text-[10px] font-extrabold uppercase">
+            <span className="px-2.5 py-0.5 bg-warm-soft text-warm rounded-full text-[10px] font-extrabold uppercase">
               {config.noticeBanner.badge}
             </span>
-            <span className="text-xs text-[#334155] truncate">
+            <span className="text-xs text-fg-2 truncate">
               {config.noticeBanner.text}
             </span>
           </div>
@@ -539,7 +521,7 @@ export const HomepageView: React.FC = () => {
               setNoticeText(config.noticeBanner.text);
               setShowNoticeModal(true);
             }}
-            className="w-11 h-11 rounded-full hover:bg-[rgba(234,246,253,0.7)] text-[#334155] hover:text-[#0062CC] flex items-center justify-center transition-colors shrink-0"
+            className="w-11 h-11 rounded-full hover:bg-muted/70 text-fg-2 hover:text-primary flex items-center justify-center transition-colors shrink-0"
             title="Edit Pengumuman PM"
           >
             <Pencil className="w-3.5 h-3.5" />
@@ -557,7 +539,7 @@ export const HomepageView: React.FC = () => {
         {/* ==================== LEFT COLUMN (3 cols) ==================== */}
         <div className="xl:col-span-3 flex flex-col gap-5">
           {/* Profile Identity Card */}
-          <div className="relative w-full h-[340px] rounded-[32px] overflow-hidden border border-white/70 shadow-cockpit-card hover:shadow-cockpit-pop transition-all group">
+          <div className="relative w-full h-[340px] rounded-[32px] overflow-hidden border border-glass-stroke shadow-cockpit-card hover:shadow-cockpit-pop transition-all group">
             {currentUser.photoURL ? (
               <img
                 src={currentUser.photoURL}
@@ -565,98 +547,47 @@ export const HomepageView: React.FC = () => {
                 className="absolute inset-0 w-full h-full object-cover object-[center_18%] group-hover:scale-105 transition-transform duration-700 ease-out"
               />
             ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-[#0B1B33] via-[#004A9E] to-[#007BFF] bg-tech-grid flex items-center justify-center pb-12">
-                <div className="w-24 h-24 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 text-white font-heading font-extrabold text-3xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
+              <div className="absolute inset-0 bg-hero flex items-center justify-center pb-12">
+                <div className="w-24 h-24 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 text-on-ink font-heading font-extrabold text-3xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
                   {currentUser.avatarInitial || currentUser.code}
                 </div>
               </div>
             )}
 
             <div className="absolute top-4 inset-x-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-white text-[10px] font-heading font-extrabold border border-white/20 shadow-xs pointer-events-auto">
-                <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-on-ink text-[10px] font-heading font-extrabold border border-white/20 shadow-xs pointer-events-auto">
+                <span className="w-2 h-2 rounded-full bg-success-solid animate-pulse"></span>
                 <span>{currentUser.role === 'admin' ? 'PM LEAD' : 'ENGINEER'}</span>
               </div>
             </div>
 
             <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 via-black/55 to-transparent pt-16 pb-5 px-5 flex items-end justify-between gap-3">
               <div className="min-w-0 pr-2">
-                <h3 className="font-heading font-extrabold text-lg text-white leading-tight drop-shadow-sm truncate">
+                <h3 className="font-heading font-extrabold text-lg text-on-ink leading-tight drop-shadow-sm truncate">
                   {currentUser.name}
                 </h3>
-                <p className="text-xs text-white/80 font-medium mt-0.5 drop-shadow-xs truncate flex items-center gap-1.5">
+                <p className="text-xs text-on-ink/80 font-medium mt-0.5 drop-shadow-xs truncate flex items-center gap-1.5">
                   <span>{currentUser.title}</span>
-                  <span className="text-white/40">•</span>
-                  <span className="text-[#93C5FD] font-semibold">@{currentUser.nickname}</span>
+                  <span className="text-on-ink/40">•</span>
+                  <span className="text-on-ink-accent font-semibold">@{currentUser.nickname}</span>
                 </p>
               </div>
-              <div className="shrink-0 px-3.5 py-1.5 rounded-full border border-white/60 bg-white/15 backdrop-blur-md text-white text-xs font-heading font-extrabold tracking-wide shadow-xs flex items-center justify-center">
+              <div className="shrink-0 px-3.5 py-1.5 rounded-full border border-glass-stroke bg-white/15 backdrop-blur-md text-on-ink text-xs font-heading font-extrabold tracking-wide shadow-xs flex items-center justify-center">
                 {currentUser.raciTag}
               </div>
             </div>
           </div>
 
-          {/* Countdown Tender Card */}
-          <div className="glass-card p-5 text-center">
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-heading font-bold text-xs text-[#0B1B33]">
-                Hitung Mundur Tenggat FEED (G2)
-              </span>
-              <Clock className="w-4 h-4 text-[#334155]" />
-            </div>
-            <p className="text-[11px] text-[#334155] text-left mb-3">
-              Batas: {config.tenderDeadline}
-            </p>
-
-            {/* Circular Dial Indicator */}
-            <div className="relative w-32 h-32 mx-auto flex items-center justify-center mb-3">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="42"
-                  fill="transparent"
-                  stroke="#DCEBF7"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="42"
-                  fill="transparent"
-                  stroke="#007BFF"
-                  strokeWidth="8"
-                  strokeDasharray="264"
-                  strokeDashoffset={String(tenderCountdown.dashOffset)}
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="font-heading text-2xl font-extrabold text-[#0B1B33] leading-none tabular-nums">
-                  {tenderCountdown.days}
-                  <span className="text-xs font-semibold ml-0.5">hari</span>
-                </span>
-                <span className="text-[10px] text-[#334155] font-medium mt-1 tabular-nums">
-                  {tenderCountdown.hours} jam {tenderCountdown.minutes} menit
-                </span>
-              </div>
-            </div>
-
-            <p className="text-[10px] text-[#334155] font-semibold border-t border-[#C9DCEB] pt-2.5">
-              {config.tenderStatusText} · {config.tenderPhaseText}
-            </p>
-          </div>
-
-          {/* Tugas Saya (Work Order) Dark Accent Card (Exception: Solid #0B1B33, Last card in Left Column -> flex-1) */}
-          <div className="flex-1 bg-[#0B1B33] text-white rounded-[28px] p-5 shadow-cockpit-pop border border-[#22314a] flex flex-col justify-between">
+          {/* Tugas Saya (Work Order) Dark Accent Card (Exception: Solid var(--text), Last card in Left Column -> flex-1) */}
+          <div className="flex-1 bg-ink text-on-ink rounded-[28px] p-5 shadow-cockpit-pop border border-ink-2 flex flex-col justify-between">
             <div className="flex flex-col flex-1 min-h-0">
               {/* Header & Summary Badges */}
               <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <h3 className="font-heading font-bold text-sm text-white">
+                <h3 className="font-heading font-bold text-sm text-on-ink">
                   Tugas Saya
                 </h3>
                 <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-white/15 text-white">
+                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-white/15 text-on-ink">
                     {isPM && woWidgetScope === 'team'
                       ? `${teamActiveWorkOrders.length} Aktif`
                       : `${myActiveWorkOrders.length} Aktif`}
@@ -664,7 +595,7 @@ export const HomepageView: React.FC = () => {
                   {(isPM && woWidgetScope === 'team'
                     ? teamOverdueCount
                     : myOverdueCount) > 0 && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-[#B91C1C] text-white inline-flex items-center gap-1">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-danger-solid text-on-ink inline-flex items-center gap-1">
                       <AlertTriangle className="w-3 h-3 shrink-0" />
                       {isPM && woWidgetScope === 'team'
                         ? teamOverdueCount
@@ -683,8 +614,8 @@ export const HomepageView: React.FC = () => {
                     onClick={() => setWoWidgetScope('mine')}
                     className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
                       woWidgetScope === 'mine'
-                        ? 'bg-[#0062CC] text-white shadow-xs'
-                        : 'text-[#9FB3C8] hover:text-white'
+                        ? 'bg-primary text-on-primary shadow-xs'
+                        : 'text-on-ink-2 hover:text-on-ink'
                     }`}
                   >
                     Saya ({myActiveWorkOrders.length})
@@ -694,8 +625,8 @@ export const HomepageView: React.FC = () => {
                     onClick={() => setWoWidgetScope('team')}
                     className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
                       woWidgetScope === 'team'
-                        ? 'bg-[#0062CC] text-white shadow-xs'
-                        : 'text-[#9FB3C8] hover:text-white'
+                        ? 'bg-primary text-on-primary shadow-xs'
+                        : 'text-on-ink-2 hover:text-on-ink'
                     }`}
                   >
                     Seluruh Tim ({teamActiveWorkOrders.length})
@@ -713,10 +644,10 @@ export const HomepageView: React.FC = () => {
                         key={st}
                         className="p-2 rounded-xl bg-white/10 border border-white/10"
                       >
-                        <span className="font-heading text-sm font-extrabold text-white tabular-nums block leading-none">
+                        <span className="font-heading text-sm font-extrabold text-on-ink tabular-nums block leading-none">
                           {teamStatusCounts[st]}
                         </span>
-                        <span className="text-[9px] text-[#9FB3C8] font-semibold block mt-1 truncate">
+                        <span className="text-[9px] text-on-ink-2 font-semibold block mt-1 truncate">
                           {st}
                         </span>
                       </div>
@@ -727,10 +658,10 @@ export const HomepageView: React.FC = () => {
                   {teamActiveWorkOrders.length === 0 ? (
                     <div className="flex-1 flex flex-col items-center justify-center text-center py-5 px-3 rounded-2xl bg-white/5 border border-white/10">
                       <CheckCircle2 className="w-6 h-6 text-[#34D399] mb-1.5" />
-                      <p className="text-xs font-semibold text-white">
+                      <p className="text-xs font-semibold text-on-ink">
                         Tidak ada tugas aktif di seluruh tim
                       </p>
-                      <p className="text-[11px] text-[#9FB3C8] mt-0.5">
+                      <p className="text-[11px] text-on-ink-2 mt-0.5">
                         Seluruh Work Order tim telah selesai dikerjakan.
                       </p>
                     </div>
@@ -747,23 +678,23 @@ export const HomepageView: React.FC = () => {
                           >
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-1.5 min-w-0">
-                                <span className="font-mono text-[10px] font-extrabold text-[#4CBAF5] shrink-0">
+                                <span className="font-mono text-[10px] font-extrabold text-on-ink-accent shrink-0">
                                   {wo.code}
                                 </span>
-                                <span className="px-1.5 py-0.5 rounded bg-white/15 text-[9px] font-bold text-white truncate">
+                                <span className="px-1.5 py-0.5 rounded bg-white/15 text-[9px] font-bold text-on-ink truncate">
                                   {wo.status}
                                 </span>
                                 {overdue && (
-                                  <span className="px-1.5 py-0.5 rounded bg-[#B91C1C] text-[9px] font-bold text-white shrink-0">
+                                  <span className="px-1.5 py-0.5 rounded bg-danger-solid text-[9px] font-bold text-on-ink shrink-0">
                                     +{Math.abs(daysDelta)}h
                                   </span>
                                 )}
                               </div>
-                              <span className="text-[10px] text-[#9FB3C8] shrink-0">
+                              <span className="text-[10px] text-on-ink-2 shrink-0">
                                 {formatYmdToIndonesian(wo.dueDate)}
                               </span>
                             </div>
-                            <p className="text-xs font-medium text-white leading-snug line-clamp-1">
+                            <p className="text-xs font-medium text-on-ink leading-snug line-clamp-1">
                               {wo.title}
                             </p>
                             <div className="flex items-center justify-between gap-2">
@@ -776,12 +707,12 @@ export const HomepageView: React.FC = () => {
                                     size="xs"
                                     useNickname
                                     avatarClassName="w-4 h-4 text-[8px]"
-                                    nameClassName="!text-[10px] !text-[#9FB3C8] !font-normal"
+                                    nameClassName="!text-[10px] !text-on-ink-2 !font-normal"
                                   />
                                 ))}
                               </div>
                               {wo.status === 'Diajukan' && (
-                                <span className="px-2 py-0.5 rounded-full bg-[#FEF3C7] text-[#92400E] text-[9px] font-extrabold shrink-0">
+                                <span className="px-2 py-0.5 rounded-full bg-warm-soft text-warm text-[9px] font-extrabold shrink-0">
                                   Review PM
                                 </span>
                               )}
@@ -796,10 +727,10 @@ export const HomepageView: React.FC = () => {
                 /* Empty State Personal Mode */
                 <div className="flex-1 flex flex-col items-center justify-center text-center py-6 px-3 rounded-2xl bg-white/5 border border-white/10">
                   <CheckCircle2 className="w-7 h-7 text-[#34D399] mb-2" />
-                  <p className="text-xs font-bold text-white">
+                  <p className="text-xs font-bold text-on-ink">
                     Tidak ada tugas aktif
                   </p>
-                  <p className="text-[11px] text-[#9FB3C8] mt-1 leading-relaxed">
+                  <p className="text-[11px] text-on-ink-2 mt-1 leading-relaxed">
                     Semua Work Order milik Anda sudah tuntas atau terkendali.
                   </p>
                 </div>
@@ -825,29 +756,29 @@ export const HomepageView: React.FC = () => {
                       >
                         <div className="flex items-center justify-between gap-1.5">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="font-mono text-[10px] font-extrabold text-[#4CBAF5]">
+                            <span className="font-mono text-[10px] font-extrabold text-on-ink-accent">
                               {wo.code}
                             </span>
                             {overdue && (
-                              <span className="px-1.5 py-0.5 rounded bg-[#B91C1C] text-[9px] font-bold text-white">
+                              <span className="px-1.5 py-0.5 rounded bg-danger-solid text-[9px] font-bold text-on-ink">
                                 Terlambat {Math.abs(daysDelta)}h
                               </span>
                             )}
                             {wo.needsRevision && wo.status === 'Dikerjakan' && (
-                              <span className="px-1.5 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] text-[9px] font-extrabold inline-flex items-center gap-0.5">
+                              <span className="px-1.5 py-0.5 rounded bg-warm-soft text-warm text-[9px] font-extrabold inline-flex items-center gap-0.5">
                                 <RotateCcw className="w-2.5 h-2.5" />
                                 Revisi
                               </span>
                             )}
                             {wo.priority === 'Kritis' && (
-                              <span className="px-1.5 py-0.5 rounded bg-[#FEE2E2] text-[#991B1B] text-[9px] font-extrabold">
+                              <span className="px-1.5 py-0.5 rounded bg-danger-soft text-danger text-[9px] font-extrabold">
                                 Kritis
                               </span>
                             )}
                           </div>
                           <span
                             className={`text-[10px] font-semibold shrink-0 ${
-                              overdue ? 'text-[#FCA5A5]' : 'text-[#9FB3C8]'
+                              overdue ? 'text-[#FCA5A5]' : 'text-on-ink-2'
                             }`}
                           >
                             {formatYmdToIndonesian(wo.dueDate)}
@@ -855,7 +786,7 @@ export const HomepageView: React.FC = () => {
                         </div>
 
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-xs font-medium text-white leading-snug line-clamp-2 flex-1 min-w-0">
+                          <p className="text-xs font-medium text-on-ink leading-snug line-clamp-2 flex-1 min-w-0">
                             {wo.title}
                           </p>
 
@@ -865,7 +796,7 @@ export const HomepageView: React.FC = () => {
                               type="button"
                               disabled={isRowBusy}
                               onClick={(e) => void handleQuickWoAction(e, wo, 'start')}
-                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-primary hover:bg-primary-hover disabled:opacity-50 text-on-primary text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
                             >
                               <Play className="w-2.5 h-2.5" />
                               Mulai
@@ -880,7 +811,7 @@ export const HomepageView: React.FC = () => {
                                 onClick={(e) =>
                                   void handleQuickWoAction(e, wo, 'complete-self')
                                 }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#059669] hover:bg-[#047857] disabled:opacity-50 text-white text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-success-solid hover:bg-success-solid disabled:opacity-50 text-on-ink text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
                               >
                                 <CheckCircle2 className="w-2.5 h-2.5" />
                                 Selesai
@@ -891,7 +822,7 @@ export const HomepageView: React.FC = () => {
                                 onClick={(e) =>
                                   void handleQuickWoAction(e, wo, 'detail')
                                 }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#FEF3C7] text-[#92400E] text-[10px] font-extrabold transition-colors"
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-warm-soft text-warm text-[10px] font-extrabold transition-colors"
                               >
                                 Isi Bukti
                               </button>
@@ -902,7 +833,7 @@ export const HomepageView: React.FC = () => {
                                 onClick={(e) =>
                                   void handleQuickWoAction(e, wo, 'submit')
                                 }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#38BDF8] hover:bg-[#0EA5E9] disabled:opacity-50 text-[#0B1B33] text-[10px] font-extrabold inline-flex items-center gap-1 transition-colors"
+                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-chart-2 hover:bg-primary disabled:opacity-50 text-fg text-[10px] font-extrabold inline-flex items-center gap-1 transition-colors"
                               >
                                 <Send className="w-2.5 h-2.5" />
                                 Ajukan
@@ -916,7 +847,7 @@ export const HomepageView: React.FC = () => {
                               onClick={(e) =>
                                 void handleQuickWoAction(e, wo, 'unblock')
                               }
-                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-[#FEE2E2] text-[#991B1B] text-[10px] font-extrabold transition-colors"
+                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-danger-soft text-danger text-[10px] font-extrabold transition-colors"
                             >
                               Lanjut
                             </button>
@@ -940,7 +871,7 @@ export const HomepageView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab('work-orders')}
-                className="w-full min-h-[44px] bg-white/15 hover:bg-white/25 text-white rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
+                className="w-full min-h-[44px] bg-white/15 hover:bg-white/25 text-on-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
               >
                 <span>Buka Menu Work Order</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -950,7 +881,7 @@ export const HomepageView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowLegacyTasksModal(true)}
-                  className="w-full py-1.5 text-[11px] text-[#9FB3C8] hover:text-white font-medium flex items-center justify-center gap-1.5 transition-colors"
+                  className="w-full py-1.5 text-[11px] text-on-ink-2 hover:text-on-ink font-medium flex items-center justify-center gap-1.5 transition-colors"
                 >
                   <Archive className="w-3 h-3" />
                   <span>
@@ -1031,20 +962,20 @@ export const HomepageView: React.FC = () => {
           <div className="grid grid-cols-1 gap-4 xl:h-full">
             <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
               <div>
-                <span className="text-[11px] text-[#334155] font-medium block">
+                <span className="text-[11px] text-fg-2 font-medium block">
                   Status ACC Pembimbing
                 </span>
                 {/* Dihitung dari status deliverable §1.4, bukan teks config manual (P1 audit, LOG-030) */}
-                <span className="font-heading text-lg font-bold text-[#0B1B33] block mt-1 tabular-nums">
+                <span className="font-heading text-lg font-bold text-fg block mt-1 tabular-nums">
                   {accSummary.acc} / {accSummary.total} ACC
                 </span>
               </div>
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#92400E] text-[10px] font-bold flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-[#B45309]" />
+                <span className="px-2 py-0.5 rounded-md bg-warm-soft text-warm text-[10px] font-bold flex items-center gap-1">
+                  <Clock className="w-3 h-3 text-warm" />
                   {accSummary.submitted} menunggu ACC
                 </span>
-                <span className="text-[10px] text-[#334155] truncate">
+                <span className="text-[10px] text-fg-2 truncate">
                   {config.supervisorReviewer}
                 </span>
               </div>
@@ -1056,8 +987,8 @@ export const HomepageView: React.FC = () => {
           <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-[#0062CC]" />
-                <span className="font-heading font-bold text-xs text-[#0B1B33]">
+                <Calendar className="w-4 h-4 text-primary" />
+                <span className="font-heading font-bold text-xs text-fg">
                   Bimbingan Mendatang
                 </span>
               </div>
@@ -1069,7 +1000,7 @@ export const HomepageView: React.FC = () => {
                     setMeetingAgenda(config.upcomingMeeting.mainAgenda);
                     setShowMeetingModal(true);
                   }}
-                  className="w-11 h-11 rounded-full hover:bg-[rgba(234,246,253,0.7)] text-[#334155] hover:text-[#0062CC] flex items-center justify-center transition-colors"
+                  className="w-11 h-11 rounded-full hover:bg-muted/70 text-fg-2 hover:text-primary flex items-center justify-center transition-colors"
                 >
                   <Pencil className="w-3.5 h-3.5" />
                 </button>
@@ -1078,28 +1009,28 @@ export const HomepageView: React.FC = () => {
 
             <div className="flex items-start gap-4">
               {/* Date Box */}
-              <div className="w-14 h-16 rounded-2xl bg-[rgba(234,246,253,0.7)] border border-[#C9DCEB]/60 flex flex-col items-center justify-center shrink-0">
-                <span className="font-heading text-xl font-extrabold text-[#0062CC] leading-none tabular-nums">
+              <div className="w-14 h-16 rounded-2xl bg-muted/70 border border-line/60 flex flex-col items-center justify-center shrink-0">
+                <span className="font-heading text-xl font-extrabold text-primary leading-none tabular-nums">
                   {config.upcomingMeeting.dayNum}
                 </span>
-                <span className="text-[10px] font-bold text-[#334155] mt-0.5 uppercase">
+                <span className="text-[10px] font-bold text-fg-2 mt-0.5 uppercase">
                   {config.upcomingMeeting.month}
                 </span>
               </div>
 
               <div className="min-w-0 flex-1">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33]">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-fg">
                   {config.upcomingMeeting.date}
                 </h4>
-                <p className="text-[11px] text-[#334155] mt-0.5 leading-snug">
+                <p className="text-[11px] text-fg-2 mt-0.5 leading-snug">
                   {config.upcomingMeeting.location}
                 </p>
 
-                <div className="mt-2.5 p-3 rounded-2xl bg-[rgba(234,246,253,0.7)] border border-[#DCEBF7]">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#0062CC] block mb-0.5">
+                <div className="mt-2.5 p-3 rounded-2xl bg-muted/70 border border-line">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary block mb-0.5">
                     AGENDA UTAMA
                   </span>
-                  <p className="text-xs font-semibold text-[#0B1B33]">
+                  <p className="text-xs font-semibold text-fg">
                     {config.upcomingMeeting.mainAgenda}
                   </p>
                 </div>
@@ -1110,25 +1041,25 @@ export const HomepageView: React.FC = () => {
           {/* Timeline Minggu Ini Card */}
           <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-3">
-              <span className="font-heading font-bold text-xs text-[#0B1B33]">
+              <span className="font-heading font-bold text-xs text-fg">
                 Timeline Minggu Ini
               </span>
-              <span className="text-[10px] font-semibold text-[#334155]">
+              <span className="text-[10px] font-semibold text-fg-2">
                 ISO 10628 &amp; ISA-5.1 Workflow
               </span>
             </div>
 
             <div className="flex items-start gap-3">
-              <span className="px-2.5 py-1 rounded-xl bg-[#0062CC] text-white font-heading text-xs font-extrabold shrink-0">
+              <span className="px-2.5 py-1 rounded-xl bg-primary text-on-primary font-heading text-xs font-extrabold shrink-0">
                 {config.weeklyFocus.week}
               </span>
               <div>
-                <p className="text-xs font-bold text-[#0B1B33]">
+                <p className="text-xs font-bold text-fg">
                   {config.weeklyFocus.title}
                 </p>
-                <div className="flex items-center gap-2 mt-1.5 text-[11px] text-[#334155]">
+                <div className="flex items-center gap-2 mt-1.5 text-[11px] text-fg-2">
                   <span className="inline-flex items-center gap-1">
-                    <Flag className="w-3.5 h-3.5 text-[#0062CC]" />
+                    <Flag className="w-3.5 h-3.5 text-primary" />
                     {config.weeklyFocus.tag}
                   </span>
                   <span>•</span>
@@ -1142,13 +1073,13 @@ export const HomepageView: React.FC = () => {
           <div className="flex-1 glass-card p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between mb-3">
-                <span className="font-heading font-bold text-xs text-[#0B1B33]">
+                <span className="font-heading font-bold text-xs text-fg">
                   RACI Assignment Ringkas
                 </span>
                 <button
                   type="button"
                   onClick={() => setActiveTab('team-raci')}
-                  className="text-xs text-[#0062CC] font-bold hover:underline flex items-center gap-1"
+                  className="text-xs text-primary font-bold hover:underline flex items-center gap-1"
                 >
                   Lihat Matriks Penuh
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -1162,14 +1093,14 @@ export const HomepageView: React.FC = () => {
                   return (
                     <div
                       key={row.id}
-                      className="px-3 py-2 rounded-2xl bg-[rgba(234,246,253,0.7)] text-xs font-medium text-[#0B1B33] flex items-center justify-between gap-2"
+                      className="px-3 py-2 rounded-2xl bg-muted/70 text-xs font-medium text-fg flex items-center justify-between gap-2"
                     >
-                      <span className="text-[11px] text-[#334155] font-semibold truncate" title={row.deliverable}>
+                      <span className="text-[11px] text-fg-2 font-semibold truncate" title={row.deliverable}>
                         {row.deliverable}
                       </span>
                       <div className="inline-flex items-center gap-1.5 shrink-0">
                         {responsible.length === 0 ? (
-                          <span className="text-[11px] text-[#92400E] font-bold">Belum ada R</span>
+                          <span className="text-[11px] text-warm font-bold">Belum ada R</span>
                         ) : (
                           responsible.slice(0, 2).map((u) => (
                             <UserChip
@@ -1178,28 +1109,28 @@ export const HomepageView: React.FC = () => {
                               variant="avatar-nama"
                               size="xs"
                               useNickname
-                              nameClassName="!font-bold !text-[#0062CC]"
+                              nameClassName="!font-bold !text-primary"
                             />
                           ))
                         )}
-                        <span className="font-extrabold text-[#0062CC]">(R)</span>
+                        <span className="font-extrabold text-primary">(R)</span>
                       </div>
                     </div>
                   );
                 })}
                 {raciRows.length === 0 && (
-                  <p className="text-xs text-[#334155]">Matriks RACI belum diisi.</p>
+                  <p className="text-xs text-fg-2">Matriks RACI belum diisi.</p>
                 )}
               </div>
             </div>
 
-            <div className="mt-4 pt-3 border-t border-[#C9DCEB] flex items-center justify-between text-[11px] text-[#334155]">
+            <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-fg-2">
               <span>Aturan Governance: Tepat 1 Accountable (A) &amp; min. 1 Responsible (R)</span>
               <span
                 className={`px-2 py-0.5 rounded-full font-bold text-[10px] tabular-nums ${
                   validRaciCount === raciRows.length
-                    ? 'bg-[#D1FAE5] text-[#065F46]'
-                    : 'bg-[#FEF3C7] text-[#92400E]'
+                    ? 'bg-success-soft text-success'
+                    : 'bg-warm-soft text-warm'
                 }`}
               >
                 {validRaciCount}/{raciRows.length} Valid
@@ -1215,20 +1146,20 @@ export const HomepageView: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <div>
-                  <h3 className="font-heading font-bold text-sm text-[#0B1B33]">
+                  <h3 className="font-heading font-bold text-sm text-fg">
                     Progress Dokumen FEED
                   </h3>
-                  <p className="text-[11px] text-[#334155]">
+                  <p className="text-[11px] text-fg-2">
                     Total Pembobotan Bab &amp; Lampiran A3
                   </p>
                 </div>
-                <span className="font-heading text-4xl font-extrabold text-[#0062CC] tabular-nums">
+                <span className="font-heading text-4xl font-extrabold text-primary tabular-nums">
                   {overallWeightedProgress}%
                 </span>
               </div>
 
               {/* Hatched Master Progress Bar */}
-              <div className="w-full h-4 rounded-full bg-[#DCEBF7] overflow-hidden my-3.5 p-0.5">
+              <div className="w-full h-4 rounded-full bg-muted overflow-hidden my-3.5 p-0.5">
                 <div
                   className="h-full rounded-full bg-hatch-pattern transition-all duration-500"
                   style={{ width: `${overallWeightedProgress}%` }}
@@ -1246,18 +1177,18 @@ export const HomepageView: React.FC = () => {
                     return (
                     <div key={del.id} className="space-y-1">
                       <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-[#0B1B33] truncate max-w-[210px]">
+                        <span className="font-bold text-fg truncate max-w-[210px]">
                           {del.title}
                         </span>
                         <div className="flex items-center gap-1.5 shrink-0">
-                          <span className="font-bold text-[#0B1B33] tabular-nums">
+                          <span className="font-bold text-fg tabular-nums">
                             {delProgress}%
                           </span>
                           {isPM && (
                             <button
                               type="button"
                               onClick={() => setActiveTab('workspaces')}
-                              className="min-w-[28px] min-h-[28px] flex items-center justify-center text-[#334155] hover:text-[#0062CC]"
+                              className="min-w-[28px] min-h-[28px] flex items-center justify-center text-fg-2 hover:text-primary"
                               title={`Ubah status ${del.title} di Workspaces`}
                               aria-label={`Ubah status ${del.title} di Workspaces`}
                             >
@@ -1267,11 +1198,11 @@ export const HomepageView: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-[#334155]">
+                      <div className="flex items-center justify-between text-[11px] text-fg-2">
                         <div className="flex items-center gap-1.5">
                           <span>{del.targetWeek}</span>
                           {del.badgeNote && (
-                            <span className="px-1.5 py-0.5 bg-[#FEE2E2] text-[#991B1B] text-[10px] font-bold rounded-md flex items-center gap-0.5">
+                            <span className="px-1.5 py-0.5 bg-danger-soft text-danger text-[10px] font-bold rounded-md flex items-center gap-0.5">
                               <AlertTriangle className="w-2.5 h-2.5" />
                               {del.badgeNote}
                             </span>
@@ -1282,9 +1213,9 @@ export const HomepageView: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="w-full h-2 rounded-full bg-[#DCEBF7] overflow-hidden">
+                      <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
                         <div
-                          className="h-full bg-[#007BFF] rounded-full transition-all duration-300"
+                          className="h-full bg-primary rounded-full transition-all duration-300"
                           style={{ width: `${delProgress}%` }}
                         ></div>
                       </div>
@@ -1298,7 +1229,7 @@ export const HomepageView: React.FC = () => {
             <button
               type="button"
               onClick={() => setActiveTab('gworkspace')}
-              className="w-full mt-5 min-h-[44px] bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
+              className="w-full mt-5 min-h-[44px] bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               Buka Dokumen Master (Google Workspace)
@@ -1309,103 +1240,103 @@ export const HomepageView: React.FC = () => {
           <div className="flex-1 glass-card p-6 flex flex-col justify-between">
             {/* Header */}
             <div className="flex items-center justify-between gap-2 mb-3">
-              <h3 className="font-heading font-bold text-sm text-[#0B1B33]">
+              <h3 className="font-heading font-bold text-sm text-fg">
                 Terbaru dari Weekly MoM
               </h3>
               <button
                 type="button"
                 onClick={() => setActiveTab('weekly-mom')}
-                className="text-xs text-[#0062CC] font-bold hover:underline inline-flex items-center gap-1 shrink-0"
+                className="text-xs text-primary font-bold hover:underline inline-flex items-center gap-1 shrink-0"
               >
                 Lihat Semua
                 <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* Two Stacked Blocks Separated by 1px #C9DCEB */}
+            {/* Two Stacked Blocks Separated by 1px var(--border) */}
             <div className="flex-1 flex flex-col justify-between gap-3">
               {/* Block A: Meeting Log Terbaru */}
               <div className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#334155] mb-1.5">
-                  <MessagesSquare className="w-3.5 h-3.5 text-[#0062CC]" />
+                <div className="flex items-center gap-1.5 text-[11px] font-bold text-fg-2 mb-1.5">
+                  <MessagesSquare className="w-3.5 h-3.5 text-primary" />
                   <span>Meeting Log Terbaru</span>
                 </div>
 
-                <div className="rounded-[20px] bg-[rgba(234,246,253,0.7)] p-3.5 border border-[#DCEBF7]">
+                <div className="rounded-[20px] bg-muted/70 p-3.5 border border-line">
                   {latestMeetingLog ? (
                     <div className="space-y-1.5">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full bg-[#E2E8F0] text-[#334155] text-[10px] font-bold">
+                        <span className="px-2.5 py-0.5 rounded-full bg-muted text-fg-2 text-[10px] font-bold">
                           {latestMeetingLog.weekLabel || `Week ${latestMeetingLog.week}`}
                         </span>
-                        <span className="text-[11px] font-medium text-[#334155]">
+                        <span className="text-[11px] font-medium text-fg-2">
                           {latestMeetingLog.dayText}
                         </span>
                       </div>
 
-                      <p className="text-xs font-bold text-[#0B1B33] line-clamp-2 leading-snug">
+                      <p className="text-xs font-bold text-fg line-clamp-2 leading-snug">
                         {latestMeetingLog.topic}
                       </p>
 
-                      <p className="text-[11px] font-semibold text-[#334155] truncate">
-                        Evaluator: <span className="text-[#0B1B33]">{latestMeetingLog.evaluator}</span>
+                      <p className="text-[11px] font-semibold text-fg-2 truncate">
+                        Evaluator: <span className="text-fg">{latestMeetingLog.evaluator}</span>
                       </p>
 
-                      <p className="text-[11px] text-[#334155] line-clamp-2 leading-relaxed">
+                      <p className="text-[11px] text-fg-2 line-clamp-2 leading-relaxed">
                         {latestMeetingLog.summary}
                       </p>
                     </div>
                   ) : (
-                    <p className="text-xs text-[#334155] py-2">
+                    <p className="text-xs text-fg-2 py-2">
                       Belum ada Meeting Log.
                     </p>
                   )}
                 </div>
               </div>
 
-              {/* 1px #C9DCEB Horizontal Divider */}
-              <div className="border-t border-[#C9DCEB]" />
+              {/* 1px var(--border) Horizontal Divider */}
+              <div className="border-t border-line" />
 
               {/* Block B: Slide Deck Terbaru */}
               <div className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#334155] mb-1.5">
-                  <Presentation className="w-3.5 h-3.5 text-[#0062CC]" />
+                <div className="flex items-center gap-1.5 text-[11px] font-bold text-fg-2 mb-1.5">
+                  <Presentation className="w-3.5 h-3.5 text-primary" />
                   <span>Slide Deck Terbaru</span>
                 </div>
 
-                <div className="rounded-[20px] bg-[rgba(234,246,253,0.7)] p-3.5 border border-[#DCEBF7]">
+                <div className="rounded-[20px] bg-muted/70 p-3.5 border border-line">
                   {latestSlideDeck ? (
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full bg-[#E2E8F0] text-[#334155] text-[10px] font-bold">
+                        <span className="px-2.5 py-0.5 rounded-full bg-muted text-fg-2 text-[10px] font-bold">
                           {latestSlideDeck.weekLabel || `Week ${latestSlideDeck.week}`}
                         </span>
-                        <span className="text-[11px] font-medium text-[#334155]">
+                        <span className="text-[11px] font-medium text-fg-2">
                           {latestSlideDeck.date}
                         </span>
                       </div>
 
-                      <p className="text-xs font-bold text-[#0B1B33] line-clamp-2 leading-snug">
+                      <p className="text-xs font-bold text-fg line-clamp-2 leading-snug">
                         {latestSlideDeck.title.toLowerCase().startsWith('slide deck')
                           ? latestSlideDeck.title
                           : `Slide Deck Week ${latestSlideDeck.week}: ${latestSlideDeck.title}`}
                       </p>
 
-                      <div className="pt-1.5 border-t border-[#C9DCEB]/60 flex items-center justify-between gap-2">
+                      <div className="pt-1.5 border-t border-line/60 flex items-center justify-between gap-2">
                         <UserChip
                           uid={latestSlideDeck.presenter}
                           variant="avatar-nama-jabatan"
                           size="xs"
                           useNickname
-                          nameClassName="!text-[11px] !font-bold !text-[#0B1B33]"
-                          titleClassName="!text-[10px] !text-[#334155]"
+                          nameClassName="!text-[11px] !font-bold !text-fg"
+                          titleClassName="!text-[10px] !text-fg-2"
                         />
 
                         <a
                           href={latestSlideDeck.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] text-white text-[11px] font-bold inline-flex items-center gap-1.5 shrink-0 transition-colors"
+                          className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-[11px] font-bold inline-flex items-center gap-1.5 shrink-0 transition-colors"
                         >
                           <span>Buka</span>
                           <ExternalLink className="w-3.5 h-3.5" />
@@ -1413,7 +1344,7 @@ export const HomepageView: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-xs text-[#334155] py-2">
+                    <p className="text-xs text-fg-2 py-2">
                       Belum ada Slide Deck.
                     </p>
                   )}
@@ -1430,16 +1361,16 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Project Status Modal */}
       {showStatusModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
-              <h3 className="font-heading font-bold text-sm text-[#0B1B33]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <div className="flex items-center justify-between pb-3 border-b border-line">
+              <h3 className="font-heading font-bold text-sm text-fg">
                 Ubah Status Proyek (PM)
               </h3>
               <button
                 type="button"
                 onClick={() => setShowStatusModal(false)}
-                className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center"
+                className="w-11 h-11 rounded-full bg-muted text-fg flex items-center justify-center"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1447,7 +1378,7 @@ export const HomepageView: React.FC = () => {
 
             <form onSubmit={handleSaveStatus} className="mt-4 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-2">
+                <label className="block text-xs font-semibold text-fg mb-2">
                   Pilih Status Proyek
                 </label>
                 <div className="grid grid-cols-1 gap-2.5">
@@ -1467,7 +1398,7 @@ export const HomepageView: React.FC = () => {
                             st.cardBg
                           } ${st.badgeText} ${
                             isSelected
-                              ? 'ring-2 ring-[#0B1B33] border-[#0B1B33] font-extrabold'
+                              ? 'ring-2 ring-fg border-fg font-extrabold'
                               : `${st.cardBorder} opacity-85 hover:opacity-100 font-bold`
                           }`}
                         >
@@ -1476,7 +1407,7 @@ export const HomepageView: React.FC = () => {
                             <span>{st.label}</span>
                           </span>
                           {isSelected && (
-                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-white/80">
+                            <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-surface/80">
                               Aktif
                             </span>
                           )}
@@ -1488,22 +1419,22 @@ export const HomepageView: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-semibold text-fg mb-1">
                   Deskripsi Status
                 </label>
                 <input
                   type="text"
                   value={editStatusDesc}
                   onChange={(e) => setEditStatusDesc(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                   required
                 />
               </div>
 
               <div>
                 <div className="flex justify-between text-xs font-semibold mb-1">
-                  <span className="text-[#0B1B33]">Audit Kecepatan (%)</span>
-                  <span className="font-bold text-[#0062CC] tabular-nums">
+                  <span className="text-fg">Audit Kecepatan (%)</span>
+                  <span className="font-bold text-primary tabular-nums">
                     {editSpeedAudit}%
                   </span>
                 </div>
@@ -1521,13 +1452,13 @@ export const HomepageView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowStatusModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:bg-[#EAF6FD] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 hover:bg-muted rounded-full"
                 >
                   Tutup
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold rounded-full shadow-xs"
+                  className="min-h-[44px] px-5 py-2 bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold rounded-full shadow-xs"
                 >
                   Simpan Perubahan
                 </button>
@@ -1540,35 +1471,35 @@ export const HomepageView: React.FC = () => {
       {/* Read-Only Legacy Tasks Archive Modal */}
       {showLegacyTasksModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs"
           role="dialog"
           aria-modal="true"
           aria-labelledby="legacy-tasks-archive-title"
         >
-          <div className="w-full max-w-md max-h-[88vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
+          <div className="w-full max-w-md max-h-[88vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-line">
               <div>
                 <h3
                   id="legacy-tasks-archive-title"
-                  className="font-heading font-bold text-sm text-[#0B1B33]"
+                  className="font-heading font-bold text-sm text-fg"
                 >
                   Arsip Checklist Lama ({completedTasksCount}/{tasks.length})
                 </h3>
-                <p className="text-[11px] text-[#4A5A72] mt-0.5">
+                <p className="text-[11px] text-fg-3 mt-0.5">
                   Mode baca-saja • Penugasan aktif kini terpusat di menu Work Order
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowLegacyTasksModal(false)}
-                className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center shrink-0"
+                className="w-11 h-11 rounded-full bg-muted text-fg flex items-center justify-center shrink-0"
                 aria-label="Tutup Arsip Checklist Lama"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="p-3 rounded-2xl bg-[#EAF6FD] text-[11px] text-[#0B1B33] leading-relaxed">
+            <div className="p-3 rounded-2xl bg-muted text-[11px] text-fg leading-relaxed">
               Daftar tugas minggu awal disimpan utuh sebagai arsip referensi proyek tanpa perubahan data.
             </div>
 
@@ -1576,31 +1507,31 @@ export const HomepageView: React.FC = () => {
               {tasks.map((task) => (
                 <div
                   key={task.id}
-                  className="flex items-start gap-2.5 p-3 rounded-2xl bg-[#F8FAFC] border border-[#EAF6FD]"
+                  className="flex items-start gap-2.5 p-3 rounded-2xl bg-muted border border-line"
                 >
                   {task.completed ? (
-                    <CheckCircle2 className="w-4 h-4 text-[#059669] shrink-0 mt-0.5" />
+                    <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
                   ) : (
-                    <Circle className="w-4 h-4 text-[#94A3B8] shrink-0 mt-0.5" />
+                    <Circle className="w-4 h-4 text-fg-3 shrink-0 mt-0.5" />
                   )}
                   <div className="flex-1 min-w-0">
                     <p
                       className={`text-xs leading-snug ${
                         task.completed
-                          ? 'line-through text-[#64748B]'
-                          : 'text-[#0B1B33] font-semibold'
+                          ? 'line-through text-fg-3'
+                          : 'text-fg font-semibold'
                       }`}
                     >
                       {task.title}
                     </p>
-                    <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-[#4A5A72]">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1 text-[10px] text-fg-3">
                       <UserChip
                         uid={task.pic}
                         variant="avatar-nama"
                         size="xs"
                         useNickname
                         avatarClassName="w-4 h-4 text-[8px]"
-                        nameClassName="!text-[10px] !text-[#4A5A72] !font-semibold"
+                        nameClassName="!text-[10px] !text-fg-3 !font-semibold"
                       />
                       <span>• {task.day}</span>
                       {task.week && <span>• {task.week}</span>}
@@ -1614,7 +1545,7 @@ export const HomepageView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowLegacyTasksModal(false)}
-                className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:bg-[#EAF6FD] rounded-full"
+                className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 hover:bg-muted rounded-full"
               >
                 Tutup
               </button>
@@ -1624,7 +1555,7 @@ export const HomepageView: React.FC = () => {
                   setShowLegacyTasksModal(false);
                   setActiveTab('work-orders');
                 }}
-                className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold rounded-full shadow-xs"
+                className="min-h-[44px] px-5 py-2 bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold rounded-full shadow-xs"
               >
                 Buka Work Order
               </button>
@@ -1635,21 +1566,21 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Notice Modal */}
       {showNoticeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               Perbarui Informasi Penting (PM)
             </h3>
             <form onSubmit={handleSaveNotice} className="mt-4 space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-semibold text-fg mb-1">
                   Isi Pengumuman
                 </label>
                 <textarea
                   rows={3}
                   value={noticeText}
                   onChange={(e) => setNoticeText(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                   required
                 />
               </div>
@@ -1657,13 +1588,13 @@ export const HomepageView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowNoticeModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full shadow-xs"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full shadow-xs"
                 >
                   Simpan
                 </button>
@@ -1675,33 +1606,33 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Meeting Modal */}
       {showMeetingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               Perbarui Jadwal Bimbingan
             </h3>
             <form onSubmit={handleSaveMeeting} className="mt-4 space-y-3">
               <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-semibold text-fg mb-1">
                   Hari &amp; Tanggal
                 </label>
                 <input
                   type="text"
                   value={meetingDate}
                   onChange={(e) => setMeetingDate(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-semibold text-fg mb-1">
                   Agenda Utama
                 </label>
                 <textarea
                   rows={2}
                   value={meetingAgenda}
                   onChange={(e) => setMeetingAgenda(e.target.value)}
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1709,13 +1640,13 @@ export const HomepageView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowMeetingModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan
                 </button>

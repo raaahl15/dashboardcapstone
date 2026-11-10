@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/layout/Header';
+import { Sidebar, BottomNav } from './components/layout/Sidebar';
+import { CommandPalette } from './components/layout/CommandPalette';
 import { UserChip } from './components/common/UserChip';
 import { ExportImportModal } from './components/layout/ExportImportModal';
 import { ProfileModal } from './components/layout/ProfileModal';
@@ -59,11 +61,10 @@ const SubTabBar: React.FC = () => {
   if (group.tabs.length < 2) return null;
   return (
     <div
-      className="mb-4 flex flex-wrap items-center gap-2"
+      className="mb-5 inline-flex max-w-full overflow-x-auto scrollbar-none items-center gap-1 p-1 rounded-full bg-muted border border-line"
       role="tablist"
       aria-label={`Sub-menu ${group.label}`}
     >
-      <span className="text-[11px] font-bold uppercase tracking-wider text-[#4A5A72] mr-1">{group.label}</span>
       {group.tabs.map((t) => {
         const active = t.key === activeTab;
         return (
@@ -73,8 +74,8 @@ const SubTabBar: React.FC = () => {
             role="tab"
             aria-selected={active}
             onClick={() => setActiveTab(t.key)}
-            className={`min-h-[44px] px-4 rounded-full text-xs font-bold transition-all ${
-              active ? 'bg-[#0062CC] text-white shadow-xs' : 'bg-white/80 text-[#334155] border border-white hover:bg-white'
+            className={`min-h-[40px] px-4 rounded-full text-[13px] whitespace-nowrap transition-all ${
+              active ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium hover:text-fg'
             }`}
           >
             {t.label}
@@ -110,17 +111,17 @@ class ChunkErrorBoundary extends React.Component<ChunkErrorBoundaryProps, ChunkE
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center bg-white/80 rounded-3xl border border-white space-y-3 shadow-cockpit-card my-4">
-          <h3 className="font-heading font-bold text-base text-[#0B1B33]">
+        <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center bg-surface/80 rounded-3xl border border-glass-stroke space-y-3 shadow-cockpit-card my-4">
+          <h3 className="font-heading font-bold text-base text-fg">
             Pembaruan Versi Terdeteksi atau Modul Gagal Dimuat
           </h3>
-          <p className="text-xs text-[#4A5A72] max-w-md">
+          <p className="text-xs text-fg-3 max-w-md">
             Aplikasi mendeteksi aset versi baru atau koneksi terputus saat memuat tampilan tab. Silakan muat ulang halaman untuk menggunakan versi teranyar.
           </p>
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold shadow-xs transition-all"
+            className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold shadow-xs transition-all"
           >
             Muat Ulang Halaman
           </button>
@@ -135,11 +136,34 @@ const MainApp: React.FC = () => {
   const { isLoggedIn, isLoading, isDataLoaded, authError, syncError, logout, activeTab } = useApp();
   const [showExportImport, setShowExportImport] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
+  // Ctrl/Cmd + K membuka pencarian cepat
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setShowSearch((v) => !v);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-sm text-[#4A5A72]">
-        Menghubungkan ke Firebase...
+      <div className="bg-cockpit-canvas min-h-screen p-4 lg:pl-[7.5rem] lg:pr-8 lg:py-6" role="status" aria-live="polite">
+        <span className="sr-only">Menghubungkan ke Firebase...</span>
+        <div className="max-w-[1440px] mx-auto space-y-4 animate-pulse">
+          <div className="h-12 w-64 rounded-full bg-muted" />
+          <div className="h-44 rounded-[32px] bg-muted" />
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="h-28 rounded-[28px] bg-muted" />
+            ))}
+          </div>
+          <div className="h-64 rounded-[32px] bg-muted" />
+        </div>
       </div>
     );
   }
@@ -150,15 +174,15 @@ const MainApp: React.FC = () => {
 
   if (!isDataLoaded) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center text-[#0B1B33]">
-        <h1 className="font-heading text-xl font-bold">Data proyek belum dapat dimuat</h1>
-        <p className="max-w-xl text-sm text-[#4A5A72]">
+      <div className="bg-cockpit-canvas min-h-screen flex flex-col items-center justify-center gap-4 px-6 text-center text-fg">
+        <h1 className="font-heading text-3xl font-normal">Data proyek <span className="font-accent text-primary">belum</span> dapat dimuat</h1>
+        <p className="max-w-xl text-sm text-fg-3">
           {syncError || 'Periksa koneksi internet dan aturan akses Firestore, lalu coba lagi.'}
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => window.location.reload()}
-            className="min-h-[44px] rounded-full bg-[#0062CC] px-5 py-2 text-sm font-semibold text-white"
+            className="min-h-[44px] rounded-full bg-primary px-5 py-2 text-sm font-semibold text-on-primary"
           >
             Coba lagi
           </button>
@@ -166,7 +190,7 @@ const MainApp: React.FC = () => {
             onClick={() => {
               void logout();
             }}
-            className="min-h-[44px] rounded-full border border-[#6B7F99] px-5 py-2 text-sm font-semibold"
+            className="min-h-[44px] rounded-full border border-line-strong px-5 py-2 text-sm font-semibold"
           >
             Keluar
           </button>
@@ -176,10 +200,11 @@ const MainApp: React.FC = () => {
   }
 
   return (
-    <div className="bg-sexy-blue min-h-screen text-[#0B1B33] flex flex-col antialiased">
+    <div className="bg-cockpit-canvas min-h-screen text-fg flex flex-col antialiased lg:pl-[6.5rem]">
+      <Sidebar />
       {(syncError || authError) && (
         <div
-          className="bg-[#FEE2E2] px-4 py-2 text-center text-xs font-semibold text-[#991B1B]"
+          className="mx-4 lg:mx-8 mt-4 rounded-2xl border border-danger-line bg-danger-soft px-4 py-2.5 text-center text-xs font-semibold text-danger"
           role="alert"
         >
           {syncError
@@ -191,15 +216,16 @@ const MainApp: React.FC = () => {
       <Header
         onOpenExportImport={() => setShowExportImport(true)}
         onOpenProfile={() => setShowProfileModal(true)}
+        onOpenSearch={() => setShowSearch(true)}
       />
 
       {/* Main Content Viewport */}
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-8 py-6">
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 lg:px-8 pt-2 pb-6">
         <SubTabBar />
         <ChunkErrorBoundary>
           <React.Suspense
             fallback={
-              <div className="min-h-[400px] flex items-center justify-center text-xs font-semibold text-[#4A5A72]">
+              <div className="min-h-[400px] flex items-center justify-center text-xs font-semibold text-fg-3">
                 Memuat tampilan modul...
               </div>
             }
@@ -223,10 +249,10 @@ const MainApp: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="w-full py-6 px-4 text-center text-xs text-[#334155] border-t border-white/70 bg-white/75 backdrop-blur-xs mt-10">
+      <footer className="w-full py-6 px-4 pb-28 lg:pb-6 text-center text-xs text-fg-3 border-t border-line mt-10">
         <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 px-4">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
-            <span className="font-heading font-extrabold text-[#0B1B33]">
+            <span className="font-heading font-extrabold text-fg">
               Dashboard Capstone Area 1
             </span>
             <span>•</span>
@@ -237,8 +263,8 @@ const MainApp: React.FC = () => {
               size="xs"
               inlineTitle
               avatarClassName="hidden"
-              nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
-              titleClassName="!text-xs !text-[#4A5A72]"
+              nameClassName="!text-xs !font-semibold !text-fg"
+              titleClassName="!text-xs !text-fg-3"
             />
           </div>
           <div>
@@ -248,6 +274,9 @@ const MainApp: React.FC = () => {
           </div>
         </div>
       </footer>
+
+      <BottomNav onOpenProfile={() => setShowProfileModal(true)} />
+      <CommandPalette isOpen={showSearch} onClose={() => setShowSearch(false)} />
 
       {/* JSON Backup & Restore Modal */}
       <ExportImportModal

@@ -293,6 +293,28 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-072] 2026-11-11 WIB — Implementasi UI/UX cockpit v2.0 ke kode (semua menu) + merge ke main
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("sudah ku review, terapkan langsung semua menu dll ke kode, lalu merge ke main")
+* **Fase**: operasional (pasca-roadmap) — implementasi desain LOG-071
+* **Tujuan**: Menerapkan desain v2.0 (design system Personal Web: Sky Blue monokrom, glassmorphism, Outfit + Inter + Instrument Serif Italic, Light/Dark) ke `apps/operations-cockpit` tanpa mengubah menu, fitur, data, maupun aturan Firestore.
+* **Perubahan** (branch `cockpit-ui-v2` → merge ke `main`):
+  - **Token tema** (`src/index.css`): variabel warna Light/Dark dari koleksi Theme file FigCraft, didaftarkan sebagai warna Tailwind (`bg-surface`, `text-fg`, `border-line`, `bg-primary`, dst.); kartu kaca blur 24/radius 32; bobot huruf maksimum SemiBold; judul halaman Outfit Regular.
+  - **Migrasi warna**: ±2.500 kelas warna hard-coded (`text-[#0B1B33]`, `bg-white`, dst.) di 30 berkas diganti token tema lewat codemod, sehingga seluruh 14 modul + semua modal mengikuti mode terang/gelap. Logika, data, dan teks tidak diubah.
+  - **Kerangka baru**: sidebar pil 80 px berikon (desktop ≥ 1024 px, `layout/Sidebar.tsx`), navigasi bawah + sheet "Lainnya" (mobile; Profil, Mode gelap, Keluar), bar atas ringkas (tanggal, menu aktif, cari, sync, notifikasi, profil), sub-tab segmen pil, tombol tema (tersimpan per perangkat, `utils/theme.ts`), **pencarian cepat Ctrl K** (`layout/CommandPalette.tsx`: lompat ke menu/sub-tab atau buka WO; hanya membaca data yang sudah dimuat).
+  - **Beranda**: zona atas disusun ulang sesuai desain — sapaan + kartu hero "Tenggat FEED · Gate G2" (hitung mundur, progress dokumen) + 4 ubin (Logbook ACC, WO aktif tim, Sesi asistensi, ACC pembimbing). Kartu dial hitung mundur lama dihapus karena isinya sudah ada di kartu hero.
+  - **Login**: latar & ilustrasi P&ID mengikuti token; layar memuat diganti skeleton; layar gagal muat & banner sinkron gagal digayakan ulang.
+  - `index.html`: font Outfit/Inter/Instrument Serif; tema diterapkan sebelum render (tanpa kedip).
+* **Bukti / Verifikasi**:
+  - `npm run lint` (tsc --noEmit) PASS; `vite build` PASS; `node tools/check_companions.js` PASS.
+  - Pratinjau lokal memakai data cadangan PM (`area1-dme-backup-2026-11-05.json`) lewat kode pratinjau sementara yang **tidak ikut di-commit**: 14 modul dipotret mode terang (1440 px), 8 modul mode gelap, Login, modal detail WO, form WO → tata letak utuh, teks terbaca di kedua tema.
+* **Belum diverifikasi**: uji di produksi dengan login asli (smoke test) dan uji di perangkat HP sungguhan — pratinjau headless tidak bisa lebih sempit dari ±500 px. Modal Profil, Backup & Restore, penyusun WA, dan form Rapat/Logbook/Gantt hanya ikut migrasi token (tidak dipotret satu per satu).
+* **Catatan**: tata letak isi tiap modul selain Beranda masih struktur v1 dengan gaya v2.0 (warna, kaca, tipografi, navigasi); penyusunan ulang isi per modul agar persis seperti PDF dilakukan bertahap bila PM menginginkan. Kembali ke v1: `git checkout cockpit-ui-v1 -- apps/operations-cockpit`.
+* **Tindak Lanjut**:
+  - [ ] PM: buka situs produksi (desktop + HP), coba mode gelap, Ctrl K, menu "Lainnya"; laporkan bagian yang masih janggal.
+  - [ ] Smoke test pasca-deploy: `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/` (PM login di jendela uji).
+
+---
+
 ### [LOG-071] 2026-11-11 WIB — Desain UI/UX cockpit v2.0 (FigCraft) + arsip v1
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("menu & fitur tetap, UI/UX berubah semua; ikuti panduan personal web; arsipkan desain sebelumnya; review via PDF di iPad")
 * **Fase**: operasional (pasca-roadmap) — tahap desain, belum implementasi kode

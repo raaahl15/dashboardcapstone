@@ -59,22 +59,22 @@ export const daysSince = (iso: string | undefined): number | null => {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  HMB: 'bg-[#D1FAE5] text-[#065F46]',
-  STANDAR: 'bg-[#D1FAE5] text-[#065F46]',
-  LITERATUR: 'bg-[#D1FAE5] text-[#065F46]',
-  ASUMSI: 'bg-[#FEF3C7] text-[#92400E]',
-  PLACEHOLDER: 'bg-[#FEE2E2] text-[#991B1B]',
-  PASS: 'bg-[#D1FAE5] text-[#065F46]',
-  FAIL: 'bg-[#FEE2E2] text-[#991B1B]',
-  ERROR: 'bg-[#FEE2E2] text-[#991B1B]',
-  WARNING: 'bg-[#FEF3C7] text-[#92400E]',
-  Draft: 'bg-[#E2E8F0] text-[#334155]',
-  WIP: 'bg-[#EAF6FD] text-[#0062CC]',
-  'Review Internal': 'bg-[#EDE9FE] text-[#5B21B6]',
-  Diajukan: 'bg-[#FEF3C7] text-[#92400E]',
-  'ACC Pembimbing': 'bg-[#D1FAE5] text-[#065F46]',
-  Revisi: 'bg-[#FEE2E2] text-[#991B1B]',
+  HMB: 'bg-success-soft text-success',
+  STANDAR: 'bg-success-soft text-success',
+  LITERATUR: 'bg-success-soft text-success',
+  ASUMSI: 'bg-warm-soft text-warm',
+  PLACEHOLDER: 'bg-danger-soft text-danger',
+  PASS: 'bg-success-soft text-success',
+  FAIL: 'bg-danger-soft text-danger',
+  ERROR: 'bg-danger-soft text-danger',
+  WARNING: 'bg-warm-soft text-warm',
+  Draft: 'bg-muted text-fg-2',
+  WIP: 'bg-muted text-primary',
+  'Review Internal': 'bg-primary-soft text-fg-2',
+  Diajukan: 'bg-warm-soft text-warm',
+  'ACC Pembimbing': 'bg-success-soft text-success',
+  Revisi: 'bg-danger-soft text-danger',
 };
 
-export const statusClass = (s: string): string => STATUS_STYLE[s] ?? 'bg-[#E2E8F0] text-[#334155]';
+export const statusClass = (s: string): string => STATUS_STYLE[s] ?? 'bg-muted text-fg-2';
 

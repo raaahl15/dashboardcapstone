@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useApp, NavTab } from '../../context/AppContext';
+import { useApp } from '../../context/AppContext';
 import { UserChip, resolveAvatarBgProps } from '../common/UserChip';
-import { NAV_GROUPS, groupOfTab } from './navigation';
+import { groupOfTab } from './navigation';
 import {
   Bell,
   LogOut,
@@ -11,16 +11,19 @@ import {
   CheckCheck,
   AlertTriangle,
   Info,
+  Search,
 } from 'lucide-react';
 
 interface HeaderProps {
   onOpenExportImport: () => void;
   onOpenProfile: () => void;
+  onOpenSearch: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenExportImport,
   onOpenProfile,
+  onOpenSearch,
 }) => {
   const {
     currentUser,
@@ -105,71 +108,44 @@ export const Header: React.FC<HeaderProps> = ({
 
   // 8 menu bergrup (Blueprint v2.4 BAB IV, LOG-032); sub-tab dirender di App.tsx
   const activeGroup = groupOfTab(activeTab);
-  const navItems: { key: NavTab; label: string; groupKey: string; sectionStart: boolean }[] = NAV_GROUPS.map(
-    (g, i) => ({
-      key: g.tabs[0].key,
-      label: g.label,
-      groupKey: g.key,
-      sectionStart: i > 0 && NAV_GROUPS[i - 1].section !== g.section,
-    })
-  );
+  const todayLabel = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
 
   const avatarBgProps = resolveAvatarBgProps(currentUser.avatarBg);
   const avatarInitials = currentUser.avatarInitial || currentUser.code;
 
   return (
-    <header className="sticky top-0 z-40 w-full px-4 md:px-8 py-3.5 backdrop-blur-md bg-white/70 border-b border-white/60 shadow-xs">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-4">
-        {/* Left: Brand Badge */}
-        <div className="flex items-center gap-3 shrink-0">
+    <header className="sticky top-0 z-30 w-full px-4 lg:px-8 pt-4 pb-3 bg-canvas/70 backdrop-blur-md">
+      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+        {/* Kiri: eyebrow tanggal + judul menu aktif */}
+        <div className="min-w-0 flex items-center gap-3">
           <button
             type="button"
             onClick={() => setActiveTab('homepage')}
-            className="inline-flex items-center gap-2.5 px-4 min-h-[44px] bg-white rounded-full shadow-xs border border-white/90 hover:shadow-sm transition-all text-left"
+            className="lg:hidden w-11 h-11 shrink-0 rounded-2xl bg-primary text-on-primary font-heading text-[11px] font-semibold flex items-center justify-center"
+            aria-label="Beranda Area 1-DME"
           >
-            <span className="w-2.5 h-2.5 rounded-full bg-[#007BFF] animate-pulse"></span>
-            <div className="flex flex-col">
-              <span className="font-heading text-xs font-extrabold tracking-tight text-[#0B1B33]">
-                Area 1-DME
-              </span>
-              <span className="text-[10px] text-[#4A5A72] font-medium leading-none">
-                Methanol Dehydration
-              </span>
-            </div>
+            DME
           </button>
+          <p className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">
+            <span className="hidden sm:inline">{todayLabel} · </span>
+            <span className="text-fg-2">{activeGroup.label}</span>
+          </p>
         </div>
 
-        {/* Center: Desktop Pill Navigation */}
-        <nav
-          className="hidden xl:flex items-center bg-white/80 p-1.5 rounded-full border border-white/90 shadow-xs overflow-x-auto scrollbar-none"
-          aria-label="Navigasi Utama"
-        >
-          {navItems.map((item) => {
-            const isActive = activeGroup.key === item.groupKey;
-            return (
-              <React.Fragment key={item.groupKey}>
-                {item.sectionStart && (
-                  <span className="mx-1 h-6 w-px bg-[#C9DCEB]" aria-hidden="true" />
-                )}
-                <button
-                  type="button"
-                  onClick={() => setActiveTab(item.key)}
-                  className={`px-3 2xl:px-4 min-h-[44px] rounded-full text-xs font-semibold tracking-tight transition-all duration-200 whitespace-nowrap ${
-                    isActive
-                      ? 'bg-[#0B1B33] text-white shadow-xs'
-                      : 'text-[#4A5A72] hover:text-[#0B1B33] hover:bg-white/90'
-                  }`}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                </button>
-              </React.Fragment>
-            );
-          })}
-        </nav>
-
         {/* Right Actions: Sync, Notifications, 44x44 Profile Button */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Pencarian cepat (Ctrl K) */}
+          <button
+            type="button"
+            onClick={onOpenSearch}
+            className="inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-full bg-surface/90 text-fg-3 hover:text-fg border border-glass-stroke shadow-xs transition-all text-xs font-medium"
+            aria-label="Buka pencarian cepat"
+          >
+            <Search className="w-4 h-4" />
+            <span className="hidden md:inline">Cari…</span>
+            <kbd className="hidden md:inline px-1.5 py-0.5 rounded-md bg-muted text-[10px] font-semibold">Ctrl K</kbd>
+          </button>
+
           {/* Real-Time Sync Button */}
           <button
             type="button"
@@ -181,11 +157,11 @@ export const Header: React.FC<HeaderProps> = ({
                 ? `Sinkronisasi Real-Time Aktif (Terakhir: ${lastSyncedAt}) — Klik untuk segarkan`
                 : 'Sinkronkan data antar-perangkat'
             }
-            className="inline-flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-full bg-white/90 text-[#047857] hover:text-[#0062CC] hover:bg-white border border-white shadow-xs transition-all text-xs font-bold"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-full bg-surface/90 text-success hover:text-primary hover:bg-surface border border-glass-stroke shadow-xs transition-all text-xs font-bold"
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${
-                isSyncing ? 'animate-spin text-[#0062CC]' : 'text-[#047857]'
+                isSyncing ? 'animate-spin text-primary' : 'text-success'
               }`}
             />
             <span className="hidden md:inline text-[11px]">
@@ -201,13 +177,13 @@ export const Header: React.FC<HeaderProps> = ({
                 setShowNotifications(!showNotifications);
                 setShowUserMenu(false);
               }}
-              className="relative inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/90 text-[#0B1B33] hover:bg-white border border-white shadow-xs transition-all"
+              className="relative inline-flex items-center justify-center w-11 h-11 rounded-full bg-surface/90 text-fg hover:bg-surface border border-glass-stroke shadow-xs transition-all"
               aria-label="Pemberitahuan Operasional"
               aria-expanded={showNotifications}
             >
-              <Bell className="w-4 h-4 text-[#0B1B33]" />
+              <Bell className="w-4 h-4 text-fg" />
               {unreadNotificationsCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-[#B91C1C] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-danger-solid text-on-ink text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
                   {unreadNotificationsCount}
                 </span>
               )}
@@ -215,13 +191,13 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Notification Popover */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-white rounded-[28px] shadow-cockpit-pop border border-white/90 p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
+              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="flex items-center justify-between pb-3 border-b border-line">
                   <div className="flex items-center gap-2">
-                    <span className="font-heading font-bold text-sm text-[#0B1B33]">
+                    <span className="font-heading font-bold text-sm text-fg">
                       Notifikasi Operasional
                     </span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-[#EAF6FD] text-[#0062CC]">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-muted text-primary">
                       {unreadNotificationsCount} Baru
                     </span>
                   </div>
@@ -229,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <button
                       type="button"
                       onClick={markAllNotificationsAsRead}
-                      className="text-xs text-[#0062CC] hover:underline font-medium inline-flex items-center gap-1"
+                      className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-1"
                     >
                       <CheckCheck className="w-3.5 h-3.5" />
                       Tandai dibaca
@@ -237,9 +213,9 @@ export const Header: React.FC<HeaderProps> = ({
                   )}
                 </div>
 
-                <div className="divide-y divide-[#EAF6FD] max-h-80 overflow-y-auto my-2">
+                <div className="divide-y divide-line max-h-80 overflow-y-auto my-2">
                   {notifications.length === 0 ? (
-                    <div className="py-6 px-3 text-center text-xs text-[#4A5A72]">
+                    <div className="py-6 px-3 text-center text-xs text-fg-3">
                       Belum ada notifikasi operasional untuk akun Anda.
                     </div>
                   ) : (
@@ -253,37 +229,37 @@ export const Header: React.FC<HeaderProps> = ({
                             setShowNotifications(false);
                           }
                         }}
-                        className={`p-3 rounded-2xl transition-colors cursor-pointer hover:bg-[#EAF6FD]/70 ${
-                          notif.read ? 'bg-transparent opacity-75' : 'bg-[#EAF6FD]/50'
+                        className={`p-3 rounded-2xl transition-colors cursor-pointer hover:bg-muted/70 ${
+                          notif.read ? 'bg-transparent opacity-75' : 'bg-muted/50'
                         }`}
                       >
                         <div className="flex items-start gap-2.5">
                           {notif.type === 'urgent' ? (
-                            <span className="p-1.5 rounded-full bg-[#FEE2E2] text-[#B91C1C] mt-0.5 shrink-0">
+                            <span className="p-1.5 rounded-full bg-danger-soft text-danger mt-0.5 shrink-0">
                               <AlertTriangle className="w-3.5 h-3.5" />
                             </span>
                           ) : notif.type === 'warning' ? (
-                            <span className="p-1.5 rounded-full bg-[#FEF3C7] text-[#B45309] mt-0.5 shrink-0">
+                            <span className="p-1.5 rounded-full bg-warm-soft text-warm mt-0.5 shrink-0">
                               <AlertTriangle className="w-3.5 h-3.5" />
                             </span>
                           ) : (
-                            <span className="p-1.5 rounded-full bg-[#EAF6FD] text-[#0062CC] mt-0.5 shrink-0">
+                            <span className="p-1.5 rounded-full bg-muted text-primary mt-0.5 shrink-0">
                               <Info className="w-3.5 h-3.5" />
                             </span>
                           )}
                           <div className="flex-1 min-w-0">
-                            <p className="font-heading font-bold text-xs text-[#0B1B33]">
+                            <p className="font-heading font-bold text-xs text-fg">
                               {notif.title}
                             </p>
-                            <p className="text-[12px] text-[#4A5A72] mt-0.5 leading-snug">
+                            <p className="text-[12px] text-fg-3 mt-0.5 leading-snug">
                               {notif.description}
                             </p>
                             <div className="flex items-center justify-between gap-2 mt-1">
-                              <span className="text-[10px] text-[#4A5A72]">
+                              <span className="text-[10px] text-fg-3">
                                 {notif.timeAgo}
                               </span>
                               {notif.workOrderId && (
-                                <span className="text-[10px] font-bold text-[#0062CC]">
+                                <span className="text-[10px] font-bold text-primary">
                                   Buka WO →
                                 </span>
                               )}
@@ -307,7 +283,7 @@ export const Header: React.FC<HeaderProps> = ({
                 setShowUserMenu((prev) => !prev);
                 setShowNotifications(false);
               }}
-              className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-white shadow-xs hover:shadow-sm transition-all overflow-hidden focus:outline-none focus:ring-2 focus:ring-[#0062CC]"
+              className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-glass-stroke shadow-xs hover:shadow-sm transition-all overflow-hidden focus:outline-none focus:ring-2 focus:ring-focus"
               aria-label="Menu profil pengguna"
               aria-haspopup="menu"
               aria-expanded={showUserMenu}
@@ -321,7 +297,7 @@ export const Header: React.FC<HeaderProps> = ({
               ) : (
                 <span
                   style={avatarBgProps.style}
-                  className={`w-full h-full rounded-full flex items-center justify-center font-heading font-extrabold text-xs text-white ${avatarBgProps.className}`}
+                  className={`w-full h-full rounded-full flex items-center justify-center font-heading font-extrabold text-xs text-on-ink ${avatarBgProps.className}`}
                 >
                   {avatarInitials}
                 </span>
@@ -335,19 +311,19 @@ export const Header: React.FC<HeaderProps> = ({
                 role="menu"
                 aria-label="Menu Profil"
                 onKeyDown={handleMenuKeyDown}
-                className="absolute right-0 mt-2 w-72 bg-white rounded-[28px] shadow-cockpit-pop border border-white p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
+                className="absolute right-0 mt-2 w-72 bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
               >
                 {/* Summary Card: Avatar, Name, Title, Email */}
-                <div className="p-3 rounded-2xl bg-[#F8FAFC] border border-[#EAF6FD] mb-2.5">
+                <div className="p-3 rounded-2xl bg-muted border border-line mb-2.5">
                   <UserChip
                     uid={currentUser.id}
                     variant="avatar-nama-jabatan"
                     size="lg"
                     avatarClassName="w-11 h-11 rounded-full font-heading text-xs font-extrabold"
-                    nameClassName="font-heading text-sm text-[#0B1B33]"
-                    titleClassName="text-xs text-[#0062CC] font-semibold"
+                    nameClassName="font-heading text-sm text-fg"
+                    titleClassName="text-xs text-primary font-semibold"
                   />
-                  <p className="mt-2 text-[11px] text-[#4A5A72] font-mono truncate">
+                  <p className="mt-2 text-[11px] text-fg-3 font-mono truncate">
                     {currentUser.email}
                   </p>
                 </div>
@@ -361,9 +337,9 @@ export const Header: React.FC<HeaderProps> = ({
                       setShowUserMenu(false);
                       onOpenProfile();
                     }}
-                    className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-[#0B1B33] hover:bg-[#EAF6FD] hover:text-[#0062CC] focus:bg-[#EAF6FD] focus:text-[#0062CC] focus:outline-none flex items-center gap-2.5 transition-colors text-left"
+                    className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-fg hover:bg-muted hover:text-primary focus:bg-muted focus:text-primary focus:outline-none flex items-center gap-2.5 transition-colors text-left"
                   >
-                    <CircleUser className="w-4 h-4 text-[#0062CC] shrink-0" />
+                    <CircleUser className="w-4 h-4 text-primary shrink-0" />
                     <span>Profil Saya</span>
                   </button>
 
@@ -375,14 +351,14 @@ export const Header: React.FC<HeaderProps> = ({
                         setShowUserMenu(false);
                         onOpenExportImport();
                       }}
-                      className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-[#0B1B33] hover:bg-[#EAF6FD] hover:text-[#0062CC] focus:bg-[#EAF6FD] focus:text-[#0062CC] focus:outline-none flex items-center gap-2.5 transition-colors text-left"
+                      className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-fg hover:bg-muted hover:text-primary focus:bg-muted focus:text-primary focus:outline-none flex items-center gap-2.5 transition-colors text-left"
                     >
-                      <Download className="w-4 h-4 text-[#0062CC] shrink-0" />
+                      <Download className="w-4 h-4 text-primary shrink-0" />
                       <span>Backup &amp; Restore</span>
                     </button>
                   )}
 
-                  <div className="my-1 border-t border-[#EAF6FD]" />
+                  <div className="my-1 border-t border-line" />
 
                   <button
                     type="button"
@@ -391,9 +367,9 @@ export const Header: React.FC<HeaderProps> = ({
                       setShowUserMenu(false);
                       void logout();
                     }}
-                    className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-[#B91C1C] hover:bg-[#FEE2E2]/60 focus:bg-[#FEE2E2]/60 focus:outline-none flex items-center gap-2.5 transition-colors text-left"
+                    className="w-full min-h-[44px] px-3.5 rounded-full text-xs font-bold text-danger hover:bg-danger-soft/60 focus:bg-danger-soft/60 focus:outline-none flex items-center gap-2.5 transition-colors text-left"
                   >
-                    <LogOut className="w-4 h-4 text-[#B91C1C] shrink-0" />
+                    <LogOut className="w-4 h-4 text-danger shrink-0" />
                     <span>Keluar</span>
                   </button>
                 </div>
@@ -403,30 +379,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Mobile Pill Navigation Strip */}
-      <nav
-        className="xl:hidden mt-2.5 overflow-x-auto scrollbar-none pb-1 flex gap-1.5"
-        aria-label="Navigasi Utama (seluler)"
-      >
-        {navItems.map((item) => {
-          const isActive = activeGroup.key === item.groupKey;
-          return (
-            <button
-              key={item.groupKey}
-              type="button"
-              onClick={() => setActiveTab(item.key)}
-              aria-current={isActive ? 'page' : undefined}
-              className={`px-3.5 min-h-[44px] rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
-                isActive
-                  ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white/80 text-[#4A5A72] border border-white/80'
-              }`}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </nav>
     </header>
   );
 };

@@ -37,12 +37,12 @@ const Pill: React.FC<{ label: string }> = ({ label }) => (
 
 const PageHead: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
   <div className="space-y-3">
-    <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33] inline-flex items-center gap-3">
+    <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg inline-flex items-center gap-3">
       {icon}
       {title}
     </h1>
     <div className="glass-faint w-full px-4 py-2.5">
-      <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">{children}</p>
+      <p className="text-xs sm:text-[13.5px] leading-snug text-fg">{children}</p>
     </div>
   </div>
 );
@@ -53,30 +53,30 @@ export const CalcResultsView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      <PageHead icon={<Calculator className="w-9 h-9 text-[#0062CC]" />} title="Hasil Kalkulator">
+      <PageHead icon={<Calculator className="w-9 h-9 text-primary" />} title="Hasil Kalkulator">
         Hasil mesin kalkulator <span className="font-mono">tools/calc/</span> (ISO 5167, IEC 60534, API 520, NPV) dari input{' '}
         <span className="font-mono">02_ENGINEERING_CALCULATORS/inputs/*.yaml</span> + HMB. Ini verifikasi silang; sizing
         manual tetap ditulis di laporan (Panduan Lampiran 1 Tahap 4).
       </PageHead>
 
-      {calc.error && <div className="glass-card p-4 text-xs text-[#991B1B]">{calc.error}</div>}
-      {calc.loading && <div className="py-10 text-center text-xs text-[#4A5A72]">Memuat hasil kalkulator...</div>}
+      {calc.error && <div className="glass-card p-4 text-xs text-danger">{calc.error}</div>}
+      {calc.loading && <div className="py-10 text-center text-xs text-fg-3">Memuat hasil kalkulator...</div>}
 
       {(calc.data?.calculators ?? []).map((c) => (
         <div key={c.file} className="glass-card p-4 sm:p-6 space-y-2">
-          <h2 className="font-heading font-bold text-base text-[#0B1B33] font-mono break-all">{c.file}</h2>
+          <h2 className="font-heading font-bold text-base text-fg font-mono break-all">{c.file}</h2>
           {c.items.map((it) => {
             const id = `${c.file}:${it.tag}`;
             return (
-              <div key={it.tag} className="bg-white/70 rounded-2xl">
+              <div key={it.tag} className="bg-surface/70 rounded-2xl">
                 <button
                   type="button"
                   onClick={() => setOpenCalc(openCalc === id ? null : id)}
                   className="w-full min-h-[44px] px-4 py-2 flex flex-wrap items-center justify-between gap-2 text-left"
                   aria-expanded={openCalc === id}
                 >
-                  <span className="text-xs font-bold text-[#0B1B33]">
-                    {it.tag} <span className="font-normal text-[#4A5A72]">{it.description}</span>
+                  <span className="text-xs font-bold text-fg">
+                    {it.tag} <span className="font-normal text-fg-3">{it.description}</span>
                   </span>
                   <span className="flex gap-1.5">
                     <Pill label={it.result} />
@@ -87,7 +87,7 @@ export const CalcResultsView: React.FC = () => {
                   <div className="overflow-x-auto px-4 pb-3">
                     <table className="w-full text-[11px] min-w-[720px]">
                       <thead>
-                        <tr className="text-left text-[#4A5A72] border-b border-[#EAF6FD]">
+                        <tr className="text-left text-fg-3 border-b border-line">
                           <th className="py-1.5 pr-2">Bagian</th>
                           <th className="py-1.5 pr-2">Parameter</th>
                           <th className="py-1.5 pr-2 text-right">Nilai</th>
@@ -100,12 +100,12 @@ export const CalcResultsView: React.FC = () => {
                         {it.rows
                           .filter((r) => r.section !== 'INFO')
                           .map((r, i) => (
-                            <tr key={i} className="border-b border-[#EAF6FD]/70 align-top">
-                              <td className="py-1.5 pr-2 text-[#4A5A72]">{r.section}</td>
+                            <tr key={i} className="border-b border-line/70 align-top">
+                              <td className="py-1.5 pr-2 text-fg-3">{r.section}</td>
                               <td className="py-1.5 pr-2">{r.parameter}</td>
                               <td className="py-1.5 pr-2 text-right font-mono">{r.value}</td>
                               <td className="py-1.5 pr-2">{r.unit}</td>
-                              <td className="py-1.5 pr-2 text-[#4A5A72] max-w-[360px]">{r.source}</td>
+                              <td className="py-1.5 pr-2 text-fg-3 max-w-[360px]">{r.source}</td>
                               <td className="py-1.5">
                                 <Pill label={r.status} />
                               </td>
@@ -120,7 +120,7 @@ export const CalcResultsView: React.FC = () => {
           })}
         </div>
       ))}
-      <p className="text-[11px] text-[#4A5A72]">
+      <p className="text-[11px] text-fg-3">
         Status data = status input terlemah. PLACEHOLDER/ASUMSI belum boleh dikutip ke laporan; ubah input di{' '}
         <span className="font-mono">02_ENGINEERING_CALCULATORS/inputs/*.yaml</span> lalu jalankan{' '}
         <span className="font-mono">npm run calc</span>.
@@ -139,18 +139,18 @@ export const TagValidationView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      <PageHead icon={<Tags className="w-9 h-9 text-[#0062CC]" />} title="Validasi Tag">
+      <PageHead icon={<Tags className="w-9 h-9 text-primary" />} title="Validasi Tag">
         Hasil <span className="font-mono">tools/validate_tags.py</span>: tag di Instrument Index, C&amp;E, alarm database, FDS,
         dan P&amp;ID DXF dibandingkan dengan <span className="font-mono">tag_map.csv</span> (tag pabrik FINAL).
       </PageHead>
 
-      {tags.error && <div className="glass-card p-4 text-xs text-[#991B1B]">{tags.error}</div>}
-      {tags.loading && <div className="py-10 text-center text-xs text-[#4A5A72]">Memuat laporan validasi...</div>}
+      {tags.error && <div className="glass-card p-4 text-xs text-danger">{tags.error}</div>}
+      {tags.loading && <div className="py-10 text-center text-xs text-fg-3">Memuat laporan validasi...</div>}
 
       {tags.data && (
         <div className="glass-card p-4 sm:p-6 space-y-3 overflow-x-auto">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-[#4A5A72]">
+            <span className="text-xs text-fg-3">
               Dibuat {fmtDateTime(tags.data.meta.generated_at)} · P&amp;ID diperiksa:{' '}
               {tags.data.meta.pid_dxf_checked.length ? tags.data.meta.pid_dxf_checked.join(', ') : 'belum ada'}
             </span>
@@ -162,7 +162,7 @@ export const TagValidationView: React.FC = () => {
                   onClick={() => setLevel(l)}
                   aria-pressed={level === l}
                   className={`min-h-[44px] px-3.5 rounded-full text-xs font-bold ${
-                    level === l ? 'bg-[#0B1B33] text-white' : 'bg-white/80 text-[#4A5A72]'
+                    level === l ? 'bg-ink text-on-ink' : 'bg-surface/80 text-fg-3'
                   }`}
                 >
                   {l} {l !== 'Semua' ? `(${tags.data!.summary[l] ?? 0})` : ''}
@@ -172,7 +172,7 @@ export const TagValidationView: React.FC = () => {
           </div>
           <table className="w-full text-[11px] min-w-[760px]">
             <thead>
-              <tr className="text-left text-[#4A5A72] border-b border-[#EAF6FD]">
+              <tr className="text-left text-fg-3 border-b border-line">
                 <th className="py-1.5 pr-2">Tingkat</th>
                 <th className="py-1.5 pr-2">Kode</th>
                 <th className="py-1.5 pr-2">Tag</th>
@@ -184,13 +184,13 @@ export const TagValidationView: React.FC = () => {
               {tags.data.findings
                 .filter((f) => level === 'Semua' || f.level === level)
                 .map((f, i) => (
-                  <tr key={i} className="border-b border-[#EAF6FD]/70 align-top">
+                  <tr key={i} className="border-b border-line/70 align-top">
                     <td className="py-1.5 pr-2">
                       <Pill label={f.level} />
                     </td>
                     <td className="py-1.5 pr-2 font-mono">{f.code}</td>
                     <td className="py-1.5 pr-2 font-bold">{f.tag}</td>
-                    <td className="py-1.5 pr-2 text-[#4A5A72]">{f.source}</td>
+                    <td className="py-1.5 pr-2 text-fg-3">{f.source}</td>
                     <td className="py-1.5">{f.message}</td>
                   </tr>
                 ))}

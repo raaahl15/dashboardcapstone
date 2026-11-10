@@ -269,7 +269,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs animate-in fade-in duration-150"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget && !isSaving) {
           onClose();
@@ -279,21 +279,21 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       aria-modal="true"
       aria-labelledby="profile-modal-title"
     >
-      <div className="w-full max-w-2xl bg-white rounded-[28px] shadow-cockpit-pop border border-white overflow-hidden max-h-[92vh] flex flex-col">
+      <div className="w-full max-w-2xl bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke overflow-hidden max-h-[92vh] flex flex-col">
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-[#EAF6FD]/60 border-b border-[#C9DCEB]/60 flex items-center justify-between gap-3 shrink-0">
+        <div className="px-6 py-4 bg-muted/60 border-b border-line/60 flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-[#0062CC] text-white flex items-center justify-center shadow-xs shrink-0">
+            <div className="w-11 h-11 rounded-2xl bg-primary text-on-primary flex items-center justify-center shadow-xs shrink-0">
               <CircleUser className="w-5 h-5" />
             </div>
             <div>
               <h2
                 id="profile-modal-title"
-                className="font-heading font-bold text-base text-[#0B1B33]"
+                className="font-heading font-bold text-base text-fg"
               >
                 Pengaturan Profil & Jabatan
               </h2>
-              <p className="text-xs text-[#4A5A72]">
+              <p className="text-xs text-fg-3">
                 Satu sumber kebenaran profil anggota Area 1-DME (`users/&#123;uid&#125;`)
               </p>
             </div>
@@ -303,7 +303,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             type="button"
             onClick={onClose}
             disabled={isSaving}
-            className="w-11 h-11 rounded-full bg-white hover:bg-[#DCEBF7] text-[#4A5A72] hover:text-[#0B1B33] flex items-center justify-center transition-colors border border-[#C9DCEB]/60 shrink-0"
+            className="w-11 h-11 rounded-full bg-surface hover:bg-muted text-fg-3 hover:text-fg flex items-center justify-center transition-colors border border-line/60 shrink-0"
             aria-label="Tutup modal profil"
           >
             <X className="w-4 h-4" />
@@ -319,16 +319,16 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
         >
           {/* PM Member Selector at the Top */}
           {isPM && (
-            <div className="p-4 rounded-2xl bg-[#EAF6FD]/70 border border-[#C9DCEB] space-y-2">
+            <div className="p-4 rounded-2xl bg-muted/70 border border-line space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <label
                   htmlFor="pm-member-selector"
-                  className="font-heading font-bold text-xs text-[#0B1B33] flex items-center gap-1.5"
+                  className="font-heading font-bold text-xs text-fg flex items-center gap-1.5"
                 >
-                  <ShieldCheck className="w-4 h-4 text-[#0062CC]" />
+                  <ShieldCheck className="w-4 h-4 text-primary" />
                   Mode Admin PM: Pilih Anggota Tim (5 Engineer)
                 </label>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#DBEAFE] text-[#1E3A8A]">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-soft text-fg-2">
                   Otoritas Penuh PM
                 </span>
               </div>
@@ -339,7 +339,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   setSelectedUid(e.target.value);
                   setStatusMessage(null);
                 }}
-                className="w-full min-h-[44px] px-3.5 rounded-xl bg-white border border-[#6B7F99] text-xs font-semibold text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                className="w-full min-h-[44px] px-3.5 rounded-xl bg-surface border border-line-strong text-xs font-semibold text-fg outline-none focus:border-primary"
               >
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -351,18 +351,18 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           )}
 
           {/* Live Avatar & Identity Preview Card */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#EAF6FD] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="p-4 rounded-2xl bg-muted border border-line flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3.5 min-w-0">
               {targetUser.photoURL ? (
                 <img
                   src={targetUser.photoURL}
                   alt={trimmedName || targetUser.name}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-white shadow-sm shrink-0"
+                  className="w-14 h-14 rounded-full object-cover border-2 border-glass-stroke shadow-sm shrink-0"
                 />
               ) : (
                 <div
                   style={previewBgProps.style}
-                  className={`w-14 h-14 rounded-full flex items-center justify-center font-heading font-extrabold text-base text-white border-2 border-white shadow-sm shrink-0 ${previewBgProps.className}`}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center font-heading font-extrabold text-base text-on-ink border-2 border-glass-stroke shadow-sm shrink-0 ${previewBgProps.className}`}
                 >
                   {previewInitials}
                 </div>
@@ -370,17 +370,17 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-heading font-extrabold text-sm text-[#0B1B33] truncate">
+                  <span className="font-heading font-extrabold text-sm text-fg truncate">
                     {trimmedName || 'Nama belum diisi'}
                   </span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary">
                     {trimmedNickname || 'Panggilan'}
                   </span>
                 </div>
-                <p className="text-xs text-[#4A5A72] font-semibold mt-0.5 truncate">
+                <p className="text-xs text-fg-3 font-semibold mt-0.5 truncate">
                   {trimmedTitle || targetUser.title} • {trimmedRaciTag || targetUser.raciTag}
                 </p>
-                <p className="text-[11px] text-[#4A5A72] truncate mt-0.5">
+                <p className="text-[11px] text-fg-3 truncate mt-0.5">
                   {targetUser.email}
                 </p>
               </div>
@@ -388,14 +388,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* Foto Profil Placeholder ("Segera hadir") */}
             <div className="flex flex-col items-start sm:items-end shrink-0">
-              <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider mb-1">
+              <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider mb-1">
                 Foto Profil
               </span>
               <span
-                className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 rounded-full bg-[#E2E8F0] text-[#334155] text-xs font-bold cursor-not-allowed select-none"
+                className="inline-flex items-center gap-1.5 min-h-[44px] px-3.5 rounded-full bg-muted text-fg-2 text-xs font-bold cursor-not-allowed select-none"
                 aria-disabled="true"
               >
-                <Camera className="w-3.5 h-3.5 text-[#64748B]" />
+                <Camera className="w-3.5 h-3.5 text-fg-3" />
                 Segera hadir
               </span>
             </div>
@@ -405,15 +405,15 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* BAGIAN 1: DATA PRIBADI */}
           {/* ================================================================= */}
           <section className="space-y-4" aria-labelledby="section-personal-heading">
-            <div className="flex items-center justify-between border-b border-[#EAF6FD] pb-2">
+            <div className="flex items-center justify-between border-b border-line pb-2">
               <h3
                 id="section-personal-heading"
-                className="font-heading font-bold text-sm text-[#0B1B33] flex items-center gap-2"
+                className="font-heading font-bold text-sm text-fg flex items-center gap-2"
               >
-                <CircleUser className="w-4 h-4 text-[#0062CC]" />
+                <CircleUser className="w-4 h-4 text-primary" />
                 Data Pribadi
               </h3>
-              <span className="text-[11px] text-[#4A5A72] font-medium">
+              <span className="text-[11px] text-fg-3 font-medium">
                 Dapat diubah oleh pemilik akun
               </span>
             </div>
@@ -423,13 +423,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <div className="flex items-center justify-between mb-1">
                   <label
                     htmlFor="profile-full-name"
-                    className="block text-xs font-semibold text-[#0B1B33]"
+                    className="block text-xs font-semibold text-fg"
                   >
                     Nama Lengkap
                   </label>
                   <span
                     className={`text-[10px] font-mono ${
-                      nameValid ? 'text-[#4A5A72]' : 'text-[#B91C1C] font-bold'
+                      nameValid ? 'text-fg-3' : 'text-danger font-bold'
                     }`}
                   >
                     {trimmedName.length}/60
@@ -445,11 +445,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     setStatusMessage(null);
                   }}
                   placeholder="Masukkan nama lengkap (1-60 karakter)"
-                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
                   required
                 />
                 {!nameValid && (
-                  <p className="mt-1 text-[11px] text-[#B91C1C] font-semibold flex items-center gap-1">
+                  <p className="mt-1 text-[11px] text-danger font-semibold flex items-center gap-1">
                     <AlertTriangle className="w-3 h-3 shrink-0" />
                     Nama lengkap wajib berisi 1 hingga 60 karakter.
                   </p>
@@ -460,13 +460,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 <div className="flex items-center justify-between mb-1">
                   <label
                     htmlFor="profile-nickname"
-                    className="block text-xs font-semibold text-[#0B1B33]"
+                    className="block text-xs font-semibold text-fg"
                   >
                     Nama Panggilan
                   </label>
                   <span
                     className={`text-[10px] font-mono ${
-                      nicknameValid ? 'text-[#4A5A72]' : 'text-[#B91C1C] font-bold'
+                      nicknameValid ? 'text-fg-3' : 'text-danger font-bold'
                     }`}
                   >
                     {trimmedNickname.length}/60
@@ -482,11 +482,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                     setStatusMessage(null);
                   }}
                   placeholder="Contoh: Ihsan"
-                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                  className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
                   required
                 />
                 {!nicknameValid && (
-                  <p className="mt-1 text-[11px] text-[#B91C1C] font-semibold flex items-center gap-1">
+                  <p className="mt-1 text-[11px] text-danger font-semibold flex items-center gap-1">
                     <AlertTriangle className="w-3 h-3 shrink-0" />
                     Nama panggilan wajib berisi 1 hingga 60 karakter.
                   </p>
@@ -497,9 +497,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div>
               <label
                 htmlFor="profile-phone"
-                className="block text-xs font-semibold text-[#0B1B33] mb-1"
+                className="block text-xs font-semibold text-fg mb-1"
               >
-                Kontak / No. Telepon <span className="text-[#4A5A72] font-normal">(Opsional)</span>
+                Kontak / No. Telepon <span className="text-fg-3 font-normal">(Opsional)</span>
               </label>
               <input
                 id="profile-phone"
@@ -510,13 +510,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   setStatusMessage(null);
                 }}
                 placeholder="Contoh: +62 812-3456-7890"
-                className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
               />
             </div>
 
             {/* 6 Color Tokens Selector from index.css */}
             <div>
-              <span className="block text-xs font-semibold text-[#0B1B33] mb-2">
+              <span className="block text-xs font-semibold text-fg mb-2">
                 Warna Avatar (6 Token Warna Sistem)
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
@@ -535,13 +535,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       }}
                       className={`min-h-[44px] px-3 py-2 rounded-full border text-xs font-semibold flex items-center gap-2.5 transition-all ${
                         isSelected
-                          ? 'border-[#0B1B33] bg-[#EAF6FD] text-[#0B1B33] ring-2 ring-[#0062CC]/30'
-                          : 'border-[#C9DCEB] bg-white text-[#4A5A72] hover:bg-[#F8FAFC]'
+                          ? 'border-fg bg-muted text-fg ring-2 ring-focus/30'
+                          : 'border-line bg-surface text-fg-3 hover:bg-muted'
                       }`}
                       aria-pressed={isSelected}
                     >
                       <span
-                        className={`w-6 h-6 rounded-full flex items-center justify-center text-white shrink-0 ${token.bgClass}`}
+                        className={`w-6 h-6 rounded-full flex items-center justify-center text-on-ink shrink-0 ${token.bgClass}`}
                       >
                         {isSelected && <Check className="w-3.5 h-3.5" />}
                       </span>
@@ -557,23 +557,23 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           {/* BAGIAN 2: DATA JABATAN */}
           {/* ================================================================= */}
           <section className="space-y-4" aria-labelledby="section-position-heading">
-            <div className="flex items-center justify-between border-b border-[#EAF6FD] pb-2">
+            <div className="flex items-center justify-between border-b border-line pb-2">
               <h3
                 id="section-position-heading"
-                className="font-heading font-bold text-sm text-[#0B1B33] flex items-center gap-2"
+                className="font-heading font-bold text-sm text-fg flex items-center gap-2"
               >
-                <Briefcase className="w-4 h-4 text-[#0062CC]" />
+                <Briefcase className="w-4 h-4 text-primary" />
                 Data Jabatan
               </h3>
-              <span className="inline-flex items-center gap-1 text-[11px] text-[#4A5A72] font-medium">
+              <span className="inline-flex items-center gap-1 text-[11px] text-fg-3 font-medium">
                 {isPM ? (
                   <>
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-success" />
                     Dapat diubah oleh PM
                   </>
                 ) : (
                   <>
-                    <Lock className="w-3.5 h-3.5 text-[#64748B]" />
+                    <Lock className="w-3.5 h-3.5 text-fg-3" />
                     Hanya baca untuk anggota
                   </>
                 )}
@@ -582,59 +582,59 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
             {/* READ-ONLY VIEW FOR MEMBERS (Tanpa kolom input) */}
             {!isPM ? (
-              <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#EAF6FD] space-y-3.5 text-xs">
+              <div className="p-4 rounded-2xl bg-muted border border-line space-y-3.5 text-xs">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="p-3 rounded-xl bg-white border border-[#EAF6FD]">
-                    <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+                  <div className="p-3 rounded-xl bg-surface border border-line">
+                    <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
                       Email Akun (Firebase Auth)
                     </span>
-                    <span className="font-mono font-semibold text-[#0B1B33] block mt-1 break-all">
+                    <span className="font-mono font-semibold text-fg block mt-1 break-all">
                       {targetUser.email}
                     </span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white border border-[#EAF6FD]">
-                    <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+                  <div className="p-3 rounded-xl bg-surface border border-line">
+                    <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
                       Peran Akses
                     </span>
-                    <span className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                    <span className="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-muted text-primary">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       {targetUser.role === 'admin' ? 'Admin (Project Manager)' : 'Member Engineer'}
                     </span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white border border-[#EAF6FD]">
-                    <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+                  <div className="p-3 rounded-xl bg-surface border border-line">
+                    <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
                       Jabatan
                     </span>
-                    <span className="font-heading font-bold text-[#0B1B33] block mt-1">
+                    <span className="font-heading font-bold text-fg block mt-1">
                       {targetUser.title}
                     </span>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-white border border-[#EAF6FD]">
-                    <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+                  <div className="p-3 rounded-xl bg-surface border border-line">
+                    <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
                       Kode RACI & Inisial
                     </span>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-[#DBEAFE] text-[#1E3A8A]">
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-primary-soft text-fg-2">
                         {targetUser.raciTag}
                       </span>
-                      <span className="font-mono font-bold text-[#4A5A72]">
+                      <span className="font-mono font-bold text-fg-3">
                         Kode: {targetUser.code}
                       </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="p-3.5 rounded-xl bg-white border border-[#EAF6FD]">
-                  <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block mb-2">
+                <div className="p-3.5 rounded-xl bg-surface border border-line">
+                  <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block mb-2">
                     Rincian Jobdesk Disiplin
                   </span>
-                  <ul className="space-y-1.5 text-xs text-[#0B1B33]">
+                  <ul className="space-y-1.5 text-xs text-fg">
                     {targetUser.jobdesk.map((jd, idx) => (
                       <li key={idx} className="flex items-start gap-2 leading-relaxed">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#0062CC] shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
                         <span>{jd}</span>
                       </li>
                     ))}
@@ -646,11 +646,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               <div className="space-y-4">
                 {/* Email always read-only */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="p-3 rounded-xl bg-[#F8FAFC] border border-[#EAF6FD] flex flex-col justify-center">
-                    <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+                  <div className="p-3 rounded-xl bg-muted border border-line flex flex-col justify-center">
+                    <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
                       Email (Hanya Baca • Auth)
                     </span>
-                    <span className="font-mono text-xs font-semibold text-[#0B1B33] mt-1 break-all">
+                    <span className="font-mono text-xs font-semibold text-fg mt-1 break-all">
                       {targetUser.email}
                     </span>
                   </div>
@@ -658,7 +658,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div>
                     <label
                       htmlFor="profile-role-select"
-                      className="block text-xs font-semibold text-[#0B1B33] mb-1"
+                      className="block text-xs font-semibold text-fg mb-1"
                     >
                       Peran Akses Sistem
                     </label>
@@ -666,7 +666,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       id="profile-role-select"
                       value={pendingRole ?? role}
                       onChange={(e) => handleRoleSelect(e.target.value as UserRole)}
-                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs font-semibold text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs font-semibold text-fg outline-none focus:border-primary"
                     >
                       <option value="member">Member Engineer (member)</option>
                       <option value="admin">Project Manager / Admin (admin)</option>
@@ -677,11 +677,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {/* Role Change Confirmation Warning Box */}
                 {pendingRole !== null && pendingRole !== targetUser.role && (
                   <div
-                    className="p-4 rounded-2xl bg-[#FEF3C7] border border-[#B45309]/40 space-y-3"
+                    className="p-4 rounded-2xl bg-warm-soft border border-warm-line/40 space-y-3"
                     role="alert"
                   >
-                    <div className="flex items-start gap-2.5 text-xs text-[#92400E]">
-                      <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-2.5 text-xs text-warm">
+                      <AlertTriangle className="w-4 h-4 text-warm shrink-0 mt-0.5" />
                       <div>
                         <p className="font-heading font-bold">
                           Konfirmasi Perubahan Peran ({targetUser.role} → {pendingRole})
@@ -697,14 +697,14 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       <button
                         type="button"
                         onClick={cancelRoleChange}
-                        className="min-h-[44px] px-4 rounded-full bg-white text-[#4A5A72] hover:text-[#0B1B33] text-xs font-bold border border-[#C9DCEB]"
+                        className="min-h-[44px] px-4 rounded-full bg-surface text-fg-3 hover:text-fg text-xs font-bold border border-line"
                       >
                         Batal
                       </button>
                       <button
                         type="button"
                         onClick={confirmRoleChange}
-                        className="min-h-[44px] px-4 rounded-full bg-[#B45309] hover:bg-[#92400E] text-white text-xs font-bold flex items-center gap-1.5 shadow-xs"
+                        className="min-h-[44px] px-4 rounded-full bg-warm-solid hover:bg-warm-solid text-on-ink text-xs font-bold flex items-center gap-1.5 shadow-xs"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         Ya, Konfirmasi Ubah Peran
@@ -714,7 +714,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 )}
 
                 {isRoleChanged && roleChangeConfirmed && (
-                  <div className="p-3 rounded-xl bg-[#DBEAFE] text-[#1E3A8A] text-xs font-semibold flex items-center justify-between gap-2">
+                  <div className="p-3 rounded-xl bg-primary-soft text-fg-2 text-xs font-semibold flex items-center justify-between gap-2">
                     <span className="flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 shrink-0" />
                       Perubahan peran ke <strong>{role}</strong> telah dikonfirmasi (klik Simpan Perubahan untuk menerapkan).
@@ -733,7 +733,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div className="sm:col-span-1">
                     <label
                       htmlFor="profile-title"
-                      className="block text-xs font-semibold text-[#0B1B33] mb-1"
+                      className="block text-xs font-semibold text-fg mb-1"
                     >
                       Jabatan
                     </label>
@@ -746,7 +746,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         setStatusMessage(null);
                       }}
                       placeholder="Contoh: Lead Process Engineer"
-                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
                       required
                     />
                   </div>
@@ -754,7 +754,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div>
                     <label
                       htmlFor="profile-raci-tag"
-                      className="block text-xs font-semibold text-[#0B1B33] mb-1"
+                      className="block text-xs font-semibold text-fg mb-1"
                     >
                       Kode RACI
                     </label>
@@ -767,7 +767,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         setStatusMessage(null);
                       }}
                       placeholder="Contoh: RACI: R"
-                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
                       required
                     />
                   </div>
@@ -775,7 +775,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div>
                     <label
                       htmlFor="profile-code"
-                      className="block text-xs font-semibold text-[#0B1B33] mb-1"
+                      className="block text-xs font-semibold text-fg mb-1"
                     >
                       Inisial Kode Engineer
                     </label>
@@ -789,7 +789,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                         setStatusMessage(null);
                       }}
                       placeholder="IH"
-                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs font-mono font-bold text-[#0B1B33] uppercase outline-none focus:border-[#0062CC]"
+                      className="w-full min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs font-mono font-bold text-fg uppercase outline-none focus:border-primary"
                       required
                     />
                   </div>
@@ -798,13 +798,13 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                 {/* Editable Jobdesk List */}
                 <div className="space-y-2.5">
                   <div className="flex items-center justify-between">
-                    <label className="block text-xs font-semibold text-[#0B1B33]">
+                    <label className="block text-xs font-semibold text-fg">
                       Daftar Jobdesk ({jobdesk.length} baris)
                     </label>
                     <button
                       type="button"
                       onClick={handleAddJobdeskRow}
-                      className="min-h-[44px] px-3.5 rounded-full bg-[#EAF6FD] hover:bg-[#DCEBF7] text-[#0062CC] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                      className="min-h-[44px] px-3.5 rounded-full bg-muted hover:bg-muted text-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       Tambah Baris Jobdesk
@@ -814,7 +814,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                   <div className="space-y-2">
                     {jobdesk.map((item, idx) => (
                       <div key={idx} className="flex items-center gap-2">
-                        <span className="w-6 text-center font-mono text-[11px] font-bold text-[#4A5A72] shrink-0">
+                        <span className="w-6 text-center font-mono text-[11px] font-bold text-fg-3 shrink-0">
                           {idx + 1}.
                         </span>
                         <input
@@ -823,12 +823,12 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                           onChange={(e) => handleJobdeskChange(idx, e.target.value)}
                           placeholder="Tulis rincian tugas / tanggung jawab disiplin..."
                           aria-label={`Baris jobdesk ${idx + 1}`}
-                          className="flex-1 min-h-[44px] px-3.5 rounded-xl border border-[#6B7F99] text-xs text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                          className="flex-1 min-h-[44px] px-3.5 rounded-xl border border-line-strong text-xs text-fg outline-none focus:border-primary"
                         />
                         <button
                           type="button"
                           onClick={() => handleRemoveJobdeskRow(idx)}
-                          className="w-11 h-11 rounded-full bg-[#FEE2E2]/70 hover:bg-[#FEE2E2] text-[#B91C1C] flex items-center justify-center transition-colors shrink-0"
+                          className="w-11 h-11 rounded-full bg-danger-soft/70 hover:bg-danger-soft text-danger flex items-center justify-center transition-colors shrink-0"
                           aria-label={`Hapus baris jobdesk ${idx + 1}`}
                           title="Hapus baris jobdesk"
                         >
@@ -837,7 +837,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
                       </div>
                     ))}
                     {jobdesk.length === 0 && (
-                      <p className="text-xs text-[#4A5A72] italic py-2">
+                      <p className="text-xs text-fg-3 italic py-2">
                         Belum ada rincian jobdesk. Klik &ldquo;Tambah Baris Jobdesk&rdquo; untuk menambahkan.
                       </p>
                     )}
@@ -853,26 +853,26 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               role="status"
               className={`p-3.5 rounded-2xl border flex items-center gap-2.5 text-xs font-semibold ${
                 statusMessage.type === 'success'
-                  ? 'bg-[#D1FAE5] border-[#047857]/30 text-[#065F46]'
-                  : 'bg-[#FEE2E2] border-[#B91C1C]/30 text-[#991B1B]'
+                  ? 'bg-success-soft border-success-line/30 text-success'
+                  : 'bg-danger-soft border-danger-line/30 text-danger'
               }`}
             >
               {statusMessage.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 text-[#047857] shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-success shrink-0" />
               ) : (
-                <AlertTriangle className="w-4 h-4 text-[#B91C1C] shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-danger shrink-0" />
               )}
               <span>{statusMessage.text}</span>
             </div>
           )}
 
           {/* Modal Footer Actions (Pill buttons, min 44px touch targets) */}
-          <div className="pt-3 border-t border-[#EAF6FD] flex flex-wrap items-center justify-end gap-3">
+          <div className="pt-3 border-t border-line flex flex-wrap items-center justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="min-h-[44px] px-5 rounded-full bg-[#EAF6FD] hover:bg-[#DCEBF7] text-[#0B1B33] text-xs font-bold transition-colors"
+              className="min-h-[44px] px-5 rounded-full bg-muted hover:bg-muted text-fg text-xs font-bold transition-colors"
             >
               Tutup
             </button>
@@ -881,8 +881,8 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
               disabled={!hasChanges || !isValidForm || isSaving || pendingRole !== null}
               className={`min-h-[44px] px-6 rounded-full font-heading text-xs font-bold inline-flex items-center gap-2 transition-all shadow-xs ${
                 !hasChanges || !isValidForm || isSaving || pendingRole !== null
-                  ? 'bg-[#E2E8F0] text-[#64748B] cursor-not-allowed'
-                  : 'bg-[#0062CC] hover:bg-[#0057B8] text-white'
+                  ? 'bg-muted text-fg-3 cursor-not-allowed'
+                  : 'bg-primary hover:bg-primary-hover text-on-primary'
               }`}
             >
               {isSaving ? (

@@ -66,10 +66,10 @@ export const deliverableProgress = (d: Pick<DeliverableItem, 'status'>): number 
 
 /** Kelas warna pil status (kontras teks ≥ 4.5:1 pada latar pil). */
 export const STATUS_PILL: Record<DocStatus, string> = {
-  Draft: 'bg-[#E2E8F0] text-[#334155]',
-  WIP: 'bg-[#DBEAFE] text-[#1E3A8A]',
-  'Review Internal': 'bg-[#EDE9FE] text-[#5B21B6]',
-  Diajukan: 'bg-[#FEF3C7] text-[#92400E]',
-  'ACC Pembimbing': 'bg-[#D1FAE5] text-[#065F46]',
-  Revisi: 'bg-[#FEE2E2] text-[#991B1B]',
+  Draft: 'bg-muted text-fg-2',
+  WIP: 'bg-primary-soft text-fg-2',
+  'Review Internal': 'bg-primary-soft text-fg-2',
+  Diajukan: 'bg-warm-soft text-warm',
+  'ACC Pembimbing': 'bg-success-soft text-success',
+  Revisi: 'bg-danger-soft text-danger',
 };

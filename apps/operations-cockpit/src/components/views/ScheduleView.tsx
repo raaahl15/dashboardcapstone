@@ -37,11 +37,11 @@ const GANTT_STATUSES: GanttTaskStatus[] = [
 ];
 
 const GANTT_STATUS_STYLES: Record<GanttTaskStatus, string> = {
-  Selesai: 'bg-[#059669]',
-  Berjalan: 'bg-[#007BFF]',
-  Belum: 'bg-[#94A3B8]',
-  Terlambat: 'bg-[#B91C1C]',
-  'Perlu dicek': 'bg-[#D97706]',
+  Selesai: 'bg-success-solid',
+  Berjalan: 'bg-primary',
+  Belum: 'bg-fg-3',
+  Terlambat: 'bg-danger-solid',
+  'Perlu dicek': 'bg-warm-solid',
 };
 
 const GANTT_WEEK_COUNT = 18;
@@ -315,21 +315,21 @@ export const ScheduleView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+          <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
             AREA 1 • PSTF 1
           </span>
-          <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+          <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
             Gantt + Rencana Minggu Ini
           </span>
         </div>
 
         <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
-          <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+          <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
             Jadwal Tim
           </h1>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="h-8 px-3.5 bg-white/70 border border-white text-[#0062CC] rounded-full text-[12px] font-semibold flex items-center gap-2">
+            <div className="h-8 px-3.5 bg-surface/70 border border-glass-stroke text-primary rounded-full text-[12px] font-semibold flex items-center gap-2">
               <Clock className="w-3.5 h-3.5" />
               <span>
                 Minggu berjalan: W{currentGanttWeek} —{' '}
@@ -341,9 +341,9 @@ export const ScheduleView: React.FC = () => {
               <button
                 type="button"
                 onClick={openAddGanttModal}
-                className="min-h-[44px] px-4 py-2 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white shadow-xs flex items-center gap-1.5 transition-all"
+                className="min-h-[44px] px-4 py-2 bg-surface/70 hover:bg-surface text-fg rounded-full text-xs font-bold border border-glass-stroke shadow-xs flex items-center gap-1.5 transition-all"
               >
-                <Calendar className="w-3.5 h-3.5 text-[#0062CC]" />
+                <Calendar className="w-3.5 h-3.5 text-primary" />
                 Tambah Task Gantt
               </button>
             )}
@@ -359,10 +359,10 @@ export const ScheduleView: React.FC = () => {
         <div className="glass-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="font-heading font-bold text-base text-[#0B1B33]">
+              <h2 className="font-heading font-bold text-base text-fg">
                 Rencana Minggu Ini (W{currentGanttWeek})
               </h2>
-              <p className="text-xs text-[#4A5A72]">
+              <p className="text-xs text-fg-3">
                 Diambil otomatis dari task Gantt yang berjalan di minggu ini. Tambah/ubah rencana lewat Gantt di bawah;
                 tugas harian dikerjakan sebagai Work Order yang ditautkan ke task Gantt.
               </p>
@@ -370,28 +370,28 @@ export const ScheduleView: React.FC = () => {
           </div>
 
           {thisWeekTasks.length === 0 ? (
-            <p className="text-xs text-[#4A5A72] py-2">Tidak ada task Gantt yang berjalan di W{currentGanttWeek}.</p>
+            <p className="text-xs text-fg-3 py-2">Tidak ada task Gantt yang berjalan di W{currentGanttWeek}.</p>
           ) : (
             <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {thisWeekTasks.map((task) => {
                 const woProgress = getLinkedScheduleProgress(workOrders, 'gantt', task.id, todayYmd);
                 const picRef = task.pic || task.picCode;
                 return (
-                  <li key={task.id} className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs space-y-2">
+                  <li key={task.id} className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs space-y-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs text-[#0B1B33]">{task.name}</p>
-                        <p className="text-[10px] text-[#4A5A72] truncate">{task.phaseName}</p>
+                        <p className="font-heading font-bold text-xs text-fg">{task.name}</p>
+                        <p className="text-[10px] text-fg-3 truncate">{task.phaseName}</p>
                       </div>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-white shrink-0 ${
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-on-ink shrink-0 ${
                           GANTT_STATUS_STYLES[task.status || 'Belum']
                         }`}
                       >
                         {task.status || 'Belum'}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#4A5A72]">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-fg-3">
                       <span>
                         W{task.startWeek}–W{task.endWeek}
                         {task.isCritical ? ' · jalur kritis' : ''}
@@ -408,7 +408,7 @@ export const ScheduleView: React.FC = () => {
                         onClick={() =>
                           setInspectLinkedTarget({ linkType: 'gantt', targetId: task.id, label: task.name })
                         }
-                        className="min-h-[32px] px-2.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD]"
+                        className="min-h-[32px] px-2.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border bg-muted text-primary border-line"
                       >
                         <ClipboardList className="w-3 h-3 shrink-0" />
                         {woProgress.completed}/{woProgress.total} WO selesai
@@ -422,8 +422,8 @@ export const ScheduleView: React.FC = () => {
           )}
 
           {weeklyPlans.length > 0 && (
-            <details className="rounded-2xl bg-white/50 border border-white/80 p-3">
-              <summary className="cursor-pointer text-xs font-bold text-[#334155] min-h-[32px] flex items-center">
+            <details className="rounded-2xl bg-surface/50 border border-glass-stroke p-3">
+              <summary className="cursor-pointer text-xs font-bold text-fg-2 min-h-[32px] flex items-center">
                 Arsip Weekly Plan lama ({weeklyPlans.length}) — tidak lagi ditambah; WO yang tertaut tetap berlaku
               </summary>
           <div
@@ -440,7 +440,7 @@ export const ScheduleView: React.FC = () => {
               return (
                 <div
                   key={plan.id}
-                  className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs hover:shadow-sm transition-all"
+                  className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex items-center gap-2.5 min-w-0">
@@ -451,14 +451,14 @@ export const ScheduleView: React.FC = () => {
                         avatarClassName="w-8 h-8 rounded-full font-heading font-bold text-xs"
                       />
                       <div className="min-w-0">
-                        <h4 className="font-heading font-bold text-xs text-[#0B1B33] truncate">
+                        <h4 className="font-heading font-bold text-xs text-fg truncate">
                           {plan.weekLabel}
                         </h4>
-                        <p className="text-[10px] text-[#4A5A72] mt-0.5">
+                        <p className="text-[10px] text-fg-3 mt-0.5">
                           {GANTT_WEEKS[plan.week - 1]?.date} 2026
                           {GANTT_WEEKS[plan.week - 1]?.isHoliday ? ' • UTS, Libur' : ''}
                         </p>
-                        <div className="flex items-center gap-1 text-[11px] text-[#4A5A72] mt-0.5">
+                        <div className="flex items-center gap-1 text-[11px] text-fg-3 mt-0.5">
                           <span>PIC:</span>
                           <UserChip
                             uid={picRef}
@@ -467,8 +467,8 @@ export const ScheduleView: React.FC = () => {
                             useNickname
                             inlineTitle
                             avatarClassName="hidden"
-                            nameClassName="!text-[11px] !font-medium !text-[#4A5A72]"
-                            titleClassName="!text-[10px] !text-[#4A5A72]"
+                            nameClassName="!text-[11px] !font-medium !text-fg-3"
+                            titleClassName="!text-[10px] !text-fg-3"
                           />
                         </div>
                       </div>
@@ -477,14 +477,14 @@ export const ScheduleView: React.FC = () => {
                     <span
                       className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1 shrink-0 ${
                         plan.status === 'Done'
-                          ? 'bg-[#D1FAE5] text-[#065F46]'
+                          ? 'bg-success-soft text-success'
                           : plan.status === 'In Progress'
-                          ? 'bg-[#FEF3C7] text-[#92400E]'
-                          : 'bg-[#E2E8F0] text-[#334155]'
+                          ? 'bg-warm-soft text-warm'
+                          : 'bg-muted text-fg-2'
                       }`}
                     >
                       {plan.status === 'Done' ? (
-                        <CheckCircle2 className="w-3 h-3 text-[#047857]" />
+                        <CheckCircle2 className="w-3 h-3 text-success" />
                       ) : (
                         <Clock className="w-3 h-3" />
                       )}
@@ -492,8 +492,8 @@ export const ScheduleView: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="mt-3 text-xs text-[#4A5A72]">
-                    <span className="font-bold text-[#0B1B33] text-[10px] uppercase tracking-wider block mb-0.5">
+                  <div className="mt-3 text-xs text-fg-3">
+                    <span className="font-bold text-fg text-[10px] uppercase tracking-wider block mb-0.5">
                       KEY OUTPUT:
                     </span>
                     <p className="text-[11px] leading-relaxed">{plan.keyOutput}</p>
@@ -512,8 +512,8 @@ export const ScheduleView: React.FC = () => {
                         }
                         className={`px-2.5 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border transition-all hover:shadow-xs ${
                           woProgress.completed === woProgress.total
-                            ? 'bg-[#D1FAE5] text-[#065F46] border-[#6EE7B7]'
-                            : 'bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD]'
+                            ? 'bg-success-soft text-success border-success-line'
+                            : 'bg-muted text-primary border-line'
                         }`}
                       >
                         <ClipboardList className="w-3 h-3 shrink-0" />
@@ -531,7 +531,7 @@ export const ScheduleView: React.FC = () => {
                               label: plan.weekLabel,
                             })
                           }
-                          className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white inline-flex items-center gap-1"
+                          className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-danger-solid text-on-ink inline-flex items-center gap-1"
                         >
                           <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
                           <span>{woProgress.overdue} terlambat</span>
@@ -540,7 +540,7 @@ export const ScheduleView: React.FC = () => {
                     </div>
                   )}
 
-                  <div className="mt-3 pt-2 border-t border-[#EAF6FD] flex items-center justify-between text-[10px] text-[#4A5A72]">
+                  <div className="mt-3 pt-2 border-t border-line flex items-center justify-between text-[10px] text-fg-3">
                     <span className="font-mono font-semibold">
                       {plan.docTag.replace(/\s*\/?\s*DRAFT\b/gi, '').trim()}
                     </span>
@@ -549,7 +549,7 @@ export const ScheduleView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => openEditPlanModal(plan)}
-                          className="hover:text-[#0062CC]"
+                          className="hover:text-primary"
                           title="Edit Weekly Plan"
                           aria-label={`Edit Weekly Plan ${plan.title}`}
                         >
@@ -558,7 +558,7 @@ export const ScheduleView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => deleteWeeklyPlan(plan.id)}
-                          className="hover:text-[#B91C1C]"
+                          className="hover:text-danger"
                           title="Hapus Plan"
                         >
                           <Trash2 className="w-3 h-3" />
@@ -579,14 +579,14 @@ export const ScheduleView: React.FC = () => {
           {/* Top Controls: Filter PIC & Add Task */}
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold text-[#0B1B33]">Filter PIC:</span>
+              <span className="text-xs font-bold text-fg">Filter PIC:</span>
               <button
                 type="button"
                 onClick={() => setSelectedPicFilter('All')}
                 className={`min-h-[44px] px-3.5 rounded-full text-xs font-semibold transition-all ${
                   selectedPicFilter === 'All'
-                    ? 'bg-[#0B1B33] text-white shadow-xs'
-                    : 'bg-white text-[#4A5A72] border border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                    ? 'bg-ink text-on-ink shadow-xs'
+                    : 'bg-surface text-fg-3 border border-line hover:bg-muted'
                 }`}
               >
                 All
@@ -600,8 +600,8 @@ export const ScheduleView: React.FC = () => {
                     onClick={() => setSelectedPicFilter(u.id)}
                     className={`min-h-[44px] px-3.5 rounded-full text-xs font-semibold transition-all ${
                       isSelected
-                        ? 'bg-[#0B1B33] text-white shadow-xs'
-                        : 'bg-white text-[#4A5A72] border border-[#C9DCEB] hover:bg-[#EAF6FD]'
+                        ? 'bg-ink text-on-ink shadow-xs'
+                        : 'bg-surface text-fg-3 border border-line hover:bg-muted'
                     }`}
                   >
                     {u.nickname}
@@ -615,7 +615,7 @@ export const ScheduleView: React.FC = () => {
                 <button
                   type="button"
                   onClick={openAddGanttPhaseModal}
-                  className="min-h-[44px] px-4 bg-white hover:bg-[#EAF6FD] text-[#0062CC] rounded-full text-xs font-bold flex items-center gap-1.5 border border-[#C9DCEB] transition-all"
+                  className="min-h-[44px] px-4 bg-surface hover:bg-muted text-primary rounded-full text-xs font-bold flex items-center gap-1.5 border border-line transition-all"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Tambah Fase
@@ -624,7 +624,7 @@ export const ScheduleView: React.FC = () => {
                   type="button"
                   onClick={openAddGanttModal}
                   disabled={ganttPhases.length === 0}
-                  className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] disabled:opacity-50 text-white rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                  className="min-h-[44px] px-4 bg-primary hover:bg-primary-hover disabled:opacity-50 text-on-primary rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   Tambah Task Gantt
@@ -634,10 +634,10 @@ export const ScheduleView: React.FC = () => {
           </div>
 
           {/* Active Filter Notice Banner */}
-          <div className="p-3 bg-[#EAF6FD] rounded-2xl border border-white flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div className="p-3 bg-muted rounded-2xl border border-glass-stroke flex flex-wrap items-center justify-between gap-2 text-xs">
             <div className="flex items-center gap-2">
-              <Filter className="w-3.5 h-3.5 text-[#0062CC]" />
-              <span className="text-[#0B1B33] font-medium text-[11px]">
+              <Filter className="w-3.5 h-3.5 text-primary" />
+              <span className="text-fg font-medium text-[11px]">
                 {selectedPicFilter === 'All'
                   ? 'Menampilkan 18 minggu: 17 Agustus–14 Desember 2026 (5 & 12 Oktober libur UTS)'
                   : `Filter aktif: ${selectedFilterUser?.nickname || selectedPicFilter} (task anggota lain ditampilkan transparan 35% dengan garis putus-putus)`}
@@ -645,36 +645,36 @@ export const ScheduleView: React.FC = () => {
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-bold">
               {GANTT_STATUSES.map((status) => (
-                <span key={status} className="flex items-center gap-1 text-[#334155]">
+                <span key={status} className="flex items-center gap-1 text-fg-2">
                   <span
                     className={`w-2.5 h-2.5 rounded-sm ${GANTT_STATUS_STYLES[status]}`}
                   />
                   {status}
                 </span>
               ))}
-              <span className="flex items-center gap-1 text-[#92400E]">
-                <span className="w-2.5 h-2.5 rounded-sm bg-[#B45309]"></span>
+              <span className="flex items-center gap-1 text-warm">
+                <span className="w-2.5 h-2.5 rounded-sm bg-warm-solid"></span>
                 Stage-gate milestone
               </span>
-              <span className="flex items-center gap-1 text-[#1D4ED8]">
-                <span className="w-0.5 h-3 bg-[#2563EB]"></span>
+              <span className="flex items-center gap-1 text-fg-2">
+                <span className="w-0.5 h-3 bg-primary"></span>
                 Minggu berjalan (W{currentGanttWeek})
               </span>
             </div>
           </div>
 
           {/* Gantt Table Container */}
-          <div className="overflow-x-auto border border-[#EAF6FD] rounded-2xl bg-white relative">
+          <div className="overflow-x-auto border border-line rounded-2xl bg-surface relative">
             <div className="min-w-[1440px]">
               {/* Header: Months & Weeks (6 label cols + 18 week cols = 24 cols) */}
-              <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] text-center text-xs font-bold border-b border-[#EAF6FD] bg-[#F8FAFC]">
-                <div className="col-span-6 p-2 text-left pl-3 text-[#0B1B33] uppercase text-[11px] font-heading">
+              <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] text-center text-xs font-bold border-b border-line bg-muted">
+                <div className="col-span-6 p-2 text-left pl-3 text-fg uppercase text-[11px] font-heading">
                   WBS PHASE &amp; DELIVERABLE
                 </div>
                 {GANTT_MONTHS.map((month) => (
                   <div
                     key={month.name}
-                    className="p-2 text-[#0062CC] border-l border-[#EAF6FD]"
+                    className="p-2 text-primary border-l border-line"
                     style={{ gridColumn: `span ${month.weeks} / span ${month.weeks}` }}
                   >
                     {month.name}
@@ -683,19 +683,19 @@ export const ScheduleView: React.FC = () => {
               </div>
 
               {/* Sub-Header: Weekly dates */}
-              <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] text-center text-[10px] font-mono font-bold text-[#4A5A72] border-b border-[#EAF6FD] bg-white">
-                <div className="col-span-6 p-1.5 text-left pl-3 font-sans text-[#0B1B33] flex items-center justify-between pr-2">
+              <div className="grid grid-cols-[repeat(24,minmax(0,1fr))] text-center text-[10px] font-mono font-bold text-fg-3 border-b border-line bg-surface">
+                <div className="col-span-6 p-1.5 text-left pl-3 font-sans text-fg flex items-center justify-between pr-2">
                   <span>Task Name / Responsible</span>
-                  <span className="text-[9px] font-bold text-[#4A5A72]">18 WEEKS</span>
+                  <span className="text-[9px] font-bold text-fg-3">18 WEEKS</span>
                 </div>
                 {GANTT_WEEKS.map((week) => (
                   <div
                     key={week.week}
-                    className={`p-1 border-l border-[#EAF6FD] leading-tight ${
+                    className={`p-1 border-l border-line leading-tight ${
                       week.week === currentGanttWeek
-                        ? 'bg-[#DBEAFE] text-[#1E3A8A] font-extrabold'
+                        ? 'bg-primary-soft text-fg-2 font-extrabold'
                         : week.isHoliday
-                        ? 'bg-[#FFF7ED] text-[#9A3412]'
+                        ? 'bg-warm-soft text-warm'
                         : ''
                     }`}
                     title={`W${week.week}: ${week.date} 2026${week.isHoliday ? ' — UTS, Libur' : ''}`}
@@ -710,16 +710,16 @@ export const ScheduleView: React.FC = () => {
               </div>
 
               {/* Stage Governance Banner */}
-              <div className="p-1.5 bg-[#EAF6FD] text-[10px] font-bold text-[#0062CC] px-3 border-b border-[#EAF6FD] flex items-center justify-between">
+              <div className="p-1.5 bg-muted text-[10px] font-bold text-primary px-3 border-b border-line flex items-center justify-between">
                 <span>STAGE GOVERNANCE</span>
                 <span>• Tahap 2: Conceptual &amp; Basic Engineering (FEED)</span>
               </div>
 
               {/* Gantt Rows */}
-              <div className="divide-y divide-[#EAF6FD] text-xs relative">
+              <div className="divide-y divide-line text-xs relative">
                 {/* Current week marker */}
                 <div
-                  className="absolute top-0 bottom-0 pointer-events-none z-10 border-r-2 border-[#2563EB]"
+                  className="absolute top-0 bottom-0 pointer-events-none z-10 border-r-2 border-primary"
                   style={{
                     left: `${(6 / 24) * 100 + ((currentGanttWeek - 1) / GANTT_WEEK_COUNT) * ((GANTT_WEEK_COUNT / 24) * 100)}%`,
                   }}
@@ -733,9 +733,9 @@ export const ScheduleView: React.FC = () => {
                   return (
                     <React.Fragment key={phase.id}>
                       {/* Phase Group Header */}
-                      <div className="min-h-10 p-2 bg-[#F8FAFC] text-[11px] font-heading font-extrabold text-[#0B1B33] pl-3 flex items-center justify-between gap-2">
+                      <div className="min-h-10 p-2 bg-muted text-[11px] font-heading font-extrabold text-fg pl-3 flex items-center justify-between gap-2">
                         <span className="min-w-0 flex items-center gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#007BFF] shrink-0"></span>
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0"></span>
                           <span className="truncate">{phase.name}</span>
                         </span>
                         {isPM && (
@@ -743,7 +743,7 @@ export const ScheduleView: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => openEditGanttPhaseModal(phase.id, phase.name)}
-                              className="w-7 h-7 rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] flex items-center justify-center"
+                              className="w-7 h-7 rounded-full text-fg-3 hover:bg-muted hover:text-primary flex items-center justify-center"
                               title={`Edit fase ${phase.name}`}
                               aria-label={`Edit fase ${phase.name}`}
                             >
@@ -765,7 +765,7 @@ export const ScheduleView: React.FC = () => {
                                   deleteGanttPhase(phase.id);
                                 }
                               }}
-                              className="w-7 h-7 rounded-full text-[#4A5A72] hover:bg-[#FEE2E2] hover:text-[#B91C1C] disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[#4A5A72] flex items-center justify-center"
+                              className="w-7 h-7 rounded-full text-fg-3 hover:bg-danger-soft hover:text-danger disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-fg-3 flex items-center justify-center"
                               title={
                                 ganttPhases.length <= 1
                                   ? 'Minimal satu fase harus tersedia'
@@ -811,11 +811,11 @@ export const ScheduleView: React.FC = () => {
                           <div
                             key={gt.id}
                             className={`grid grid-cols-[repeat(24,minmax(0,1fr))] items-center py-2.5 transition-all ${
-                              isMatchPic ? 'bg-white' : 'bg-gray-50/40 opacity-50'
+                              isMatchPic ? 'bg-surface' : 'bg-muted/40 opacity-50'
                             }`}
                           >
                             {/* Task Label & PIC */}
-                            <div className="col-span-6 pl-3 pr-2 flex items-start justify-between gap-2 text-[#0B1B33]">
+                            <div className="col-span-6 pl-3 pr-2 flex items-start justify-between gap-2 text-fg">
                               <div className="min-w-0 space-y-1">
                                 <span
                                   className="block whitespace-normal break-words text-[11px] font-semibold leading-snug"
@@ -836,8 +836,8 @@ export const ScheduleView: React.FC = () => {
                                       }
                                       className={`px-2 py-0.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border transition-colors ${
                                         woProgress.completed === woProgress.total
-                                          ? 'bg-[#D1FAE5] text-[#065F46] border-[#6EE7B7]'
-                                          : 'bg-[#EAF6FD] text-[#0062CC] border-[#BAE6FD] hover:bg-[#DBEAFE]'
+                                          ? 'bg-success-soft text-success border-success-line'
+                                          : 'bg-muted text-primary border-line hover:bg-primary-soft'
                                       }`}
                                     >
                                       <ClipboardList className="w-2.5 h-2.5 shrink-0" />
@@ -855,7 +855,7 @@ export const ScheduleView: React.FC = () => {
                                             label: gt.name,
                                           })
                                         }
-                                        className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-[#B91C1C] text-white inline-flex items-center gap-0.5"
+                                        className="px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-danger-solid text-on-ink inline-flex items-center gap-0.5"
                                         title={`${woProgress.overdue} Work Order terlambat`}
                                       >
                                         <AlertTriangle className="w-2.5 h-2.5 shrink-0" />
@@ -871,7 +871,7 @@ export const ScheduleView: React.FC = () => {
                                     <button
                                       type="button"
                                       onClick={() => openEditGanttModal(gt)}
-                                      className="w-7 h-7 rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] flex items-center justify-center"
+                                      className="w-7 h-7 rounded-full text-fg-3 hover:bg-muted hover:text-primary flex items-center justify-center"
                                       title={`Edit task ${gt.name}`}
                                       aria-label={`Edit task ${gt.name}`}
                                     >
@@ -884,7 +884,7 @@ export const ScheduleView: React.FC = () => {
                                           deleteGanttTask(gt.id);
                                         }
                                       }}
-                                      className="w-7 h-7 rounded-full text-[#4A5A72] hover:bg-[#FEE2E2] hover:text-[#B91C1C] flex items-center justify-center"
+                                      className="w-7 h-7 rounded-full text-fg-3 hover:bg-danger-soft hover:text-danger flex items-center justify-center"
                                       title={`Hapus task ${gt.name}`}
                                       aria-label={`Hapus task ${gt.name}`}
                                     >
@@ -906,7 +906,7 @@ export const ScheduleView: React.FC = () => {
                               {GANTT_WEEKS.filter((week) => week.isHoliday).map((week) => (
                                 <span
                                   key={week.week}
-                                  className="absolute inset-y-0 bg-[#FFF7ED]"
+                                  className="absolute inset-y-0 bg-warm-soft"
                                   style={{
                                     left: `${((week.week - 1) / GANTT_WEEK_COUNT) * 100}%`,
                                     width: `${(1 / GANTT_WEEK_COUNT) * 100}%`,
@@ -925,11 +925,11 @@ export const ScheduleView: React.FC = () => {
                                         })
                                     : undefined
                                 }
-                                className={`absolute h-6 rounded-lg text-[10px] font-bold text-white flex items-center justify-center gap-1 px-2 shadow-xs transition-all ${
+                                className={`absolute h-6 rounded-lg text-[10px] font-bold text-on-ink flex items-center justify-center gap-1 px-2 shadow-xs transition-all ${
                                   gt.isStageGateMilestone
-                                    ? 'bg-[#B45309]'
+                                    ? 'bg-warm-solid'
                                     : GANTT_STATUS_STYLES[status]
-                                } ${!isMatchPic ? 'border border-dashed border-[#6B7F99]' : ''} ${
+                                } ${!isMatchPic ? 'border border-dashed border-line-strong' : ''} ${
                                   woProgress.total > 0 ? 'cursor-pointer hover:brightness-105' : ''
                                 }`}
                                 style={{
@@ -961,8 +961,8 @@ export const ScheduleView: React.FC = () => {
           </div>
 
           {/* Footer: sumber data jadwal (teks klaim statis dihapus, audit Fase 4 / LOG-028) */}
-          <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] text-[#4A5A72] border-t border-[#EAF6FD]">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#047857]" />
+          <div className="pt-2 flex flex-wrap items-center gap-2 text-[11px] text-fg-3 border-t border-line">
+            <ShieldCheck className="w-3.5 h-3.5 text-success" />
             <span>Jadwal tersimpan di Firestore dan tersinkron antar-perangkat secara real-time.</span>
           </div>
         </div>
@@ -972,9 +972,9 @@ export const ScheduleView: React.FC = () => {
       {/* MODALS: Weekly Plan & Gantt Task */}
       {/* ========================================================================= */}
       {showAddPlanModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingWeeklyPlanId ? 'Edit Weekly Plan' : 'Tambah Weekly Plan Baru'}
             </h3>
             <form onSubmit={handleSavePlan} className="mt-4 space-y-3">
@@ -987,7 +987,7 @@ export const ScheduleView: React.FC = () => {
                     max={GANTT_WEEK_COUNT}
                     value={newPlanWeek}
                     onChange={(e) => setNewPlanWeek(Number(e.target.value))}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -996,7 +996,7 @@ export const ScheduleView: React.FC = () => {
                   <select
                     value={newPlanPic}
                     onChange={(e) => setNewPlanPic(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     {users.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -1014,7 +1014,7 @@ export const ScheduleView: React.FC = () => {
                   value={newPlanTitle}
                   onChange={(e) => setNewPlanTitle(e.target.value)}
                   placeholder="Contoh: Pengujian URS dan Bab 1"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1026,7 +1026,7 @@ export const ScheduleView: React.FC = () => {
                   value={newPlanOutput}
                   onChange={(e) => setNewPlanOutput(e.target.value)}
                   placeholder="Luaran teknis utama yang harus diserahkan..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1039,7 +1039,7 @@ export const ScheduleView: React.FC = () => {
                     onChange={(e) =>
                       setNewPlanStatus(e.target.value as WeeklyPlanItem['status'])
                     }
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     <option value="Planning">Planning</option>
                     <option value="In Progress">In Progress</option>
@@ -1053,7 +1053,7 @@ export const ScheduleView: React.FC = () => {
                     value={newPlanDocTag}
                     onChange={(e) => setNewPlanDocTag(e.target.value)}
                     placeholder={`W${String(newPlanWeek).padStart(2, '0')}`}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   />
                 </div>
               </div>
@@ -1065,13 +1065,13 @@ export const ScheduleView: React.FC = () => {
                     setShowAddPlanModal(false);
                     setEditingWeeklyPlanId(null);
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingWeeklyPlanId ? 'Simpan Perubahan' : 'Simpan Plan'}
                 </button>
@@ -1082,9 +1082,9 @@ export const ScheduleView: React.FC = () => {
       )}
 
       {showGanttPhaseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingGanttPhaseId === null ? 'Tambah Fase Gantt' : 'Edit Nama Fase Gantt'}
             </h3>
             <form onSubmit={handleSaveGanttPhase} className="mt-4 space-y-3">
@@ -1101,13 +1101,13 @@ export const ScheduleView: React.FC = () => {
                     setGanttPhaseFormError('');
                   }}
                   placeholder="Contoh: FASE 5: FINAL REVIEW (W17 - W20)"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                   autoFocus
                 />
               </div>
               {ganttPhaseFormError && (
-                <p className="text-xs font-medium text-[#B91C1C]" role="alert">
+                <p className="text-xs font-medium text-danger" role="alert">
                   {ganttPhaseFormError}
                 </p>
               )}
@@ -1118,13 +1118,13 @@ export const ScheduleView: React.FC = () => {
                     setShowGanttPhaseModal(false);
                     setGanttPhaseFormError('');
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan Fase
                 </button>
@@ -1135,9 +1135,9 @@ export const ScheduleView: React.FC = () => {
       )}
 
       {showAddGanttModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingGanttTaskId ? 'Edit Task Gantt' : 'Tambah Baris Task Gantt'}
             </h3>
             <form onSubmit={handleSaveGantt} className="mt-4 space-y-3">
@@ -1146,7 +1146,7 @@ export const ScheduleView: React.FC = () => {
                 <select
                   value={newGanttPhase}
                   onChange={(e) => setNewGanttPhase(Number(e.target.value))}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 >
                   {ganttPhases.map((phase) => (
@@ -1164,7 +1164,7 @@ export const ScheduleView: React.FC = () => {
                   value={newGanttName}
                   onChange={(e) => setNewGanttName(e.target.value)}
                   placeholder="Contoh: 2.5 Lembar PFD Final"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1175,7 +1175,7 @@ export const ScheduleView: React.FC = () => {
                   <select
                     value={newGanttPic}
                     onChange={(e) => setNewGanttPic(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     <option value="ALL">All Team</option>
                     {users.map((u) => (
@@ -1196,7 +1196,7 @@ export const ScheduleView: React.FC = () => {
                       setNewGanttStart(Number(e.target.value));
                       setGanttFormError('');
                     }}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1211,7 +1211,7 @@ export const ScheduleView: React.FC = () => {
                       setNewGanttEnd(Number(e.target.value));
                       setGanttFormError('');
                     }}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1222,7 +1222,7 @@ export const ScheduleView: React.FC = () => {
                 <select
                   value={newGanttStatus}
                   onChange={(e) => setNewGanttStatus(e.target.value as GanttTaskStatus)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 >
                   {GANTT_STATUSES.map((status) => (
                     <option key={status} value={status}>
@@ -1233,19 +1233,19 @@ export const ScheduleView: React.FC = () => {
               </div>
 
               <div>
-                <label className="min-h-[44px] px-3 rounded-xl bg-[#FFFBEB] text-[#92400E] text-xs font-semibold flex items-center gap-2">
+                <label className="min-h-[44px] px-3 rounded-xl bg-warm-soft text-warm text-xs font-semibold flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={newGanttIsStageGateMilestone}
                     onChange={(e) => setNewGanttIsStageGateMilestone(e.target.checked)}
-                    className="accent-[#B45309]"
+                    className="accent-warm"
                   />
                   Stage-gate milestone
                 </label>
               </div>
 
               {ganttFormError && (
-                <p className="text-xs font-medium text-[#B91C1C]" role="alert">
+                <p className="text-xs font-medium text-danger" role="alert">
                   {ganttFormError}
                 </p>
               )}
@@ -1257,13 +1257,13 @@ export const ScheduleView: React.FC = () => {
                     setShowAddGanttModal(false);
                     setGanttFormError('');
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingGanttTaskId ? 'Simpan Perubahan' : 'Simpan Task'}
                 </button>
@@ -1284,31 +1284,31 @@ export const ScheduleView: React.FC = () => {
 
         return (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs"
             role="dialog"
             aria-modal="true"
             aria-labelledby="schedule-linked-wo-title"
           >
-            <div className="w-full max-w-lg max-h-[88vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4">
-              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#EAF6FD]">
+            <div className="w-full max-w-lg max-h-[88vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-line">
                 <div className="min-w-0">
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#0062CC] block">
+                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary block">
                     {inspectLinkedTarget.linkType === 'gantt'
                       ? 'WORK ORDER TERTAUT • GANTT TASK'
                       : 'WORK ORDER TERTAUT • WEEKLY PLAN'}
                   </span>
                   <h3
                     id="schedule-linked-wo-title"
-                    className="font-heading font-bold text-sm text-[#0B1B33] mt-0.5 leading-snug"
+                    className="font-heading font-bold text-sm text-fg mt-0.5 leading-snug"
                   >
                     {inspectLinkedTarget.label}
                   </h3>
                   <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC]">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary">
                       {linkedStats.completed}/{linkedStats.total} WO selesai
                     </span>
                     {linkedStats.overdue > 0 && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#B91C1C] text-white">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-danger-solid text-on-ink">
                         {linkedStats.overdue} terlambat
                       </span>
                     )}
@@ -1317,7 +1317,7 @@ export const ScheduleView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setInspectLinkedTarget(null)}
-                  className="w-11 h-11 rounded-full bg-[#EAF6FD] text-[#0B1B33] flex items-center justify-center shrink-0"
+                  className="w-11 h-11 rounded-full bg-muted text-fg flex items-center justify-center shrink-0"
                   aria-label="Tutup daftar Work Order tertaut"
                 >
                   <X className="w-4 h-4" />
@@ -1325,7 +1325,7 @@ export const ScheduleView: React.FC = () => {
               </div>
 
               {linkedStats.items.length === 0 ? (
-                <p className="text-xs text-[#4A5A72] py-4 text-center">
+                <p className="text-xs text-fg-3 py-4 text-center">
                   Tidak ada Work Order aktif atau selesai pada item jadwal ini.
                 </p>
               ) : (
@@ -1341,11 +1341,11 @@ export const ScheduleView: React.FC = () => {
                           setInspectLinkedTarget(null);
                           setSelectedWorkOrderId(wo.id);
                         }}
-                        className="w-full text-left p-3.5 rounded-2xl bg-[#F8FAFC] hover:bg-[#EAF6FD]/70 border border-[#EAF6FD] transition-all space-y-2"
+                        className="w-full text-left p-3.5 rounded-2xl bg-muted hover:bg-muted/70 border border-line transition-all space-y-2"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="font-mono text-xs font-extrabold text-[#0062CC]">
+                            <span className="font-mono text-xs font-extrabold text-primary">
                               {wo.code}
                             </span>
                             <WorkOrderStatusBadge
@@ -1363,11 +1363,11 @@ export const ScheduleView: React.FC = () => {
                           )}
                         </div>
 
-                        <p className="font-heading font-bold text-xs text-[#0B1B33] leading-snug">
+                        <p className="font-heading font-bold text-xs text-fg leading-snug">
                           {wo.title}
                         </p>
 
-                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-white">
+                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-glass-stroke">
                           <div className="flex flex-wrap items-center gap-1.5">
                             {wo.assigneeIds.map((uid) => (
                               <UserChip
@@ -1377,13 +1377,13 @@ export const ScheduleView: React.FC = () => {
                                 size="xs"
                                 useNickname
                                 avatarClassName="w-5 h-5 rounded-full text-[9px]"
-                                nameClassName="!text-[11px] !font-semibold !text-[#334155]"
+                                nameClassName="!text-[11px] !font-semibold !text-fg-2"
                               />
                             ))}
                           </div>
                           <span
                             className={`text-[11px] font-semibold shrink-0 ${
-                              overdue ? 'text-[#B91C1C]' : 'text-[#4A5A72]'
+                              overdue ? 'text-danger' : 'text-fg-3'
                             }`}
                           >
                             Tenggat: {formatYmdToIndonesian(wo.dueDate)}
@@ -1395,7 +1395,7 @@ export const ScheduleView: React.FC = () => {
                 </div>
               )}
 
-              <div className="pt-2 border-t border-[#EAF6FD] flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-2 border-t border-line flex flex-wrap items-center justify-between gap-2">
                 {isPM ? (
                   <button
                     type="button"
@@ -1409,7 +1409,7 @@ export const ScheduleView: React.FC = () => {
                             : { type: 'weeklyPlan', planId: target.targetId },
                       });
                     }}
-                    className="min-h-[44px] px-4 rounded-full bg-[#EAF6FD] hover:bg-[#DBEAFE] text-[#0062CC] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                    className="min-h-[44px] px-4 rounded-full bg-muted hover:bg-primary-soft text-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Tambah WO ke Jadwal Ini
@@ -1420,7 +1420,7 @@ export const ScheduleView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setInspectLinkedTarget(null)}
-                  className="min-h-[44px] px-5 rounded-full bg-[#0B1B33] text-white text-xs font-bold"
+                  className="min-h-[44px] px-5 rounded-full bg-ink text-on-ink text-xs font-bold"
                 >
                   Tutup
                 </button>

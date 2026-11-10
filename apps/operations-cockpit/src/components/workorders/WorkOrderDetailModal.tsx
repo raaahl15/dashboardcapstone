@@ -232,7 +232,7 @@ export const WorkOrderDetailModal: React.FC = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end bg-[#0B1B33]/45 backdrop-blur-xs"
+      className="fixed inset-0 z-50 flex justify-end bg-ink/45 backdrop-blur-xs"
       role="dialog"
       aria-modal="true"
       aria-labelledby="wo-detail-title"
@@ -242,12 +242,12 @@ export const WorkOrderDetailModal: React.FC = () => {
         }
       }}
     >
-      <div className="w-full max-w-2xl h-full bg-white shadow-cockpit-pop border-l border-white flex flex-col overflow-hidden animate-in slide-in-from-right duration-200">
+      <div className="w-full max-w-2xl h-full bg-surface shadow-cockpit-pop border-l border-glass-stroke flex flex-col overflow-hidden animate-in slide-in-from-right duration-200">
         {/* Top Sticky Header */}
-        <div className="px-6 py-4 border-b border-[#EAF6FD] bg-white/95 flex items-start justify-between gap-3">
+        <div className="px-6 py-4 border-b border-line bg-surface/95 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-[#0B1B33] text-white">
+              <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-ink text-on-ink">
                 {wo.code}
               </span>
               <WorkOrderStatusBadge
@@ -262,7 +262,7 @@ export const WorkOrderDetailModal: React.FC = () => {
             </div>
             <h2
               id="wo-detail-title"
-              className="font-heading font-bold text-base sm:text-lg text-[#0B1B33] mt-2 leading-snug"
+              className="font-heading font-bold text-base sm:text-lg text-fg mt-2 leading-snug"
             >
               {wo.title}
             </h2>
@@ -275,7 +275,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 onClick={() => setWaOpen(true)}
                 title={`Kirim pesan WhatsApp ${wo.code} (template Rakai)`}
                 aria-label={`Kirim pesan WhatsApp ${wo.code}`}
-                className="min-h-[44px] px-3.5 rounded-full bg-[#DCFCE7] hover:bg-[#BBF7D0] text-[#166534] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                className="min-h-[44px] px-3.5 rounded-full bg-success-soft hover:bg-success-soft text-success text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
               >
                 <MessageCircle className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">WhatsApp</span>
@@ -299,7 +299,7 @@ export const WorkOrderDetailModal: React.FC = () => {
               <button
                 type="button"
                 onClick={() => openWorkOrderForm({ editingWorkOrderId: wo.id })}
-                className="min-h-[44px] px-3.5 rounded-full bg-[#EAF6FD] hover:bg-[#DCEBF7] text-[#0062CC] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                className="min-h-[44px] px-3.5 rounded-full bg-muted hover:bg-muted text-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
                 title="Ubah Work Order"
               >
                 <Pencil className="w-3.5 h-3.5" />
@@ -309,7 +309,7 @@ export const WorkOrderDetailModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setSelectedWorkOrderId(null)}
-              className="w-11 h-11 rounded-full hover:bg-[#EAF6FD] text-[#4A5A72] hover:text-[#0B1B33] flex items-center justify-center transition-colors"
+              className="w-11 h-11 rounded-full hover:bg-muted text-fg-3 hover:text-fg flex items-center justify-center transition-colors"
               aria-label="Tutup panel detail Work Order"
             >
               <X className="w-4 h-4" />
@@ -322,7 +322,7 @@ export const WorkOrderDetailModal: React.FC = () => {
           {actionError && (
             <div
               role="alert"
-              className="p-3 rounded-2xl bg-[#FEE2E2] border border-[#FCA5A5] text-xs font-semibold text-[#991B1B] flex items-center gap-2"
+              className="p-3 rounded-2xl bg-danger-soft border border-danger-line text-xs font-semibold text-danger flex items-center gap-2"
             >
               <AlertTriangle className="w-4 h-4 shrink-0" />
               <span>{actionError}</span>
@@ -330,7 +330,7 @@ export const WorkOrderDetailModal: React.FC = () => {
           )}
 
           {actionInfo && (
-            <div className="p-3 rounded-2xl bg-[#D1FAE5] border border-[#6EE7B7] text-xs font-semibold text-[#065F46] flex items-center gap-2">
+            <div className="p-3 rounded-2xl bg-success-soft border border-success-line text-xs font-semibold text-success flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>{actionInfo}</span>
             </div>
@@ -338,53 +338,53 @@ export const WorkOrderDetailModal: React.FC = () => {
 
           {/* Callout Banners: Revisi / Blocked / Dibatalkan */}
           {wo.revisionNote && (wo.needsRevision || wo.status === 'Dikerjakan') && (
-            <div className="p-4 rounded-2xl bg-[#FEF3C7] border border-[#FCD34D] space-y-1">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#92400E] flex items-center gap-1.5">
+            <div className="p-4 rounded-2xl bg-warm-soft border border-warm-line space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-warm flex items-center gap-1.5">
                 <RotateCcw className="w-3.5 h-3.5" />
                 Catatan Revisi dari PM
               </span>
-              <p className="text-xs font-medium text-[#78350F] leading-relaxed">
+              <p className="text-xs font-medium text-warm leading-relaxed">
                 {wo.revisionNote}
               </p>
             </div>
           )}
 
           {wo.status === 'Blocked' && wo.blockedReason && (
-            <div className="p-4 rounded-2xl bg-[#FEE2E2] border border-[#FCA5A5] space-y-1">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#991B1B] flex items-center gap-1.5">
+            <div className="p-4 rounded-2xl bg-danger-soft border border-danger-line space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-danger flex items-center gap-1.5">
                 <PauseCircle className="w-3.5 h-3.5" />
                 Alasan Kendala (Blocked)
               </span>
-              <p className="text-xs font-medium text-[#7F1D1D] leading-relaxed">
+              <p className="text-xs font-medium text-danger leading-relaxed">
                 {wo.blockedReason}
               </p>
             </div>
           )}
 
           {wo.status === 'Dibatalkan' && wo.cancelReason && (
-            <div className="p-4 rounded-2xl bg-[#F1F5F9] border border-[#CBD5E1] space-y-1">
-              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#334155] flex items-center gap-1.5">
+            <div className="p-4 rounded-2xl bg-muted border border-line-strong space-y-1">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-fg-2 flex items-center gap-1.5">
                 <Ban className="w-3.5 h-3.5" />
                 Work Order Dibatalkan
               </span>
-              <p className="text-xs font-medium text-[#334155] leading-relaxed">
+              <p className="text-xs font-medium text-fg-2 leading-relaxed">
                 Alasan: {wo.cancelReason}
               </p>
             </div>
           )}
 
           {/* Instruksi / Deskripsi */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#DCEBF7] space-y-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[#4A5A72]">
+          <div className="p-4 rounded-2xl bg-muted border border-line space-y-1.5">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3">
               Instruksi &amp; Ruang Lingkup
             </span>
-            <p className="text-xs text-[#0B1B33] leading-relaxed whitespace-pre-line">
+            <p className="text-xs text-fg leading-relaxed whitespace-pre-line">
               {wo.description || 'Tidak ada catatan instruksi tambahan.'}
             </p>
             {(wo.outputText || wo.fileUrl) && (
-              <div className="pt-2 mt-1 border-t border-[#DCEBF7] space-y-1 text-xs">
+              <div className="pt-2 mt-1 border-t border-line space-y-1 text-xs">
                 {wo.outputText && (
-                  <p className="text-[#0B1B33]">
+                  <p className="text-fg">
                     <span className="font-bold">Output: </span>
                     {wo.outputText}
                   </p>
@@ -394,7 +394,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                     href={sanitizeExternalUrl(wo.fileUrl)}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-[#0062CC] hover:underline break-all"
+                    className="inline-flex items-center gap-1 font-bold text-primary hover:underline break-all"
                   >
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     Buka file kerja
@@ -406,15 +406,15 @@ export const WorkOrderDetailModal: React.FC = () => {
 
           {/* Grid Metadata: Penanggung Jawab, Pendukung, Waktu, Asal & Tautan Jadwal */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="p-4 rounded-2xl bg-white border border-[#DCEBF7] space-y-2.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-[#4A5A72] block">
+            <div className="p-4 rounded-2xl bg-surface border border-line space-y-2.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3 block">
                 Penanggung Jawab ({wo.assigneeIds.length})
               </span>
               <div className="flex flex-wrap gap-2">
                 {wo.assigneeIds.map((uid) => (
                   <div
                     key={uid}
-                    className="px-2.5 py-1.5 rounded-xl bg-[#EAF6FD]/70 border border-[#DCEBF7]"
+                    className="px-2.5 py-1.5 rounded-xl bg-muted/70 border border-line"
                   >
                     <UserChip
                       uid={uid}
@@ -427,8 +427,8 @@ export const WorkOrderDetailModal: React.FC = () => {
               </div>
 
               {wo.supporterIds.length > 0 && (
-                <div className="pt-2 border-t border-[#EAF6FD]">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#4A5A72] block mb-1.5">
+                <div className="pt-2 border-t border-line">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-fg-3 block mb-1.5">
                     Pendukung
                   </span>
                   <div className="flex flex-wrap gap-1.5">
@@ -446,33 +446,33 @@ export const WorkOrderDetailModal: React.FC = () => {
               )}
             </div>
 
-            <div className="p-4 rounded-2xl bg-white border border-[#DCEBF7] space-y-2.5 text-xs">
+            <div className="p-4 rounded-2xl bg-surface border border-line space-y-2.5 text-xs">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#4A5A72] block">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3 block">
                   Tenggat &amp; Minggu Proyek
                 </span>
-                <div className="flex flex-wrap items-center gap-1.5 mt-1 font-bold text-[#0B1B33]">
-                  <Calendar className="w-3.5 h-3.5 text-[#0062CC]" />
+                <div className="flex flex-wrap items-center gap-1.5 mt-1 font-bold text-fg">
+                  <Calendar className="w-3.5 h-3.5 text-primary" />
                   <span>{formatYmdToIndonesian(wo.dueDate)}</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-[#EAF6FD] text-[#0062CC]">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-muted text-primary">
                     W{weekInfo.week}
                   </span>
                 </div>
                 {weekInfo.isOutOfRange && (
-                  <p className="text-[11px] text-[#B45309] font-semibold mt-1">
+                  <p className="text-[11px] text-warm font-semibold mt-1">
                     Di luar rentang Minggu 1–16
                   </p>
                 )}
                 {wo.completedAt && wo.status === 'Selesai' && (
-                  <p className="text-[11px] text-[#047857] font-semibold mt-1">
+                  <p className="text-[11px] text-success font-semibold mt-1">
                     Selesai: {formatIsoDateTimeShort(wo.completedAt)}
                   </p>
                 )}
               </div>
 
-              <div className="pt-2 border-t border-[#EAF6FD] space-y-1.5">
+              <div className="pt-2 border-t border-line space-y-1.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-[#4A5A72]">Asal:</span>
+                  <span className="text-[11px] text-fg-3">Asal:</span>
                   {wo.origin.type === 'mom' ? (
                     <button
                       type="button"
@@ -480,19 +480,19 @@ export const WorkOrderDetailModal: React.FC = () => {
                         setSelectedWorkOrderId(null);
                         setActiveTab('weekly-mom');
                       }}
-                      className="text-[11px] font-bold text-[#0062CC] hover:underline"
+                      className="text-[11px] font-bold text-primary hover:underline"
                     >
                       MoM ({wo.origin.trackerActionCode})
                     </button>
                   ) : (
-                    <span className="text-[11px] font-semibold text-[#0B1B33]">
+                    <span className="text-[11px] font-semibold text-fg">
                       Dibuat Manual
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-start justify-between gap-2">
-                  <span className="text-[11px] text-[#4A5A72] shrink-0">
+                  <span className="text-[11px] text-fg-3 shrink-0">
                     Tautan Jadwal:
                   </span>
                   {linkedGantt ? (
@@ -502,7 +502,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                         setSelectedWorkOrderId(null);
                         setActiveTab('schedule');
                       }}
-                      className="text-[11px] font-bold text-[#0062CC] hover:underline text-right inline-flex items-center gap-1"
+                      className="text-[11px] font-bold text-primary hover:underline text-right inline-flex items-center gap-1"
                     >
                       <Link2 className="w-3 h-3 shrink-0" />
                       <span className="truncate max-w-[180px]">
@@ -516,7 +516,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                         setSelectedWorkOrderId(null);
                         setActiveTab('schedule');
                       }}
-                      className="text-[11px] font-bold text-[#0062CC] hover:underline text-right inline-flex items-center gap-1"
+                      className="text-[11px] font-bold text-primary hover:underline text-right inline-flex items-center gap-1"
                     >
                       <Link2 className="w-3 h-3 shrink-0" />
                       <span className="truncate max-w-[180px]">
@@ -524,7 +524,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                       </span>
                     </button>
                   ) : (
-                    <span className="text-[11px] text-[#4A5A72]">Tidak ditautkan</span>
+                    <span className="text-[11px] text-fg-3">Tidak ditautkan</span>
                   )}
                 </div>
               </div>
@@ -533,12 +533,12 @@ export const WorkOrderDetailModal: React.FC = () => {
 
           {/* Checklist Langkah Kerja */}
           {wo.checklist.length > 0 && (
-            <div className="p-4 rounded-2xl bg-white border border-[#DCEBF7] space-y-3">
+            <div className="p-4 rounded-2xl bg-surface border border-line space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-[#0B1B33]">
+                <span className="text-xs font-bold text-fg">
                   Checklist Langkah Kerja
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC] tabular-nums">
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary tabular-nums">
                   {completedChecklistCount}/{wo.checklist.length} selesai
                 </span>
               </div>
@@ -552,18 +552,18 @@ export const WorkOrderDetailModal: React.FC = () => {
                     onClick={() => handleToggleChecklistItem(item.id)}
                     className={`w-full min-h-[44px] px-3 py-2 rounded-xl border text-left flex items-center gap-2.5 transition-all ${
                       item.done
-                        ? 'bg-[#D1FAE5]/40 border-[#6EE7B7] text-[#065F46]'
-                        : 'bg-[#F8FAFC] border-[#DCEBF7] text-[#0B1B33]'
+                        ? 'bg-success-soft/40 border-success-line text-success'
+                        : 'bg-muted border-line text-fg'
                     } ${
                       canExecute
-                        ? 'hover:border-[#0062CC] cursor-pointer'
+                        ? 'hover:border-primary cursor-pointer'
                         : 'cursor-default opacity-85'
                     }`}
                   >
                     {item.done ? (
-                      <CheckSquare className="w-4 h-4 text-[#047857] shrink-0" />
+                      <CheckSquare className="w-4 h-4 text-success shrink-0" />
                     ) : (
-                      <Square className="w-4 h-4 text-[#6B7F99] shrink-0" />
+                      <Square className="w-4 h-4 text-fg-3 shrink-0" />
                     )}
                     <span
                       className={`text-xs font-medium ${
@@ -579,16 +579,16 @@ export const WorkOrderDetailModal: React.FC = () => {
           )}
 
           {/* Bukti Hasil Pelaksanaan */}
-          <div className="p-4 rounded-2xl bg-white border border-[#DCEBF7] space-y-3">
+          <div className="p-4 rounded-2xl bg-surface border border-line space-y-3">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-bold text-[#0B1B33]">
+              <span className="text-xs font-bold text-fg">
                 Bukti Hasil Pekerjaan
               </span>
               <span
                 className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
                   wo.requireEvidence
-                    ? 'bg-[#FEF3C7] text-[#92400E]'
-                    : 'bg-[#F1F5F9] text-[#475569]'
+                    ? 'bg-warm-soft text-warm'
+                    : 'bg-muted text-fg-3'
                 }`}
               >
                 {wo.requireEvidence ? 'Wajib saat Submit' : 'Opsional'}
@@ -598,7 +598,7 @@ export const WorkOrderDetailModal: React.FC = () => {
             {canExecute ? (
               <form onSubmit={handleSaveEvidenceOnly} className="space-y-2.5">
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#4A5A72] mb-1">
+                  <label className="block text-[11px] font-semibold text-fg-3 mb-1">
                     Tautan Bukti (Google Drive / Dokumen / Repository)
                   </label>
                   <input
@@ -606,11 +606,11 @@ export const WorkOrderDetailModal: React.FC = () => {
                     value={evidenceUrlInput}
                     onChange={(e) => setEvidenceUrlInput(e.target.value)}
                     placeholder="https://drive.google.com/..."
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#4A5A72] mb-1">
+                  <label className="block text-[11px] font-semibold text-fg-3 mb-1">
                     Catatan Hasil Singkat
                   </label>
                   <input
@@ -618,7 +618,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                     value={evidenceNoteInput}
                     onChange={(e) => setEvidenceNoteInput(e.target.value)}
                     placeholder="Contoh: Revisi Rev-02 sudah sesuai batas konversi 82%"
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                   />
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
@@ -627,13 +627,13 @@ export const WorkOrderDetailModal: React.FC = () => {
                       href={safeExternalEvidence}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="min-h-[38px] px-3.5 rounded-full bg-[#EAF6FD] text-[#0062CC] text-xs font-bold inline-flex items-center gap-1.5 hover:underline"
+                      className="min-h-[38px] px-3.5 rounded-full bg-muted text-primary text-xs font-bold inline-flex items-center gap-1.5 hover:underline"
                     >
                       <span>Buka Bukti Tersimpan</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   ) : (
-                    <span className="text-[11px] text-[#4A5A72]">
+                    <span className="text-[11px] text-fg-3">
                       Belum ada tautan bukti tersimpan.
                     </span>
                   )}
@@ -641,32 +641,32 @@ export const WorkOrderDetailModal: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isBusy}
-                    className="min-h-[40px] px-4 rounded-full bg-[#F8FAFC] hover:bg-[#EAF6FD] text-[#0B1B33] border border-[#C9DCEB] text-xs font-bold inline-flex items-center gap-1.5"
+                    className="min-h-[40px] px-4 rounded-full bg-muted hover:bg-muted text-fg border border-line text-xs font-bold inline-flex items-center gap-1.5"
                   >
-                    <Save className="w-3.5 h-3.5 text-[#0062CC]" />
+                    <Save className="w-3.5 h-3.5 text-primary" />
                     <span>Simpan Bukti</span>
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="text-xs text-[#334155] space-y-2">
+              <div className="text-xs text-fg-2 space-y-2">
                 {safeExternalEvidence !== '#' ? (
                   <a
                     href={safeExternalEvidence}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="min-h-[40px] px-4 rounded-full bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold inline-flex items-center gap-1.5"
+                    className="min-h-[40px] px-4 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold inline-flex items-center gap-1.5"
                   >
                     <span>Buka Tautan Bukti Hasil</span>
                     <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 ) : (
-                  <p className="text-[#4A5A72] italic">
+                  <p className="text-fg-3 italic">
                     Tidak ada tautan bukti dilampirkan.
                   </p>
                 )}
                 {wo.evidenceNote && (
-                  <p className="p-2.5 rounded-xl bg-[#F8FAFC] border border-[#EAF6FD] text-xs text-[#0B1B33]">
+                  <p className="p-2.5 rounded-xl bg-muted border border-line text-xs text-fg">
                     {wo.evidenceNote}
                   </p>
                 )}
@@ -678,10 +678,10 @@ export const WorkOrderDetailModal: React.FC = () => {
           {reasonMode && (
             <form
               onSubmit={handleConfirmReasonAction}
-              className="p-4 rounded-2xl bg-[#FFFBEB] border border-[#F59E0B] space-y-3"
+              className="p-4 rounded-2xl bg-warm-soft border border-warm-line space-y-3"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-extrabold text-[#92400E]">
+                <span className="text-xs font-extrabold text-warm">
                   {reasonMode === 'block' && 'Alasan Kendala (Blocked) Wajib Diisi'}
                   {reasonMode === 'revision' && 'Catatan Revisi untuk Penanggung Jawab'}
                   {reasonMode === 'reopen' && 'Alasan Pembukaan Kembali Work Order'}
@@ -694,7 +694,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                     setReasonMode(null);
                     setReasonText('');
                   }}
-                  className="text-xs font-bold text-[#4A5A72] hover:text-[#0B1B33]"
+                  className="text-xs font-bold text-fg-3 hover:text-fg"
                 >
                   Tutup
                 </button>
@@ -704,7 +704,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 value={reasonText}
                 onChange={(e) => setReasonText(e.target.value)}
                 placeholder="Tuliskan keterangan yang jelas agar tercatat di riwayat..."
-                className="w-full p-3 rounded-xl border border-[#D97706] bg-white text-xs text-[#0B1B33] outline-none"
+                className="w-full p-3 rounded-xl border border-warm-line bg-surface text-xs text-fg outline-none"
                 autoFocus
                 required
               />
@@ -715,14 +715,14 @@ export const WorkOrderDetailModal: React.FC = () => {
                     setReasonMode(null);
                     setReasonText('');
                   }}
-                  className="min-h-[40px] px-4 rounded-full text-xs font-semibold text-[#4A5A72]"
+                  className="min-h-[40px] px-4 rounded-full text-xs font-semibold text-fg-3"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={isBusy}
-                  className="min-h-[40px] px-5 rounded-full bg-[#0B1B33] text-white text-xs font-bold"
+                  className="min-h-[40px] px-5 rounded-full bg-ink text-on-ink text-xs font-bold"
                 >
                   Konfirmasi
                 </button>
@@ -731,10 +731,10 @@ export const WorkOrderDetailModal: React.FC = () => {
           )}
 
           {/* Riwayat Perubahan */}
-          <div className="p-4 rounded-2xl bg-[#F8FAFC] border border-[#DCEBF7] space-y-3">
+          <div className="p-4 rounded-2xl bg-muted border border-line space-y-3">
             <div className="flex items-center gap-1.5">
-              <History className="w-3.5 h-3.5 text-[#0062CC]" />
-              <span className="text-xs font-bold text-[#0B1B33]">
+              <History className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-bold text-fg">
                 Riwayat Perubahan ({wo.history.length})
               </span>
             </div>
@@ -745,17 +745,17 @@ export const WorkOrderDetailModal: React.FC = () => {
                 return (
                   <div
                     key={entry.id}
-                    className="p-3 rounded-xl bg-white border border-[#EAF6FD] text-xs space-y-1"
+                    className="p-3 rounded-xl bg-surface border border-line text-xs space-y-1"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-bold text-[#0B1B33]">
+                      <span className="font-bold text-fg">
                         {entry.eventLabel}
                       </span>
-                      <span className="text-[10px] text-[#4A5A72] font-mono">
+                      <span className="text-[10px] text-fg-3 font-mono">
                         {formatIsoDateTimeShort(entry.at)}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-[#4A5A72]">
+                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-fg-3">
                       <span>Oleh: {actor?.nickname || entry.actorId}</span>
                       {entry.fromStatus && entry.fromStatus !== entry.toStatus && (
                         <span>
@@ -764,7 +764,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                       )}
                     </div>
                     {entry.note && (
-                      <p className="text-[11px] text-[#334155] bg-[#F8FAFC] px-2.5 py-1.5 rounded-lg border border-[#EAF6FD] mt-1">
+                      <p className="text-[11px] text-fg-2 bg-muted px-2.5 py-1.5 rounded-lg border border-line mt-1">
                         {entry.note}
                       </p>
                     )}
@@ -776,7 +776,7 @@ export const WorkOrderDetailModal: React.FC = () => {
         </div>
 
         {/* Sticky Footer: Contextual Role-Based Transition Buttons */}
-        <div className="px-6 py-4 border-t border-[#EAF6FD] bg-white flex flex-wrap items-center justify-between gap-2.5">
+        <div className="px-6 py-4 border-t border-line bg-surface flex flex-wrap items-center justify-between gap-2.5">
           <div className="flex flex-wrap items-center gap-2">
             {/* Ditugaskan -> Dikerjakan */}
             {wo.status === 'Ditugaskan' && (isAssignee || isPM) && (
@@ -784,7 +784,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 type="button"
                 disabled={isBusy}
                 onClick={() => void runAction(() => startWorkOrder(wo.id))}
-                className="min-h-[44px] px-5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
+                className="min-h-[44px] px-5 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>Mulai Kerjakan</span>
@@ -797,7 +797,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 type="button"
                 disabled={isBusy}
                 onClick={handleSubmitForReview}
-                className="min-h-[44px] px-5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
+                className="min-h-[44px] px-5 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
               >
                 <Send className="w-3.5 h-3.5" />
                 <span>Ajukan ke PM</span>
@@ -811,7 +811,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                   type="button"
                   disabled={isBusy}
                   onClick={() => void runAction(() => approveWorkOrder(wo.id))}
-                  className="min-h-[44px] px-5 rounded-full bg-[#047857] hover:bg-[#065F46] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
+                  className="min-h-[44px] px-5 rounded-full bg-success-solid hover:bg-success-solid text-on-ink text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Tandai Selesai</span>
@@ -827,7 +827,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                   setReasonText('');
                   setActionError('');
                 }}
-                className="min-h-[44px] px-4 rounded-full bg-[#FEE2E2] hover:bg-[#FECACA] text-[#991B1B] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                className="min-h-[44px] px-4 rounded-full bg-danger-soft hover:bg-danger-soft text-danger text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
               >
                 <PauseCircle className="w-3.5 h-3.5" />
                 <span>Tandai Blocked</span>
@@ -840,7 +840,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 type="button"
                 disabled={isBusy}
                 onClick={() => void runAction(() => unblockWorkOrder(wo.id))}
-                className="min-h-[44px] px-5 rounded-full bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
+                className="min-h-[44px] px-5 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
               >
                 <Play className="w-3.5 h-3.5" />
                 <span>Lanjutkan Kerjakan</span>
@@ -854,7 +854,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                   type="button"
                   disabled={isBusy}
                   onClick={() => void runAction(() => approveWorkOrder(wo.id))}
-                  className="min-h-[44px] px-5 rounded-full bg-[#047857] hover:bg-[#065F46] text-white text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
+                  className="min-h-[44px] px-5 rounded-full bg-success-solid hover:bg-success-solid text-on-ink text-xs font-bold inline-flex items-center gap-1.5 shadow-xs transition-all"
                 >
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Setujui Selesai</span>
@@ -867,7 +867,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                     setReasonText('');
                     setActionError('');
                   }}
-                  className="min-h-[44px] px-4 rounded-full bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                  className="min-h-[44px] px-4 rounded-full bg-warm-soft hover:bg-warm-soft text-warm text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
                   <span>Minta Revisi</span>
@@ -876,7 +876,7 @@ export const WorkOrderDetailModal: React.FC = () => {
             )}
 
             {wo.status === 'Diajukan' && !isPM && (
-              <span className="text-xs font-semibold text-[#92400E]">
+              <span className="text-xs font-semibold text-warm">
                 Menunggu review &amp; persetujuan Project Manager
               </span>
             )}
@@ -891,7 +891,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                   setReasonText('');
                   setActionError('');
                 }}
-                className="min-h-[44px] px-4 rounded-full bg-[#FEF3C7] hover:bg-[#FDE68A] text-[#92400E] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                className="min-h-[44px] px-4 rounded-full bg-warm-soft hover:bg-warm-soft text-warm text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Buka Kembali</span>
@@ -909,7 +909,7 @@ export const WorkOrderDetailModal: React.FC = () => {
                 setReasonText('');
                 setActionError('');
               }}
-              className="min-h-[44px] px-4 rounded-full text-xs font-bold text-[#B91C1C] hover:bg-[#FEE2E2]/60 inline-flex items-center gap-1.5 transition-colors"
+              className="min-h-[44px] px-4 rounded-full text-xs font-bold text-danger hover:bg-danger-soft/60 inline-flex items-center gap-1.5 transition-colors"
             >
               <Ban className="w-3.5 h-3.5" />
               <span>Batalkan WO</span>

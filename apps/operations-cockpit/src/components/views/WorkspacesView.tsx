@@ -71,13 +71,13 @@ export const WorkspacesView: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
           Deliverable FEED
         </h1>
 
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
               Status mengikuti siklus baku: Draft → WIP → Review Internal → Diajukan → ACC Pembimbing (atau Revisi).
               Progres dihitung otomatis dari status. Diajukan, ACC Pembimbing, dan Revisi wajib disertai bukti (kode WO /
               referensi MoM).
@@ -86,13 +86,13 @@ export const WorkspacesView: React.FC = () => {
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
                 WORKSPACES • FEED/DED AREA 1
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
                 <Layers className="w-3.5 h-3.5" /> {deliverables.length} Deliverable
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold inline-flex items-center gap-2">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5" /> Tenggat FEED: {config.tenderDeadline}
               </span>
             </div>
@@ -101,7 +101,7 @@ export const WorkspacesView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowUploadModal(true)}
-                className="min-h-[44px] px-4 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                className="min-h-[44px] px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
               >
                 <Upload className="w-3.5 h-3.5" />
                 Perbarui Tautan Berkas
@@ -110,7 +110,7 @@ export const WorkspacesView: React.FC = () => {
           </div>
 
           {isPM && legacyCount > 0 && (
-            <div className="glass-faint px-4 py-2.5 flex items-start gap-2 text-xs text-[#92400E]" role="status">
+            <div className="glass-faint px-4 py-2.5 flex items-start gap-2 text-xs text-warm" role="status">
               <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
               <span>
                 {legacyCount} deliverable masih tersimpan dengan status lama (mis. "ACC Final"/"In Review Pembimbing").
@@ -134,15 +134,15 @@ export const WorkspacesView: React.FC = () => {
               <div>
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <div className="w-8 h-8 rounded-xl bg-white/70 text-[#0062CC] flex items-center justify-center shrink-0">
+                    <div className="w-8 h-8 rounded-xl bg-surface/70 text-primary flex items-center justify-center shrink-0">
                       <FileText className="w-4 h-4" />
                     </div>
-                    <h3 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">{item.title}</h3>
+                    <h3 className="font-heading font-bold text-sm sm:text-base text-fg">{item.title}</h3>
                     {isPM && (
                       <button
                         type="button"
                         onClick={() => openEditModal(item)}
-                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-[#4A5A72] hover:text-[#0062CC] rounded-full hover:bg-black/5 transition-colors"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center text-fg-3 hover:text-primary rounded-full hover:bg-black/5 transition-colors"
                         title="Ubah status & tautan"
                         aria-label={`Ubah status dan tautan ${item.title}`}
                       >
@@ -152,28 +152,28 @@ export const WorkspacesView: React.FC = () => {
                   </div>
 
                   <div className="text-right shrink-0">
-                    <span className="font-heading text-base font-extrabold text-[#0B1B33] tabular-nums">
+                    <span className="font-heading text-base font-extrabold text-fg tabular-nums">
                       Progres: {progress}%
                     </span>
                   </div>
                 </div>
 
-                <div className="w-full h-2 rounded-full bg-[#DCEBF7] overflow-hidden my-3">
+                <div className="w-full h-2 rounded-full bg-muted overflow-hidden my-3">
                   <div
-                    className="h-full bg-[#007BFF] rounded-full transition-all duration-300"
+                    className="h-full bg-primary rounded-full transition-all duration-300"
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
 
-                <p className="text-xs text-[#4A5A72] leading-relaxed">{item.subtitle}</p>
+                <p className="text-xs text-fg-3 leading-relaxed">{item.subtitle}</p>
                 {item.reviewEvidence && (
-                  <p className="mt-2 text-[11px] text-[#334155]">
+                  <p className="mt-2 text-[11px] text-fg-2">
                     <span className="font-semibold">Bukti:</span> {item.reviewEvidence}
                   </p>
                 )}
               </div>
 
-              <div className="pt-3 border-t border-white/80 flex items-center justify-between gap-2">
+              <div className="pt-3 border-t border-glass-stroke flex items-center justify-between gap-2">
                 <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${STATUS_PILL[status]}`}>
                   {status.toUpperCase()}
                   {isLegacyStatus(item.status) && (
@@ -185,7 +185,7 @@ export const WorkspacesView: React.FC = () => {
                   href={item.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
+                  className="min-h-[44px] px-5 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
                 >
                   Lihat <ExternalLink className="w-3.5 h-3.5" />
                 </a>
@@ -197,16 +197,16 @@ export const WorkspacesView: React.FC = () => {
 
       {/* Edit Deliverable Modal */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
           <div
-            className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white"
+            className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke"
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-deliverable-title"
           >
             <h3
               id="edit-deliverable-title"
-              className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]"
+              className="font-heading font-bold text-sm text-fg pb-3 border-b border-line"
             >
               Perbarui Deliverable: {selectedItem.title}
             </h3>
@@ -219,7 +219,7 @@ export const WorkspacesView: React.FC = () => {
                   id="deliv-status"
                   value={editStatus}
                   onChange={(e) => setEditStatus(e.target.value as DocStatus)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 >
                   {DOC_STATUSES.map((s) => (
                     <option key={s} value={s}>
@@ -244,7 +244,7 @@ export const WorkspacesView: React.FC = () => {
                       : 'Kode WO + tanggal pengajuan, mis. WO-012, 4 Nov 2026'
                   }
                   required={needsEvidence}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -257,7 +257,7 @@ export const WorkspacesView: React.FC = () => {
                   type="url"
                   value={editUrl}
                   onChange={(e) => setEditUrl(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -266,11 +266,11 @@ export const WorkspacesView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setSelectedItem(null)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
-                <button type="submit" className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full">
+                <button type="submit" className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full">
                   Simpan Perubahan
                 </button>
               </div>
@@ -281,32 +281,32 @@ export const WorkspacesView: React.FC = () => {
 
       {/* Perbarui Tautan Berkas Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
           <div
-            className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white"
+            className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke"
             role="dialog"
             aria-modal="true"
             aria-labelledby="upload-link-title"
           >
             <h3
               id="upload-link-title"
-              className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]"
+              className="font-heading font-bold text-sm text-fg pb-3 border-b border-line"
             >
               Perbarui Tautan Berkas
             </h3>
-            <p className="text-xs text-[#4A5A72] mt-1 mb-4">
+            <p className="text-xs text-fg-3 mt-1 mb-4">
               Tempel tautan Google Docs/Drive dari modul G-Workspace. File biner (CAD, PDF) tetap disimpan di Drive.
             </p>
             <form onSubmit={handleUploadSubmit} className="space-y-3">
               <div>
-                <label htmlFor="upload-target" className="block text-xs font-semibold mb-1 text-[#0B1B33]">
+                <label htmlFor="upload-target" className="block text-xs font-semibold mb-1 text-fg">
                   Pilih Deliverable Target
                 </label>
                 <select
                   id="upload-target"
                   value={uploadDeliverableId || deliverables[0]?.id || ''}
                   onChange={(e) => setUploadDeliverableId(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 >
                   {deliverables.map((item) => (
                     <option key={item.id} value={item.id}>
@@ -321,7 +321,7 @@ export const WorkspacesView: React.FC = () => {
                 onChange={(e) => setUploadTitle(e.target.value)}
                 placeholder="Catatan singkat (opsional)"
                 aria-label="Catatan singkat"
-                className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
               />
               <input
                 type="url"
@@ -329,18 +329,18 @@ export const WorkspacesView: React.FC = () => {
                 onChange={(e) => setUploadUrl(e.target.value)}
                 placeholder="URL Google Docs / Drive (https://...)"
                 aria-label="URL berkas"
-                className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 required
               />
               <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(false)}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
-                <button type="submit" className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full">
+                <button type="submit" className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full">
                   Simpan Tautan
                 </button>
               </div>

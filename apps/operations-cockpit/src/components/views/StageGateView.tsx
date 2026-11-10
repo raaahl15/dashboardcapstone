@@ -60,7 +60,7 @@ const RubricInputs: React.FC<RubricInputsProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
       <div className="sm:col-span-1">
-        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
+        <label className="block text-[11px] font-semibold text-fg mb-1">
           Skor Mandiri (0 - 100)
         </label>
         <input
@@ -76,11 +76,11 @@ const RubricInputs: React.FC<RubricInputsProps> = ({
               (e.target as HTMLInputElement).blur();
             }
           }}
-          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs font-bold outline-none disabled:opacity-60 disabled:bg-gray-100 focus:border-[#0062CC]"
+          className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs font-bold outline-none disabled:opacity-60 disabled:bg-muted focus:border-primary"
         />
       </div>
       <div className="sm:col-span-3">
-        <label className="block text-[11px] font-semibold text-[#0B1B33] mb-1">
+        <label className="block text-[11px] font-semibold text-fg mb-1">
           Catatan Mitigasi
         </label>
         <input
@@ -94,7 +94,7 @@ const RubricInputs: React.FC<RubricInputsProps> = ({
               (e.target as HTMLInputElement).blur();
             }
           }}
-          className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none disabled:opacity-60 disabled:bg-gray-100 focus:border-[#0062CC]"
+          className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none disabled:opacity-60 disabled:bg-muted focus:border-primary"
         />
       </div>
     </div>
@@ -174,23 +174,23 @@ export const StageGateView: React.FC = () => {
       {/* TOP ZONE: Heading, description, and Stage-Gate actions */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
           Kesiapan Stage-Gate
         </h1>
 
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
               Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum G2 Evaluasi PSTF 1 ({config.tenderDeadline})
             </p>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
                 AUDIT INTERNAL
               </span>
-              <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0B1B33] text-[12px] font-medium tracking-normal inline-flex items-center">
+              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
                 G2 Evaluasi PSTF 1: {config.tenderDeadline}
               </span>
             </div>
@@ -198,9 +198,9 @@ export const StageGateView: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => window.print()}
-                className="min-h-[44px] px-4 py-2 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1.5 shadow-xs transition-all"
+                className="min-h-[44px] px-4 py-2 bg-surface/70 hover:bg-surface text-fg rounded-full text-xs font-bold border border-glass-stroke flex items-center gap-1.5 shadow-xs transition-all"
               >
-                <Printer className="w-3.5 h-3.5 text-[#0062CC]" />
+                <Printer className="w-3.5 h-3.5 text-primary" />
                 Cetak Rubrik Form
               </button>
 
@@ -209,8 +209,8 @@ export const StageGateView: React.FC = () => {
                   onClick={handleToggleLock}
                   className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all ${
                     config.readinessLocked
-                      ? 'bg-[#0B1B33] text-white hover:bg-[#22314a]'
-                      : 'bg-[#0062CC] hover:bg-[#0057B8] text-white'
+                      ? 'bg-ink text-on-ink hover:bg-ink-2'
+                      : 'bg-primary hover:bg-primary-hover text-on-primary'
                   }`}
                 >
                   {config.readinessLocked ? (
@@ -239,7 +239,7 @@ export const StageGateView: React.FC = () => {
       {/* ========================================================================= */}
       <div className="glass-card p-6 space-y-5">
         <div className="flex flex-col items-center text-center">
-          <span className="text-[11px] font-bold text-[#4A5A72] uppercase tracking-wider mb-2">
+          <span className="text-[11px] font-bold text-fg-3 uppercase tracking-wider mb-2">
             INDEKS KESIAPAN BERKAS & SIDANG
           </span>
 
@@ -254,7 +254,7 @@ export const StageGateView: React.FC = () => {
               <path
                 d="M 50 210 A 160 160 0 0 1 370 210"
                 pathLength="100"
-                stroke="#DCEBF7"
+                stroke="var(--muted)"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
@@ -263,7 +263,7 @@ export const StageGateView: React.FC = () => {
                 pathLength="100"
                 strokeDasharray="70 30"
                 strokeDashoffset="0"
-                stroke="#B91C1C"
+                stroke="var(--danger)"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
@@ -272,7 +272,7 @@ export const StageGateView: React.FC = () => {
                 pathLength="100"
                 strokeDasharray="15 85"
                 strokeDashoffset="-70"
-                stroke="#B45309"
+                stroke="var(--warm)"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
@@ -281,22 +281,22 @@ export const StageGateView: React.FC = () => {
                 pathLength="100"
                 strokeDasharray="15 85"
                 strokeDashoffset="-85"
-                stroke="#047857"
+                stroke="var(--success)"
                 strokeWidth="16"
                 strokeLinecap="round"
               />
 
               {/* Threshold flags */}
-              <text x="312" y="65" fill="#B45309" fontSize="13" fontWeight="bold" fontFamily="Inter">
+              <text x="312" y="65" fill="var(--warm)" fontSize="13" fontWeight="bold" fontFamily="Inter">
                 70%
               </text>
-              <text x="365" y="128" fill="#047857" fontSize="13" fontWeight="bold" fontFamily="Inter">
+              <text x="365" y="128" fill="var(--success)" fontSize="13" fontWeight="bold" fontFamily="Inter">
                 85%
               </text>
-              <text x="40" y="215" fill="#991B1B" fontSize="11" fontWeight="bold" fontFamily="Inter">
+              <text x="40" y="215" fill="var(--danger)" fontSize="11" fontWeight="bold" fontFamily="Inter">
                 0%
               </text>
-              <text x="360" y="215" fill="#065F46" fontSize="11" fontWeight="bold" fontFamily="Inter">
+              <text x="360" y="215" fill="var(--success)" fontSize="11" fontWeight="bold" fontFamily="Inter">
                 100%
               </text>
 
@@ -307,15 +307,15 @@ export const StageGateView: React.FC = () => {
                   Math.min(180, (stageGateReadinessPercent / 100) * 180)
                 )})`}
               >
-                <polygon fill="#0B1B33" points="0,-5 0,5 -135,0" />
-                <circle cx="0" cy="0" r="14" fill="#0B1B33" />
+                <polygon fill="var(--text)" points="0,-5 0,5 -135,0" />
+                <circle cx="0" cy="0" r="14" fill="var(--text)" />
                 <circle cx="0" cy="0" r="5" fill="white" />
               </g>
             </svg>
 
             {/* Central Dial Value */}
             <div className="absolute bottom-2 flex flex-col items-center">
-              <span className="font-heading text-4xl sm:text-5xl font-extrabold text-[#0B1B33] tabular-nums">
+              <span className="font-heading text-4xl sm:text-5xl font-extrabold text-fg tabular-nums">
                 {stageGateReadinessPercent}%
               </span>
             </div>
@@ -326,10 +326,10 @@ export const StageGateView: React.FC = () => {
             <span
               className={`px-4 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 ${
                 stageGateReadinessPercent >= 85
-                  ? 'bg-[#D1FAE5] text-[#065F46]'
+                  ? 'bg-success-soft text-success'
                   : stageGateReadinessPercent >= 70
-                  ? 'bg-[#FEF3C7] text-[#92400E]'
-                  : 'bg-[#FEE2E2] text-[#991B1B]'
+                  ? 'bg-warm-soft text-warm'
+                  : 'bg-danger-soft text-danger'
               }`}
             >
               {stageGateReadinessPercent >= 85 ? (
@@ -345,45 +345,45 @@ export const StageGateView: React.FC = () => {
             </span>
           </div>
 
-          <p className="text-[11px] text-[#4A5A72] mt-2">
+          <p className="text-[11px] text-fg-3 mt-2">
             Ambang hijau: ≥ 85% (Ready for Stage-Gate Defense & Tender Submission) • Target KAK: ≥ 80%
           </p>
         </div>
 
         {/* 3 Mini Score Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-white/80">
-          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
-            <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-glass-stroke">
+          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
+            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
               RUBRIK MANDIRI
             </span>
-            <span className="font-heading text-2xl font-extrabold text-[#0B1B33] block mt-1 tabular-nums">
+            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
               {averageRubricScore} / 100
             </span>
-            <span className="text-[11px] text-[#92400E] font-medium block mt-0.5">
+            <span className="text-[11px] text-warm font-medium block mt-0.5">
               {rubricParameters.filter((p) => p.score < 70).length} parameter skor &lt; 70
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
-            <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
+            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
               DEFENSE BANK
             </span>
-            <span className="font-heading text-2xl font-extrabold text-[#0B1B33] block mt-1 tabular-nums">
+            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
               {defenseQuestions.length} Butir
             </span>
-            <span className="text-[11px] text-[#065F46] font-medium block mt-0.5">
+            <span className="text-[11px] text-success font-medium block mt-0.5">
               {defenseQuestions.filter((q) => !q.verifiedResponse.trim()).length} belum ada jawaban
             </span>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/70 border border-white/80 text-center shadow-xs">
-            <span className="text-[10px] font-bold text-[#4A5A72] uppercase tracking-wider block">
+          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
+            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
               HARDCOPY BERKAS
             </span>
-            <span className="font-heading text-2xl font-extrabold text-[#0B1B33] block mt-1 tabular-nums">
+            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
               {readyPhysicalCount} / {physicalChecklist.length} Bundel
             </span>
-            <span className="text-[11px] text-[#0062CC] font-medium block mt-0.5">
+            <span className="text-[11px] text-primary font-medium block mt-0.5">
               {physicalChecklist.length
                 ? Math.round((readyPhysicalCount / physicalChecklist.length) * 100)
                 : 0}
@@ -400,18 +400,18 @@ export const StageGateView: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
+              <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
                 Audit Rubrik Mandiri
               </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#FEF3C7] text-[#92400E] tabular-nums">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warm-soft text-warm tabular-nums">
                 Rata-rata Skor: {averageRubricScore}
               </span>
             </div>
-            <p className="text-xs text-[#4A5A72]">
+            <p className="text-xs text-fg-3">
               5 Parameter Rubrik Capstone DTNTF
             </p>
           </div>
-          <span className="text-[11px] text-[#4A5A72]">
+          <span className="text-[11px] text-fg-3">
             {config.readinessLocked ? 'Status Terkunci oleh PM' : 'Belum dikunci PM'}
           </span>
         </div>
@@ -425,22 +425,22 @@ export const StageGateView: React.FC = () => {
             return (
               <div
                 key={param.id}
-                className="rounded-2xl border border-white/80 bg-white/60 overflow-hidden shadow-xs"
+                className="rounded-2xl border border-glass-stroke bg-surface/60 overflow-hidden shadow-xs"
               >
                 {/* Header Bar */}
                 <div
                   onClick={() => setExpandedParam(isExpanded ? '' : param.id)}
-                  className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-white/70 transition-colors"
+                  className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-surface/70 transition-colors"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-7 h-7 rounded-full bg-white/70 text-[#0062CC] font-heading font-extrabold text-xs flex items-center justify-center shrink-0">
+                    <span className="w-7 h-7 rounded-full bg-surface/70 text-primary font-heading font-extrabold text-xs flex items-center justify-center shrink-0">
                       {param.num}
                     </span>
                     <div className="min-w-0">
-                      <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33] truncate">
+                      <h4 className="font-heading font-bold text-xs sm:text-sm text-fg truncate">
                         {param.title}
                       </h4>
-                      <p className="text-[11px] text-[#4A5A72] truncate">
+                      <p className="text-[11px] text-fg-3 truncate">
                         {param.subtitle}
                       </p>
                     </div>
@@ -450,10 +450,10 @@ export const StageGateView: React.FC = () => {
                     <span
                       className={`px-3 py-1 rounded-full text-xs font-bold tabular-nums ${
                         param.score >= 85
-                          ? 'bg-[#D1FAE5] text-[#065F46]'
+                          ? 'bg-success-soft text-success'
                           : param.score >= 70
-                          ? 'bg-[#FEF3C7] text-[#92400E]'
-                          : 'bg-[#FEE2E2] text-[#991B1B]'
+                          ? 'bg-warm-soft text-warm'
+                          : 'bg-danger-soft text-danger'
                       }`}
                     >
                       Skor: {param.score}
@@ -465,23 +465,23 @@ export const StageGateView: React.FC = () => {
                         size="xs"
                         useNickname
                         inlineTitle
-                        nameClassName="!text-[11px] !font-semibold !text-[#4A5A72]"
-                        titleClassName="!text-[10px] !text-[#4A5A72]"
+                        nameClassName="!text-[11px] !font-semibold !text-fg-3"
+                        titleClassName="!text-[10px] !text-fg-3"
                       />
                     </div>
                     {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-[#4A5A72]" />
+                      <ChevronUp className="w-4 h-4 text-fg-3" />
                     ) : (
-                      <ChevronDown className="w-4 h-4 text-[#4A5A72]" />
+                      <ChevronDown className="w-4 h-4 text-fg-3" />
                     )}
                   </div>
                 </div>
 
                 {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="p-4 pt-2 border-t border-white/80 bg-white/40 space-y-4 text-xs">
+                  <div className="p-4 pt-2 border-t border-glass-stroke bg-surface/40 space-y-4 text-xs">
                     <div>
-                      <span className="font-bold text-[10px] text-[#0062CC] uppercase tracking-wider block mb-2">
+                      <span className="font-bold text-[10px] text-primary uppercase tracking-wider block mb-2">
                         KRITERIA VERIFIKASI PARAMETER
                       </span>
                       <div className="space-y-2">
@@ -489,23 +489,23 @@ export const StageGateView: React.FC = () => {
                           <div
                             key={idx}
                             onClick={() => !config.readinessLocked && toggleRubricItem(param.id, idx)}
-                            className={`p-2.5 rounded-xl bg-white/70 border border-white/80 flex items-center justify-between gap-3 transition-colors ${
+                            className={`p-2.5 rounded-xl bg-surface/70 border border-glass-stroke flex items-center justify-between gap-3 transition-colors ${
                               config.readinessLocked
                                 ? 'opacity-75 cursor-not-allowed'
-                                : 'cursor-pointer hover:bg-white'
+                                : 'cursor-pointer hover:bg-surface'
                             }`}
                           >
                             <div className="flex items-center gap-2.5">
                               {it.checked ? (
-                                <CheckCircle2 className="w-4 h-4 text-[#0062CC] shrink-0" />
+                                <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
                               ) : (
-                                <Circle className="w-4 h-4 text-[#6B7F99] shrink-0" />
+                                <Circle className="w-4 h-4 text-fg-3 shrink-0" />
                               )}
                               <span
                                 className={
                                   it.checked
-                                    ? 'text-[#0B1B33] font-semibold'
-                                    : 'text-[#4A5A72]'
+                                    ? 'text-fg font-semibold'
+                                    : 'text-fg-3'
                                 }
                               >
                                 {it.text}
@@ -514,8 +514,8 @@ export const StageGateView: React.FC = () => {
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
                                 it.checked
-                                  ? 'bg-[#D1FAE5] text-[#065F46]'
-                                  : 'bg-[#FEF3C7] text-[#92400E]'
+                                  ? 'bg-success-soft text-success'
+                                  : 'bg-warm-soft text-warm'
                               }`}
                             >
                               {it.statusText}
@@ -547,10 +547,10 @@ export const StageGateView: React.FC = () => {
       <div className="glass-card p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
+            <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
               Defense Dossier
             </h2>
-            <p className="text-xs text-[#4A5A72]">
+            <p className="text-xs text-fg-3">
               Bank pertanyaan sidang bimbingan & dewan penguji Capstone
             </p>
           </div>
@@ -560,8 +560,8 @@ export const StageGateView: React.FC = () => {
               onClick={() => setActiveDossierAxis('all')}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                 activeDossierAxis === 'all'
-                  ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white text-[#4A5A72] border border-[#C9DCEB]'
+                  ? 'bg-ink text-on-ink shadow-xs'
+                  : 'bg-surface text-fg-3 border border-line'
               }`}
             >
               Semua
@@ -570,8 +570,8 @@ export const StageGateView: React.FC = () => {
               onClick={() => setActiveDossierAxis('koordinator')}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                 activeDossierAxis === 'koordinator'
-                  ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white text-[#4A5A72] border border-[#C9DCEB]'
+                  ? 'bg-ink text-on-ink shadow-xs'
+                  : 'bg-surface text-fg-3 border border-line'
               }`}
             >
               Dosen Koordinator / Akademik
@@ -580,8 +580,8 @@ export const StageGateView: React.FC = () => {
               onClick={() => setActiveDossierAxis('praktisi')}
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all ${
                 activeDossierAxis === 'praktisi'
-                  ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white text-[#4A5A72] border border-[#C9DCEB]'
+                  ? 'bg-ink text-on-ink shadow-xs'
+                  : 'bg-surface text-fg-3 border border-line'
               }`}
             >
               Praktisi Industri / EPC Expert
@@ -589,7 +589,7 @@ export const StageGateView: React.FC = () => {
             {isPM && (
               <button
                 onClick={() => setShowAddQuestionModal(true)}
-                className="px-3.5 py-1.5 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                className="px-3.5 py-1.5 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Tambah Q&A
@@ -603,49 +603,49 @@ export const StageGateView: React.FC = () => {
           {filteredQuestions.map((q) => (
             <div
               key={q.id}
-              className="p-5 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex flex-col justify-between space-y-4"
+              className="p-5 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs flex flex-col justify-between space-y-4"
             >
               <div>
-                <div className="flex items-center justify-between text-[10px] font-bold uppercase text-[#0062CC] mb-2">
-                  <span className="px-2 py-0.5 rounded-md bg-white/70">
+                <div className="flex items-center justify-between text-[10px] font-bold uppercase text-primary mb-2">
+                  <span className="px-2 py-0.5 rounded-md bg-surface/70">
                     {q.chapterTag}
                   </span>
-                  <div className="inline-flex items-center gap-1 text-[#4A5A72] normal-case">
+                  <div className="inline-flex items-center gap-1 text-fg-3 normal-case">
                     <span className="uppercase">PIC:</span>
                     <UserChip
                       uid={q.pic}
                       variant="avatar-nama"
                       size="xs"
                       useNickname
-                      nameClassName="!text-[10px] !font-bold !text-[#4A5A72]"
+                      nameClassName="!text-[10px] !font-bold !text-fg-3"
                     />
                   </div>
                 </div>
 
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33] leading-snug mb-3">
+                <h4 className="font-heading font-bold text-xs sm:text-sm text-fg leading-snug mb-3">
                   "{q.question}"
                 </h4>
 
-                <div className="p-3 rounded-xl bg-white/50 border border-white/80">
-                  <span className="text-[10px] font-bold text-[#4A5A72] uppercase block mb-1">
+                <div className="p-3 rounded-xl bg-surface/50 border border-glass-stroke">
+                  <span className="text-[10px] font-bold text-fg-3 uppercase block mb-1">
                     CATATAN RESPON TERVERIFIKASI:
                   </span>
-                  <p className="text-xs text-[#0B1B33] font-medium leading-relaxed">
+                  <p className="text-xs text-fg font-medium leading-relaxed">
                     {q.verifiedResponse}
                   </p>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-white/80 flex items-center justify-between text-xs">
-                <span className="text-[#065F46] font-bold flex items-center gap-1 text-[11px]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#047857]" /> Siap Sidang
+              <div className="pt-2 border-t border-glass-stroke flex items-center justify-between text-xs">
+                <span className="text-success font-bold flex items-center gap-1 text-[11px]">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-success" /> Siap Sidang
                 </span>
                 <button
                   onClick={() => {
                     setEditingQuestion(q);
                     setEditedResponse(q.verifiedResponse);
                   }}
-                  className="text-[#0062CC] hover:underline font-semibold flex items-center gap-1"
+                  className="text-primary hover:underline font-semibold flex items-center gap-1"
                 >
                   <Edit2 className="w-3 h-3" /> Edit Respon
                 </button>
@@ -661,14 +661,14 @@ export const StageGateView: React.FC = () => {
       <div className="glass-card p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-heading font-bold text-base sm:text-lg text-[#0B1B33]">
+            <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
               Checklist Berkas Fisik
             </h2>
-            <p className="text-xs text-[#4A5A72]">
+            <p className="text-xs text-fg-3">
               Verifikasi kelengkapan hardcopy & paket arsip digital untuk penyerahan tender 15 Des 2026
             </p>
           </div>
-          <span className="font-heading font-bold text-xs text-[#0062CC] tabular-nums">
+          <span className="font-heading font-bold text-xs text-primary tabular-nums">
             {readyPhysicalCount} dari {physicalChecklist.length} Berkas Siap (
             {Math.round((readyPhysicalCount / physicalChecklist.length) * 100)}%)
           </span>
@@ -679,21 +679,21 @@ export const StageGateView: React.FC = () => {
             <div
               key={item.id}
               onClick={() => isPM && !config.readinessLocked && togglePhysicalItem(item.id)}
-              className={`p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs flex items-center justify-between gap-4 transition-all ${
-                isPM && !config.readinessLocked ? 'cursor-pointer hover:bg-white' : ''
+              className={`p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs flex items-center justify-between gap-4 transition-all ${
+                isPM && !config.readinessLocked ? 'cursor-pointer hover:bg-surface' : ''
               }`}
             >
               <div className="flex items-start gap-3">
                 {item.ready ? (
-                  <CheckCircle2 className="w-5 h-5 text-[#0062CC] shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 ) : (
-                  <Circle className="w-5 h-5 text-[#6B7F99] shrink-0 mt-0.5" />
+                  <Circle className="w-5 h-5 text-fg-3 shrink-0 mt-0.5" />
                 )}
                 <div>
-                  <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33]">
+                  <h4 className="font-heading font-bold text-xs sm:text-sm text-fg">
                     {item.title}
                   </h4>
-                  <p className="text-xs text-[#4A5A72] mt-0.5">
+                  <p className="text-xs text-fg-3 mt-0.5">
                     {item.subtitle}
                   </p>
                 </div>
@@ -702,10 +702,10 @@ export const StageGateView: React.FC = () => {
               <span
                 className={`px-3 py-1 rounded-full text-[11px] font-bold shrink-0 ${
                   item.ready
-                    ? 'bg-[#D1FAE5] text-[#065F46]'
+                    ? 'bg-success-soft text-success'
                     : item.statusBadge.includes('Plotting')
-                    ? 'bg-[#FEF3C7] text-[#92400E]'
-                    : 'bg-[#FEE2E2] text-[#991B1B]'
+                    ? 'bg-warm-soft text-warm'
+                    : 'bg-danger-soft text-danger'
                 }`}
               >
                 {item.statusBadge}
@@ -716,22 +716,22 @@ export const StageGateView: React.FC = () => {
       </div>
 
       {/* Footer Info */}
-      <div className="p-4 rounded-2xl bg-white/70 border border-white text-xs text-[#4A5A72] flex items-center gap-2">
-        <ShieldCheck className="w-4 h-4 text-[#0062CC] shrink-0" />
+      <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-xs text-fg-3 flex items-center gap-2">
+        <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
         <span>
           Sesuai Rubrik Penilaian Tahap 3 (Evaluasi Proposal) Capstone PSTF DTNTF K2026 • Penyerahan Berkas Tender:{' '}
-          <strong className="text-[#0B1B33]">{config.tenderDeadline}</strong>
+          <strong className="text-fg">{config.tenderDeadline}</strong>
         </span>
       </div>
 
       {/* Edit Defense Response Modal */}
       {editingQuestion && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-2 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-2 border-b border-line">
               Edit Respon Sidang
             </h3>
-            <p className="text-xs text-[#4A5A72] my-2">
+            <p className="text-xs text-fg-3 my-2">
               "{editingQuestion.question}"
             </p>
             <form onSubmit={handleSaveResponse} className="space-y-3">
@@ -739,20 +739,20 @@ export const StageGateView: React.FC = () => {
                 rows={4}
                 value={editedResponse}
                 onChange={(e) => setEditedResponse(e.target.value)}
-                className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none focus:border-[#0062CC]"
+                className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                 required
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setEditingQuestion(null)}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                  className="px-4 py-2 text-xs font-semibold text-fg-3"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan Respon
                 </button>
@@ -764,9 +764,9 @@ export const StageGateView: React.FC = () => {
 
       {/* Add Defense Question Modal */}
       {showAddQuestionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               Tambah Pertanyaan Defense Dossier
             </h3>
             <form onSubmit={handleAddQuestion} className="mt-4 space-y-3">
@@ -778,7 +778,7 @@ export const StageGateView: React.FC = () => {
                     onChange={(e) =>
                       setNewQAxis(e.target.value as 'koordinator' | 'praktisi')
                     }
-                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     <option value="koordinator">Dosen Koordinator / Akademik</option>
                     <option value="praktisi">Praktisi Industri / EPC Expert</option>
@@ -789,7 +789,7 @@ export const StageGateView: React.FC = () => {
                   <select
                     value={newQPic}
                     onChange={(e) => setNewQPic(e.target.value)}
-                    className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     {users.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -807,7 +807,7 @@ export const StageGateView: React.FC = () => {
                   value={newQTag}
                   onChange={(e) => setNewQTag(e.target.value)}
                   placeholder="Contoh: BAB 3: PFD & NERACA"
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -819,7 +819,7 @@ export const StageGateView: React.FC = () => {
                   value={newQText}
                   onChange={(e) => setNewQText(e.target.value)}
                   placeholder="Contoh: Bagaimana proteksi overpressure pada bejana V-01?"
-                  className="w-full h-10 px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -831,7 +831,7 @@ export const StageGateView: React.FC = () => {
                   value={newQResp}
                   onChange={(e) => setNewQResp(e.target.value)}
                   placeholder="Uraikan respon yang didukung data kalkulasi dan rujukan standar..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -839,13 +839,13 @@ export const StageGateView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddQuestionModal(false)}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72]"
+                  className="px-4 py-2 text-xs font-semibold text-fg-3"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   Simpan Q&A
                 </button>

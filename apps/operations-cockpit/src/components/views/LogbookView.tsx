@@ -79,7 +79,7 @@ export const LogbookView: React.FC = () => {
         roleTitle: 'Logbook kelompok',
         category: 'kelompok',
         avatarText: 'A1',
-        avatarBg: 'bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white',
+        avatarBg: 'bg-gradient-to-tr from-hero-1 via-ink to-hero-2 text-on-ink',
       },
     ];
 
@@ -91,7 +91,7 @@ export const LogbookView: React.FC = () => {
         roleTitle: u.title || 'Engineer',
         category: 'anggota',
         avatarText: u.code || u.avatarInitial || u.name.slice(0, 2).toUpperCase(),
-        avatarBg: u.avatarBg || 'bg-gradient-to-tr from-blue-700 to-indigo-800 text-white',
+        avatarBg: u.avatarBg || 'bg-gradient-to-tr from-blue-700 to-indigo-800 text-on-ink',
       });
     });
 
@@ -378,10 +378,10 @@ export const LogbookView: React.FC = () => {
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="font-heading text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-[-0.02em] leading-[1.1] text-[#0B1B33]">
+            <h1 className="font-heading text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-[-0.02em] leading-[1.1] text-fg">
               Logbook Kegiatan
             </h1>
-            <p className="text-xs sm:text-sm text-[#4A5A72] mt-1">
+            <p className="text-xs sm:text-sm text-fg-3 mt-1">
               <strong>6 logbook</strong>: 1 logbook kelompok Area 1 + 5 logbook per anggota, masing-masing <strong>12 baris</strong>. Diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Format uraian: <em>Judul Uraian: Isi Uraian</em>.
             </p>
           </div>
@@ -396,16 +396,16 @@ export const LogbookView: React.FC = () => {
                 )
               }
               disabled={filteredLogbooks.length === 0}
-              className="min-h-[40px] px-4 py-2 bg-white/80 hover:bg-white text-[#0B1B33] border border-white rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
+              className="min-h-[40px] px-4 py-2 bg-surface/80 hover:bg-surface text-fg border border-glass-stroke rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
               title="Unduh entri yang sedang tampil (sesuai filter) sebagai CSV rekap untuk Simaster"
             >
-              <Download className="w-3.5 h-3.5 text-[#0062CC]" />
+              <Download className="w-3.5 h-3.5 text-primary" />
               Ekspor CSV ({filteredLogbooks.length})
             </button>
             {/* Tombol "Sinkronkan 72 Entri" dihapus (LOG-052): mengisi logbook dengan entri contoh sama dengan memalsukan logbook. */}
             <button
               onClick={() => handleOpenAdd()}
-              className="min-h-[40px] px-5 py-2 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
+              className="min-h-[40px] px-5 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
             >
               <Plus className="w-4 h-4" />
               Add Logbook
@@ -423,29 +423,29 @@ export const LogbookView: React.FC = () => {
           <div className="lg:col-span-5 space-y-2">
             <div className="flex items-baseline justify-between">
               <div className="flex items-baseline gap-2">
-                <span className="font-heading text-3xl sm:text-4xl font-extrabold text-[#0B1B33] tabular-nums">
+                <span className="font-heading text-3xl sm:text-4xl font-extrabold text-fg tabular-nums">
                   {totalFilled} / {TOTAL_TARGET}
                 </span>
-                <span className="text-xs font-semibold text-[#4A5A72]">
+                <span className="text-xs font-semibold text-fg-3">
                   Entri Terisi ({totalVerified} Terparaf)
                 </span>
               </div>
-              <span className="text-xs font-bold text-[#0062CC] tabular-nums">
+              <span className="text-xs font-bold text-primary tabular-nums">
                 {overallFilledPercent}% Terisi
               </span>
             </div>
 
             {/* Hatched bar */}
-            <div className="w-full h-3.5 rounded-full bg-[#DCEBF7] overflow-hidden p-0.5">
+            <div className="w-full h-3.5 rounded-full bg-muted overflow-hidden p-0.5">
               <div
                 className="h-full rounded-full bg-hatch-pattern transition-all duration-500"
                 style={{ width: `${overallFilledPercent}%` }}
               ></div>
             </div>
 
-            <div className="flex items-center justify-between text-[11px] text-[#4A5A72]">
+            <div className="flex items-center justify-between text-[11px] text-fg-3">
               <span>Target: 1 kelompok + {entities.length - 1} anggota, × 12 baris</span>
-              <span className="font-semibold text-[#047857]">
+              <span className="font-semibold text-success">
                 {totalVerified} / {TOTAL_TARGET} ACC ({overallVerifiedPercent}%)
               </span>
             </div>
@@ -455,14 +455,14 @@ export const LogbookView: React.FC = () => {
           <div
             className={`lg:col-span-7 p-3.5 rounded-2xl flex items-start gap-2.5 text-xs ${
               momLogbookStatus.hasUnloggedMom
-                ? 'bg-[#FEF3C7]/90 border border-[#B45309]/30 text-[#92400E]'
-                : 'bg-[#D1FAE5]/90 border border-[#047857]/30 text-[#065F46]'
+                ? 'bg-warm-soft/90 border border-warm-line/30 text-warm'
+                : 'bg-success-soft/90 border border-success-line/30 text-success'
             }`}
           >
             {momLogbookStatus.hasUnloggedMom ? (
-              <AlertTriangle className="w-4 h-4 text-[#B45309] shrink-0 mt-0.5" />
+              <AlertTriangle className="w-4 h-4 text-warm shrink-0 mt-0.5" />
             ) : (
-              <Check className="w-4 h-4 text-[#047857] shrink-0 mt-0.5" />
+              <Check className="w-4 h-4 text-success shrink-0 mt-0.5" />
             )}
             <div>
               <p className="font-semibold leading-relaxed">
@@ -480,13 +480,13 @@ export const LogbookView: React.FC = () => {
         {/* ========================================================================= */}
         {/* ENTITY MATRIX CARDS (per anggota) */}
         {/* ========================================================================= */}
-        <div className="pt-3 border-t border-white/80">
+        <div className="pt-3 border-t border-glass-stroke">
           <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold text-[#0B1B33] flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-[#0062CC]" />
+            <span className="text-xs font-bold text-fg flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-primary" />
               KUOTA 6 LOGBOOK (1 KELOMPOK + 5 ANGGOTA × 12 BARIS):
             </span>
-            <span className="text-[11px] text-[#4A5A72]">
+            <span className="text-[11px] text-fg-3">
               Klik kartu untuk memfilter entri
             </span>
           </div>
@@ -502,8 +502,8 @@ export const LogbookView: React.FC = () => {
                   onClick={() => setFilterEntity(isSelected ? 'All' : ent.id)}
                   className={`p-3 rounded-2xl text-left transition-all border ${
                     isSelected
-                      ? 'bg-white shadow-md border-[#0062CC] ring-2 ring-[#0062CC]/20'
-                      : 'bg-white/70 hover:bg-white border-white/80 shadow-xs'
+                      ? 'bg-surface shadow-md border-primary ring-2 ring-focus/20'
+                      : 'bg-surface/70 hover:bg-surface border-glass-stroke shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-1.5 mb-1.5">
@@ -515,32 +515,32 @@ export const LogbookView: React.FC = () => {
                     <span
                       className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full tabular-nums ${
                         stat.isCompleted
-                          ? 'bg-[#D1FAE5] text-[#065F46]'
-                          : 'bg-[#FEF3C7] text-[#92400E]'
+                          ? 'bg-success-soft text-success'
+                          : 'bg-warm-soft text-warm'
                       }`}
                     >
                       {stat.total}/12
                     </span>
                   </div>
 
-                  <p className="font-heading font-bold text-xs text-[#0B1B33] truncate">
+                  <p className="font-heading font-bold text-xs text-fg truncate">
                     {ent.shortName}
                   </p>
-                  <p className="text-[10px] text-[#4A5A72] truncate">
+                  <p className="text-[10px] text-fg-3 truncate">
                     {ent.category === 'kelompok' ? 'Area 1 Unit' : ent.roleTitle}
                   </p>
 
                   {/* Mini progress bar */}
-                  <div className="w-full h-1.5 rounded-full bg-[#E2E8F0] overflow-hidden mt-2">
+                  <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden mt-2">
                     <div
                       className={`h-full rounded-full transition-all duration-300 ${
-                        stat.isCompleted ? 'bg-[#047857]' : 'bg-[#0062CC]'
+                        stat.isCompleted ? 'bg-success-solid' : 'bg-primary'
                       }`}
                       style={{ width: `${stat.percent}%` }}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[9px] text-[#4A5A72] mt-1 tabular-nums">
+                  <div className="flex items-center justify-between text-[9px] text-fg-3 mt-1 tabular-nums">
                     <span>ACC: {stat.verified}/12</span>
                     <span>{stat.percent}%</span>
                   </div>
@@ -558,16 +558,16 @@ export const LogbookView: React.FC = () => {
         <div className="flex flex-wrap items-center justify-between gap-3">
           {/* Entity Filter Pills */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-bold text-[#0B1B33] mr-1 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5 text-[#0062CC]" />
+            <span className="text-xs font-bold text-fg mr-1 flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-primary" />
               ENTITAS:
             </span>
             <button
               onClick={() => setFilterEntity('All')}
               className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                 filterEntity === 'All'
-                  ? 'bg-[#0B1B33] text-white shadow-xs'
-                  : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
+                  ? 'bg-ink text-on-ink shadow-xs'
+                  : 'bg-surface/70 text-fg-3 border border-glass-stroke hover:bg-surface'
               }`}
             >
               Semua ({logbooks.length})
@@ -581,8 +581,8 @@ export const LogbookView: React.FC = () => {
                   onClick={() => setFilterEntity(ent.id)}
                   className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1 ${
                     isSelected
-                      ? 'bg-[#0B1B33] text-white shadow-xs'
-                      : 'bg-white/70 text-[#4A5A72] border border-white hover:bg-white'
+                      ? 'bg-ink text-on-ink shadow-xs'
+                      : 'bg-surface/70 text-fg-3 border border-glass-stroke hover:bg-surface'
                   }`}
                 >
                   <span>{ent.shortName}</span>
@@ -594,18 +594,18 @@ export const LogbookView: React.FC = () => {
 
           {/* Search box */}
           <div className="relative min-w-[200px] max-w-xs w-full sm:w-auto">
-            <Search className="w-3.5 h-3.5 text-[#6B7F99] absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-fg-3 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari uraian, kendala..."
-              className="w-full h-8 pl-8 pr-3 bg-white/80 border border-white rounded-full text-xs outline-none focus:bg-white focus:ring-1 focus:ring-[#0062CC]"
+              className="w-full h-8 pl-8 pr-3 bg-surface/80 border border-glass-stroke rounded-full text-xs outline-none focus:bg-surface focus:ring-1 focus:ring-focus"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#6B7F99] hover:text-[#0B1B33]"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -614,16 +614,16 @@ export const LogbookView: React.FC = () => {
         </div>
 
         {/* Secondary Filter: Week & Verification Status */}
-        <div className="pt-2 border-t border-white/60 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="pt-2 border-t border-glass-stroke flex flex-wrap items-center justify-between gap-3 text-xs">
           {/* Week Selector */}
           <div className="flex flex-wrap items-center gap-1">
-            <span className="text-[11px] font-semibold text-[#4A5A72] mr-1">Minggu:</span>
+            <span className="text-[11px] font-semibold text-fg-3 mr-1">Minggu:</span>
             <button
               onClick={() => setFilterWeek('All')}
               className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
                 filterWeek === 'All'
-                  ? 'bg-[#0062CC] text-white'
-                  : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface/60 text-fg-3 hover:bg-surface'
               }`}
             >
               Semua
@@ -636,8 +636,8 @@ export const LogbookView: React.FC = () => {
                   onClick={() => setFilterWeek(String(w))}
                   className={`px-2 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
                     isSelected
-                      ? 'bg-[#0062CC] text-white'
-                      : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+                      ? 'bg-primary text-on-primary'
+                      : 'bg-surface/60 text-fg-3 hover:bg-surface'
                   }`}
                 >
                   W{w < 10 ? `0${w}` : w}
@@ -648,7 +648,7 @@ export const LogbookView: React.FC = () => {
 
           {/* Status Filter */}
           <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-semibold text-[#4A5A72] mr-1">Status Paraf:</span>
+            <span className="text-[11px] font-semibold text-fg-3 mr-1">Status Paraf:</span>
             {(['All', 'verified', 'unverified'] as const).map((st) => {
               const label =
                 st === 'All'
@@ -663,8 +663,8 @@ export const LogbookView: React.FC = () => {
                   onClick={() => setFilterStatus(st)}
                   className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
                     isSelected
-                      ? 'bg-[#0B1B33] text-white'
-                      : 'bg-white/60 text-[#4A5A72] hover:bg-white'
+                      ? 'bg-ink text-on-ink'
+                      : 'bg-surface/60 text-fg-3 hover:bg-surface'
                   }`}
                 >
                   {label}
@@ -679,10 +679,10 @@ export const LogbookView: React.FC = () => {
       {/* LOGBOOK TABLE */}
       {/* ========================================================================= */}
       <div className="glass-card p-5 sm:p-6 space-y-4">
-        <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
+        <div className="overflow-x-auto rounded-2xl border border-glass-stroke bg-surface/60">
           <table className="w-full text-left border-collapse min-w-[860px]">
             <thead>
-              <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72] uppercase tracking-wider">
+              <tr className="border-b border-glass-stroke bg-surface/70 text-[10px] font-heading font-bold text-fg-3 uppercase tracking-wider">
                 <th className="p-3.5 w-28">Minggu &amp; Tgl</th>
                 <th className="p-3.5 w-44">Kategori &amp; Entitas</th>
                 <th className="p-3.5">Uraian Pekerjaan Teknis</th>
@@ -691,12 +691,12 @@ export const LogbookView: React.FC = () => {
                 <th className="p-3.5 text-center w-24">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/80 text-xs">
+            <tbody className="divide-y divide-line text-xs">
               {filteredLogbooks.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="p-8 text-center text-[#4A5A72]">
-                    <BookOpen className="w-8 h-8 text-[#6B7F99] mx-auto mb-2 opacity-50" />
-                    <p className="font-semibold text-sm text-[#0B1B33]">Tidak ada entri logbook yang cocok</p>
+                  <td colSpan={6} className="p-8 text-center text-fg-3">
+                    <BookOpen className="w-8 h-8 text-fg-3 mx-auto mb-2 opacity-50" />
+                    <p className="font-semibold text-sm text-fg">Tidak ada entri logbook yang cocok</p>
                     <p className="text-xs mt-1">Coba sesuaikan filter entitas atau kata kunci pencarian Anda.</p>
                   </td>
                 </tr>
@@ -719,20 +719,20 @@ export const LogbookView: React.FC = () => {
                   const solutionText = match ? match[2].trim() : ((log.issueSolution || '').split(';').slice(1).join(';') || '');
 
                   return (
-                    <tr key={log.id} className="hover:bg-white/70 transition-colors">
+                    <tr key={log.id} className="hover:bg-surface/70 transition-colors">
                       {/* Minggu & Tanggal */}
                       <td className="p-3.5 whitespace-nowrap">
                         <div className="flex flex-col gap-0.5">
                           {log.weekNumber ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-[#EAF6FD] text-[#0062CC] w-fit">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-muted text-primary w-fit">
                               W{log.weekNumber < 10 ? `0${log.weekNumber}` : log.weekNumber}
                             </span>
                           ) : (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-slate-100 text-slate-600 w-fit">
+                            <span className="inline-flex items-center px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-muted text-fg-3 w-fit">
                               ENTRI
                             </span>
                           )}
-                          <span className="font-bold text-[#0B1B33] text-xs">
+                          <span className="font-bold text-fg text-xs">
                             {log.date}
                           </span>
                         </div>
@@ -742,14 +742,14 @@ export const LogbookView: React.FC = () => {
                       <td className="p-3.5 whitespace-nowrap">
                         {isTeam ? (
                           <div className="inline-flex items-center gap-2">
-                            <span className="w-8 h-8 rounded-full font-heading font-bold text-xs bg-gradient-to-tr from-[#0062CC] via-[#0B1B33] to-[#4338CA] text-white flex items-center justify-center shadow-xs">
+                            <span className="w-8 h-8 rounded-full font-heading font-bold text-xs bg-gradient-to-tr from-hero-1 via-ink to-hero-2 text-on-ink flex items-center justify-center shadow-xs">
                               A1
                             </span>
                             <div className="flex flex-col leading-tight">
-                              <span className="font-heading font-bold text-xs text-[#0B1B33]">
+                              <span className="font-heading font-bold text-xs text-fg">
                                 Area 1 (Kelompok)
                               </span>
-                              <span className="text-[10px] text-[#0062CC] font-semibold">
+                              <span className="text-[10px] text-primary font-semibold">
                                 Unit Capstone
                               </span>
                             </div>
@@ -761,25 +761,25 @@ export const LogbookView: React.FC = () => {
                             size="md"
                             useNickname
                             avatarClassName="w-8 h-8 rounded-full font-heading font-bold text-xs"
-                            nameClassName="font-heading !text-xs !font-bold !text-[#0B1B33]"
-                            titleClassName="!text-[10px] !text-[#4A5A72]"
+                            nameClassName="font-heading !text-xs !font-bold !text-fg"
+                            titleClassName="!text-[10px] !text-fg-3"
                           />
                         )}
                       </td>
 
                       {/* Uraian Pekerjaan Teknis */}
-                      <td className="p-3.5 text-[#0B1B33] font-medium leading-relaxed">
+                      <td className="p-3.5 text-fg font-medium leading-relaxed">
                         {log.workDescription}
                       </td>
 
                       {/* Kendala dan Solusi */}
                       <td className="p-3.5 text-[11px] leading-relaxed">
-                        <div className="p-2 rounded-xl bg-white/70 border border-white/90 space-y-1">
-                          <p className="text-[#B45309] font-medium leading-snug">
+                        <div className="p-2 rounded-xl bg-surface/70 border border-glass-stroke space-y-1">
+                          <p className="text-warm font-medium leading-snug">
                             {issueText}
                           </p>
                           {solutionText && (
-                            <p className="text-[#047857] font-medium leading-snug">
+                            <p className="text-success font-medium leading-snug">
                               {solutionText}
                             </p>
                           )}
@@ -790,13 +790,13 @@ export const LogbookView: React.FC = () => {
                       <td className="p-3.5 text-center whitespace-nowrap">
                         <div className="flex flex-col items-center justify-center gap-1.5">
                           {log.verifiedByLecturer ? (
-                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#D1FAE5] text-[#065F46] flex items-center gap-1">
-                              <Check className="w-3 h-3 text-[#047857]" />
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-success-soft text-success flex items-center gap-1">
+                              <Check className="w-3 h-3 text-success" />
                               Terverifikasi
                             </span>
                           ) : (
-                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] flex items-center gap-1">
-                              <Clock className="w-3 h-3 text-[#B45309]" />
+                            <span className="px-3 py-1 rounded-full text-[10px] font-bold bg-warm-soft text-warm flex items-center gap-1">
+                              <Clock className="w-3 h-3 text-warm" />
                               Belum Diparaf
                             </span>
                           )}
@@ -809,12 +809,12 @@ export const LogbookView: React.FC = () => {
                               aria-checked={Boolean(log.verifiedByLecturer)}
                               onClick={() => toggleLogbookVerification(log.id)}
                               className={`w-11 h-6 flex items-center rounded-full p-1 transition-colors ${
-                                log.verifiedByLecturer ? 'bg-[#0062CC]' : 'bg-[#C9DCEB]'
+                                log.verifiedByLecturer ? 'bg-primary' : 'bg-line'
                               }`}
                               title="Toggle status verifikasi paraf dosen (PM)"
                             >
                               <div
-                                className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform ${
+                                className={`bg-surface w-4 h-4 rounded-full shadow-md transform transition-transform ${
                                   log.verifiedByLecturer ? 'translate-x-5' : 'translate-x-0'
                                 }`}
                               />
@@ -829,7 +829,7 @@ export const LogbookView: React.FC = () => {
                           {canEdit && (
                             <button
                               onClick={() => handleOpenEdit(log)}
-                              className="text-[#4A5A72] hover:text-[#0062CC] transition-colors p-1.5 rounded-lg hover:bg-[#EAF6FD]"
+                              className="text-fg-3 hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-muted"
                               title="Edit Entri"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
@@ -842,7 +842,7 @@ export const LogbookView: React.FC = () => {
                                   deleteLogbook(log.id);
                                 }
                               }}
-                              className="text-[#4A5A72] hover:text-[#B91C1C] transition-colors p-1.5 rounded-lg hover:bg-[#FEE2E2]"
+                              className="text-fg-3 hover:text-danger transition-colors p-1.5 rounded-lg hover:bg-danger-soft"
                               title="Hapus Entri"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -859,12 +859,12 @@ export const LogbookView: React.FC = () => {
         </div>
 
         {/* Footer Notes */}
-        <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-[#4A5A72] border-t border-white/80">
+        <div className="pt-2 flex flex-wrap items-center justify-between text-xs text-fg-3 border-t border-glass-stroke">
           <div className="flex items-center gap-1.5 font-medium">
-            <Info className="w-4 h-4 text-[#0062CC]" />
+            <Info className="w-4 h-4 text-primary" />
             <span>Status Terverifikasi merefleksikan paraf basah di logbook fisik resmi Capstone DTNTF.</span>
           </div>
-          <span className="font-semibold text-[#0B1B33]">
+          <span className="font-semibold text-fg">
             Menampilkan {filteredLogbooks.length} dari total {logbooks.length} entri • Kuota Target: 72 Entri (6 × 12)
           </span>
         </div>
@@ -878,12 +878,12 @@ export const LogbookView: React.FC = () => {
           role="dialog"
           aria-modal="true"
           aria-labelledby="logbook-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs animate-in fade-in duration-150"
         >
-          <div className="w-full max-w-lg bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-[#EAF6FD]">
-              <h3 id="logbook-modal-title" className="font-heading font-bold text-base text-[#0B1B33] flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-[#0062CC]" />
+          <div className="w-full max-w-lg bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between pb-3 border-b border-line">
+              <h3 id="logbook-modal-title" className="font-heading font-bold text-base text-fg flex items-center gap-2">
+                <BookOpen className="w-4 h-4 text-primary" />
                 {editingLog ? 'Edit Entri Logbook' : 'Tambah Entri Logbook Baru'}
               </h3>
               <button
@@ -891,7 +891,7 @@ export const LogbookView: React.FC = () => {
                   setShowAddModal(false);
                   setEditingLog(null);
                 }}
-                className="text-[#6B7F99] hover:text-[#0B1B33] p-1 rounded-lg"
+                className="text-fg-3 hover:text-fg p-1 rounded-lg"
                 aria-label="Tutup modal"
               >
                 <X className="w-5 h-5" />
@@ -901,13 +901,13 @@ export const LogbookView: React.FC = () => {
             <form onSubmit={handleSubmitForm} className="space-y-3.5 text-xs">
               {/* Entitas / Pencatat */}
               <div>
-                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-bold text-fg mb-1">
                   Pemilik Logbook
                 </label>
                 <select
                   value={formAuthorId}
                   onChange={(e) => setFormAuthorId(e.target.value)}
-                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong bg-surface text-xs font-medium text-fg outline-none focus:border-primary"
                   required
                 >
                   {entities
@@ -925,13 +925,13 @@ export const LogbookView: React.FC = () => {
               {/* Grid: Minggu & Tanggal */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                  <label className="block text-xs font-bold text-fg mb-1">
                     Minggu Perkuliahan
                   </label>
                   <select
                     value={formWeekNumber}
                     onChange={(e) => setFormWeekNumber(parseInt(e.target.value, 10))}
-                    className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] bg-white text-xs font-medium text-[#0B1B33] outline-none focus:border-[#0062CC]"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong bg-surface text-xs font-medium text-fg outline-none focus:border-primary"
                   >
                     {Array.from({ length: MAX_WEEK }, (_, i) => i + 1).map((w) => (
                       <option key={w} value={w}>
@@ -942,13 +942,13 @@ export const LogbookView: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#0B1B33] mb-1">Tanggal</label>
+                  <label className="block text-xs font-bold text-fg mb-1">Tanggal</label>
                   <input
                     type="text"
                     value={formDate}
                     onChange={(e) => setFormDate(e.target.value)}
                     placeholder="Contoh: 14 Sep 2026"
-                    className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
+                    className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                     required
                   />
                 </div>
@@ -956,7 +956,7 @@ export const LogbookView: React.FC = () => {
 
               {/* Uraian Pekerjaan Teknis */}
               <div>
-                <label className="block text-xs font-bold text-[#0B1B33] mb-1">
+                <label className="block text-xs font-bold text-fg mb-1">
                   Uraian Pekerjaan Teknis
                 </label>
                 <textarea
@@ -964,14 +964,14 @@ export const LogbookView: React.FC = () => {
                   value={formDesc}
                   onChange={(e) => setFormDesc(e.target.value)}
                   placeholder="Judul Uraian: Isi Uraian (contoh: Sizing FV-101: menghitung Kv normal/maks. dengan ISA-75.01 ...)"
-                  className="w-full p-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC] leading-relaxed"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary leading-relaxed"
                   required
                 />
               </div>
 
               {/* Kendala */}
               <div>
-                <label className="block text-xs font-bold text-[#B45309] mb-1">
+                <label className="block text-xs font-bold text-warm mb-1">
                   Kendala Dihadapi
                 </label>
                 <input
@@ -979,13 +979,13 @@ export const LogbookView: React.FC = () => {
                   value={formIssue}
                   onChange={(e) => setFormIssue(e.target.value)}
                   placeholder="Contoh: Konvergensi simulasi lambat pada aliran recycle"
-                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                 />
               </div>
 
               {/* Solusi */}
               <div>
-                <label className="block text-xs font-bold text-[#047857] mb-1">
+                <label className="block text-xs font-bold text-success mb-1">
                   Solusi / Tindak Lanjut
                 </label>
                 <input
@@ -993,14 +993,14 @@ export const LogbookView: React.FC = () => {
                   value={formSolution}
                   onChange={(e) => setFormSolution(e.target.value)}
                   placeholder="Contoh: Ganti metode inisialisasi solver ke Newton-Raphson"
-                  className="w-full h-10 px-3 rounded-xl border border-[#CBD5E1] text-xs outline-none focus:border-[#0062CC]"
+                  className="w-full h-10 px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
                 />
               </div>
 
               {/* PM Verification Option */}
               {isPM && (
-                <div className="pt-2 border-t border-[#EAF6FD] flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#0B1B33]">
+                <div className="pt-2 border-t border-line flex items-center justify-between">
+                  <span className="text-xs font-semibold text-fg">
                     Status Paraf Dosen Pembimbing
                   </span>
                   <label className="inline-flex items-center gap-2 cursor-pointer">
@@ -1008,9 +1008,9 @@ export const LogbookView: React.FC = () => {
                       type="checkbox"
                       checked={formVerified}
                       onChange={(e) => setFormVerified(e.target.checked)}
-                      className="w-4 h-4 rounded text-[#0062CC] focus:ring-0"
+                      className="w-4 h-4 rounded text-primary focus:ring-0"
                     />
-                    <span className="text-xs font-medium text-[#4A5A72]">
+                    <span className="text-xs font-medium text-fg-3">
                       Tandai Terverifikasi
                     </span>
                   </label>
@@ -1018,20 +1018,20 @@ export const LogbookView: React.FC = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-2 pt-3 border-t border-[#EAF6FD]">
+              <div className="flex justify-end gap-2 pt-3 border-t border-line">
                 <button
                   type="button"
                   onClick={() => {
                     setShowAddModal(false);
                     setEditingLog(null);
                   }}
-                  className="px-4 py-2 text-xs font-semibold text-[#4A5A72] hover:text-[#0B1B33]"
+                  className="px-4 py-2 text-xs font-semibold text-fg-3 hover:text-fg"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#0062CC] hover:bg-[#0057B8] text-white text-xs font-bold rounded-full shadow-xs transition-all"
+                  className="px-5 py-2.5 bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold rounded-full shadow-xs transition-all"
                 >
                   {editingLog ? 'Perbarui Entri' : 'Simpan Entri'}
                 </button>

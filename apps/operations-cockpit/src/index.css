@@ -1,99 +1,239 @@
 @import "tailwindcss";
 
+/*
+ * Cockpit UI v2.0 (LOG-072) — design system Personal Web: Sky Blue monokrom, glassmorphism,
+ * Outfit + Inter + Instrument Serif Italic. Semua warna lewat token; mode gelap = [data-theme="dark"].
+ * Sumber token: D:\rahul\dme-cockpit-design\2026-11-11_cockpit-ui-v2.0.figcraft (koleksi Theme).
+ */
 @layer base {
   :root {
-    --ink: #0B1B33;
-    --ink-muted: #4A5A72;
-    --on-dark: #FFFFFF;
-    --on-dark-muted: #9FB3C8;
-    --primary: #0062CC;
-    --primary-hover: #0057B8;
-    --primary-active: #004A9E;
-    --primary-brand: #007BFF;
-    --accent: #4CBAF5;
+    color-scheme: light;
+    --bg: #F0F7FF;
     --surface: #FFFFFF;
-    --surface-tint: #EAF6FD;
-    --surface-dark: #0B1B33;
-    --track: #DCEBF7;
-    --divider: #C9DCEB;
-    --border-input: #6B7F99;
-    --placeholder: #5F6F86;
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-stroke: rgba(255, 255, 255, 0.9);
+    --muted: #E1F0FF;
+    --border: #CDE4FF;
+    --border-strong: #97C9FF;
+    --text: #021024;
+    --text-2: #0F4FA3;
+    --text-3: #4A6890;
+    --primary: #1662CC;
+    --primary-hover: #0F4FA3;
+    --on-primary: #FFFFFF;
+    --primary-soft: #CDE4FF;
+    --ring: #1E7DFF;
+    --success: #15803D;
+    --success-soft: #DCFCE7;
+    --success-solid: #15803D;
+    --success-line: #86EFAC;
+    --warm: #C2410C;
+    --warm-soft: #FFEDD5;
+    --warm-solid: #C2410C;
+    --warm-line: #FDBA74;
     --danger: #B91C1C;
-
-    --ok-bg: #D1FAE5;
-    --ok-fg: #065F46;
-    --ok-solid: #047857;
-    --warn-bg: #FEF3C7;
-    --warn-fg: #92400E;
-    --warn-solid: #B45309;
-    --crit-bg: #FEE2E2;
-    --crit-fg: #991B1B;
+    --danger-soft: #FEE2E2;
+    --danger-solid: #B91C1C;
+    --danger-line: #FCA5A5;
+    --chart-1: #1662CC;
+    --chart-2: #5CAEFF;
+    --chart-3: #0A3B7A;
+    --backdrop: #B6D8FF;
+    /* Permukaan gelap tetap (kartu hero, tooltip): teks di atasnya selalu terang */
+    --ink: #062956;
+    --ink-2: #0A3B7A;
+    --on-ink: #F0F7FF;
+    --on-ink-2: #B6D8FF;
+    --on-ink-accent: #78BAFF;
+    --hero-1: #0A3B7A;
+    --hero-2: #1662CC;
+    --shadow-glass: 0 12px 32px rgba(6, 41, 86, 0.1);
+    --shadow-pop: 0 24px 48px -12px rgba(6, 41, 86, 0.28);
+    /* alias lama (masih dipakai sebagian style inline) */
+    --divider: var(--border);
+    /* warna avatar (pilihan di Profil): tetap sama di kedua tema supaya inisial putih terbaca */
+    --acct-solid: #0A3B7A;
+    --ok-solid: #15803D;
+    --warn-solid: #C2410C;
     --crit-solid: #B91C1C;
-    --neutral-bg: #E2E8F0;
-    --neutral-fg: #334155;
-    --neutral-solid: #64748B;
-    --acct-bg: #DBEAFE;
-    --acct-fg: #1E3A8A;
-    --acct-solid: #1D4ED8;
+    --surface-dark: #062956;
+    --track: var(--muted);
+  }
+
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --bg: #010A16;
+    --surface: #021024;
+    --glass: rgba(6, 41, 86, 0.55);
+    --glass-stroke: rgba(61, 155, 255, 0.18);
+    --muted: #041A35;
+    --border: #062956;
+    --border-strong: #0F4FA3;
+    --text: #F0F7FF;
+    --text-2: #97C9FF;
+    --text-3: #78BAFF;
+    --primary: #3D9BFF;
+    --primary-hover: #5CAEFF;
+    --on-primary: #010A16;
+    --primary-soft: #0A3B7A;
+    --ring: #3D9BFF;
+    --success: #4ADE80;
+    --success-soft: #052E16;
+    --success-line: #14532D;
+    --warm: #FB923C;
+    --warm-soft: #431407;
+    --warm-line: #7C2D12;
+    --danger: #F87171;
+    --danger-soft: #450A0A;
+    --danger-line: #7F1D1D;
+    --chart-1: #3D9BFF;
+    --chart-2: #97C9FF;
+    --chart-3: #CDE4FF;
+    --backdrop: #062956;
+    --ink: #062956;
+    --ink-2: #0A3B7A;
+    --shadow-glass: 0 12px 32px rgba(0, 0, 0, 0.35);
+    --shadow-pop: 0 24px 48px -12px rgba(0, 0, 0, 0.6);
+  }
+
+  html {
+    background: var(--bg);
   }
 
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    color: var(--ink);
+    color: var(--text);
+    background: var(--bg);
   }
 
   h1, h2, h3, h4, .font-heading {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-accent {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--on-primary);
+  }
 }
 
-/* Atmospheric EPC Sexy Blue Gradient */
-.bg-sexy-blue {
-  background: radial-gradient(circle at 50% 45%, #FFFFFF 0%, #B0E0E6 28%, #4CBAF5 62%, #007BFF 100%);
-  background-attachment: fixed;
+@theme inline {
+  --font-heading: 'Outfit', system-ui, sans-serif;
+  --color-canvas: var(--bg);
+  --color-surface: var(--surface);
+  --color-glass: var(--glass);
+  --color-glass-stroke: var(--glass-stroke);
+  --color-muted: var(--muted);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-fg-2: var(--text-2);
+  --color-fg-3: var(--text-3);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-focus: var(--ring);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-solid: var(--success-solid);
+  --color-success-line: var(--success-line);
+  --color-warm: var(--warm);
+  --color-warm-soft: var(--warm-soft);
+  --color-warm-solid: var(--warm-solid);
+  --color-warm-line: var(--warm-line);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-solid: var(--danger-solid);
+  --color-danger-line: var(--danger-line);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-backdrop: var(--backdrop);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-on-ink: var(--on-ink);
+  --color-on-ink-2: var(--on-ink-2);
+  --color-on-ink-accent: var(--on-ink-accent);
+  --color-hero-1: var(--hero-1);
+  --color-hero-2: var(--hero-2);
 }
 
+/* Bobot huruf dilunakkan: Outfit tebal terasa berat; v2.0 memakai maksimum SemiBold */
+@theme {
+  --font-weight-bold: 600;
+  --font-weight-extrabold: 600;
+  --font-weight-black: 700;
+}
+
+/* Judul halaman: Outfit Regular (bukan tebal), sesuai desain v2.0. Di luar @layer agar menang atas utilitas font-bold. */
+main h1 {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* Kanvas halaman: warna dasar + pendar lembut di pojok (tanpa gradien ramai) */
+.bg-sexy-blue,
 .bg-cockpit-canvas {
-  background: radial-gradient(60% 50% at 20% 10%, rgba(255, 255, 255, 0.55), transparent 70%),
-              linear-gradient(135deg, #B0E0E6 0%, #79CDEF 55%, #4CBAF5 100%);
+  background:
+    radial-gradient(60% 45% at 100% 0%, color-mix(in srgb, var(--backdrop) 55%, transparent), transparent 70%),
+    radial-gradient(40% 35% at 0% 100%, color-mix(in srgb, var(--backdrop) 30%, transparent), transparent 70%),
+    var(--bg);
   background-attachment: fixed;
 }
 
-/* Subtle 8% technical engineering grid */
 .bg-tech-grid {
   background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--border) 45%, transparent) 1px, transparent 1px);
+}
+
+/* Kartu hero: gradien biru tua, sama di kedua tema */
+.bg-hero {
+  background: linear-gradient(135deg, var(--ink) 0%, var(--hero-1) 50%, var(--hero-2) 100%);
+  color: var(--on-ink);
 }
 
 .shadow-cockpit-pop {
-  box-shadow: 0 20px 40px -20px rgba(11, 27, 51, 0.35);
+  box-shadow: var(--shadow-pop);
 }
 
 .shadow-cockpit-card {
-  box-shadow: 0 10px 30px -16px rgba(11, 27, 51, 0.28);
+  box-shadow: var(--shadow-glass);
 }
 
-/* Reusable Glass Surfaces */
+/* Permukaan kaca: blur 24, radius 32 (K-09 design system) */
 .glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.85) 100%);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 12px 32px -18px rgba(11, 27, 51, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  border-radius: 28px;
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid var(--glass-stroke);
+  box-shadow: var(--shadow-glass);
+  border-radius: 32px;
 }
 
 .glass-faint {
-  background: rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-stroke);
   border-radius: 20px;
   box-shadow: none;
 }
@@ -101,13 +241,12 @@
 @supports not (backdrop-filter: blur(1px)) {
   .glass-card,
   .glass-faint {
-    background: rgba(255, 255, 255, 0.85);
+    background: var(--surface);
   }
 }
 
-/* Progress Hatch Bar Pattern */
 .bg-hatch-pattern {
-  background-image: repeating-linear-gradient(135deg, #007BFF 0 8px, #4CBAF5 8px 16px);
+  background-image: repeating-linear-gradient(135deg, var(--primary) 0 8px, var(--chart-2) 8px 16px);
 }
 
 /* 3D Flip Card support */
@@ -128,24 +267,58 @@
   transform: rotateY(180deg);
 }
 
-/* Custom sleek scrollbar */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes v2-pop {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes v2-sheet {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+.anim-pop {
+  animation: v2-pop 160ms ease-out;
+}
+
+.anim-sheet {
+  animation: v2-sheet 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(220, 235, 247, 0.5);
-  border-radius: 9999px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(107, 127, 153, 0.6);
+  background: color-mix(in srgb, var(--text-3) 45%, transparent);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 75, 159, 0.8);
+  background: var(--primary);
 }
 
 /* Accessibility: Hormati prefers-reduced-motion pengguna */

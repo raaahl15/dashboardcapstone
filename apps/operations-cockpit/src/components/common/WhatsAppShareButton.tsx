@@ -20,7 +20,7 @@ export const WhatsAppShareButton: React.FC<Props> = ({ text, label = 'Bagikan ke
     rel="noreferrer"
     title={label}
     aria-label={label}
-    className="min-h-[44px] px-3.5 rounded-full bg-[#DCFCE7] hover:bg-[#BBF7D0] text-[#166534] text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+    className="min-h-[44px] px-3.5 rounded-full bg-success-soft hover:bg-success-soft text-success text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
   >
     <MessageCircle className="w-3.5 h-3.5" />
     {!compact && <span className="hidden sm:inline">WhatsApp</span>}

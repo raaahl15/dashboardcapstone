@@ -310,21 +310,21 @@ export const WeeklyMoMView: React.FC = () => {
       {/* TOP ZONE: Heading, description, and MoM actions */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-[#0B1B33]">
+        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
           Rapat Mingguan (MoM)
         </h1>
 
         <div className="space-y-2.5">
           <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-[#0B1B33]">
+            <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
               Repositori materi presentasi asistensi mingguan, pelacak komitmen tindakan korektif, dan logbook asistensi DTNTF.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-[#0B1B33] text-white text-[12px] font-medium tracking-normal inline-flex items-center">
+            <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
               FEED ASISTENSI &amp; EVALUASI
             </span>
-            <span className="h-8 px-3.5 rounded-full bg-white/70 border border-white text-[#0062CC] text-[12px] font-semibold tracking-normal inline-flex items-center">
+            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold tracking-normal inline-flex items-center">
               Semester Gasal 2026/2027
             </span>
           </div>
@@ -337,29 +337,29 @@ export const WeeklyMoMView: React.FC = () => {
       <div className="glass-card p-5 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-[#0062CC]" />
-            <h3 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33]">
+            <BookOpen className="w-4 h-4 text-primary" />
+            <h3 className="font-heading font-bold text-xs sm:text-sm text-fg">
               Format Slide Deck Bimbingan (15 menit)
             </h3>
           </div>
           {/* Panduan Capstone tidak mengatur format slide bimbingan: ini format internal tim (LOG-051/052) */}
-          <span className="px-3 py-1 bg-white/70 text-[#0062CC] rounded-full text-[10px] font-bold flex items-center gap-1 border border-white">
+          <span className="px-3 py-1 bg-surface/70 text-primary rounded-full text-[10px] font-bold flex items-center gap-1 border border-glass-stroke">
             <FileCheck2 className="w-3 h-3" /> Format internal tim · template slide UGM (Canva)
           </span>
         </div>
 
         {/* 2-Segment Progress Visualizer */}
-        <div className="w-full h-8 rounded-full overflow-hidden flex text-white text-[11px] font-bold shadow-xs">
-          <div className="w-[66.7%] bg-[#0062CC] flex items-center justify-center px-3 tracking-wide">
+        <div className="w-full h-8 rounded-full overflow-hidden flex text-on-ink text-[11px] font-bold shadow-xs">
+          <div className="w-[66.7%] bg-primary flex items-center justify-center px-3 tracking-wide">
             10 menit - Pemaparan Teknis
           </div>
-          <div className="w-[33.3%] bg-[#0B1B33] bg-hatch-pattern flex items-center justify-center px-3 tracking-wide">
+          <div className="w-[33.3%] bg-ink bg-hatch-pattern flex items-center justify-center px-3 tracking-wide">
             5 menit - Diskusi &amp; Q&amp;A Dosen
           </div>
         </div>
 
-        <div className="text-[11px] text-[#4A5A72] flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-bold text-[#0B1B33]">Urutan:</span>
+        <div className="text-[11px] text-fg-3 flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="font-bold text-fg">Urutan:</span>
           <span>1 Status capaian vs timeline</span>
           <span>•</span>
           <span>2 Tindak lanjut arahan bimbingan sebelumnya</span>
@@ -381,12 +381,12 @@ export const WeeklyMoMView: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <ClipboardList className="w-4 h-4 text-[#0062CC]" />
-              <h2 className="font-heading font-bold text-sm sm:text-base text-[#0B1B33]">
+              <ClipboardList className="w-4 h-4 text-primary" />
+              <h2 className="font-heading font-bold text-sm sm:text-base text-fg">
                 Work Order Sejak Rapat Lalu
               </h2>
             </div>
-            <p className="text-xs text-[#4A5A72] mt-0.5">
+            <p className="text-xs text-fg-3 mt-0.5">
               Ringkasan otomatis capaian dan hambatan Work Order berdasarkan periode minggu rapat berurutan
             </p>
           </div>
@@ -396,7 +396,7 @@ export const WeeklyMoMView: React.FC = () => {
               value={activeMomPeriod?.key || ''}
               onChange={(e) => setSelectedPeriodKey(e.target.value)}
               aria-label="Pilih periode ringkasan Work Order antar-rapat"
-              className="min-h-[40px] px-3.5 rounded-full bg-white/90 border border-[#C9DCEB] text-xs font-semibold text-[#0B1B33] outline-none focus:border-[#0062CC]"
+              className="min-h-[40px] px-3.5 rounded-full bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
             >
               {momPeriodOptions.map((opt) => (
                 <option key={opt.key} value={opt.key}>
@@ -409,19 +409,19 @@ export const WeeklyMoMView: React.FC = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
           {/* Kelompok 1: Selesai */}
-          <div className="rounded-2xl bg-white/75 border border-[#6EE7B7]/60 p-3.5 flex flex-col gap-2.5">
+          <div className="rounded-2xl bg-surface/75 border border-success-line/60 p-3.5 flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-[#065F46] inline-flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#047857]" />
+              <span className="text-xs font-heading font-bold text-success inline-flex items-center gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
                 Selesai
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#D1FAE5] text-[#065F46]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-success-soft text-success">
                 {momWoSummary.completed.length}
               </span>
             </div>
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
               {momWoSummary.completed.length === 0 ? (
-                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                <p className="text-[11px] text-fg-3 py-3 text-center">
                   Belum ada WO selesai pada periode ini
                 </p>
               ) : (
@@ -430,19 +430,19 @@ export const WeeklyMoMView: React.FC = () => {
                     key={wo.id}
                     type="button"
                     onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-[#D1FAE5]/40 hover:bg-[#D1FAE5]/80 transition-colors space-y-1"
+                    className="w-full text-left p-2.5 rounded-xl bg-success-soft/40 hover:bg-success-soft/80 transition-colors space-y-1"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-[#065F46]">
+                      <span className="font-mono text-[10px] font-extrabold text-success">
                         {wo.code}
                       </span>
-                      <span className="text-[10px] text-[#065F46] font-semibold">
+                      <span className="text-[10px] text-success font-semibold">
                         {wo.completedAt
                           ? formatYmdToIndonesian(wo.completedAt.slice(0, 10))
                           : `W${wo.projectWeek}`}
                       </span>
                     </div>
-                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                    <p className="text-[11px] font-bold text-fg line-clamp-1">
                       {wo.title}
                     </p>
                   </button>
@@ -452,19 +452,19 @@ export const WeeklyMoMView: React.FC = () => {
           </div>
 
           {/* Kelompok 2: Masih Berjalan */}
-          <div className="rounded-2xl bg-white/75 border border-[#93C5FD]/60 p-3.5 flex flex-col gap-2.5">
+          <div className="rounded-2xl bg-surface/75 border border-line/60 p-3.5 flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-[#1E3A8A] inline-flex items-center gap-1.5">
-                <PlayCircle className="w-3.5 h-3.5 text-[#0062CC]" />
+              <span className="text-xs font-heading font-bold text-fg-2 inline-flex items-center gap-1.5">
+                <PlayCircle className="w-3.5 h-3.5 text-primary" />
                 Masih Berjalan
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#DBEAFE] text-[#1E3A8A]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-soft text-fg-2">
                 {momWoSummary.inProgress.length}
               </span>
             </div>
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
               {momWoSummary.inProgress.length === 0 ? (
-                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                <p className="text-[11px] text-fg-3 py-3 text-center">
                   Tidak ada WO berjalan
                 </p>
               ) : (
@@ -473,17 +473,17 @@ export const WeeklyMoMView: React.FC = () => {
                     key={wo.id}
                     type="button"
                     onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-[#EAF6FD]/70 hover:bg-[#DBEAFE]/70 transition-colors space-y-1"
+                    className="w-full text-left p-2.5 rounded-xl bg-muted/70 hover:bg-primary-soft/70 transition-colors space-y-1"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-[#0062CC]">
+                      <span className="font-mono text-[10px] font-extrabold text-primary">
                         {wo.code}
                       </span>
-                      <span className="text-[10px] font-bold text-[#334155]">
+                      <span className="text-[10px] font-bold text-fg-2">
                         {wo.status}
                       </span>
                     </div>
-                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                    <p className="text-[11px] font-bold text-fg line-clamp-1">
                       {wo.title}
                     </p>
                   </button>
@@ -493,19 +493,19 @@ export const WeeklyMoMView: React.FC = () => {
           </div>
 
           {/* Kelompok 3: Terlambat */}
-          <div className="rounded-2xl bg-white/75 border border-[#FCA5A5]/70 p-3.5 flex flex-col gap-2.5">
+          <div className="rounded-2xl bg-surface/75 border border-danger-line/70 p-3.5 flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-[#991B1B] inline-flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-[#B91C1C]" />
+              <span className="text-xs font-heading font-bold text-danger inline-flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-danger" />
                 Terlambat
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FEE2E2] text-[#991B1B]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-danger-soft text-danger">
                 {momWoSummary.overdue.length}
               </span>
             </div>
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
               {momWoSummary.overdue.length === 0 ? (
-                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                <p className="text-[11px] text-fg-3 py-3 text-center">
                   Nihil keterlambatan WO
                 </p>
               ) : (
@@ -514,17 +514,17 @@ export const WeeklyMoMView: React.FC = () => {
                     key={wo.id}
                     type="button"
                     onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-[#FEE2E2]/55 hover:bg-[#FEE2E2] transition-colors space-y-1"
+                    className="w-full text-left p-2.5 rounded-xl bg-danger-soft/55 hover:bg-danger-soft transition-colors space-y-1"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-[#991B1B]">
+                      <span className="font-mono text-[10px] font-extrabold text-danger">
                         {wo.code}
                       </span>
-                      <span className="text-[10px] font-bold text-[#B91C1C]">
+                      <span className="text-[10px] font-bold text-danger">
                         {formatYmdToIndonesian(wo.dueDate)}
                       </span>
                     </div>
-                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                    <p className="text-[11px] font-bold text-fg line-clamp-1">
                       {wo.title}
                     </p>
                   </button>
@@ -534,19 +534,19 @@ export const WeeklyMoMView: React.FC = () => {
           </div>
 
           {/* Kelompok 4: Blocked */}
-          <div className="rounded-2xl bg-white/75 border border-[#FCD34D]/70 p-3.5 flex flex-col gap-2.5">
+          <div className="rounded-2xl bg-surface/75 border border-warm-line/70 p-3.5 flex flex-col gap-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-[#92400E] inline-flex items-center gap-1.5">
-                <PauseCircle className="w-3.5 h-3.5 text-[#B45309]" />
+              <span className="text-xs font-heading font-bold text-warm inline-flex items-center gap-1.5">
+                <PauseCircle className="w-3.5 h-3.5 text-warm" />
                 Blocked
               </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-[#FEF3C7] text-[#92400E]">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-warm-soft text-warm">
                 {momWoSummary.blocked.length}
               </span>
             </div>
             <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
               {momWoSummary.blocked.length === 0 ? (
-                <p className="text-[11px] text-[#4A5A72] py-3 text-center">
+                <p className="text-[11px] text-fg-3 py-3 text-center">
                   Tidak ada WO yang terhambat
                 </p>
               ) : (
@@ -555,10 +555,10 @@ export const WeeklyMoMView: React.FC = () => {
                     key={wo.id}
                     type="button"
                     onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-[#FEF3C7]/60 hover:bg-[#FEF3C7] transition-colors space-y-1"
+                    className="w-full text-left p-2.5 rounded-xl bg-warm-soft/60 hover:bg-warm-soft transition-colors space-y-1"
                   >
                     <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-[#92400E]">
+                      <span className="font-mono text-[10px] font-extrabold text-warm">
                         {wo.code}
                       </span>
                       <UserChip
@@ -567,14 +567,14 @@ export const WeeklyMoMView: React.FC = () => {
                         size="xs"
                         useNickname
                         avatarClassName="w-4 h-4 text-[8px]"
-                        nameClassName="!text-[10px] !font-semibold !text-[#92400E]"
+                        nameClassName="!text-[10px] !font-semibold !text-warm"
                       />
                     </div>
-                    <p className="text-[11px] font-bold text-[#0B1B33] line-clamp-1">
+                    <p className="text-[11px] font-bold text-fg line-clamp-1">
                       {wo.title}
                     </p>
                     {wo.blockedReason && (
-                      <p className="text-[10px] text-[#92400E] line-clamp-1">
+                      <p className="text-[10px] text-warm line-clamp-1">
                         Alasan: {wo.blockedReason}
                       </p>
                     )}
@@ -594,21 +594,21 @@ export const WeeklyMoMView: React.FC = () => {
         <div className="lg:col-span-4 glass-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <h2 className="font-heading font-bold text-base text-[#0B1B33]">
+              <h2 className="font-heading font-bold text-base text-fg">
                 Your Slide Deck
               </h2>
-              <p className="text-xs text-[#4A5A72]">
+              <p className="text-xs text-fg-3">
                 Slide paparan tiap bimbingan, terbaru di atas
               </p>
             </div>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/70 text-[#0062CC]">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-surface/70 text-primary">
               {slideDecks.length} Berkas Terarsip
             </span>
             {isPM && (
               <button
                 type="button"
                 onClick={openAddDeckModal}
-                className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                className="min-h-[44px] px-4 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Add Slide Deck
@@ -620,30 +620,30 @@ export const WeeklyMoMView: React.FC = () => {
             {[...slideDecks].sort((a, b) => (b.week || 0) - (a.week || 0)).map((deck) => (
               <div
                 key={deck.id}
-                className="p-4 rounded-2xl bg-white/70 border border-white/80 shadow-xs hover:shadow-sm transition-all"
+                className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs hover:shadow-sm transition-all"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/70 text-[#0062CC]">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-surface/70 text-primary">
                     {deck.weekLabel}
                   </span>
-                  <span className="text-[11px] text-[#4A5A72] font-medium">
+                  <span className="text-[11px] text-fg-3 font-medium">
                     {deck.date}
                   </span>
                 </div>
 
-                <h4 className="font-heading font-bold text-xs text-[#0B1B33] mb-3 leading-snug">
+                <h4 className="font-heading font-bold text-xs text-fg mb-3 leading-snug">
                   {deck.title}
                 </h4>
 
-                <div className="flex items-center justify-between pt-2 border-t border-white/80">
+                <div className="flex items-center justify-between pt-2 border-t border-glass-stroke">
                   <UserChip
                     uid={deck.presenter || deck.presenterCode}
                     variant="avatar-nama-jabatan"
                     size="sm"
                     useNickname
                     avatarClassName="w-7 h-7 rounded-full font-heading font-bold text-[10px]"
-                    nameClassName="!text-[11px] !font-bold !text-[#0B1B33]"
-                    titleClassName="!text-[9px] !text-[#4A5A72]"
+                    nameClassName="!text-[11px] !font-bold !text-fg"
+                    titleClassName="!text-[9px] !text-fg-3"
                   />
 
                   <div className="flex items-center gap-1.5">
@@ -652,7 +652,7 @@ export const WeeklyMoMView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => openEditDeckModal(deck)}
-                          className="p-1 text-[#4A5A72] hover:text-[#0062CC]"
+                          className="p-1 text-fg-3 hover:text-primary"
                           title="Edit Slide Deck"
                           aria-label={`Edit Slide Deck ${deck.title}`}
                         >
@@ -661,7 +661,7 @@ export const WeeklyMoMView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => deleteSlideDeck(deck.id)}
-                          className="p-1 text-[#4A5A72] hover:text-[#B91C1C]"
+                          className="p-1 text-fg-3 hover:text-danger"
                           title="Hapus Slide Deck"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -673,13 +673,13 @@ export const WeeklyMoMView: React.FC = () => {
                         href={deck.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3 py-1 bg-white/70 hover:bg-[#0062CC] hover:text-white text-[#0062CC] rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
+                        className="px-3 py-1 bg-surface/70 hover:bg-primary hover:text-on-primary text-primary rounded-full text-[11px] font-bold flex items-center gap-1 transition-all"
                       >
                         Buka <ExternalLink className="w-3 h-3" />
                       </a>
                     ) : (
                       <span
-                        className="px-3 py-1 bg-[#F1F5F9] text-[#64748B] rounded-full text-[11px] font-semibold"
+                        className="px-3 py-1 bg-muted text-fg-3 rounded-full text-[11px] font-semibold"
                         title="Link slide belum diisi; PM dapat menambahkannya lewat tombol edit"
                       >
                         Link belum ada
@@ -699,14 +699,14 @@ export const WeeklyMoMView: React.FC = () => {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="font-heading font-bold text-base text-[#0B1B33]">
+                  <h2 className="font-heading font-bold text-base text-fg">
                     Action Item MoM → Work Order
                   </h2>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FEF3C7] text-[#92400E]">
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-warm-soft text-warm">
                     {activeActionsCount} Active
                   </span>
                 </div>
-                <p className="text-xs text-[#4A5A72]">
+                <p className="text-xs text-fg-3">
                   Masukan dosen pembimbing; setiap action item dikerjakan sebagai Work Order dan statusnya mengikuti WO
                 </p>
               </div>
@@ -728,19 +728,19 @@ export const WeeklyMoMView: React.FC = () => {
                 <button
                   type="button"
                   onClick={openAddActionModal}
-                  className="min-h-[44px] px-4 bg-white/70 hover:bg-white text-[#0B1B33] rounded-full text-xs font-bold border border-white flex items-center gap-1 shadow-xs transition-all"
+                  className="min-h-[44px] px-4 bg-surface/70 hover:bg-surface text-fg rounded-full text-xs font-bold border border-glass-stroke flex items-center gap-1 shadow-xs transition-all"
                 >
-                  <Plus className="w-3.5 h-3.5 text-[#0062CC]" />
+                  <Plus className="w-3.5 h-3.5 text-primary" />
                   Tambah Action Item
                 </button>
               )}
               </div>
             </div>
 
-            <div className="overflow-x-auto rounded-2xl border border-white/80 bg-white/60">
+            <div className="overflow-x-auto rounded-2xl border border-glass-stroke bg-surface/60">
               <table className="w-full text-left border-collapse min-w-[720px]">
                 <thead>
-                  <tr className="border-b border-white/80 bg-white/70 text-[10px] font-heading font-bold text-[#4A5A72]">
+                  <tr className="border-b border-glass-stroke bg-surface/70 text-[10px] font-heading font-bold text-fg-3">
                     <th className="p-3">ID Action</th>
                     <th className="p-3">Week</th>
                     <th className="p-3">Kendala dan Masukan Dosen</th>
@@ -751,7 +751,7 @@ export const WeeklyMoMView: React.FC = () => {
                     {isPM && <th className="p-3 text-center">Aksi</th>}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/80 text-xs">
+                <tbody className="divide-y divide-line text-xs">
                   {trackerActions.map((act) => {
                     const linkedWo = findWorkOrderForTrackerAction(workOrders, act.id);
                     const hasActiveLinkedWo =
@@ -760,14 +760,14 @@ export const WeeklyMoMView: React.FC = () => {
                     const resolvedPicId = getUser(picRef)?.id || picRef;
 
                     return (
-                      <tr key={act.id} className="hover:bg-white/70 transition-colors">
-                        <td className="p-3 font-mono font-bold text-[#0062CC]">
+                      <tr key={act.id} className="hover:bg-surface/70 transition-colors">
+                        <td className="p-3 font-mono font-bold text-primary">
                           {act.code}
                         </td>
-                        <td className="p-3 font-bold text-[#0B1B33]">
+                        <td className="p-3 font-bold text-fg">
                           {act.week}
                         </td>
-                        <td className="p-3 max-w-[240px] text-xs text-[#0B1B33] font-medium leading-relaxed">
+                        <td className="p-3 max-w-[240px] text-xs text-fg font-medium leading-relaxed">
                           {act.issue}
                         </td>
                         <td className="p-3">
@@ -777,10 +777,10 @@ export const WeeklyMoMView: React.FC = () => {
                             size="xs"
                             useNickname
                             avatarClassName="w-5 h-5 rounded-full text-[10px]"
-                            nameClassName="!text-xs !font-semibold !text-[#0B1B33]"
+                            nameClassName="!text-xs !font-semibold !text-fg"
                           />
                         </td>
-                        <td className="p-3 text-xs text-[#4A5A72]">
+                        <td className="p-3 text-xs text-fg-3">
                           {act.deadline}
                         </td>
                         <td className="p-3 text-center">
@@ -790,8 +790,8 @@ export const WeeklyMoMView: React.FC = () => {
                             onClick={() => toggleTrackerActionStatus(act.id)}
                             className={`px-3 py-1 rounded-full text-[10px] font-bold inline-flex items-center gap-1 transition-all hover:scale-105 active:scale-95 ${
                               act.progress === 'Resolved'
-                                ? 'bg-[#D1FAE5] text-[#065F46]'
-                                : 'bg-[#FEF3C7] text-[#92400E]'
+                                ? 'bg-success-soft text-success'
+                                : 'bg-warm-soft text-warm'
                             }`}
                             title={
                               hasActiveLinkedWo
@@ -800,9 +800,9 @@ export const WeeklyMoMView: React.FC = () => {
                             }
                           >
                             {act.progress === 'Resolved' ? (
-                              <Check className="w-3 h-3 text-[#047857]" />
+                              <Check className="w-3 h-3 text-success" />
                             ) : (
-                              <Clock className="w-3 h-3 text-[#B45309]" />
+                              <Clock className="w-3 h-3 text-warm" />
                             )}
                             {act.progress}
                           </button>
@@ -848,7 +848,7 @@ export const WeeklyMoMView: React.FC = () => {
                                   },
                                 })
                               }
-                              className="min-h-[32px] px-3 rounded-full bg-[#EAF6FD] hover:bg-[#0062CC] text-[#0062CC] hover:text-white border border-[#BAE6FD] text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
+                              className="min-h-[32px] px-3 rounded-full bg-muted hover:bg-primary text-primary hover:text-on-primary border border-line text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
                             >
                               <Plus className="w-3 h-3" />
                               Buat WO
@@ -857,12 +857,12 @@ export const WeeklyMoMView: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => setSelectedWorkOrderId(linkedWo.id)}
-                              className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]"
+                              className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-muted text-fg-3 border border-line-strong"
                             >
                               {linkedWo.code} · Dibatalkan
                             </button>
                           ) : (
-                            <span className="text-[11px] text-[#94A3B8]">—</span>
+                            <span className="text-[11px] text-fg-3">—</span>
                           )}
                         </td>
                         {isPM && (
@@ -871,7 +871,7 @@ export const WeeklyMoMView: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => openEditActionModal(act)}
-                                className="text-[#4A5A72] hover:text-[#0062CC]"
+                                className="text-fg-3 hover:text-primary"
                                 title="Edit Action"
                                 aria-label={`Edit Action ${act.code}`}
                               >
@@ -880,7 +880,7 @@ export const WeeklyMoMView: React.FC = () => {
                               <button
                                 type="button"
                                 onClick={() => deleteTrackerAction(act.id)}
-                                className="text-[#4A5A72] hover:text-[#B91C1C]"
+                                className="text-fg-3 hover:text-danger"
                                 title="Hapus Baris Action"
                                 aria-label={`Hapus Action ${act.code}`}
                               >
@@ -901,22 +901,22 @@ export const WeeklyMoMView: React.FC = () => {
           <div className="glass-card p-5 sm:p-6 space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="font-heading font-bold text-base text-[#0B1B33]">
+                <h2 className="font-heading font-bold text-base text-fg">
                   Meeting Log
                 </h2>
-                <p className="text-xs text-[#4A5A72]">
+                <p className="text-xs text-fg-3">
                   Catatan resmi asistensi dan arahan teknis evaluasi
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[11px] text-[#4A5A72] font-semibold flex items-center gap-1">
-                  <Clock className="w-3.5 h-3.5 text-[#0062CC]" /> Semester Gasal 2026/2027
+                <span className="text-[11px] text-fg-3 font-semibold flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5 text-primary" /> Semester Gasal 2026/2027
                 </span>
                 {isPM && (
                   <button
                     type="button"
                     onClick={openAddMomModal}
-                    className="min-h-[44px] px-4 bg-[#0062CC] hover:bg-[#0057B8] text-white rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
+                    className="min-h-[44px] px-4 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1 shadow-xs transition-all"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     Add MoM
@@ -929,19 +929,19 @@ export const WeeklyMoMView: React.FC = () => {
               {meetingLogs.map((log) => (
                 <div
                   key={log.id}
-                  className="p-5 rounded-2xl bg-white/70 border border-white/80 shadow-xs space-y-3"
+                  className="p-5 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs space-y-3"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#0062CC] text-white">
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary text-on-primary">
                         {log.weekLabel}
                       </span>
-                      <span className="text-xs font-semibold text-[#0B1B33] flex items-center gap-1">
-                        <Calendar className="w-3.5 h-3.5 text-[#0062CC]" /> {log.dayText}
+                      <span className="text-xs font-semibold text-fg flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5 text-primary" /> {log.dayText}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[11px] text-[#4A5A72] flex items-center gap-1">
+                      <span className="text-[11px] text-fg-3 flex items-center gap-1">
                         {log.location}
                       </span>
                       <WhatsAppShareButton
@@ -959,7 +959,7 @@ export const WeeklyMoMView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => openEditMomModal(log)}
-                          className="min-h-[44px] min-w-[44px] rounded-full text-[#4A5A72] hover:bg-[#EAF6FD] hover:text-[#0062CC] flex items-center justify-center transition-colors"
+                          className="min-h-[44px] min-w-[44px] rounded-full text-fg-3 hover:bg-muted hover:text-primary flex items-center justify-center transition-colors"
                           title="Edit catatan MoM"
                           aria-label={`Edit MoM ${log.weekLabel}`}
                         >
@@ -970,7 +970,7 @@ export const WeeklyMoMView: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => deleteMeetingLog(log.id)}
-                          className="min-h-[44px] min-w-[44px] rounded-full text-[#4A5A72] hover:bg-[#FEE2E2] hover:text-[#B91C1C] flex items-center justify-center transition-colors"
+                          className="min-h-[44px] min-w-[44px] rounded-full text-fg-3 hover:bg-danger-soft hover:text-danger flex items-center justify-center transition-colors"
                           title="Hapus catatan MoM"
                           aria-label={`Hapus MoM ${log.weekLabel}`}
                         >
@@ -980,9 +980,9 @@ export const WeeklyMoMView: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs border-y border-white/80 py-2">
-                    <span className="text-[#4A5A72]">
-                      Dosen Evaluator: <strong className="text-[#0B1B33]">{log.evaluator}</strong>
+                  <div className="flex flex-wrap items-center justify-between gap-2 text-xs border-y border-glass-stroke py-2">
+                    <span className="text-fg-3">
+                      Dosen Evaluator: <strong className="text-fg">{log.evaluator}</strong>
                     </span>
                     <div className="flex items-center gap-1.5 flex-wrap">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -993,21 +993,21 @@ export const WeeklyMoMView: React.FC = () => {
                             variant="avatar-nama"
                             size="xs"
                             useNickname
-                            nameClassName="!text-[10px] !font-semibold !text-[#4A5A72]"
+                            nameClassName="!text-[10px] !font-semibold !text-fg-3"
                           />
                         ))}
                       </div>
-                      <span className="px-2 py-0.5 bg-[#D1FAE5] text-[#065F46] font-bold rounded-full text-[10px]">
+                      <span className="px-2 py-0.5 bg-success-soft text-success font-bold rounded-full text-[10px]">
                         {log.presenceRatio}
                       </span>
                     </div>
                   </div>
 
                   <div className="space-y-1">
-                    <h4 className="font-heading font-bold text-xs sm:text-sm text-[#0B1B33]">
+                    <h4 className="font-heading font-bold text-xs sm:text-sm text-fg">
                       {log.topic}
                     </h4>
-                    <p className="text-xs text-[#4A5A72] leading-relaxed">
+                    <p className="text-xs text-fg-3 leading-relaxed">
                       {log.summary}
                     </p>
                   </div>
@@ -1024,7 +1024,7 @@ export const WeeklyMoMView: React.FC = () => {
                       });
                       setActiveTab('logbook');
                     }}
-                    className="min-h-[44px] px-4 rounded-full bg-[#EAF6FD] hover:bg-[#0062CC] text-[#0062CC] hover:text-white text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                    className="min-h-[44px] px-4 rounded-full bg-muted hover:bg-primary text-primary hover:text-on-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                     Buat draf logbook dari MoM ini
@@ -1040,9 +1040,9 @@ export const WeeklyMoMView: React.FC = () => {
       {/* MODALS: Add Slide Deck & Add Action Item & Add MoM */}
       {/* ========================================================================= */}
       {showDeckModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingDeckId ? 'Edit Slide Deck Asistensi' : 'Tambah Slide Deck Asistensi'}
             </h3>
             <form onSubmit={handleSaveDeck} className="mt-4 space-y-3">
@@ -1055,7 +1055,7 @@ export const WeeklyMoMView: React.FC = () => {
                     max="18"
                     value={newDeckWeek}
                     onChange={(e) => setNewDeckWeek(Number(e.target.value))}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1064,7 +1064,7 @@ export const WeeklyMoMView: React.FC = () => {
                   <select
                     value={newDeckPresenter}
                     onChange={(e) => setNewDeckPresenter(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     {users.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -1082,7 +1082,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newDeckTitle}
                   onChange={(e) => setNewDeckTitle(e.target.value)}
                   placeholder="Contoh: Slide Deck Week 5: FDS & Interlock"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1094,7 +1094,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newDeckDate}
                   onChange={(e) => setNewDeckDate(e.target.value)}
                   placeholder="Contoh: 22 Okt 2026"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1106,7 +1106,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newDeckUrl}
                   onChange={(e) => setNewDeckUrl(e.target.value)}
                   placeholder="https://drive.google.com/..."
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
 
@@ -1117,13 +1117,13 @@ export const WeeklyMoMView: React.FC = () => {
                     setShowDeckModal(false);
                     setEditingDeckId(null);
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingDeckId ? 'Simpan Perubahan' : 'Simpan Deck'}
                 </button>
@@ -1134,9 +1134,9 @@ export const WeeklyMoMView: React.FC = () => {
       )}
 
       {showActionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingActionId ? 'Edit Action Item Asistensi' : 'Tambah Action Item Asistensi'}
             </h3>
             <form onSubmit={handleSaveAction} className="mt-4 space-y-3">
@@ -1148,7 +1148,7 @@ export const WeeklyMoMView: React.FC = () => {
                     value={newActionWeek}
                     onChange={(e) => setNewActionWeek(e.target.value)}
                     placeholder="W5"
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1157,7 +1157,7 @@ export const WeeklyMoMView: React.FC = () => {
                   <select
                     value={newActionPic}
                     onChange={(e) => setNewActionPic(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   >
                     {users.map((u) => (
                       <option key={u.id} value={u.id}>
@@ -1175,7 +1175,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newActionIssue}
                   onChange={(e) => setNewActionIssue(e.target.value)}
                   placeholder="Catatan koreksi atau arahan yang harus ditindaklanjuti..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1186,7 +1186,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="text"
                   value={newActionDeadline}
                   onChange={(e) => setNewActionDeadline(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1198,7 +1198,7 @@ export const WeeklyMoMView: React.FC = () => {
                   onChange={(e) =>
                     setNewActionProgress(e.target.value as 'Resolved' | 'In Progress')
                   }
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 >
                   <option value="In Progress">In Progress</option>
                   <option value="Resolved">Resolved</option>
@@ -1206,7 +1206,7 @@ export const WeeklyMoMView: React.FC = () => {
               </div>
 
               {!editingActionId && (
-                <label className="flex items-start gap-2 text-xs text-[#0B1B33] min-h-[44px] cursor-pointer">
+                <label className="flex items-start gap-2 text-xs text-fg min-h-[44px] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={createWoForAction}
@@ -1226,13 +1226,13 @@ export const WeeklyMoMView: React.FC = () => {
                     setShowActionModal(false);
                     setEditingActionId(null);
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingActionId ? 'Simpan Perubahan' : createWoForAction ? 'Simpan & Buat WO' : 'Simpan Action'}
                 </button>
@@ -1243,9 +1243,9 @@ export const WeeklyMoMView: React.FC = () => {
       )}
 
       {showMomModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B1B33]/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-white rounded-[28px] p-6 shadow-cockpit-pop border border-white">
-            <h3 className="font-heading font-bold text-sm text-[#0B1B33] pb-3 border-b border-[#EAF6FD]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
               {editingMomId ? 'Edit Catatan Meeting Log (MoM)' : 'Tambah Catatan Meeting Log (MoM)'}
             </h3>
             <form onSubmit={handleSaveMom} className="mt-4 space-y-3">
@@ -1258,7 +1258,7 @@ export const WeeklyMoMView: React.FC = () => {
                     max="18"
                     value={newMomWeek}
                     onChange={(e) => setNewMomWeek(Number(e.target.value))}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1268,7 +1268,7 @@ export const WeeklyMoMView: React.FC = () => {
                     type="text"
                     value={newMomDate}
                     onChange={(e) => setNewMomDate(e.target.value)}
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                     required
                   />
                 </div>
@@ -1280,7 +1280,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="text"
                   value={newMomLocation}
                   onChange={(e) => setNewMomLocation(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1291,7 +1291,7 @@ export const WeeklyMoMView: React.FC = () => {
                   type="text"
                   value={newMomEvaluator}
                   onChange={(e) => setNewMomEvaluator(e.target.value)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1302,13 +1302,13 @@ export const WeeklyMoMView: React.FC = () => {
                   {users.map((user) => (
                     <label
                       key={user.id}
-                      className="flex items-center gap-2 rounded-xl border border-[#EAF6FD] px-3 py-2 text-xs"
+                      className="flex items-center gap-2 rounded-xl border border-line px-3 py-2 text-xs"
                     >
                       <input
                         type="checkbox"
                         checked={newMomMembers.includes(user.id)}
                         onChange={() => toggleMomMember(user.id)}
-                        className="accent-[#0062CC]"
+                        className="accent-primary"
                       />
                       <span>{user.nickname}</span>
                     </label>
@@ -1323,7 +1323,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newMomTopic}
                   onChange={(e) => setNewMomTopic(e.target.value)}
                   placeholder="Topik Utama: Penyelarasan FDS & PFD"
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1335,7 +1335,7 @@ export const WeeklyMoMView: React.FC = () => {
                   value={newMomSummary}
                   onChange={(e) => setNewMomSummary(e.target.value)}
                   placeholder="Rangkuman detail arahan dosen evaluator..."
-                  className="w-full p-3 rounded-xl border border-[#6B7F99] text-xs outline-none"
+                  className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                   required
                 />
               </div>
@@ -1347,13 +1347,13 @@ export const WeeklyMoMView: React.FC = () => {
                     setShowMomModal(false);
                     setEditingMomId(null);
                   }}
-                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-[#4A5A72] rounded-full"
+                  className="min-h-[44px] px-4 py-2 text-xs font-semibold text-fg-3 rounded-full"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="min-h-[44px] px-5 py-2 bg-[#0062CC] text-white text-xs font-bold rounded-full"
+                  className="min-h-[44px] px-5 py-2 bg-primary text-on-primary text-xs font-bold rounded-full"
                 >
                   {editingMomId ? 'Simpan Perubahan' : 'Simpan MoM'}
                 </button>
