@@ -308,6 +308,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - PDF review di `D:\rahul\dme-cockpit-design\export\`: `00_cover-design-system.pdf` (3 hlm), `01_cockpit-desktop.pdf` (17 hlm), `02_cockpit-mobile.pdf` (3 hlm), `99_arsip-v1.pdf` (1 hlm). Pratinjau halaman 1–3 desktop dicek: font ter-embed, urutan sesuai alur menu.
 * **Catatan**: Inter yang terpasang di FigCraft tidak punya bobot Medium (tampil Regular). Email anggota tidak dipakai di desain (field login memakai contoh `nama@mail.ugm.ac.id`).
 * **Tindak Lanjut**:
+  - [x] PDF diunggah ke Drive (akun pribadi PM) folder [`06 - Design Files/2026-11-11_cockpit-ui-v2.0`](https://drive.google.com/drive/folders/16M5ntdJiKgRErde2Zlq9XkfKdJ6aVYxs): 00, 01a (layar 1–8), 01b (layar 9–17), 02, 99. PDF desktop dipecah dua karena batas unggah konektor ~7 MB.
   - [ ] PM: review PDF di iPad, beri catatan revisi.
   - [ ] Setelah disetujui: implementasi v2.0 di `apps/operations-cockpit` bertahap per menu (token tema → shell/sidebar → per halaman), tiap tahap lewat `npm run check` + smoke test.
 
