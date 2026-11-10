@@ -309,7 +309,8 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 * **Catatan**: Inter yang terpasang di FigCraft tidak punya bobot Medium (tampil Regular). Email anggota tidak dipakai di desain (field login memakai contoh `nama@mail.ugm.ac.id`).
 * **Tindak Lanjut**:
   - [x] PDF diunggah ke Drive (akun pribadi PM) folder [`06 - Design Files/2026-11-11_cockpit-ui-v2.0`](https://drive.google.com/drive/folders/16M5ntdJiKgRErde2Zlq9XkfKdJ6aVYxs): 00, 01a (layar 1–8), 01b (layar 9–17), 02, 99. PDF desktop dipecah dua karena batas unggah konektor ~7 MB.
-  - [ ] PM: review PDF di iPad, beri catatan revisi.
+  - [x] PM: review PDF di iPad → "sudah bagus"; minta lanjut modal (form WO, penyusun WA, Profil) + tampilan baca file companion `.md`.
+  - [x] Tambahan 4 layar desktop (total 21): Form Buat WO (modal 2 kolom), Kirim pesan WA (template Ditugaskan/Direvisi/Disetujui, opsi tutorial AI, pratinjau, kirim per PIC; nomor HP tidak ditampilkan), Profil anggota (bagian pribadi + jabatan khusus PM; nomor WA contoh placeholder), Companion .md reader (contoh `tag_map.md` + metadata frontmatter + daftar isi). Diunggah ke folder Drive yang sama: `01c_cockpit-desktop_layar-18-21.pdf` + `00_cover-design-system.pdf` baru (TOC 21 layar). Cover lama diganti nama `LAMA_00_…` (pemindahan ke Trash ditolak sistem izin).
   - [ ] Setelah disetujui: implementasi v2.0 di `apps/operations-cockpit` bertahap per menu (token tema → shell/sidebar → per halaman), tiap tahap lewat `npm run check` + smoke test.
 
 ---
