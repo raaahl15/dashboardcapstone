@@ -1,3 +1,22 @@
+---
+id: "WO031-L1-SUMBER"
+title: "WO-031 Langkah 1: Sumber Batas Suhu Katalis & Parameter Kinetika (TBD-04)"
+category: "Report Chapter"
+standard: "Panduan Capstone DTNTF 2026 Lampiran 3A"
+target_files: []
+generated_by: ""
+source_data:
+  - "Penelusuran literatur web 2026-11-10 (kutipan sekunder, lihat §5)"
+  - "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.json (S-105)"
+author: "Claude Code (AI) atas instruksi PM; PIC WO-031 Ihsaan Zauhair Tsaqif Prawira"
+reviewer: "Ihsaan Zauhair Tsaqif Prawira; Jonathan Pangihutan Michael Siahaan"
+status: "Draft"
+review_evidence: "WO-031"
+google_ref: ""
+last_updated: "2026-11-10"
+tags: ["WO-031", "TBD-04", "Katalis", "Kinetika", "Area-100"]
+---
+
 # WO-031 Langkah 1 — Sumber Batas Suhu Katalis & Parameter Kinetika (TBD-04)
 
 **Status:** DRAF PENELUSURAN, belum diverifikasi ke naskah asli. Semua angka di bawah berasal dari kutipan sekunder (abstrak, cuplikan mesin pencari, laporan desain yang mengutip sumber). **Jangan dikutip di laporan sebelum dicek ke sumber primer** (lihat kolom "Perlu dicek").
