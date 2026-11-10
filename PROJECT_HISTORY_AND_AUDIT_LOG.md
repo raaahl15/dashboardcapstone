@@ -293,6 +293,20 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-069] 2026-11-10 12:30 WIB — WO-031 langkah 1: penelusuran sumber batas suhu katalis & kinetika (TBD-04)
+* **Pelaksana**: Claude Code (AI), atas instruksi PM
+* **Fase**: operasional (pasca-roadmap)
+* **Tujuan**: Mengumpulkan sumber batas suhu katalis dan parameter kinetika sebagai bahan WO-031 (IH + JN) dan penutupan TBD-04.
+* **Perubahan**:
+  - **Baru** `07_FINAL_DELIVERABLES/reports/laporan_pstf1/WO031_Langkah1_Sumber_Batas_Suhu_Katalis.md`: tabel 9 temuan beserta sumber, implikasi awal L/H/HH, catatan validitas model Bab 1, dan sisa tugas IH.
+* **Bukti / Verifikasi**:
+  - Penelusuran web. PDF Turton (WVU) dan AIDIC tidak bisa dibuka dari sesi cloud (host diblokir jaringan), jadi semua angka masih **kutipan sekunder** dan diberi status "perlu dicek".
+* **Keputusan**: belum ada. Temuan penting yang menunggu IH: model Berčič & Levec (Bab 1 Pers. 1.4) dilaporkan valid pada 320–360 °C, sedangkan R-101 beroperasi pada 250 °C. Batas 400 °C dari Turton berlaku untuk katalis zeolit, bukan γ-Al₂O₃.
+* **Tindak Lanjut**:
+  - [ ] **IH**: verifikasi angka ke naskah asli (Berčič & Levec 1992/1993, Turton), lalu lanjut ke langkah 2 (titik embun S-104 di DWSIM).
+
+---
+
 ### [LOG-068] 2026-11-05 12:40 WIB — Panduan kerja tim (PDF) + template pesan onboarding grup WA
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM
 * **Fase**: operasional (pasca-roadmap)
