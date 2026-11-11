@@ -12,7 +12,7 @@ MIX-01,M-101,Mixer,Titik pencampuran umpan segar dan recycle (di P&ID kemungkina
 HEAT-01,E-101,Heater,Pemanas umpan reaktor,100,AREA_1,S-03,S-04,FINAL
 RC-01,R-101,ConversionReactor,Reaktor dehidrasi metanol,100,AREA_1,S-04,S-05; S-06,FINAL
 COOL-01,E-102,Cooler,Pendingin efluen reaktor (kondensor parsial),100,AREA_1,S-05,S-07,FINAL
-,T-101,Vessel,"Drum umpan metanol; titik campur umpan segar S-102 + recycle S-114 (padanan fisik M-101). Hanya di P&ID DME-PID-002, tidak dimodelkan di DWSIM",100,AREA_1,S-102; S-114,S-103,USULAN
+,T-101,Vessel,"Drum umpan metanol atmosferik sebelum P-101 (penyangga isap pompa); tidak dimodelkan di DWSIM karena tidak mengubah kondisi aliran. Diterima dosen Bimbingan 6, posisi ditetapkan LOG-081",100,AREA_1,OSBL,S-101,FINAL
 E-01,,EnergyStream,Daya pompa P-101,100,AREA_1_ENERGY,-,PUMP-01,FINAL
 E-02,,EnergyStream,Duty pemanas E-101,100,AREA_1_ENERGY,-,HEAT-01,FINAL
 E-03,,EnergyStream,Duty reaktor R-101 (konektor energi masuk di DWSIM; tanda nilai menentukan arah fisik),100,AREA_1_ENERGY,-,RC-01,FINAL

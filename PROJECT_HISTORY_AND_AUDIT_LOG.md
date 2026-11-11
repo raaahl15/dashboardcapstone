@@ -293,6 +293,22 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-081] 2026-11-12 WIB — Koreksi keputusan T-101 (LOG-080): drum dipertahankan sebagai drum umpan atmosferik sebelum P-101
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas persetujuan PM ("kerjakan dari no 1").
+* **Fase**: G1 (ACC draf PSTF 1) — koreksi WO-025
+* **Alasan**: LOG-080 menghapus T-101, padahal MoM Bimbingan 6 (LOG MoM B6, checklist WO-026) mencatat T-101 **sudah diterima dosen**. Agen melewatkan catatan itu. Masalah sebenarnya di P&ID Rev B hanya posisi: T-101 digambar setelah P-101 sehingga drum atmosferik menerima aliran 15,5 bar(a).
+* **Keputusan pengganti (TBD-07 ditutup)**: T-101 = drum umpan atmosferik **sebelum P-101** (dari tangki metanol OSBL, keluar sebagai S-101 ke isap P-101). Tidak dimodelkan di DWSIM karena tidak mengubah kondisi aliran; HMB tetap. LIC-105 mengatur LV-105 (FC) di aliran masuk dari tangki OSBL; PT-106 (0–4 bar(a)) dan PSV-102 tetap berlaku. S-114 tetap bergabung in-line di M-101.
+* **Perubahan**:
+  - PFD `DME-PFD-001_PFD_Area1_RevA_A3` (.dxf/.pdf/_preview.png): T-101 digambar (simbol pustaka ISO_X8200, tangki atap lengkung) di depan P-101 dengan bendera masuk dari tangki OSBL; label & keterangan peralatan T-101; tabel aliran S-101 dari T-101; catatan C diganti. DXF 542 entitas, sha256 `e9c7e10e6056858a…`.
+  - Drive `03_CAD_DWG`: PNG & PDF baru diunggah dengan nama asli (PNG id `1C8_sFM4…`, PDF id `1HISWg19…`); versi sebelumnya diberi nama `USANG_…_tanpa-T-101` (tidak dihapus).
+  - Google Doc Laporan PSTF 1 (2 batch terjaga `requiredRevisionId`): Tabel 1.1 (M-101 + catatan T-101), lingkup "(termasuk R-101 dan T-101)", peralatan terkait URS, URS-015 & URS-025 dikembalikan (LV-105 di aliran masuk; PSV-102/PT-106 drum atmosferik), Tabel 1.10 TBD-07, narasi 3.1, Tabel 3.1 S-101 (dari T-101), Tabel 3.2 baris LIC-105 ditambahkan kembali, Tabel 3.3 status butir titik campur. Ekspor PDF hal. 10 dan 16–18 diperiksa visual.
+  - Repo: `BAB1_Konseptualisasi_Sistem.md` diselaraskan; `tag_map.csv` baris `T-101` → **FINAL** (from OSBL, to S-101) + log revisi 1.2 di `tag_map.md`. `test_export_hmb.py` 10 passed; `validate_tags.py` 0 ERROR, 0 WARNING.
+* **Belum selesai**:
+  - [ ] PM: ganti gambar di Gambar 3.1 Laporan dengan PNG baru (versi yang tertanam sekarang belum memuat T-101).
+  - [ ] JN (WO-026): pindahkan T-101 ke depan P-101 di P&ID Rev C; LV-105 di aliran masuk.
+
+---
+
 ### [LOG-080] 2026-11-12 WIB — WO-025 diselesaikan: keputusan TBD-05/06/07, verifikasi E-101/E-102, utilitas, Gambar 3.1
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "selesaikan WO-025 punya Ihsan, tidak perlu menunggu keputusan Ihsan atau siapa pun, kita putuskan sendiri".
 * **Fase**: G1 (ACC draf PSTF 1) — WO-025 Bab 3.1–3.2 (IH), tenggat 12 Nov

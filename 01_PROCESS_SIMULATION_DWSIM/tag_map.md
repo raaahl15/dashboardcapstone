@@ -14,7 +14,7 @@ reviewer: "Jonathan Pangihutan Michael Siahaan"
 status: "Review Internal"
 review_evidence: "Konfirmasi IH (PIC) + JN (reviewer) disampaikan PM, 2026-11-03 (LOG-016)"
 google_ref: ""
-last_updated: "2026-11-03"
+last_updated: "2026-11-12"
 tags: ["Tag Map", "DWSIM", "Plant Tag", "Battery Limit", "Area-100"]
 ---
 
@@ -79,3 +79,4 @@ Topologi dibaca dari XML di dalam `DME.dwxmz` (salinan di folder sementara; file
 | 0.2 | 2026-11-03 | Claude Code (AI) | Pabrik 3 area (Area 2 distilasi 1, Area 3 distilasi 2); S-114 masuk dari Area 3; kode area 100/200/300 (LOG-015). |
 | 1.0 | 2026-11-03 | Ihsaan Z. T. Prawira / Jonathan P. M. Siahaan | Dikonfirmasi; status baris `FINAL`, dokumen `Review Internal` (LOG-016). |
 | 1.1 | 2026-11-04 | Claude Code (AI) | Tambah baris `T-101` (drum umpan dari P&ID, status `USULAN`, tanpa objek DWSIM); temuan 10 (LOG-036). Baris lain tetap `FINAL`. |
+| 1.2 | 2026-11-12 | Claude Code (AI) | `T-101` naik ke `FINAL`: drum umpan atmosferik **sebelum P-101** (from OSBL, to S-101), diterima dosen Bimbingan 6; temuan 10 ditutup (LOG-081). M-101 tetap titik campur in-line S-102 + S-114. |

@@ -1,13 +1,11 @@
 {
   "meta": {
-    "generated_at": "2026-11-05T06:37:07+07:00",
+    "generated_at": "2026-11-12T06:13:30+07:00",
     "validator": "tools/validate_tags.py",
     "firm_area": "1",
     "index_instruments": 30,
     "tag_map_plant_tags": 14,
-    "pid_dxf_checked": [
-      "DME-PID-002_Draft_PID_Area1_RevB_A3.dxf (sha256 42972fbff65f11ca)"
-    ],
+    "pid_dxf_checked": [],
     "sources": [
       {
         "source": "Master Instrument Index (kolom lokasi/layanan)",
@@ -32,26 +30,12 @@
         "path": "06_COLLABORATIVE_WORKSPACE\\mirrors\\FDS-IC-DME-2026-001.md",
         "sha256": "638ff23a640d",
         "tags_found": 26
-      },
-      {
-        "source": "P&ID DME-PID-002_Draft_PID_Area1_RevB_A3.dxf",
-        "path": "D:\\rahul\\CAPSTONE_DME_AREA1\\03_CAD_DWG\\DME-PID-002_Draft_PID_Area1_RevB_A3.dxf",
-        "sha256": "42972fbff65f",
-        "tags_found": 45
       }
     ]
   },
   "summary": {
     "ERROR": 0,
-    "WARNING": 1
+    "WARNING": 0
   },
-  "findings": [
-    {
-      "level": "WARNING",
-      "code": "NOT_IN_DRAWING",
-      "tag": "FE-101",
-      "source": "P&ID",
-      "message": "Ada di index tetapi tidak ditemukan di gambar P&ID"
-    }
-  ]
+  "findings": []
 }
