@@ -293,6 +293,25 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-078] 2026-11-11 WIB — PFD Area 1 DME-PFD-001 Rev A digambar ulang sesuai DWSIM, RFP, dan Panduan
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("perbaiki PFD sesuai DWSIM, RFP dan Panduan, buat ulang DXF sesuai template dan symbol library, tampilkan preview PDF"). Lanjutan temuan LOG-077 (PFD AREA 1.pdf 23 Okt tidak sesuai HMB).
+* **Fase**: G1 (ACC draf PSTF 1) — mendukung WO-025 (Gambar 3.1) dan serahan RFP Tabel 3 no. 2 (PFD/P&ID I&C overlay, PDF & native DWG)
+* **File (di luar Git, staging Drive `03_CAD_DWG/`)**:
+  - `DME-PFD-001_PFD_Area1_RevA_A3.dxf` (AC1027, 609 entitas, sha256 `173c50921efc9621…`), `…_A3.pdf` (vektor A3), `…_A3_preview.png`.
+* **Isi gambar**:
+  - Topologi DWSIM `DME.dwxmz` / tag_map FINAL: S-101 → P-101 → S-102 (FE-101, FV-101) → M-101 ← S-114 (recycle Area 3) → S-103 → E-101 → S-104 (XV-102) → R-101 (isotermal 250 °C, Q −733,0 kW) → S-105 → E-102 → S-107 ke Area 2. S-106 (0 kg/jam) tidak digambar. Tidak ada FEHE/E-103 dan T-101 (beda dengan PFD 23 Okt; T-101 menunggu TBD-07).
+  - Overlay I&C dari Master Instrument Index: kaskade TIC-101 (TT-101 multi-titik) → SP FIC-101 → FV-101 (FC) sesuai RFP §2.1; SIS TT-102A/B/C 2oo3 → TSHH-102 → XY-102/XV-102 (FC); TT-104/TAH-104; PT-103; TT-109 → TIC-109 → TV-109 (FO) di CWR.
+  - Tabel neraca massa & energi tiap aliran (Panduan: PFD ISO 10628 terintegrasi neraca massa & panas): fasa, fraksi uap, T, P, laju massa/molar, fraksi & laju komponen, ρ, Cp, entalpi spesifik dan laju entalpi. Entalpi diambil langsung dari `DME.dwxmz` (fasa Mixture) dan dicek: ΔH aliran × ṁ = duty P-101/E-101/E-102 DWSIM. Neraca energi unit + penutupan massa 0,027 %.
+  - Nomor line 6 segmen Legend Rev 1, ukuran dari CALC_LineSizing (S-114 1-1/2"); kelas/insulasi TBC.
+  - Template `DME_Master_Template.dxf` lembar 1 (DME-PFD-001, Rev A, 11-11-26, IFR, 1 OF 1); catatan 5 template diubah dari "SIL-2" menjadi "SIL TBD". Simbol: blok pustaka ISO10628 (ISO_8093, ISO_X8184, ISO_2512, ISO_X8012) dan ISA51 (bubble field/DCS/SIS, ACT_DIAPH, ACT_SOL_S, FE_ORF_C). Bubble memakai turunan blok pustaka tanpa teks contoh (`*_NT`); pustaka asli tidak diubah.
+* **Bukti / Verifikasi**: dibangun ezdxf 1.4.5 dari skrip (scratchpad sesi, tidak di Git), dirender ulang dan diperiksa visual per bagian (flowsheet, tabel, blok judul).
+* **Belum selesai**:
+  - [ ] Review IH/JN, lalu buka & simpan sebagai DWG native di AutoCAD (RFP minta native DWG).
+  - [ ] Unggah DXF/PDF ke Drive `03_CAD_DWG/` (Antigravity) dan sisipkan ke Gambar 3.1 Laporan PSTF 1; Tabel 3.3 (3.1.1) diperbarui.
+  - [ ] Media pemanas E-101, pendingin R-101 (TBD-05), kondisi CW, kelas pipa: TBC.
+
+---
+
 ### [LOG-077] 2026-11-11 WIB — WO-025 Bab 3.1–3.2 Laporan PSTF 1 dilengkapi (PFD, HMB, verifikasi manual, kesesuaian PFD–P&ID)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("kerjain punya Ihsan dulu, lengkapin pekerjaan Ihsan yang WO-025"). Penulis bagian tetap Ihsan (IH); reviewer JN (3.1) dan AL (3.2).
 * **Fase**: G1 (ACC draf PSTF 1, 29 Nov) — WO-025, tenggat 12 Nov
