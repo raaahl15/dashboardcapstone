@@ -15,7 +15,7 @@ reviewer: "Rahul Ghulam Hidayatulloh (PM); reviewer bagian: 1.1 Heidi Falina Bri
 status: "WIP"
 review_evidence: "WO-029"
 google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit"
-last_updated: "2026-11-05"
+last_updated: "2026-11-12"
 tags: ["Laporan PSTF 1", "Bab 1", "URS", "Model Dinamik", "NAMUR Phase 1", "Area-100"]
 ---
 
@@ -38,7 +38,7 @@ Dasar data proses adalah model DWSIM `DME.dwxmz`, yaitu model referensi yang dat
 | Tag pabrik | Objek DWSIM | Fungsi | Kondisi operasi tunak |
 | :--- | :--- | :--- | :--- |
 | P-101 | PUMP-01 | Pompa umpan metanol segar | 1,0 → 15,5 bar(a); 8.321 kg/jam; daya 5,6 kW |
-| M-101 / T-101 | MIX-01 | Titik pencampuran umpan segar S-102 dan daur ulang S-114. Pada Draf P&ID diwujudkan sebagai drum umpan T-101 (tag usulan) | 10.553 kg/jam campuran |
+| M-101 | MIX-01 | Titik pencampuran in-line umpan segar S-102 dan daur ulang S-114 pada 15,5 bar(a), tanpa drum umpan (T-101 dihapus, subbab 3.1.1) | 10.553 kg/jam campuran |
 | E-101 | HEAT-01 | Pemanas dan penguap umpan reaktor | 25,3 → 250 °C; beban 4.726 kW |
 | R-101 | RC-01 | Reaktor katalitik dehidrasi metanol (unggun tetap) | 250 °C; 14,7 bar(a); konversi metanol 80,0 %; panas dibuang 733 kW |
 | E-102 | COOL-01 | Pendingin efluen (kondensasi parsial) | 250 → 89 °C; beban 3.246 kW |
@@ -101,7 +101,7 @@ Serahan FEED menurut Tabel 3 RFP adalah URS I&C, PFD/P&ID I&C *overlay*, *I&C De
 
 Berdasarkan Pasal 1.3 RFP, pekerjaan konsultan **tidak** mencakup:
 
-a. disiplin non-I&C, yaitu sipil umum, struktur, kalkulasi mekanikal bejana tekan (termasuk R-101 dan T-101), serta perpipaan proses non-instrumen;
+a. disiplin non-I&C, yaitu sipil umum, struktur, kalkulasi mekanikal bejana tekan (termasuk R-101), serta perpipaan proses non-instrumen;
 
 b. pengadaan fisik instrumen, pabrikasi panel, instalasi kabel/*tubing*, konstruksi, dan komisioning lapangan.
 
@@ -166,7 +166,7 @@ b. Densitas gas $\rho$ dan kapasitas panas $c_p$ konstan di sekitar titik operas
 
 c. Kapasitas panas efektif $(Mc_p)_{\text{eff}} = M_g c_p + M_{cat} c_{cat}$ mencakup gas dan katalis. Massa katalis mendominasi inersia termal unggun.
 
-d. **Basis kondisi tunak mengikuti DWSIM:** reaktor beroperasi isotermal 250 °C dengan pembuangan panas $\dot Q_{rem}$ = 733 kW. Pembuangan panas dimodelkan sebagai $UA\,(T - T_c)$. Mekanisme fisiknya (media pendingin, pendingin antar-unggun, atau pengaturan suhu umpan) belum ditetapkan pada PFD/P&ID (butir terbuka TBD-05). Skenario hilangnya pembuangan panas (adiabatik) dipakai sebagai kasus bahaya pada subbab 1.2.1.
+d. **Basis kondisi tunak mengikuti DWSIM:** reaktor beroperasi isotermal 250 °C dengan pembuangan panas $\dot Q_{rem}$ = 733 kW. Pembuangan panas dimodelkan sebagai $UA\,(T - T_c)$. Secara fisik, R-101 dirancang multitubular: panas diserap air umpan ketel yang mendidih di sisi cangkang menjadi kukus 21 bar(a) ($T_c$ ≈ 214,9 °C), sesuai keputusan pada subbab 3.1.1. Skenario hilangnya pembuangan panas (adiabatik) dipakai sebagai kasus bahaya pada subbab 1.2.1.
 
 Umpan S-104 masuk dengan laju massa $F$ dan suhu $T_{in}$; efluen S-105 keluar pada suhu $T$. Neraca massa total dan neraca komponen metanol:
 
@@ -289,7 +289,7 @@ URS ini disusun mengacu pada ANSI/ISA-5.06.01-2007 dan memenuhi RFP Pasal 3.1.1.
 | :--- | :--- |
 | Nomor dokumen URS | URS-IC-DME-REA-001 |
 | Nama paket pekerjaan | Sistem Instrumentasi dan Kontrol Seksi Reaktor Dehidrasi Metanol (Area 1) |
-| Peralatan terkait | P-101, M-101/T-101, E-101, R-101, E-102 |
+| Peralatan terkait | P-101, M-101, E-101, R-101, E-102 |
 | Batas aliran proses | S-101 sampai S-107, termasuk daur ulang masuk S-114 |
 | Dokumen acuan | KAK-IC-DME-2026-001; HMB DWSIM `DME.dwxmz`; Draf P&ID DME-PID-002 |
 | Kategori perangkat lunak | GAMP Category 4 (DCS/SIS berbasis modul fungsi terkonfigurasi) |
@@ -310,9 +310,9 @@ Pada tahap FEED, seluruh butir diverifikasi melalui *Design Qualification* (DQ):
 | :--- | :--- | :--- | :--- | :--- | :---: |
 | URS-011 | Regulasi laju umpan metanol segar S-102 (*discharge* P-101) sebagai *slave* kaskade | Nominal 8.321,3 kg/jam (261,65 kmol/jam); deviasi ≤ ±2,0 % dari setpoint. Umpan total reaktor S-103 = 10.553,2 kg/jam (segar + daur ulang S-114 2.234,7 kg/jam) | FE-101, FT-101, FIC-101, FV-101 (FC) | HMB DWSIM; RFP 2.1 | H |
 | URS-012 | Pengendalian suhu unggun R-101 (*master* kaskade) dan pemantauan suhu umpan S-104 | Suhu umpan nominal 250 °C (beban E-101 4.726 kW), alarm suhu tinggi TAH-104. Suhu unggun dikendalikan dengan akurasi ≤ ±1,5 °C. Batas atas operasi dari spesifikasi katalis (TBD-04) | TE-101, TT-101, TIC-101; TT-104, TAH-104 | HMB DWSIM; RFP 2.1 | C |
-| URS-013 | Pemantauan tekanan R-101 dan ΔP unggun katalis | Tekanan nominal 14,7 bar(a) (1.470 kPa) ±0,5 bar, alarm tekanan tinggi. Kenaikan ΔP unggun ≤ 25 kPa di atas kondisi unggun bersih (indikasi *fouling*) | PT-103; transmitter ΔP unggun (TBD-06) | HMB DWSIM; integritas reaktor | H |
+| URS-013 | Pemantauan tekanan R-101 dan ΔP unggun katalis | Tekanan nominal 14,7 bar(a) (1.470 kPa) ±0,5 bar, alarm tekanan tinggi. Kenaikan ΔP unggun ≤ 25 kPa di atas kondisi unggun bersih (indikasi *fouling*) | PT-103 dan PIC-103; PDT-112 untuk ΔP unggun | HMB DWSIM; integritas reaktor | H |
 | URS-014 | Pengendalian suhu efluen S-107 keluaran E-102 | Nominal 89 °C ±2,0 °C (beban E-102 3.246 kW); katup air pendingin *fail-open* | TT-109, TIC-109, TV-109 (FO) | HMB DWSIM; antarmuka Area 2 | H |
-| URS-015 | Pengendalian level drum umpan T-101 | Setpoint 50 %, alarm level rendah untuk mencegah kehilangan umpan ke E-101; gelas penduga lokal | LT-105, LIC-105, LV-105 (FC), LAL-105, LG-105 | Draf P&ID; kontinuitas umpan | H |
+| URS-015 | Dihapus: drum umpan T-101 tidak ada di Area 1 (subbab 3.1.1) | – | – | – | – |
 
 ### 1.3.2 Ambang Batas Pengaman Kritis dan Persyaratan *Interlock* ESD
 
@@ -326,7 +326,7 @@ Seksi reaktor dilengkapi lapisan SIS yang independen dari DCS. Fungsi trip tidak
 | URS-022 | Penutupan katup darurat saluran masuk umpan reaktor | Waktu tutup penuh < 2 detik; *fail-close*, *de-energize-to-trip*; alarm trip di HMI | XV-102, XY-102, XA-102 | RFP 2.1 ("dalam hitungan detik") | C |
 | URS-023 | Penghentian pompa umpan saat trip suhu | P-101 berhenti < 1 detik setelah TSHH-102 aktif (C&E). Isolasi media pemanas E-101 dievaluasi di HAZOP (TBD-06) | P-101 (C&E) | Matriks C&E | C |
 | URS-024 | Proteksi tekanan lebih R-101 | PSV-101 berpegas, set ≤ tekanan desain R-101 (TBD-01), buangan tertutup ke flare. Alarm tekanan tinggi dari PT-103 di DCS. Trip tekanan tinggi-tinggi berinstrumen hanya ditambahkan bila HAZOP/LOPA mensyaratkan (dengan transmitter 2oo3 terpisah) | PSV-101, PT-103 | API 520/521/526 | C |
-| URS-025 | Proteksi tekanan lebih drum T-101 | PSV-102 berpegas, set ≤ tekanan desain T-101 (TBD-07) | PSV-102, PT-106 | API 520/521 | H |
+| URS-025 | Dihapus: drum umpan T-101 tidak ada di Area 1 (subbab 3.1.1) | – | – | – | – |
 
 ### 1.3.3 Arsitektur Keandalan Sistem (*Hardware Redundancy* & *Availability*)
 
@@ -384,9 +384,9 @@ d. butir terbuka berikut tercatat dan memiliki rencana penutupan.
 | TBD-02 | Sizing katup kontrol FV-101, LV-105, dan TV-109 (ISA-75.01 / IEC 60534). Perkiraan awal FV-101: Kv 9,4 (normal) / 11,7 (maks.) pada line 2" | Bab 2 PSTF 2 (perhitungan manual) |
 | TBD-03 | Setpoint TSHH-102 dan target SIL seluruh SIF | HAZOP + LOPA, PSTF 2 |
 | TBD-04 | Parameter kinetika ($k_0$, $E_a$, $K_M$, $K_W$, $K_{eq}$) dan suhu maksimum katalis | Literatur / data vendor katalis, W13–W14 |
-| TBD-05 | Mekanisme pembuangan panas R-101, volume reaktor, dan massa katalis (untuk $\tau_{th}$) | Disiplin proses (IH), W13–W14 |
-| TBD-06 | Transmitter ΔP unggun katalis dan kendali/isolasi media pemanas E-101 pada P&ID | Draf P&ID Rev C (JN), W13 |
-| TBD-07 | Status T-101 (drum umpan) terhadap M-101 DWSIM dan tekanan desain T-101 | Konfirmasi IH + JN, W13 |
+| TBD-05 | Mekanisme pembuangan panas R-101, volume reaktor, dan massa katalis (untuk $\tau_{th}$) | Mekanisme ditutup di 3.1.1 (R-101 multitubular, kukus 21 bar(a)); volume reaktor dan massa katalis lewat WO-031 |
+| TBD-06 | Transmitter ΔP unggun katalis dan kendali/isolasi media pemanas E-101 pada P&ID | Ditutup di 3.1.1: TIC-104/TV-104 minyak panas dan PDT-112, digambar di P&ID Rev C (JN) |
+| TBD-07 | Status T-101 (drum umpan) terhadap M-101 DWSIM dan tekanan desain T-101 | Ditutup di 3.1.1: T-101 dihapus, P-101 mengisap dari tangki metanol OSBL |
 
 ### 1.3.7 Matriks Ketertelusuran (*Traceability Matrix*)
 

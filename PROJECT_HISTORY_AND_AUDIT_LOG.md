@@ -293,6 +293,31 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-080] 2026-11-12 WIB — WO-025 diselesaikan: keputusan TBD-05/06/07, verifikasi E-101/E-102, utilitas, Gambar 3.1
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "selesaikan WO-025 punya Ihsan, tidak perlu menunggu keputusan Ihsan atau siapa pun, kita putuskan sendiri".
+* **Fase**: G1 (ACC draf PSTF 1) — WO-025 Bab 3.1–3.2 (IH), tenggat 12 Nov
+* **Keputusan desain (firma, berlaku untuk PFD, laporan, dan P&ID Rev C)**:
+  - **TBD-07 ditutup**: drum T-101 dihapus dari Area 1. P-101 mengisap langsung dari tangki metanol OSBL; S-114 bergabung in-line di M-101 (sesuai DWSIM). Loop 105 (LT/LIC/LV/LAL/LG-105), PT-106, dan PSV-102 dihapus; URS-015 dan URS-025 ditandai "Dihapus".
+  - **TBD-05 (mekanisme) ditutup**: R-101 multitubular, katalis di tabung, air umpan ketel 105 °C mendidih di sisi cangkang menjadi kukus 21 bar(a) / 214,9 °C (±1,12 t/jam). Suhu pendingin diatur PIC-111 (PT-111, PV-111). Volume reaktor dan massa katalis tetap lewat WO-031.
+  - **TBD-06 ditutup**: E-101 dipanasi minyak panas 300/200 °C (±74 t/jam); TT-104 dinaikkan menjadi loop TIC-104 → TV-104 di aliran balik minyak panas; PDT-112 untuk ΔP unggun.
+  - **ΔP E-102**: dibatasi ±0,5 bar; sisa ±3,8 bar diambil katup tekanan balik PV-103 (loop PIC-103) di S-107. Air pendingin 30/40 °C (±280 t/jam).
+  - Topologi mengikuti HMB/DWSIM (tanpa FEHE/E-103); suhu adiabatik R-101 memakai 371 °C (Pers. 1.2).
+* **Perubahan Google Doc Laporan PSTF 1** (2 batch Docs API terjaga `requiredRevisionId`, tanpa galat):
+  - 3.1: narasi PFD (DME-PFD-001 Rev A, I&C hanya di P&ID), mekanisme R-101 dan media E-101/E-102; tautan file + judul **Gambar 3.1**; Tabel 3.1 (T-101 dihapus); Tabel 3.2 judul "digambar pada Draf P&ID" + baris PIC-111, TIC-104, PIC-103 (Rev C) menggantikan LIC-105, TT-104, PT-103.
+  - 3.1.1: paragraf keputusan; Tabel 3.3 kolom "Status dan keputusan" diisi keputusan 9 butir.
+  - 3.2.2: verifikasi manual E-101 (Pers. 3.10, basis model gas ideal: 4.567,4 kW, −3,4 %; lintasan fisik titik gelembung 154,2 °C: 4.172 kW, −11,7 %, dijelaskan) dan E-102 (Pers. 3.11: 3.367,2 kW, +3,7 %), korelasi DIPPR (Perry's ed. 8); **Tabel 3.8** kebutuhan utilitas.
+  - Bab 1: Tabel 1.1 (M-101), lingkup 1.x (T-101), 1.2 butir d (mekanisme pendingin), Tabel URS (peralatan terkait, URS-013, URS-015, URS-025), Tabel 1.10 (penutupan TBD-05/06/07).
+  - Ekspor PDF halaman 16–23 diperiksa visual.
+* **Repo**: `BAB1_Konseptualisasi_Sistem.md` diselaraskan dengan perubahan Bab 1 di atas.
+* **PFD**: `DME-PFD-001_PFD_Area1_RevA_A3` (.dxf/.pdf/_preview.png) diperbarui: label utilitas (minyak panas 300/200 °C, BFW → kukus MP 21 bar(a), CW 30/40 °C), catatan C (T-101 dihapus) dan D (utilitas). DXF 534 entitas, sha256 `9580041a25586c0c…`. PNG dan PDF diunggah ke Drive `03_CAD_DWG` (privat, akses tim).
+* **Belum selesai**:
+  - [ ] Gambar 3.1 belum tertanam: Docs API hanya menerima URL gambar publik, dan file Drive tim bersifat privat. Sisipkan manual (Sisipkan → Gambar → Drive) dari tautan di atas judul gambar, atau PM mengizinkan tautan publik sementara.
+  - [ ] JN (WO-026, P&ID Rev C + Master Instrument Index): hapus T-101/loop 105/PT-106/PSV-102; tambah FE-101, TIC-104/TV-104, PIC-103/PV-103, PIC-111/PT-111/PV-111, PDT-112, nomor line 6 segmen, catatan 371 °C.
+  - [ ] AL (FDS): sesuaikan narasi LIC-105 dan media pemanas E-101.
+  - [ ] Status WO-025 di cockpit diubah oleh PM/IH (agen tidak punya akses Firestore); DWG native dari AutoCAD.
+
+---
+
 ### [LOG-079] 2026-11-12 WIB — DME-PFD-001 Rev A dibersihkan: PFD murni tanpa overlay I&C
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas keputusan PM: "jadi PFD saja, I&C-nya di P&ID".
 * **Keputusan**: PFD hanya memuat peralatan, aliran bernomor, utilitas, kondisi operasi, duty, dan tabel neraca massa & energi (Panduan). Instrumen, loop kontrol, SIS, dan katup kendali hanya digambar di P&ID DME-PID-002 (JN). Serahan RFP Tabel 3 no. 2 "PFD / P&ID I&C overlay" ditafsirkan sebagai paket PFD + P&ID dengan overlay I&C di P&ID. Ini mengoreksi tafsiran di LOG-078.
