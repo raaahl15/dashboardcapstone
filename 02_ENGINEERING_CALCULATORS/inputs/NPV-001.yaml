@@ -1,14 +1,15 @@
-# Input tekno-ekonomi. SEMUA nilai masih data contoh dari CSV lama (LOG-004) -> PLACEHOLDER.
-# Ganti oleh Cost Engineer (HD) dengan estimasi berbasis Draf P&ID beserta sumbernya.
+# Input tekno-ekonomi Area 1 (Bab 4, WO-027, LOG-083). Nilai diturunkan oleh tools/calc/bab4_ekonomi.py
+# (lihat CALC_Bab4_Ekonomi_Area1.csv untuk rincian, sumber harga, dan sensitivitas). File ini = verifikasi silang
+# kasus dasar dengan mesin npv.py (numpy-financial).
 tag: NPV-001
 calculator: npv
-description: Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh
-standard: Analisis arus kas terdiskonto
+description: Kelayakan Area 1 - porsi margin penjualan DME (alpha = 1/3) vs CAPEX Area 1 (faktorial + I&C bottom-up)
+standard: Analisis arus kas terdiskonto (sebelum pajak, tanpa eskalasi)
 inputs:
-  capex:   {value: 4850000, unit: USD, label: CAPEX total, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
-  opex:    {value: 285000, unit: USD, label: OPEX per tahun, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
-  revenue: {value: 1450000, unit: USD, label: Pendapatan/penghematan per tahun, source: "CSV lama (data contoh bootstrap, LOG-004)", status: PLACEHOLDER}
-  rate:    {value: 10.0, unit: "%", label: Suku bunga diskonto, source: "CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan)", status: PLACEHOLDER}
-  life:    {value: 20, unit: tahun, label: Umur ekonomi, source: "Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)", status: PLACEHOLDER}
-  hurdle:  {value: 12.0, unit: "%", label: Batas IRR minimum (WACC), source: "CSV lama ('Harus > WACC (12%)')", status: PLACEHOLDER}
-  payback_target: {value: 5.0, unit: tahun, label: Target payback, source: "CSV lama ('Target < 5 Tahun')", status: PLACEHOLDER}
+  capex:   {value: 1877960, unit: USD, label: CAPEX Area 1, source: "bab4_ekonomi.py: PCE Towler & Sinnott x CEPCI 797,9/532,9 x (Lang 4,74 - 0,36) + CAPEX I&C 608.099 USD", status: ASUMSI}
+  opex:    {value: 1298220, unit: USD, label: OPEX Area 1 per tahun, source: "bab4_ekonomi.py: bahan bakar minyak panas, kredit kukus, CW, listrik, gaji, pemeliharaan 3 %, OPEX I&C", status: ASUMSI}
+  revenue: {value: 1697194, unit: USD, label: Porsi Area 1 atas margin penjualan DME per tahun, source: "alpha 1/3 x (47.132 t DME x 560 USD/t - 66.570 t metanol x 320 USD/t); harga IMARC Q1 2026 & S&P Global Platts", status: ASUMSI}
+  rate:    {value: 10.0, unit: "%", label: Suku bunga diskonto, source: "BI-Rate 5,75 % (RDG BI 20-21 Okt 2026) + premi risiko 4,25 %", status: ASUMSI}
+  life:    {value: 20, unit: tahun, label: Umur ekonomi, source: "Towler & Sinnott (umur pabrik kimia tipikal)", status: ASUMSI}
+  hurdle:  {value: 10.0, unit: "%", label: Batas IRR minimum, source: "Sama dengan suku bunga diskonto (BI-Rate 5,75 % + premi 4,25 %)", status: ASUMSI}
+  payback_target: {value: 5.0, unit: tahun, label: Target payback, source: "Kriteria umum industri kimia (< 5 tahun)", status: ASUMSI}

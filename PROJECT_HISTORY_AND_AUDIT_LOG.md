@@ -293,6 +293,24 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-083] 2026-11-12 WIB — WO-027 Bab 4 Kajian Tekno-Ekonomi diisi (CAPEX/OPEX I&C + kelayakan Area 1 berbasis penjualan produk)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (urutan kerja no. 3). Keputusan PM via pertanyaan terstruktur: **dua lapis** (I&C rinci sesuai RFP + kelayakan Area 1), pendapatan = **alokasi margin penjualan DME pabrik** (porsi α), harga dari **riset web dengan sitasi**.
+* **Fase**: G1 (ACC draf PSTF 1, jalur kritis) — WO-027 (PIC HD)
+* **Model** (`tools/calc/bab4_ekonomi.py` → `02_ENGINEERING_CALCULATORS/CALC_Bab4_Ekonomi_Area1.csv` + companion .md):
+  - **CAPEX I&C** bottom-up dari Instrument Index Rev C (46 tag, 22 I/O): 608.099 USD (Rp 10,98 miliar); DCS 175.110 USD (29 %). Harga Rosemount 3051T/644 (Transcat), katup Fisher 2" (dealer), DCS per I/O (Chemical Processing 2018, eskalasi). Ketelitian setara AACE Class 3–4 (RFP minta Class 2 → penawaran vendor di DED).
+  - **OPEX I&C** 46.726 USD/tahun (kalibrasi, AMS, dukungan DCS/SIS, suku cadang, listrik).
+  - **CAPEX Area 1** faktorial: PCE Towler & Sinnott (ukuran dari HMB) × CEPCI 797,9/532,9 × (Lang 4,74 − 0,36) + I&C = 1.877.960 USD. **OPEX Area 1** 1.298.220 USD/tahun (bahan bakar minyak panas 94 %).
+  - **Kelayakan** (arahan Bimbingan 6): CF = α (penjualan DME 47.132 t × 560 USD/t − metanol 66.570 t × 320 USD/t) − OPEX, α = 1/3 sementara → CF 398.974 USD/tahun, **NPV 1,52 juta USD (i = 10 %), IRR 20,8 % (> BI-Rate 5,75 %), PBP 4,7 tahun**.
+  - **Sensitivitas**: NPV positif untuk i 5,75–15 %; NPV = 0 pada DME 549 USD/t; impas bahan baku = 1,41 × harga metanol; harga Q3 2026 (metanol 480, DME 570) → NPV −27,4 juta USD. Kesimpulan **layak bersyarat** (risiko harga pasar dominan).
+  - Sumber: BI-Rate 5,75 % (RDG 20–21 Okt 2026), JISDOR Rp 18.058 (31 Jul 2026), S&P Global Platts (metanol SEA), IMARC (DME), Nexizo, Transcat, Chemical Processing, Towler & Sinnott, Peters dkk. CEPCI 2025 absolut berbayar → dipakai CEPCI 2023.
+* **Laporan PSTF 1 (Google Doc)**: 4.1, 4.2, 4.3 ditulis (narasi, Pers. 4.1–4.4, Tabel 4.1–4.7, daftar sumber); 2 batch terjaga `requiredRevisionId`; ekspor PDF hal. 24–30 diperiksa visual.
+* **Verifikasi silang**: `inputs/NPV-001.yaml` diisi kasus dasar → `npm run calc`: NPV 1.518.731 USD, IRR 20,76 %, PBP 4,71 tahun (terdiskonto 6,69) = model Bab 4; companion NPV rev 1.1; `pytest tools/calc` 26 passed.
+* **Belum selesai**:
+  - [ ] α disepakati dengan Area 2/3 (CAPEX tiap area); harga vendor DCS/SIS/katup untuk Class 2; review HD (PIC) dan PM.
+  - [ ] Konfigurasi T-101 final (catatan Bimbingan 6: T-101 = drum campur padanan M-101 setelah P-101) — menunggu keputusan PM; biaya drum di Tabel 4.2 tidak sensitif terhadap pilihan ini.
+
+---
+
 ### [LOG-082] 2026-11-12 WIB — Master Instrument Index Rev C (data WO-026): 46 tag, mendahului gambar P&ID Rev C
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas persetujuan PM (urutan kerja no. 2 setelah koreksi T-101).
 * **Fase**: G1 — WO-026 bagian data (JN); basis kuantitas CAPEX I&C WO-027

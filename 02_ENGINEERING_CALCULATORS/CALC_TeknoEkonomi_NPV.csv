@@ -1,18 +1,18 @@
 TAG,SECTION,PARAMETER,SYMBOL,VALUE,UNIT,SOURCE,DATA_STATUS
-NPV-001,INFO,Deskripsi,,"Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",,Analisis arus kas terdiskonto,PLACEHOLDER
-NPV-001,INPUT,CAPEX total,,4850000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
-NPV-001,INPUT,OPEX per tahun,,285000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
-NPV-001,INPUT,Pendapatan/penghematan per tahun,,1450000,USD,"CSV lama (data contoh bootstrap, LOG-004)",PLACEHOLDER
-NPV-001,INPUT,Suku bunga diskonto,,10,%,CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan),PLACEHOLDER
-NPV-001,INPUT,Umur ekonomi,,20,tahun,"Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)",PLACEHOLDER
-NPV-001,INPUT,Batas IRR minimum (WACC),,12,%,CSV lama ('Harus > WACC (12%)'),PLACEHOLDER
-NPV-001,INPUT,Target payback,,5,tahun,CSV lama ('Target < 5 Tahun'),PLACEHOLDER
-NPV-001,HASIL,Arus kas bersih tahunan,CF,1165000,USD/tahun,pendapatan - OPEX,PLACEHOLDER
-NPV-001,HASIL,Net Present Value,NPV,5068302,USD,"sum CF_t/(1+i)^t, t=0..20",PLACEHOLDER
-NPV-001,HASIL,Internal Rate of Return,IRR,23.6781,%,NPV(IRR) = 0,PLACEHOLDER
-NPV-001,HASIL,Payback sederhana,PBP,4.16309,tahun,CAPEX / CF,PLACEHOLDER
-NPV-001,HASIL,Payback terdiskonto,DPBP,5.65956,tahun,kumulatif PV = 0,PLACEHOLDER
-NPV-001,CEK,NPV > 0,,PASS,,"NPV = 5,068,302 [kriteria kelayakan]",PLACEHOLDER
-NPV-001,CEK,IRR > batas minimum,,PASS,,IRR = 23.68 % vs 12.0 % [kriteria kelayakan],PLACEHOLDER
-NPV-001,CEK,Payback < target,,PASS,,PBP = 4.16 vs 5.0 tahun [kriteria kelayakan],PLACEHOLDER
-NPV-001,KESIMPULAN,Hasil,,PASS,,Kelayakan bergantung pada status input,PLACEHOLDER
+NPV-001,INFO,Deskripsi,,Kelayakan Area 1 - porsi margin penjualan DME (alpha = 1/3) vs CAPEX Area 1 (faktorial + I&C bottom-up),,"Analisis arus kas terdiskonto (sebelum pajak, tanpa eskalasi)",ASUMSI
+NPV-001,INPUT,CAPEX Area 1,,1877960,USD,"bab4_ekonomi.py: PCE Towler & Sinnott x CEPCI 797,9/532,9 x (Lang 4,74 - 0,36) + CAPEX I&C 608.099 USD",ASUMSI
+NPV-001,INPUT,OPEX Area 1 per tahun,,1298220,USD,"bab4_ekonomi.py: bahan bakar minyak panas, kredit kukus, CW, listrik, gaji, pemeliharaan 3 %, OPEX I&C",ASUMSI
+NPV-001,INPUT,Porsi Area 1 atas margin penjualan DME per tahun,,1697194,USD,alpha 1/3 x (47.132 t DME x 560 USD/t - 66.570 t metanol x 320 USD/t); harga IMARC Q1 2026 & S&P Global Platts,ASUMSI
+NPV-001,INPUT,Suku bunga diskonto,,10,%,"BI-Rate 5,75 % (RDG BI 20-21 Okt 2026) + premi risiko 4,25 %",ASUMSI
+NPV-001,INPUT,Umur ekonomi,,20,tahun,Towler & Sinnott (umur pabrik kimia tipikal),ASUMSI
+NPV-001,INPUT,Batas IRR minimum,,10,%,"Sama dengan suku bunga diskonto (BI-Rate 5,75 % + premi 4,25 %)",ASUMSI
+NPV-001,INPUT,Target payback,,5,tahun,Kriteria umum industri kimia (< 5 tahun),ASUMSI
+NPV-001,HASIL,Arus kas bersih tahunan,CF,398974,USD/tahun,pendapatan - OPEX,ASUMSI
+NPV-001,HASIL,Net Present Value,NPV,1518731,USD,"sum CF_t/(1+i)^t, t=0..20",ASUMSI
+NPV-001,HASIL,Internal Rate of Return,IRR,20.7564,%,NPV(IRR) = 0,ASUMSI
+NPV-001,HASIL,Payback sederhana,PBP,4.70697,tahun,CAPEX / CF,ASUMSI
+NPV-001,HASIL,Payback terdiskonto,DPBP,6.68539,tahun,kumulatif PV = 0,ASUMSI
+NPV-001,CEK,NPV > 0,,PASS,,"NPV = 1,518,731 [kriteria kelayakan]",ASUMSI
+NPV-001,CEK,IRR > batas minimum,,PASS,,IRR = 20.76 % vs 10.0 % [kriteria kelayakan],ASUMSI
+NPV-001,CEK,Payback < target,,PASS,,PBP = 4.71 vs 5.0 tahun [kriteria kelayakan],ASUMSI
+NPV-001,KESIMPULAN,Hasil,,PASS,,Kelayakan bergantung pada status input,ASUMSI

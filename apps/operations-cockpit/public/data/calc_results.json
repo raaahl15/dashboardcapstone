@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-11T23:17:45.713Z",
+ "generated_at": "2026-11-11T23:44:46.379Z",
  "calculators": [
   {
    "file": "CALC_API520_PSV.csv",
@@ -697,6 +697,498 @@
        "unit": "",
        "source": "Tanpa corrosion allowance (§6-2); rating flens P_f (§6-13 langkah 3) dicek terpisah di companion .md",
        "status": "ASUMSI"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "file": "CALC_Bab4_Ekonomi_Area1.csv",
+   "items": [
+    {
+     "tag": "undefined",
+     "description": "",
+     "result": "BELUM DIHITUNG",
+     "rows": [
+      {
+       "section": "INPUT",
+       "value": "8000",
+       "unit": "jam/tahun"
+      },
+      {
+       "section": "INPUT",
+       "value": "20",
+       "unit": "tahun"
+      },
+      {
+       "section": "INPUT",
+       "value": "10.0",
+       "unit": "%"
+      },
+      {
+       "section": "INPUT",
+       "value": "5.75",
+       "unit": "%"
+      },
+      {
+       "section": "INPUT",
+       "value": "18058",
+       "unit": "Rp/USD"
+      },
+      {
+       "section": "INPUT",
+       "value": "320",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "560",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "480",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "570",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.3333",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "532.9",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "797.9",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "4.74",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.36",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "8.0",
+       "unit": "USD/MMBtu"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.85",
+       "unit": "-"
+      },
+      {
+       "section": "INPUT",
+       "value": "15.0",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.03",
+       "unit": "USD/t"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.07",
+       "unit": "USD/kWh"
+      },
+      {
+       "section": "INPUT",
+       "value": "5",
+       "unit": "orang"
+      },
+      {
+       "section": "INPUT",
+       "value": "9000",
+       "unit": "USD/orang/tahun"
+      },
+      {
+       "section": "INPUT",
+       "value": "0.03",
+       "unit": "-"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "1500",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "21000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "15000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "6000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "9600",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "18000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "27000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "6000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "4300",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "1500",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "600",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "20000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "175110",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "60000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "42000",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "52200.0",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "459810.0",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "68971.5",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "79317.225",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_IC",
+       "value": "608098.725",
+       "unit": "USD"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "6500",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "10000",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "23511.0",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "3915.0",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "2800.0",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "OPEX_IC",
+       "value": "46726.0",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "8629.58",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "4835.3777",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "28627.7195",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "44015.0192",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "29586.8916",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "77938.4483",
+       "unit": "USD (2010)"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "289922.6864",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "1269861.3664",
+       "unit": "USD"
+      },
+      {
+       "section": "CAPEX_A1",
+       "value": "1877960.0914",
+       "unit": "USD"
+      },
+      {
+       "section": "PRODUKSI",
+       "value": "47132.2067",
+       "unit": "t/tahun"
+      },
+      {
+       "section": "PRODUKSI",
+       "value": "66570.1683",
+       "unit": "t/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "26394035.7253",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "21302453.8675",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "5091581.8577",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "1214196.536",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "-134291.8897",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "67086.9538",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "3164.0",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "45000",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "56338.8027",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "1298220.4029",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "398973.5497",
+       "unit": "USD/tahun"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "1518726.6467",
+       "unit": "USD"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "20.7563",
+       "unit": "%"
+      },
+      {
+       "section": "EKONOMI_BASE",
+       "value": "4.707",
+       "unit": "tahun"
+      },
+      {
+       "section": "SENS_RATE",
+       "value": "2792576.1805",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_RATE",
+       "value": "2039221.0315",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_RATE",
+       "value": "1518726.6467",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_RATE",
+       "value": "1102150.3459",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_RATE",
+       "value": "619347.6056",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_DME",
+       "value": "-6506534.2451",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_DME",
+       "value": "1518726.6467",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_DME",
+       "value": "13556617.9843",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_DME",
+       "value": "26932052.8038",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_DME",
+       "value": "39103698.4896",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_MEOH",
+       "value": "9075384.9129",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_MEOH",
+       "value": "1518726.6467",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_MEOH",
+       "value": "-13594589.8857",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_MEOH",
+       "value": "-28707906.418",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_MEOH",
+       "value": "-43821222.9504",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_ALPHA",
+       "value": "-2093565.5683",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_ALPHA",
+       "value": "1518726.6467",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_ALPHA",
+       "value": "4408560.4187",
+       "unit": "USD"
+      },
+      {
+       "section": "SENS_ALPHA",
+       "value": "8743311.0767",
+       "unit": "USD"
+      },
+      {
+       "section": "SKENARIO",
+       "value": "-27370362.9361",
+       "unit": "USD"
+      },
+      {
+       "section": "IMPAS",
+       "value": "534.605",
+       "unit": "USD/t"
+      },
+      {
+       "section": "IMPAS",
+       "value": "1.4124",
+       "unit": "t/t"
+      },
+      {
+       "section": "IMPAS",
+       "value": "548.6454",
+       "unit": "USD/t"
       }
      ]
     }
@@ -2963,45 +3455,45 @@
    "items": [
     {
      "tag": "NPV-001",
-     "description": "Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",
+     "description": "Kelayakan Area 1 - porsi margin penjualan DME (alpha = 1/3) vs CAPEX Area 1 (faktorial + I&C bottom-up)",
      "result": "PASS",
-     "data_status": "PLACEHOLDER",
+     "data_status": "ASUMSI",
      "rows": [
       {
        "section": "INFO",
        "parameter": "Deskripsi",
        "symbol": "",
-       "value": "Kelayakan investasi (NPV, IRR, payback) - struktur siap, data masih contoh",
+       "value": "Kelayakan Area 1 - porsi margin penjualan DME (alpha = 1/3) vs CAPEX Area 1 (faktorial + I&C bottom-up)",
        "unit": "",
-       "source": "Analisis arus kas terdiskonto",
-       "status": "PLACEHOLDER"
+       "source": "Analisis arus kas terdiskonto (sebelum pajak, tanpa eskalasi)",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
-       "parameter": "CAPEX total",
+       "parameter": "CAPEX Area 1",
        "symbol": "",
-       "value": "4850000",
+       "value": "1877960",
        "unit": "USD",
-       "source": "CSV lama (data contoh bootstrap, LOG-004)",
-       "status": "PLACEHOLDER"
+       "source": "bab4_ekonomi.py: PCE Towler & Sinnott x CEPCI 797,9/532,9 x (Lang 4,74 - 0,36) + CAPEX I&C 608.099 USD",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
-       "parameter": "OPEX per tahun",
+       "parameter": "OPEX Area 1 per tahun",
        "symbol": "",
-       "value": "285000",
+       "value": "1298220",
        "unit": "USD",
-       "source": "CSV lama (data contoh bootstrap, LOG-004)",
-       "status": "PLACEHOLDER"
+       "source": "bab4_ekonomi.py: bahan bakar minyak panas, kredit kukus, CW, listrik, gaji, pemeliharaan 3 %, OPEX I&C",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
-       "parameter": "Pendapatan/penghematan per tahun",
+       "parameter": "Porsi Area 1 atas margin penjualan DME per tahun",
        "symbol": "",
-       "value": "1450000",
+       "value": "1697194",
        "unit": "USD",
-       "source": "CSV lama (data contoh bootstrap, LOG-004)",
-       "status": "PLACEHOLDER"
+       "source": "alpha 1/3 x (47.132 t DME x 560 USD/t - 66.570 t metanol x 320 USD/t); harga IMARC Q1 2026 & S&P Global Platts",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -3009,8 +3501,8 @@
        "symbol": "",
        "value": "10",
        "unit": "%",
-       "source": "CSV lama ('NPV @ 10%'); ganti dengan suku bunga acuan (Panduan: NPV/IRR vs suku bunga acuan)",
-       "status": "PLACEHOLDER"
+       "source": "BI-Rate 5,75 % (RDG BI 20-21 Okt 2026) + premi risiko 4,25 %",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -3018,17 +3510,17 @@
        "symbol": "",
        "value": "20",
        "unit": "tahun",
-       "source": "Diturunkan dari cek ulang NPV pada LOG-004 (~20 tahun cocok dengan NPV 5,07 jt USD)",
-       "status": "PLACEHOLDER"
+       "source": "Towler & Sinnott (umur pabrik kimia tipikal)",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
-       "parameter": "Batas IRR minimum (WACC)",
+       "parameter": "Batas IRR minimum",
        "symbol": "",
-       "value": "12",
+       "value": "10",
        "unit": "%",
-       "source": "CSV lama ('Harus > WACC (12%)')",
-       "status": "PLACEHOLDER"
+       "source": "Sama dengan suku bunga diskonto (BI-Rate 5,75 % + premi 4,25 %)",
+       "status": "ASUMSI"
       },
       {
        "section": "INPUT",
@@ -3036,53 +3528,53 @@
        "symbol": "",
        "value": "5",
        "unit": "tahun",
-       "source": "CSV lama ('Target < 5 Tahun')",
-       "status": "PLACEHOLDER"
+       "source": "Kriteria umum industri kimia (< 5 tahun)",
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Arus kas bersih tahunan",
        "symbol": "CF",
-       "value": "1165000",
+       "value": "398974",
        "unit": "USD/tahun",
        "source": "pendapatan - OPEX",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Net Present Value",
        "symbol": "NPV",
-       "value": "5068302",
+       "value": "1518731",
        "unit": "USD",
        "source": "sum CF_t/(1+i)^t, t=0..20",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Internal Rate of Return",
        "symbol": "IRR",
-       "value": "23.6781",
+       "value": "20.7564",
        "unit": "%",
        "source": "NPV(IRR) = 0",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Payback sederhana",
        "symbol": "PBP",
-       "value": "4.16309",
+       "value": "4.70697",
        "unit": "tahun",
        "source": "CAPEX / CF",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "HASIL",
        "parameter": "Payback terdiskonto",
        "symbol": "DPBP",
-       "value": "5.65956",
+       "value": "6.68539",
        "unit": "tahun",
        "source": "kumulatif PV = 0",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -3090,8 +3582,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "NPV = 5,068,302 [kriteria kelayakan]",
-       "status": "PLACEHOLDER"
+       "source": "NPV = 1,518,731 [kriteria kelayakan]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -3099,8 +3591,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "IRR = 23.68 % vs 12.0 % [kriteria kelayakan]",
-       "status": "PLACEHOLDER"
+       "source": "IRR = 20.76 % vs 10.0 % [kriteria kelayakan]",
+       "status": "ASUMSI"
       },
       {
        "section": "CEK",
@@ -3108,8 +3600,8 @@
        "symbol": "",
        "value": "PASS",
        "unit": "",
-       "source": "PBP = 4.16 vs 5.0 tahun [kriteria kelayakan]",
-       "status": "PLACEHOLDER"
+       "source": "PBP = 4.71 vs 5.0 tahun [kriteria kelayakan]",
+       "status": "ASUMSI"
       },
       {
        "section": "KESIMPULAN",
@@ -3118,7 +3610,7 @@
        "value": "PASS",
        "unit": "",
        "source": "Kelayakan bergantung pada status input",
-       "status": "PLACEHOLDER"
+       "status": "ASUMSI"
       }
      ]
     }

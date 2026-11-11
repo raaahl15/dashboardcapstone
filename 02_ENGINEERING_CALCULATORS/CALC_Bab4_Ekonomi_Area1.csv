@@ -1,0 +1,97 @@
+SECTION,ITEM,VALUE,UNIT,BASIS,STATUS
+INPUT,hours,8000,jam/tahun,Jam operasi pabrik kimia kontinu (Turton dkk.; Towler & Sinnott: 8.000 jam),ASUMSI
+INPUT,life,20,tahun,Umur ekonomi pabrik kimia tipikal (Towler & Sinnott §9),ASUMSI
+INPUT,rate,10.0,%,"BI-Rate 5,75 % (RDG BI 20-21 Okt 2026) + premi risiko proyek 4,25 %",ASUMSI
+INPUT,bi_rate,5.75,%,"Bank Indonesia, RDG 20-21 Okt 2026 (BI-Rate tetap 5,75 %)",SUMBER
+INPUT,kurs,18058,Rp/USD,JISDOR Bank Indonesia 31 Jul 2026,SUMBER
+INPUT,p_meoh,320,USD/t,"Metanol CFR Asia Tenggara Agu 2025-Feb 2026: 315-325 USD/t (S&P Global Platts, 20 Mar 2026)",SUMBER
+INPUT,p_dme,560,USD/t,"DME Tiongkok Q1 2026: 560 USD/t (IMARC, DME Price Index)",SUMBER
+INPUT,p_meoh_q3,480,USD/t,Metanol CFR Asia Tenggara Agu-Sep 2026: 460-500 USD/t (Nexizo 13 Agu 2026; IMARC Sep 2026),SUMBER
+INPUT,p_dme_q3,570,USD/t,DME Tiongkok Sep 2026: 570 USD/t (IMARC Q3 2026),SUMBER
+INPUT,alpha,0.3333,-,Porsi Area 1 atas margin pabrik; sementara 1/3 (tiga area setara) sampai CAPEX Area 2/3 tersedia,ASUMSI
+INPUT,cepci_2010,532.9,-,"Basis korelasi Towler & Sinnott ed. 2 (Jan 2010, USGC)",SUMBER
+INPUT,cepci_now,797.9,-,CEPCI rata-rata 2023 (Chemical Engineering); 2024-2025 berubah < ±2 %,SUMBER
+INPUT,lang,4.74,-,"Faktor Lang pabrik fluida (Peters, Timmerhaus & West; Towler & Sinnott)",SUMBER
+INPUT,f_ic_in_lang,0.36,-,"Porsi instrumentasi & kontrol dalam faktor Lang pabrik fluida (Peters dkk., 36 % PCE) - diganti I&C bottom-up",SUMBER
+INPUT,fuel,8.0,USD/MMBtu,"Gas alam industri non-HGBT (asumsi; HGBT ±6,5 USD/MMBtu)",ASUMSI
+INPUT,eta_heater,0.85,-,Efisiensi pemanas minyak panas berbahan bakar gas,ASUMSI
+INPUT,p_steam,15.0,USD/t,"Nilai kredit kukus MP (asumsi, setara biaya bahan bakar ketel)",ASUMSI
+INPUT,p_cw,0.03,USD/t,"Air pendingin sirkulasi (Towler & Sinnott: 0,02-0,05 USD/t)",ASUMSI
+INPUT,p_elec,0.07,USD/kWh,"Tarif listrik industri (asumsi, setara ±Rp 1.250/kWh)",ASUMSI
+INPUT,operators,5,orang,1 operator lapangan Area 1 per regu × 5 regu (4 shift + cadangan),ASUMSI
+INPUT,salary,9000,USD/orang/tahun,"Operator pabrik kimia Indonesia ±Rp 12 jt/bulan × 13,5 + tunjangan",ASUMSI
+INPUT,f_maint,0.03,-,Pemeliharaan 3 % FCI per tahun (Towler & Sinnott: 3-5 %),ASUMSI
+CAPEX_IC,FE: FE-101,1500,USD,"1 × 1,500 USD; Orifice plate + flange tap",ASUMSI
+CAPEX_IC,"TX_P: FT-101, PT-103, LT-105, PT-106, PT-111, PDT-112, LT-113",21000,USD,"7 × 3,000 USD; Transmitter tekanan/DP HART (Rosemount 3051T: 3.013,80 USD, Transcat 2026)",SUMBER
+CAPEX_IC,"CV_S: FV-101, PV-111, LV-113",15000,USD,"3 × 5,000 USD; Katup kendali globe ≤2"" + aktuator + positioner (Fisher 2"": 4.730,95 USD, dealer)",SUMBER
+CAPEX_IC,TX_T_MULTI: TT-101,6000,USD,"1 × 6,000 USD; TT-101 multi-titik (6 titik) + transmitter multi-input",ASUMSI
+CAPEX_IC,"TX_SIS: TE-102A, TE-102B, TE-102C",9600,USD,"3 × 3,200 USD; Transmitter suhu bersertifikat SIL (1,5 × transmitter biasa)",ASUMSI
+CAPEX_IC,ESDV: XV-102,18000,USD,"1 × 18,000 USD; ESDV 6"" + solenoid + limit switch (XV/XY-102)",ASUMSI
+CAPEX_IC,"CV_M: PV-103, TV-104, LV-105",27000,USD,"3 × 9,000 USD; Katup kendali 3-4"" + aktuator + positioner (skala dari 2"")",ASUMSI
+CAPEX_IC,"PSV: PSV-101, PSV-102",6000,USD,"2 × 3,000 USD; Katup pengaman pegas",ASUMSI
+CAPEX_IC,"TX_T: TT-104, TT-109",4300,USD,"2 × 2,150 USD; Transmitter suhu HART (Rosemount 644: 1.345,57 USD, Transcat) + termokopel & thermowell 800 USD",ASUMSI
+CAPEX_IC,LG: LG-105,1500,USD,"1 × 1,500 USD; Gelas penduga level",ASUMSI
+CAPEX_IC,"PI: PI-107, PI-108",600,USD,2 × 300 USD; Pressure gauge lokal,ASUMSI
+CAPEX_IC,CV_L: TV-109,20000,USD,"1 × 20,000 USD; Katup kendali 8"" (CW E-102) + aktuator + positioner",ASUMSI
+CAPEX_IC,DCS (dasar + I/O),175110,USD,"150,000 + 27 I/O (22 + 20 % cadangan) × 930 USD; Per titik I/O terpasang di luar instrumen lapangan (500 USD/titik 2001 → 714 USD 2017, Chemical Processing 2018; eskalasi ±30 % ke 2026)",ASUMSI
+CAPEX_IC,Logic solver SIS,60000,USD,"Logic solver SIS kecil bersertifikat SIL (lingkup PSTF 2, tetap dianggarkan)",ASUMSI
+CAPEX_IC,"Kabel, JB, marshalling",42000,USD,"21 perangkat tersambung × 2,000 USD",ASUMSI
+CAPEX_IC,Pemasangan & komisioning instrumen,52200.0,USD,"40% × perangkat lapangan 130,500 USD (Peters dkk.: 25-60 %)",ASUMSI
+CAPEX_IC,Subtotal langsung,459810.0,USD,perangkat + DCS + SIS + kabel + pemasangan,
+CAPEX_IC,Jasa rekayasa I&C (FEED/DED),68971.5,USD,15% × langsung,ASUMSI
+CAPEX_IC,Kontingensi,79317.225,USD,15% × (langsung + rekayasa),ASUMSI
+CAPEX_IC,TOTAL CAPEX I&C,608098.725,USD,= Rp 10.98 miliar,
+OPEX_IC,Kalibrasi berkala,6500,USD/tahun,"26 instrumen × 250 USD/tahun (1×/tahun, jasa + sertifikat)",ASUMSI
+OPEX_IC,Lisensi & dukungan AMS (HART),10000,USD/tahun,"Asset Management System, lisensi tahunan",ASUMSI
+OPEX_IC,Dukungan perangkat lunak DCS/SIS,23511.0,USD/tahun,10 %/tahun × (DCS + SIS),ASUMSI
+OPEX_IC,Suku cadang instrumen,3915.0,USD/tahun,3 %/tahun × perangkat lapangan,ASUMSI
+OPEX_IC,Listrik DCS & instrumen,2800.0,USD/tahun,5 kW × jam operasi × tarif listrik,ASUMSI
+OPEX_IC,TOTAL OPEX I&C,46726.0,USD/tahun,= Rp 844 juta/tahun,
+CAPEX_A1,P-101 pompa sentrifugal,8629.58,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; S = 2.92 L/s; a=8.000 b=240 n=0,9",ASUMSI
+CAPEX_A1,P-101 motor,4835.3777,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; S = 5,65 kW; a=-1.100 b=2.100 n=0,6",ASUMSI
+CAPEX_A1,M-101 / T-101 pencampur-drum,28627.7195,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; bejana vertikal CS, massa shell ±1.500 kg; a=11.600 b=34 n=0,85",ASUMSI
+CAPEX_A1,E-101 U-tube,44015.0192,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; A = 158 m² (U 300 W/m²K, LMTD minyak panas 300/200 °C); a=24.000 b=46 n=1,2",ASUMSI
+CAPEX_A1,E-102 U-tube,29586.8916,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; A = 55 m² (U 500 W/m²K, CW 30/40 °C)",ASUMSI
+CAPEX_A1,R-101 multitubular,77938.4483,USD (2010),"Towler & Sinnott ed. 2 Tab. 6.6; A = 209 m² (U 100 W/m²K, ΔT 35,1 K) × 1,5 konstruksi reaktor",ASUMSI
+CAPEX_A1,PCE peralatan utama (eskalasi),289922.6864,USD,× CEPCI 797.9/532.9,
+CAPEX_A1,FCI proses tanpa I&C,1269861.3664,USD,PCE × (Lang 4.74 - 0.36),
+CAPEX_A1,TOTAL CAPEX Area 1,1877960.0914,USD,FCI proses + CAPEX I&C; = Rp 33.91 miliar,
+PRODUKSI,DME produk S-08,47132.2067,t/tahun,5891.5 kg/jam × 8000 jam,HMB
+PRODUKSI,Metanol segar S-101,66570.1683,t/tahun,8321.3 kg/jam × 8000 jam,HMB
+EKONOMI_BASE,Penjualan DME pabrik,26394035.7253,USD/tahun,,
+EKONOMI_BASE,Biaya metanol pabrik,21302453.8675,USD/tahun,,
+EKONOMI_BASE,Margin kotor pabrik,5091581.8577,USD/tahun,,
+EKONOMI_BASE,Bahan bakar minyak panas E-101,1214196.536,USD/tahun,,
+EKONOMI_BASE,Kredit kukus MP R-101,-134291.8897,USD/tahun,,
+EKONOMI_BASE,Air pendingin E-102,67086.9538,USD/tahun,,
+EKONOMI_BASE,Listrik P-101,3164.0,USD/tahun,,
+EKONOMI_BASE,Gaji operator Area 1,45000,USD/tahun,,
+EKONOMI_BASE,Pemeliharaan Area 1,56338.8027,USD/tahun,,
+EKONOMI_BASE,TOTAL OPEX Area 1 (termasuk OPEX I&C),1298220.4029,USD/tahun,,
+EKONOMI_BASE,Arus kas bersih Area 1 (α × margin - OPEX),398973.5497,USD/tahun,,
+EKONOMI_BASE,NPV,1518726.6467,USD,"i = 10.0 %, n = 20 tahun",
+EKONOMI_BASE,IRR,20.7563,%,bandingkan BI-Rate 5.75 % dan i = 10.0 %,
+EKONOMI_BASE,Payback sederhana,4.707,tahun,CAPEX / CF,
+SENS_RATE,i = 5.75 %,2792576.1805,USD,NPV,
+SENS_RATE,i = 8.0 %,2039221.0315,USD,NPV,
+SENS_RATE,i = 10.0 %,1518726.6467,USD,NPV,
+SENS_RATE,i = 12.0 %,1102150.3459,USD,NPV,
+SENS_RATE,i = 15.0 %,619347.6056,USD,NPV,
+SENS_DME,DME 500 USD/t,-6506534.2451,USD,"NPV; IRR nan %; CF -543,671",
+SENS_DME,DME 560 USD/t,1518726.6467,USD,"NPV; IRR 20.8 %; CF 398,974",
+SENS_DME,DME 650 USD/t,13556617.9843,USD,"NPV; IRR 96.5 %; CF 1,812,940",
+SENS_DME,DME 750 USD/t,26932052.8038,USD,"NPV; IRR 180.2 %; CF 3,384,013",
+SENS_DME,DME 841 USD/t,39103698.4896,USD,"NPV; IRR 256.3 %; CF 4,813,690",
+SENS_MEOH,Metanol 280 USD/t,9075384.9129,USD,"NPV; IRR 68.5 %; CF 1,286,576",
+SENS_MEOH,Metanol 320 USD/t,1518726.6467,USD,"NPV; IRR 20.8 %; CF 398,974",
+SENS_MEOH,Metanol 400 USD/t,-13594589.8857,USD,"NPV; IRR nan %; CF -1,376,231",
+SENS_MEOH,Metanol 480 USD/t,-28707906.418,USD,"NPV; IRR nan %; CF -3,151,435",
+SENS_MEOH,Metanol 560 USD/t,-43821222.9504,USD,"NPV; IRR nan %; CF -4,926,640",
+SENS_ALPHA,α = 0.25,-2093565.5683,USD,NPV; IRR nan %,
+SENS_ALPHA,α = 0.33,1518726.6467,USD,NPV; IRR 20.8 %,
+SENS_ALPHA,α = 0.40,4408560.4187,USD,NPV; IRR 39.3 %,
+SENS_ALPHA,α = 0.50,8743311.0767,USD,NPV; IRR 66.4 %,
+SKENARIO,"Harga Q3 2026 (DME 570, metanol 480)",-27370362.9361,USD,"margin kotor pabrik -5,088,323 USD/tahun; CF -2,994,328",
+IMPAS,Harga DME impas (CF = 0) pada metanol basis,534.605,USD/t,α × margin = OPEX Area 1,
+IMPAS,Rasio massa metanol/DME,1.4124,t/t,harga DME impas bahan baku = rasio × harga metanol,
+IMPAS,Harga DME untuk NPV = 0 (i = 10 %),548.6454,USD/t,bisection,

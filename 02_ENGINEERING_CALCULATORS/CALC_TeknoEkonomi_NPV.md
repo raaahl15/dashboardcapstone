@@ -8,13 +8,13 @@ target_files:
   - "inputs/NPV-001.yaml"
 generated_by: "tools/calc/npv.py (npm run calc)"
 source_data:
-  - "PLACEHOLDER — CAPEX/OPEX belum dari BoM/Draf P&ID"
+  - "tools/calc/bab4_ekonomi.py → CALC_Bab4_Ekonomi_Area1.csv (Instrument Index Rev C + HMB + harga publik 2026)"
 author: "Heidi Falina Brilian (PIC)"
 reviewer: ""
 status: "Draft"
 review_evidence: ""
 google_ref: ""
-last_updated: "2026-11-03"
+last_updated: "2026-11-12"
 tags: ["Economics", "CAPEX", "OPEX", "NPV", "IRR"]
 ---
 
@@ -22,7 +22,7 @@ tags: ["Economics", "CAPEX", "OPEX", "NPV", "IRR"]
 
 > 🔄 **FILE HASIL GENERATE (LOG-020).** CSV ditulis ulang oleh `npm run calc` dari `inputs/NPV-001.yaml`. Jangan edit CSV; ubah input YAML.
 >
-> ⚠️ **DATA PLACEHOLDER — JANGAN DIKUTIP KE LAPORAN.** Mesin hitung sudah siap dan terverifikasi, tetapi **semua input** masih data contoh dari CSV lama (CAPEX 4,85 jt USD, OPEX 0,285 jt, pendapatan 1,45 jt, i = 10 %, n = 20 tahun). Hasil saat ini: NPV 5,07 jt USD, IRR 23,7 %, payback 4,16 tahun (terdiskonto 5,66 tahun), cocok dengan hitung ulang LOG-004. PIC (HD) mengganti input dengan estimasi berbasis Draf P&ID + sumber harga.
+> ✅ **INPUT KASUS DASAR BAB 4 (LOG-083, status ASUMSI).** Input diganti dengan hasil `tools/calc/bab4_ekonomi.py` (lihat `CALC_Bab4_Ekonomi_Area1.md`): CAPEX Area 1 1.877.960 USD, OPEX 1.298.220 USD/tahun, porsi margin Area 1 1.697.194 USD/tahun, i = 10 %, n = 20 tahun. Hasil: NPV 1.518.731 USD, IRR 20,76 %, payback 4,71 tahun (terdiskonto 6,69 tahun), cocok dengan model Bab 4. Data contoh lama (CAPEX 4,85 jt USD) sudah tidak dipakai.
 
 ## 1. Cakupan
 Menurut Panduan Capstone DTNTF 2026 (BAB III §3.3), kajian tekno-ekonomi **berbasis Draf P&ID** dan mencakup: estimasi CAPEX (perangkat keras, software, pipa, jasa engineering), OPEX (listrik, kalibrasi, maintenance), NPV, IRR terhadap suku bunga acuan, dan Payback Period. Rubrik nilai *Sangat Baik* menuntut analisis risiko suku bunga pasar (sensitivitas).
@@ -56,3 +56,4 @@ Asumsi umur pabrik 20 tahun dan discount rate 10% juga belum memiliki rujukan.
 | 0.1 | 2026-11-02 | Antigravity (AI) | Draf awal dari skrip bootstrap. |
 | 0.2 | 2026-11-03 | Claude Code (AI) | Status → Draft; penandaan PLACEHOLDER; hitung ulang NPV/Payback (LOG-004). |
 | 1.0 | 2026-11-03 | Claude Code (AI) | Kalkulator skrip `tools/calc/npv.py` + payback terdiskonto; input contoh dipindah ke YAML (PLACEHOLDER); uji verifikasi (LOG-020). |
+| 1.1 | 2026-11-12 | Claude Code (AI) | Input diganti nilai kasus dasar Bab 4 (status ASUMSI); verifikasi silang cocok (LOG-083). |

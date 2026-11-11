@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-11T23:17:45.713Z",
+ "generated_at": "2026-11-11T23:44:46.379Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -9,11 +9,11 @@
   "warnings": 1
  },
  "calc": {
-  "total": 12,
+  "total": 13,
   "pass": 12,
   "fail": 0,
-  "not_calculated": 0,
-  "placeholder": 2
+  "not_calculated": 1,
+  "placeholder": 1
  },
  "tags": {
   "generated_at": "2026-11-12T06:17:05+07:00",
@@ -22,13 +22,13 @@
   "pid_checked": 0
  },
  "companions": {
-  "covered": 27,
-  "total": 27,
+  "covered": 28,
+  "total": 28,
   "pass": true,
   "status_distribution": {
    "WIP": 13,
    "Review Internal": 1,
-   "Draft": 13
+   "Draft": 14
   }
  },
  "sources": {
@@ -45,14 +45,16 @@
   "02_ENGINEERING_CALCULATORS/CALC_API520_PSV.md": "a01a475273ad755142535b81f22d3b288d0069e375c4b68e48dee6da5cde9dc3",
   "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.csv": "6a0a3989d4491bfe6c7536f1eb19ed365f7c1b4dd4e361e5f56158cffcd1bb79",
   "02_ENGINEERING_CALCULATORS/CALC_ASME_Thermowell.md": "e4b9661444c43885fff17fa581c0b0634722e98b5a2036d2e6b00185fe263197",
+  "02_ENGINEERING_CALCULATORS/CALC_Bab4_Ekonomi_Area1.csv": "f997f6e0355e862337e3f3586647b8bb267a2f2466e72b52ea415c42588e0306",
+  "02_ENGINEERING_CALCULATORS/CALC_Bab4_Ekonomi_Area1.md": "36625b47fe657821c32ed28ed6f6a4b21baa0542a3bc42581379b7014a940b8a",
   "02_ENGINEERING_CALCULATORS/CALC_ISA75_ControlValve.csv": "a7c056bd2f4ad3c5a288fc2f53bf4f38b456fc47d0b1d4dcded62059366dcada",
   "02_ENGINEERING_CALCULATORS/CALC_ISA75_ControlValve.md": "9d97ad411ef699b3388eac75cccf14b1978c21a85df834b0fd925fdc4a738239",
   "02_ENGINEERING_CALCULATORS/CALC_ISO5167_Orifice.csv": "de234b945815c871551fb5265100edd00c1e261dce6daadbe1d6424b0faa6730",
   "02_ENGINEERING_CALCULATORS/CALC_ISO5167_Orifice.md": "161b39d735c1329f214b339e0826c6045381db11421eab5c32384116415bff7a",
   "02_ENGINEERING_CALCULATORS/CALC_LineSizing.csv": "34c6f06a53ff4b27ed26a8c6af435be1fd162cd4104d5b6a0124fffbc8856f9e",
   "02_ENGINEERING_CALCULATORS/CALC_LineSizing.md": "3c6e2214c61dee701ee755c02737113a24c481fc4efb43c66c3d8cb44f460bfc",
-  "02_ENGINEERING_CALCULATORS/CALC_TeknoEkonomi_NPV.csv": "7e3396008550a5796f579c49a2df2982f14dfc905456ad00306226b881760813",
-  "02_ENGINEERING_CALCULATORS/CALC_TeknoEkonomi_NPV.md": "5e67bdb296158e2a0f163ecc956841cdba1e571f606f8facca3e9e3dc144265a",
+  "02_ENGINEERING_CALCULATORS/CALC_TeknoEkonomi_NPV.csv": "50f3fcecb7a6fbf682dd53b24f3aba3a6ba9b2a61aab8f85ddc9be817ee48d16",
+  "02_ENGINEERING_CALCULATORS/CALC_TeknoEkonomi_NPV.md": "03e6ea6627335929355b17681b1b0f33ffcdcfd82efc20301f6e31178158c9fb",
   "03_CAD_AND_PID_LIBRARIES/symbol_libraries/SYMBOL_LIBRARIES.md": "bf7e91047a74ad8d366192d5ddb03f175de8472683fa386b6c6d772e9ec67140",
   "03_CAD_AND_PID_LIBRARIES/templates/DME_Master_Template.md": "8b66bc724e92fca344adb6df935b379e1a42e653933518c3c3e4cf4f45655d1b",
   "03_CAD_AND_PID_LIBRARIES/templates/acad_dme.md": "0698776baaeb96421de18267d8411616698ebbad6bf5b04406eb2ee9e3baa834",
