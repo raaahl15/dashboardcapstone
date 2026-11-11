@@ -293,6 +293,27 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-076] 2026-11-11 WIB — Pemeriksaan progres & hasil WO minggu 13 per anggota (tenggat 12 Nov, Bimbingan 7)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("cek progres WO yang sudah dikerjakan setiap anggota, apa sudah dikerjakan dan hasilnya seperti apa").
+* **Fase**: operasional — pemantauan WO (read-only, tidak ada data yang diubah)
+* **Sumber**: status WO dari dump cockpit 10 Nov 23.49 WIB (`tools/out/smoke_console_2026-11-10T17-49-41-082Z.json`, login Ihsan); rincian checklist dari cadangan PM 5 Nov; hasil kerja dibaca langsung di Google Drive (metadata pengubah terakhir + isi dokumen) pada 11 Nov malam.
+* **Temuan per WO**:
+  - **WO-024 (Altaf, FDS Bab 5–7)**: dikerjakan, hasil baik. FDS Google Doc diubah Altaf 11 Nov 16.55 WIB: Bab 5 tabel start-up 8 langkah (permissive + mode MAN/AUTO/CAS), Bab 6 setpoint per loop dari HMB + tabel gangguan, Bab 7 shutdown normal, trip SIS (rujuk C&E), posisi aman katup. Kurang: header masih menyebut "Bab 5–7 kosong", log revisi belum dinaikkan dari 0.4, Bab 1 FDS masih kosong, tabel 6.2 L/H/HH masih TBD padahal Ihsan sudah punya nilai (WO-031), Bab 8 catatan inkonsistensi sudah usang.
+  - **WO-025 (Ihsan, Bab 3.1–3.2)**: sebagian. Laporan PSTF 1 diubah Ihsan 11 Nov 22.55 WIB. 3.1 berisi tabel tag_map mentah (kolom dwsim_tag/scope/AREA_1), belum ada narasi PFD maupun gambar; petunjuk [..] belum dihapus. 3.2 tabel HMB memakai tag DWSIM (S-01…) bukan tag pabrik, ikut memuat aliran Area 2/3 (S-08…S-13) dan unit area lain (CSCOL-01/02, REC-01, COOL-02, PUMP-02), desimal titik, satuan "degC"; verifikasi neraca manual R-101 dimulai tetapi persamaannya berupa gambar. 3.3 dan cek konsistensi PFD↔P&ID belum ada.
+  - **WO-031 (Ihsan, batas suhu L/H/HH)**: ada hasil (CSV 10 Nov + dokumen verifikasi): L = 250 °C, H = 360 °C, HH = 400 °C; hitung suhu adiabatik 371,2 °C benar (diverifikasi ulang). Catatan teknis: L = setpoint operasi (250 °C) sehingga alarm L akan aktif terus saat normal; H 360 °C berada 110 °C di atas setpoint (±1,5 °C) dan hanya 11 °C di bawah puncak adiabatik, terlalu lambat sebagai alarm operator; HH 400 °C = ambang kerusakan katalis (zeolit, Turton) tanpa margin dan untuk γ-Al₂O₃ belum dikonfirmasi; dokumen memakai tag DWSIM (S-04, RC-01) dan berupa ekspor percakapan AI; sumber belum disitasi lengkap; berkas ada di root Drive, bukan 08_WORK_ORDERS_EVIDENCE.
+  - **WO-026 (Jonathan, P&ID Rev C)**: tidak ditemukan hasil. Folder 03_CAD_DWG terakhir berubah 4–5 Nov (Rev B); Master Instrument Index tidak berubah sejak 4 Nov.
+  - **WO-027 (Heidi, Bab 4 tekno-ekonomi, jalur kritis G1)**: tidak ditemukan hasil. Bab 4 di Laporan PSTF 1 masih seluruhnya petunjuk [..]; tidak ada berkas Heidi di folder proyek.
+  - **WO-028 (Rahul)**: kerangka laporan ada; MoM B6 & pengingat logbook sudah (LOG-058).
+  - **WO-029 (Rahul, revisi Bab 1)**: Bab 1 Rev 1 sudah di Google Doc; review Ihsan + reviewer bagian belum terlihat (tidak ada komentar di dokumen).
+  - **WO-030 (semua, logbook per orang)**: tiap entitas 6/12 entri, isinya entri B1–B6 yang ditulis ulang agen (LOG-053), belum ada entri yang ditulis anggota sendiri.
+* **Batasan**: status WO di Firestore setelah 10 Nov 23.49 WIB tidak terbaca (agen tidak punya akses Firestore); berkas yang disimpan anggota di Drive pribadi tanpa dibagikan tidak terlihat.
+* **Tindak Lanjut**:
+  - [ ] PM: konfirmasi ke Jonathan (WO-026) dan Heidi (WO-027) sebelum Bimbingan 7; WO-027 jalur kritis G1.
+  - [ ] Ihsan: rapikan 3.1/3.2 (tag pabrik, Area 1 saja, narasi PFD) dan tinjau ulang nilai L/H/HH bersama Altaf sebelum dimasukkan ke FDS 6.2.
+  - [ ] Altaf: perbarui header & log revisi FDS ke 0.5, isi Bab 1 FDS.
+
+---
+
 ### [LOG-075] 2026-11-11 WIB — UI v2.0 putaran 4: semua modal, panel notifikasi, dan form mengikuti halaman 03 desain
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("okey lanjutkan") setelah LOG-074.
 * **Fase**: operasional (pasca-roadmap) — penutup implementasi UI v2.0
