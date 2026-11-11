@@ -64,10 +64,10 @@ export const GoogleWorkspaceView: React.FC = () => {
             href={d.url}
             target="_blank"
             rel="noreferrer"
-            className="glass-card p-5 flex flex-col gap-3 hover:shadow-cockpit-pop transition-all"
+            className="glass-card !rounded-[28px] p-6 flex flex-col gap-3 min-h-[250px] hover:shadow-cockpit-pop transition-all"
           >
             <div className="flex items-start justify-between gap-2">
-              <span className="w-10 h-10 rounded-2xl bg-surface/70 text-primary flex items-center justify-center shadow-xs">
+              <span className={`w-11 h-11 rounded-2xl text-on-ink flex items-center justify-center ${d.type === 'sheets' ? 'bg-success-solid' : 'bg-primary'}`}>
                 <DocIcon type={d.type} />
               </span>
               <span className="flex flex-wrap gap-1 justify-end">
@@ -78,10 +78,10 @@ export const GoogleWorkspaceView: React.FC = () => {
               </span>
             </div>
             <div>
-              <h2 className="font-heading font-bold text-sm text-fg">{d.title}</h2>
+              <h2 className="text-base font-semibold text-fg leading-snug">{d.title}</h2>
               {d.doc_no && <p className="text-[11px] font-mono text-fg-3">{d.doc_no}</p>}
             </div>
-            <dl className="text-[11px] text-fg-3 space-y-0.5">
+            <dl className="text-xs text-fg-2 space-y-0.5">
               {d.pic && <div><dt className="inline">PIC: </dt><dd className="inline text-fg">{d.pic}</dd></div>}
               {d.target_folder && <div><dt className="inline">Folder: </dt><dd className="inline font-mono">{d.target_folder}</dd></div>}
               {d.tabs && <div><dt className="inline">Tab: </dt><dd className="inline">{d.tabs.join(', ')}</dd></div>}
@@ -90,23 +90,28 @@ export const GoogleWorkspaceView: React.FC = () => {
                 <div><dt className="inline">Bagian: </dt><dd className="inline">{Object.keys(d.section_owners).length} bagian dengan pengerja &amp; reviewer</dd></div>
               )}
             </dl>
-            <span className="mt-auto inline-flex items-center gap-1.5 text-xs font-bold text-primary">
-              <ExternalLink className="w-3.5 h-3.5" /> Buka di Google {d.type === 'sheets' ? 'Sheets' : d.type === 'slides' ? 'Slides' : 'Docs'}
+            <span className="mt-auto w-full min-h-[44px] rounded-full border border-line-strong bg-surface text-sm font-semibold text-primary inline-flex items-center justify-center gap-1.5">
+              Buka di Google {d.type === 'sheets' ? 'Sheets' : d.type === 'slides' ? 'Slides' : 'Docs'} <ExternalLink className="w-3.5 h-3.5" />
             </span>
           </a>
         ))}
       </div>
 
       <div className="glass-card p-4 sm:p-6">
-        <h2 className="font-heading font-bold text-base sm:text-lg text-fg mb-3">Folder Google Drive</h2>
+        <h2 className="font-heading text-2xl font-normal text-fg mb-4 flex flex-wrap items-baseline gap-3">
+          Folder Google Drive
+          <a href={data.drive.root.url} target="_blank" rel="noreferrer" className="text-xs font-semibold uppercase tracking-[0.12em] text-fg-3 hover:text-primary">
+            {data.drive.root.title}
+          </a>
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-2">
-          {[data.drive.root, ...data.drive.folders].map((f) => (
+          {data.drive.folders.map((f) => (
             <a
               key={f.id}
               href={f.url}
               target="_blank"
               rel="noreferrer"
-              className="min-h-[44px] px-3.5 py-2 rounded-2xl bg-surface/80 border border-glass-stroke hover:bg-surface flex items-center gap-2 text-xs font-semibold text-fg"
+              className="min-h-[48px] px-4 py-2 rounded-[18px] bg-surface hover:shadow-cockpit-card flex items-center gap-2.5 text-xs font-semibold text-fg transition-all"
             >
               <FolderOpen className="w-4 h-4 text-primary shrink-0" />
               <span className="truncate">{f.title}</span>

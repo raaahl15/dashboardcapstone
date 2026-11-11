@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Library, Search, ExternalLink } from 'lucide-react';
+import { Library, Search, ExternalLink, ArrowLeft } from 'lucide-react';
 import { useStaticData, fmtDateTime, statusClass } from '../../utils/staticData';
 import { MarkdownView } from '../common/MarkdownView';
 
@@ -46,21 +46,73 @@ export const MasterLibraryView: React.FC = () => {
     );
   }, [docs, query, status]);
   const current = docs.find((d) => d.path === selected) ?? filtered[0];
+  const countOf = (st: string) => (st === 'Semua' ? docs.length : docs.filter((d) => d.status === st).length);
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      <div className="space-y-3">
-        <div className="max-w-4xl">
-          <p className="text-[13px] leading-relaxed text-fg-3">
-            {docs.length} companion <span className="font-mono">.md</span> dari repo beserta status siklus dokumen (Blueprint
-            §1.4), rumus, dan SOP. Dibundel {fmtDateTime(lib.data?.generated_at)}; untuk mengubah isi, edit file di repo atau
-            master Google Workspace-nya.
-          </p>
-        </div>
-      </div>
-
       {lib.error && <div className="glass-card p-4 text-xs text-danger">{lib.error}</div>}
 
+      {selected === null ? (
+        <>
+          <div className="flex flex-wrap items-center gap-2">
+            {statuses.map((st) => (
+              <button
+                key={st}
+                type="button"
+                onClick={() => setStatus(st)}
+                aria-pressed={status === st}
+                className={`min-h-[36px] px-3.5 rounded-full text-xs font-semibold transition-colors ${
+                  status === st ? 'bg-ink text-on-ink' : 'bg-surface border border-line text-fg-2 hover:border-primary'
+                }`}
+              >
+                {st} · {countOf(st)}
+              </button>
+            ))}
+            <label className="ml-auto flex items-center gap-2 bg-surface rounded-full px-3.5 min-h-[38px] border border-line w-full sm:w-64">
+              <Search className="w-4 h-4 text-fg-3" />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Cari judul, tag, folder..."
+                className="flex-1 bg-transparent text-xs outline-none text-fg placeholder:text-fg-3"
+                aria-label="Cari dokumen"
+              />
+            </label>
+          </div>
+          <div className="glass-card p-3 sm:p-4">
+            <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2.5">
+              {filtered.map((d) => (
+                <li key={d.path}>
+                  <button
+                    type="button"
+                    onClick={() => setSelected(d.path)}
+                    className="w-full min-h-[64px] px-3.5 py-2.5 rounded-[20px] bg-surface hover:shadow-cockpit-card transition-all flex items-center gap-3 text-left"
+                  >
+                    <span className="w-10 h-10 rounded-xl bg-primary-soft text-fg-2 text-[11px] font-semibold flex items-center justify-center shrink-0">MD</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm font-semibold text-fg truncate">{d.title}</span>
+                      <span className="block text-[11px] text-fg-3 truncate">{d.path}</span>
+                    </span>
+                    <Pill label={d.status} />
+                  </button>
+                </li>
+              ))}
+              {filtered.length === 0 && <li className="text-xs text-fg-3 p-3">{lib.loading ? 'Memuat...' : 'Tidak ada dokumen yang cocok.'}</li>}
+            </ul>
+          </div>
+          <p className="text-xs text-fg-3">
+            Menampilkan {filtered.length} dari {docs.length} companion · dibundel {fmtDateTime(lib.data?.generated_at)} · edit di repo atau master Google Workspace.
+          </p>
+        </>
+      ) : (
+      <>
+      <button
+        type="button"
+        onClick={() => setSelected(null)}
+        className="min-h-[40px] px-4 rounded-full bg-surface border border-line text-xs font-semibold text-fg-2 inline-flex items-center gap-1.5 hover:border-primary"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" /> Semua companion
+      </button>
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-4">
         <div className="xl:col-span-4 glass-card p-4 space-y-3">
           <label className="flex items-center gap-2 bg-surface/90 rounded-full px-3 min-h-[44px] border border-glass-stroke">
@@ -146,6 +198,9 @@ export const MasterLibraryView: React.FC = () => {
           )}
         </div>
       </div>
+
+      </>
+      )}
 
       <p className="text-[11px] text-fg-3 inline-flex items-center gap-1.5">
         <Library className="w-3.5 h-3.5" /> Sumber: <span className="font-mono">tools/build_manifest.js</span> → public/data/

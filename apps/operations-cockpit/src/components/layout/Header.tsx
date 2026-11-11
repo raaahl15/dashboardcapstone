@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip, resolveAvatarBgProps } from '../common/UserChip';
-import { groupOfTab, PAGE_META } from './navigation';
+import { groupOfTab, PAGE_META, triggerPageAction } from './navigation';
 import {
   Bell,
   LogOut,
@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   Info,
   Search,
+  Plus,
+  Printer,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -116,23 +118,15 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="relative z-30 w-full px-4 lg:px-8 pt-5 pb-4">
-      <div className="max-w-[1440px] mx-auto flex items-start justify-between gap-3">
+      <div className="max-w-[1440px] mx-auto flex items-center lg:items-start justify-between gap-3">
         {/* Kiri: eyebrow tanggal + judul menu aktif */}
-        <div className="min-w-0 flex items-center gap-3">
-          <button
-            type="button"
-            onClick={() => setActiveTab('homepage')}
-            className="lg:hidden w-11 h-11 shrink-0 rounded-full bg-primary text-on-primary font-heading text-sm font-semibold flex items-center justify-center"
-            aria-label="Beranda Area 1-DME"
-          >
-            A1
-          </button>
+        <div className="min-w-0 flex-1 flex items-center gap-3 max-lg:order-2">
           <div className="min-w-0">
-            <p className="text-xs sm:text-[13px] text-fg-3 line-clamp-2 sm:truncate">
+            <p className="text-xs sm:text-[13px] text-fg-3 truncate">
               {pageMeta.title ? pageMeta.eyebrow : `${todayLabel} · ${pageMeta.eyebrow}`}
             </p>
             {pageMeta.title && (
-              <h1 className="font-heading text-[26px] sm:text-4xl leading-tight font-normal tracking-[-0.02em] text-fg">
+              <h1 className="font-heading text-[23px] sm:text-4xl leading-tight font-normal tracking-[-0.02em] text-fg truncate">
                 {pageMeta.title}
                 {pageMeta.accent && (
                   <span className="hidden sm:inline font-accent text-primary text-[0.72em] ml-3 whitespace-nowrap">
@@ -145,16 +139,16 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Right Actions: Sync, Notifications, 44x44 Profile Button */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 max-lg:contents">
           {/* Pencarian cepat (Ctrl K) */}
-          <button
+          <button data-order="search"
             type="button"
             onClick={onOpenSearch}
-            className="inline-flex items-center gap-2 px-3.5 min-h-[44px] rounded-full bg-surface/90 text-fg-3 hover:text-fg border border-glass-stroke shadow-xs transition-all text-xs font-medium"
+            className="max-lg:order-3 inline-flex items-center justify-center gap-2 max-md:w-11 md:px-3.5 lg:w-72 min-h-[44px] rounded-full bg-surface/90 text-fg-3 hover:text-fg border border-glass-stroke shadow-xs transition-all text-sm"
             aria-label="Buka pencarian cepat"
           >
             <Search className="w-4 h-4" />
-            <span className="hidden md:inline">Cari…</span>
+            <span className="hidden md:inline flex-1 text-left">Cari WO, dokumen, tag…</span>
             <kbd className="hidden md:inline px-1.5 py-0.5 rounded-md bg-muted text-[10px] font-semibold">Ctrl K</kbd>
           </button>
 
@@ -169,20 +163,18 @@ export const Header: React.FC<HeaderProps> = ({
                 ? `Sinkronisasi Real-Time Aktif (Terakhir: ${lastSyncedAt}) — Klik untuk segarkan`
                 : 'Sinkronkan data antar-perangkat'
             }
-            className="hidden sm:inline-flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-full bg-surface/90 text-success hover:text-primary hover:bg-surface border border-glass-stroke shadow-xs transition-all text-xs font-bold"
+            className="max-lg:order-3 hidden sm:inline-flex items-center justify-center w-11 h-11 rounded-full bg-surface/90 text-success hover:text-primary hover:bg-surface border border-glass-stroke shadow-xs transition-all"
+            aria-label={lastSyncedAt ? `Sinkron terakhir ${lastSyncedAt}; klik untuk segarkan` : 'Sinkronkan data'}
           >
             <RefreshCw
               className={`w-3.5 h-3.5 ${
                 isSyncing ? 'animate-spin text-primary' : 'text-success'
               }`}
             />
-            <span className="hidden md:inline text-[11px]">
-              {lastSyncedAt ? `Sync ${lastSyncedAt}` : 'Live Sync'}
-            </span>
           </button>
 
           {/* Notifications Bell */}
-          <div className="relative" ref={notifRef}>
+          <div className="relative max-lg:order-4" ref={notifRef}>
             <button
               type="button"
               onClick={() => {
@@ -286,8 +278,20 @@ export const Header: React.FC<HeaderProps> = ({
             )}
           </div>
 
+          {pageMeta.action && (!pageMeta.action.pmOnly || isPM) && (
+            <button
+              type="button"
+              onClick={() => triggerPageAction(activeTab)}
+              aria-label={pageMeta.action.label}
+              className="max-lg:fixed max-lg:z-40 max-lg:right-4 max-lg:bottom-[calc(6rem+env(safe-area-inset-bottom))] max-lg:shadow-cockpit-pop inline-flex items-center justify-center gap-1.5 px-5 min-h-[48px] lg:min-h-[44px] rounded-full bg-primary hover:bg-primary-hover text-on-primary text-sm font-semibold shadow-cockpit-card transition-colors"
+            >
+              {activeTab === 'stage-gate' ? <Printer className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+              <span>{pageMeta.action.label}</span>
+            </button>
+          )}
+
           {/* User Profile Button (Strictly 44x44px circle, photoURL or initials on avatarBg) */}
-          <div className="relative" ref={userRef}>
+          <div className="relative lg:hidden max-lg:order-1 shrink-0" ref={userRef}>
             <button
               ref={profileButtonRef}
               type="button"
@@ -323,7 +327,7 @@ export const Header: React.FC<HeaderProps> = ({
                 role="menu"
                 aria-label="Menu Profil"
                 onKeyDown={handleMenuKeyDown}
-                className="absolute right-0 mt-2 w-72 bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
+                className="absolute left-0 mt-2 w-72 bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-4 z-50 animate-in fade-in zoom-in-95 duration-150"
               >
                 {/* Summary Card: Avatar, Name, Title, Email */}
                 <div className="p-3 rounded-2xl bg-muted border border-line mb-2.5">

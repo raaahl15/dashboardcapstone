@@ -18,6 +18,7 @@ import {
   UserCheck,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { usePageAction } from '../layout/navigation';
 import { UserChip } from '../common/UserChip';
 import { WorkOrder, WorkOrderPriority, WorkOrderStatus } from '../../types';
 import {
@@ -261,6 +262,8 @@ export const WorkOrdersView: React.FC = () => {
     setSearchQuery('');
   };
 
+  usePageAction('work-orders', () => isPM && openWorkOrderForm());
+
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* BILAH ALAT v2.0: mode tampilan, lingkup, filter, dan ringkasan sebaris */}
@@ -364,16 +367,6 @@ export const WorkOrdersView: React.FC = () => {
             </button>
           )}
 
-          {isPM && (
-            <button
-              type="button"
-              onClick={() => openWorkOrderForm()}
-              className="ml-auto min-h-[44px] px-5 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-sm font-semibold flex items-center gap-1.5 shadow-cockpit-card transition-all"
-            >
-              <Plus className="w-4 h-4" />
-              Buat Work Order
-            </button>
-          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">

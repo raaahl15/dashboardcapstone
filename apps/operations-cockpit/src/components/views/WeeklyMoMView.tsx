@@ -13,6 +13,7 @@ import {
 } from '../../utils/workOrderHelpers';
 import { STATUS_BADGE_CONFIG } from '../workorders/WorkOrderBadges';
 import { requestLogbookDraft } from '../../utils/logbookDraft';
+import { usePageAction } from '../layout/navigation';
 import {
   Plus,
   ExternalLink,
@@ -134,6 +135,26 @@ export const WeeklyMoMView: React.FC = () => {
   const [newMomSummary, setNewMomSummary] = useState('');
 
   const activeActionsCount = trackerActions.filter((a) => a.progress === 'In Progress').length;
+
+  // MoM terakhir = minggu tertinggi (bila sama, urutan data terakhir)
+  const latestLog = useMemo(
+    () => meetingLogs.reduce<(typeof meetingLogs)[number] | null>((best, l) => (!best || l.week >= best.week ? l : best), null),
+    [meetingLogs]
+  );
+  const latestPoints = useMemo(() => {
+    if (!latestLog) return [];
+    const parts = latestLog.summary
+      .split(/\n+|(?<=\.)\s+(?=[A-Z0-9(])/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+    return parts.length ? parts : [latestLog.summary];
+  }, [latestLog]);
+  const latestActions = useMemo(() => {
+    if (!latestLog) return [];
+    return trackerActions
+      .filter((a) => a.week.replace(/\D/g, '') === String(latestLog.week))
+      .map((action) => ({ action, wo: findWorkOrderForTrackerAction(workOrders, action.id) }));
+  }, [latestLog, trackerActions, workOrders]);
 
   const openAddDeckModal = () => {
     setEditingDeckId(null);
@@ -298,6 +319,8 @@ export const WeeklyMoMView: React.FC = () => {
     setShowMomModal(false);
   };
 
+  usePageAction('weekly-mom', () => isPM && openAddMomModal());
+
   const toggleMomMember = (uid: string) => {
     setNewMomMembers((prev) =>
       prev.includes(uid) ? prev.filter((memberId) => memberId !== uid) : [...prev, uid]
@@ -306,277 +329,172 @@ export const WeeklyMoMView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, description, and MoM actions */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
+      {/* MoM terakhir (kiri) + WO sejak rapat lalu (kanan) */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+        <section className="xl:col-span-8 glass-card p-6 sm:p-7 flex flex-col">
+          {latestLog ? (
+            <>
+              <div className="flex flex-wrap items-center gap-2 text-xs text-fg-3">
+                <span className="px-3 py-1 rounded-full bg-primary text-on-primary font-semibold uppercase tracking-wide">
+                  {latestLog.weekLabel || `Week ${latestLog.week}`}
+                </span>
+                <span>
+                  {latestLog.dayText} · {latestLog.location} · Evaluator: {latestLog.evaluator}
+                </span>
+                <span className="ml-auto flex items-center gap-1">
+                  <WhatsAppShareButton
+                    compact
+                    label={`Bagikan ringkasan MoM ${latestLog.weekLabel} ke WhatsApp`}
+                    text={[
+                      `*MoM ${latestLog.weekLabel}: ${latestLog.topic}*`,
+                      `${latestLog.dayText} | ${latestLog.location} | ${latestLog.evaluator}`,
+                      `Kehadiran: ${latestLog.presenceRatio}`,
+                      '',
+                      latestLog.summary,
+                    ].join('\n')}
+                  />
+                  {isPM && (
+                    <button
+                      type="button"
+                      onClick={() => openEditMomModal(latestLog)}
+                      className="w-10 h-10 rounded-full text-fg-3 hover:bg-muted hover:text-primary flex items-center justify-center"
+                      title="Edit catatan MoM"
+                      aria-label={`Edit MoM ${latestLog.weekLabel}`}
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </span>
+              </div>
 
-        <div className="space-y-2.5">
-          <div className="max-w-4xl">
-            <p className="text-[13px] leading-relaxed text-fg-3">
-              Repositori materi presentasi asistensi mingguan, pelacak komitmen tindakan korektif, dan logbook asistensi DTNTF.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold tracking-normal inline-flex items-center">
-              Semester Gasal 2026/2027
-            </span>
-          </div>
-        </div>
-      </div>
+              <h2 className="mt-4 font-heading text-3xl font-normal leading-tight text-fg">{latestLog.topic}</h2>
 
-      {/* ========================================================================= */}
-      {/* FORMAT SLIDE DECK BANNER (15 MENIT) */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-primary" />
-            <h3 className="font-heading font-bold text-xs sm:text-sm text-fg">
-              Format Slide Deck Bimbingan (15 menit)
-            </h3>
-          </div>
-          {/* Panduan Capstone tidak mengatur format slide bimbingan: ini format internal tim (LOG-051/052) */}
-          <span className="px-3 py-1 bg-surface/70 text-primary rounded-full text-[10px] font-bold flex items-center gap-1 border border-glass-stroke">
-            <FileCheck2 className="w-3 h-3" /> Format internal tim · template slide UGM (Canva)
-          </span>
-        </div>
+              <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Ringkasan &amp; arahan</p>
+              <ol className="mt-2.5 space-y-2.5">
+                {latestPoints.map((pt, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm leading-relaxed text-fg-2">
+                    <span className="w-6 h-6 rounded-full bg-primary-soft text-fg-2 text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ol>
 
-        {/* 2-Segment Progress Visualizer */}
-        <div className="w-full h-8 rounded-full overflow-hidden flex text-on-ink text-[11px] font-bold shadow-xs">
-          <div className="w-[66.7%] bg-primary flex items-center justify-center px-3 tracking-wide">
-            10 menit - Pemaparan Teknis
-          </div>
-          <div className="w-[33.3%] bg-ink bg-hatch-pattern flex items-center justify-center px-3 tracking-wide">
-            5 menit - Diskusi &amp; Q&amp;A Dosen
-          </div>
-        </div>
+              {latestLog.presentMembers.length > 0 && (
+              <div className="mt-5 flex flex-wrap items-center gap-2">
+                <span className="text-xs text-fg-3 mr-1">Hadir {latestLog.presenceRatio}:</span>
+                {latestLog.presentMembers.map((m, i) => (
+                  <UserChip key={`${m}-${i}`} uid={m} variant="avatar-nama" size="xs" useNickname nameClassName="!text-[11px] !font-medium !text-fg-2" />
+                ))}
+              </div>
+              )}
 
-        <div className="text-[11px] text-fg-3 flex flex-wrap items-center gap-x-2 gap-y-1">
-          <span className="font-bold text-fg">Urutan:</span>
-          <span>1 Status capaian vs timeline</span>
-          <span>•</span>
-          <span>2 Tindak lanjut arahan bimbingan sebelumnya</span>
-          <span>•</span>
-          <span>3–4 Hasil kerja per WO/anggota (+ standar)</span>
-          <span>•</span>
-          <span>5 Risiko &amp; butir terbuka</span>
-          <span>•</span>
-          <span>6 Pertanyaan/keputusan untuk dosen</span>
-          <span>•</span>
-          <span>7 WO minggu depan</span>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* WORK ORDER SEJAK RAPAT LALU (4 KELOMPOK RINGKASAN ANTAR-RAPAT) */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-5 sm:p-6 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <ClipboardList className="w-4 h-4 text-primary" />
-              <h2 className="font-heading font-bold text-sm sm:text-base text-fg">
-                Work Order Sejak Rapat Lalu
-              </h2>
-            </div>
-            <p className="text-xs text-fg-3 mt-0.5">
-              Ringkasan otomatis capaian dan hambatan Work Order berdasarkan periode minggu rapat berurutan
-            </p>
-          </div>
-
-          {momPeriodOptions.length > 0 && (
-            <select
-              value={activeMomPeriod?.key || ''}
-              onChange={(e) => setSelectedPeriodKey(e.target.value)}
-              aria-label="Pilih periode ringkasan Work Order antar-rapat"
-              className="min-h-[40px] px-3.5 rounded-full bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
-            >
-              {momPeriodOptions.map((opt) => (
-                <option key={opt.key} value={opt.key}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              <div className="mt-auto pt-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Tindak lanjut → Work Order</p>
+                <div className="mt-2.5 flex flex-wrap gap-2">
+                  {latestActions.length === 0 && <span className="text-xs text-fg-3">Belum ada action item untuk minggu ini.</span>}
+                  {latestActions.map(({ action, wo }) => (
+                    <button
+                      key={action.id}
+                      type="button"
+                      onClick={() => wo && setSelectedWorkOrderId(wo.id)}
+                      disabled={!wo}
+                      className="min-h-[36px] px-3.5 rounded-full border border-line-strong bg-surface text-xs font-semibold text-fg-2 hover:border-primary disabled:opacity-70"
+                      title={action.issue}
+                    >
+                      {action.code} → {wo ? wo.code : 'belum ada WO'}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      requestLogbookDraft({
+                        weekNumber: latestLog.week,
+                        date: latestLog.dayText.replace(/^[A-Za-z]+,\s*/, '').split(' - ')[0],
+                        workDescription: `Asistensi ${latestLog.weekLabel || `Week ${latestLog.week}`}: ${latestLog.topic}. ${latestLog.summary}`,
+                        issueSolution: '',
+                      });
+                      setActiveTab('logbook');
+                    }}
+                    className="min-h-[36px] px-3.5 rounded-full bg-muted text-primary text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary hover:text-on-primary"
+                  >
+                    <BookOpen className="w-3.5 h-3.5" />
+                    Buat draf logbook
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <p className="text-sm text-fg-3">Belum ada catatan MoM.</p>
           )}
-        </div>
+        </section>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
-          {/* Kelompok 1: Selesai */}
-          <div className="rounded-2xl bg-surface/75 border border-success-line/60 p-3.5 flex flex-col gap-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-success inline-flex items-center gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-success" />
-                Selesai
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-success-soft text-success">
-                {momWoSummary.completed.length}
-              </span>
+        <div className="xl:col-span-4 flex flex-col gap-5">
+          <section className="glass-card p-6">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="font-heading text-2xl font-normal text-fg">WO sejak rapat lalu</h2>
             </div>
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
-              {momWoSummary.completed.length === 0 ? (
-                <p className="text-[11px] text-fg-3 py-3 text-center">
-                  Belum ada WO selesai pada periode ini
-                </p>
-              ) : (
-                momWoSummary.completed.map((wo) => (
-                  <button
-                    key={wo.id}
-                    type="button"
-                    onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-success-soft/40 hover:bg-success-soft/80 transition-colors space-y-1"
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-success">
-                        {wo.code}
-                      </span>
-                      <span className="text-[10px] text-success font-semibold">
-                        {wo.completedAt
-                          ? formatYmdToIndonesian(wo.completedAt.slice(0, 10))
-                          : `W${wo.projectWeek}`}
-                      </span>
-                    </div>
-                    <p className="text-[11px] font-bold text-fg line-clamp-1">
-                      {wo.title}
-                    </p>
-                  </button>
-                ))
-              )}
+            {momPeriodOptions.length > 0 && (
+              <select
+                value={activeMomPeriod?.key || ''}
+                onChange={(e) => setSelectedPeriodKey(e.target.value)}
+                aria-label="Pilih periode ringkasan Work Order antar-rapat"
+                className="mt-3 w-full min-h-[40px] px-3.5 rounded-full bg-surface border border-line text-xs font-medium text-fg outline-none focus:border-primary"
+              >
+                {momPeriodOptions.map((opt) => (
+                  <option key={opt.key} value={opt.key}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            )}
+            <div className="mt-4 grid grid-cols-4 gap-2 text-center">
+              {(
+                [
+                  ['Selesai', momWoSummary.completed, 'bg-success-soft text-success'],
+                  ['Berjalan', momWoSummary.inProgress, 'bg-primary-soft text-fg-2'],
+                  ['Terlambat', momWoSummary.overdue, 'bg-warm-soft text-warm'],
+                  ['Blocked', momWoSummary.blocked, 'bg-muted text-fg-2'],
+                ] as const
+              ).map(([label, list, cls]) => (
+                <div key={label} className={`rounded-2xl py-3 ${cls}`}>
+                  <p className="text-2xl font-semibold tabular-nums leading-none">{list.length}</p>
+                  <p className="mt-1.5 text-[11px] font-medium">{label}</p>
+                </div>
+              ))}
             </div>
-          </div>
+            <ul className="mt-4 space-y-1.5 max-h-48 overflow-y-auto">
+              {[...momWoSummary.overdue, ...momWoSummary.blocked, ...momWoSummary.inProgress, ...momWoSummary.completed].map((wo) => {
+                const late = momWoSummary.overdue.includes(wo);
+                return (
+                  <li key={wo.id}>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedWorkOrderId(wo.id)}
+                      className="w-full text-left text-xs flex items-center gap-2 py-1 hover:text-primary"
+                    >
+                      <span className={`font-semibold tabular-nums whitespace-nowrap shrink-0 ${late ? 'text-warm' : 'text-fg-3'}`}>{wo.code}</span>
+                      <span className={`truncate ${late ? 'text-warm' : 'text-fg-2'}`}>{wo.title}</span>
+                      <span className="ml-auto shrink-0 text-fg-3">{formatYmdToIndonesian(wo.dueDate)}</span>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
 
-          {/* Kelompok 2: Masih Berjalan */}
-          <div className="rounded-2xl bg-surface/75 border border-line/60 p-3.5 flex flex-col gap-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-fg-2 inline-flex items-center gap-1.5">
-                <PlayCircle className="w-3.5 h-3.5 text-primary" />
-                Masih Berjalan
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-primary-soft text-fg-2">
-                {momWoSummary.inProgress.length}
-              </span>
+          <section className="glass-card p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Format slide bimbingan · 15 menit</p>
+            <div className="mt-3 flex h-2.5 rounded-full overflow-hidden">
+              <span className="w-2/3 bg-primary" />
+              <span className="w-1/3 bg-hatch-pattern" />
             </div>
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
-              {momWoSummary.inProgress.length === 0 ? (
-                <p className="text-[11px] text-fg-3 py-3 text-center">
-                  Tidak ada WO berjalan
-                </p>
-              ) : (
-                momWoSummary.inProgress.map((wo) => (
-                  <button
-                    key={wo.id}
-                    type="button"
-                    onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-muted/70 hover:bg-primary-soft/70 transition-colors space-y-1"
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-primary">
-                        {wo.code}
-                      </span>
-                      <span className="text-[10px] font-bold text-fg-2">
-                        {wo.status}
-                      </span>
-                    </div>
-                    <p className="text-[11px] font-bold text-fg line-clamp-1">
-                      {wo.title}
-                    </p>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Kelompok 3: Terlambat */}
-          <div className="rounded-2xl bg-surface/75 border border-danger-line/70 p-3.5 flex flex-col gap-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-danger inline-flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-danger" />
-                Terlambat
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-danger-soft text-danger">
-                {momWoSummary.overdue.length}
-              </span>
-            </div>
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
-              {momWoSummary.overdue.length === 0 ? (
-                <p className="text-[11px] text-fg-3 py-3 text-center">
-                  Nihil keterlambatan WO
-                </p>
-              ) : (
-                momWoSummary.overdue.map((wo) => (
-                  <button
-                    key={wo.id}
-                    type="button"
-                    onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-danger-soft/55 hover:bg-danger-soft transition-colors space-y-1"
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-danger">
-                        {wo.code}
-                      </span>
-                      <span className="text-[10px] font-bold text-danger">
-                        {formatYmdToIndonesian(wo.dueDate)}
-                      </span>
-                    </div>
-                    <p className="text-[11px] font-bold text-fg line-clamp-1">
-                      {wo.title}
-                    </p>
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
-
-          {/* Kelompok 4: Blocked */}
-          <div className="rounded-2xl bg-surface/75 border border-warm-line/70 p-3.5 flex flex-col gap-2.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-heading font-bold text-warm inline-flex items-center gap-1.5">
-                <PauseCircle className="w-3.5 h-3.5 text-warm" />
-                Blocked
-              </span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-warm-soft text-warm">
-                {momWoSummary.blocked.length}
-              </span>
-            </div>
-            <div className="space-y-1.5 max-h-48 overflow-y-auto pr-0.5">
-              {momWoSummary.blocked.length === 0 ? (
-                <p className="text-[11px] text-fg-3 py-3 text-center">
-                  Tidak ada WO yang terhambat
-                </p>
-              ) : (
-                momWoSummary.blocked.map((wo) => (
-                  <button
-                    key={wo.id}
-                    type="button"
-                    onClick={() => setSelectedWorkOrderId(wo.id)}
-                    className="w-full text-left p-2.5 rounded-xl bg-warm-soft/60 hover:bg-warm-soft transition-colors space-y-1"
-                  >
-                    <div className="flex items-center justify-between gap-1">
-                      <span className="font-mono text-[10px] font-extrabold text-warm">
-                        {wo.code}
-                      </span>
-                      <UserChip
-                        uid={wo.assigneeIds[0]}
-                        variant="avatar-nama"
-                        size="xs"
-                        useNickname
-                        avatarClassName="w-4 h-4 text-[8px]"
-                        nameClassName="!text-[10px] !font-semibold !text-warm"
-                      />
-                    </div>
-                    <p className="text-[11px] font-bold text-fg line-clamp-1">
-                      {wo.title}
-                    </p>
-                    {wo.blockedReason && (
-                      <p className="text-[10px] text-warm line-clamp-1">
-                        Alasan: {wo.blockedReason}
-                      </p>
-                    )}
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
+            <p className="mt-2 text-xs text-fg-2">10 menit pemaparan teknis · 5 menit diskusi &amp; Q&amp;A dosen</p>
+            <p className="mt-2 text-xs leading-relaxed text-fg-3">
+              Urutan: status vs timeline · tindak lanjut arahan sebelumnya · hasil kerja per WO · risiko · pertanyaan untuk dosen · WO minggu depan. Format internal tim (template slide UGM).
+            </p>
+          </section>
         </div>
       </div>
 

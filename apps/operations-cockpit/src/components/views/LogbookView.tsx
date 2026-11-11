@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { consumeLogbookDraft } from '../../utils/logbookDraft';
+import { usePageAction } from '../layout/navigation';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { LogbookItem } from '../../types';
@@ -370,312 +371,128 @@ export const LogbookView: React.FC = () => {
     setEditingLog(null);
   };
 
+  usePageAction('logbook', () => handleOpenAdd());
+
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, Description & Action Buttons */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <p className="text-xs sm:text-sm text-fg-3 mt-1">
-              <strong>6 logbook</strong>: 1 logbook kelompok Area 1 + 5 logbook per anggota, masing-masing <strong>12 baris</strong>. Diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Format uraian: <em>Judul Uraian: Isi Uraian</em>.
-            </p>
-          </div>
+      {/* Pengingat 1×24 jam (strip tipis) */}
+      <div
+        className={`rounded-full px-4 py-2.5 flex items-center gap-2.5 text-xs ${
+          momLogbookStatus.hasUnloggedMom ? 'bg-warm-soft text-warm' : 'bg-success-soft text-success'
+        }`}
+        title="Gunakan tombol &quot;Buat draf logbook&quot; di halaman Rapat, lalu lengkapi uraian pekerjaanmu sendiri. Paraf dosen tetap di buku logbook fisik."
+      >
+        {momLogbookStatus.hasUnloggedMom ? <AlertTriangle className="w-4 h-4 shrink-0" /> : <Check className="w-4 h-4 shrink-0" />}
+        <span className="font-medium">
+          {momLogbookStatus.hasUnloggedMom
+            ? `Pengingat 1×24 jam: untuk MoM ${momLogbookStatus.latestMomLabel}, belum ada entri dari ${momLogbookStatus.missingNames.join(', ')}.`
+            : `Lengkap: semua anggota sudah mengisi logbook untuk MoM terbaru (${momLogbookStatus.latestMomLabel}).`}
+        </span>
+        <span className="ml-auto shrink-0 tabular-nums font-semibold">
+          {totalFilled}/{TOTAL_TARGET} terisi · {totalVerified} terparaf ({overallVerifiedPercent}%)
+        </span>
+      </div>
 
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+      {/* Kuota 6 logbook × 12 baris (klik untuk memfilter) */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-4">
+        {entities.map((ent) => {
+          const stat = statsByEntity[ent.id] || { total: 0, verified: 0, percent: 0, isCompleted: false };
+          const isSelected = filterEntity === ent.id;
+          const accPct = Math.round((stat.verified / 12) * 100);
+          return (
             <button
+              key={ent.id}
               type="button"
-              onClick={() =>
-                downloadText(
-                  `logbook_area1_${new Date().toISOString().slice(0, 10)}.csv`,
-                  buildLogbookCsv(filteredLogbooks, (id) => getUser(id))
-                )
-              }
-              disabled={filteredLogbooks.length === 0}
-              className="min-h-[40px] px-4 py-2 bg-surface/80 hover:bg-surface text-fg border border-glass-stroke rounded-full font-heading text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all disabled:opacity-50"
-              title="Unduh entri yang sedang tampil (sesuai filter) sebagai CSV rekap untuk Simaster"
+              onClick={() => setFilterEntity(isSelected ? 'All' : ent.id)}
+              aria-pressed={isSelected}
+              className={`glass-card !rounded-[26px] p-4 text-left transition-all ${isSelected ? '!border-primary ring-2 ring-focus/30' : 'hover:shadow-cockpit-pop'}`}
             >
-              <Download className="w-3.5 h-3.5 text-primary" />
-              Ekspor CSV ({filteredLogbooks.length})
+              <span className="flex items-center gap-2.5">
+                <span className={`w-10 h-10 rounded-full text-xs font-semibold flex items-center justify-center shrink-0 ${ent.avatarBg}`}>
+                  {ent.avatarText}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-fg truncate">{ent.shortName}</span>
+                  <span className="block text-[11px] text-fg-3 truncate">{ent.category === 'kelompok' ? 'Area 1 Unit' : ent.roleTitle}</span>
+                </span>
+              </span>
+              <span className="mt-3 flex items-baseline justify-between">
+                <span className="text-2xl font-semibold text-fg tabular-nums">
+                  {stat.total}/12
+                </span>
+                <span className="text-[11px] font-semibold text-success tabular-nums">ACC {accPct}%</span>
+              </span>
+              <span className="mt-2 block h-1.5 rounded-full bg-muted overflow-hidden">
+                <span className={`block h-full rounded-full ${stat.isCompleted ? 'bg-success-solid' : 'bg-success-solid/80'}`} style={{ width: `${stat.percent}%` }} />
+              </span>
             </button>
-            {/* Tombol "Sinkronkan 72 Entri" dihapus (LOG-052): mengisi logbook dengan entri contoh sama dengan memalsukan logbook. */}
-            <button
-              onClick={() => handleOpenAdd()}
-              className="min-h-[40px] px-5 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center gap-2 shadow-xs transition-all"
-            >
-              <Plus className="w-4 h-4" />
-              Add Logbook
-            </button>
-          </div>
-        </div>
+          );
+        })}
       </div>
 
-      {/* ========================================================================= */}
-      {/* GLOBAL QUOTA SUMMARY & MOM ALERT */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-5 space-y-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
-          {/* Progress Global 72 Quota */}
-          <div className="lg:col-span-5 space-y-2">
-            <div className="flex items-baseline justify-between">
-              <div className="flex items-baseline gap-2">
-                <span className="font-heading text-3xl sm:text-4xl font-extrabold text-fg tabular-nums">
-                  {totalFilled} / {TOTAL_TARGET}
-                </span>
-                <span className="text-xs font-semibold text-fg-3">
-                  Entri Terisi ({totalVerified} Terparaf)
-                </span>
-              </div>
-              <span className="text-xs font-bold text-primary tabular-nums">
-                {overallFilledPercent}% Terisi
-              </span>
-            </div>
-
-            {/* Hatched bar */}
-            <div className="w-full h-3.5 rounded-full bg-muted overflow-hidden p-0.5">
-              <div
-                className="h-full rounded-full bg-hatch-pattern transition-all duration-500"
-                style={{ width: `${overallFilledPercent}%` }}
-              ></div>
-            </div>
-
-            <div className="flex items-center justify-between text-[11px] text-fg-3">
-              <span>Target: 1 kelompok + {entities.length - 1} anggota, × 12 baris</span>
-              <span className="font-semibold text-success">
-                {totalVerified} / {TOTAL_TARGET} ACC ({overallVerifiedPercent}%)
-              </span>
-            </div>
-          </div>
-
-          {/* Dynamic 24-Hour Rule Alert Box */}
-          <div
-            className={`lg:col-span-7 p-3.5 rounded-2xl flex items-start gap-2.5 text-xs ${
-              momLogbookStatus.hasUnloggedMom
-                ? 'bg-warm-soft/90 border border-warm-line/30 text-warm'
-                : 'bg-success-soft/90 border border-success-line/30 text-success'
-            }`}
+      {/* Entri logbook: filter ringkas + tabel */}
+      <div className="glass-card p-5 sm:p-6 space-y-4">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h2 className="font-heading text-2xl font-normal text-fg mr-auto">Entri logbook</h2>
+          <select value={filterEntity} onChange={(e) => setFilterEntity(e.target.value)} aria-label="Filter entitas" className="min-h-[38px] pl-3.5 pr-2 rounded-full border border-line bg-surface text-xs font-medium text-fg outline-none focus:border-primary">
+            <option value="All">Entitas: Semua ({logbooks.length})</option>
+            {entities.map((ent) => (
+              <option key={ent.id} value={ent.id}>
+                {ent.shortName} ({statsByEntity[ent.id]?.total || 0})
+              </option>
+            ))}
+          </select>
+          <select
+            value={filterWeek}
+            onChange={(e) => setFilterWeek(e.target.value)}
+            aria-label="Filter minggu"
+            className={`min-h-[38px] pl-3.5 pr-2 rounded-full border border-line bg-surface text-xs font-medium text-fg outline-none focus:border-primary ${filterWeek !== 'All' ? '!bg-primary-soft !border-primary' : ''}`}
           >
-            {momLogbookStatus.hasUnloggedMom ? (
-              <AlertTriangle className="w-4 h-4 text-warm shrink-0 mt-0.5" />
-            ) : (
-              <Check className="w-4 h-4 text-success shrink-0 mt-0.5" />
-            )}
-            <div>
-              <p className="font-semibold leading-relaxed">
-                {momLogbookStatus.hasUnloggedMom
-                  ? `Pengingat 1×24 jam: untuk MoM ${momLogbookStatus.latestMomLabel}, belum ada entri dari ${momLogbookStatus.missingNames.join(', ')}.`
-                  : `Lengkap: semua anggota sudah mengisi logbook untuk MoM terbaru (${momLogbookStatus.latestMomLabel}).`}
-              </p>
-              <p className="text-[11px] opacity-85 mt-0.5">
-                Gunakan tombol &quot;Buat draf logbook dari MoM ini&quot; di halaman Rapat, lalu lengkapi uraian spesifik pekerjaanmu sendiri. Paraf dosen tetap di buku logbook fisik.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* ========================================================================= */}
-        {/* ENTITY MATRIX CARDS (per anggota) */}
-        {/* ========================================================================= */}
-        <div className="pt-3 border-t border-glass-stroke">
-          <div className="flex items-center justify-between mb-2.5">
-            <span className="text-xs font-bold text-fg flex items-center gap-1.5">
-              <Layers className="w-3.5 h-3.5 text-primary" />
-              KUOTA 6 LOGBOOK (1 KELOMPOK + 5 ANGGOTA × 12 BARIS):
-            </span>
-            <span className="text-[11px] text-fg-3">
-              Klik kartu untuk memfilter entri
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
-            {entities.map((ent) => {
-              const stat = statsByEntity[ent.id] || { total: 0, verified: 0, percent: 0, isCompleted: false };
-              const isSelected = filterEntity === ent.id;
-
-              return (
-                <button
-                  key={ent.id}
-                  onClick={() => setFilterEntity(isSelected ? 'All' : ent.id)}
-                  className={`p-3 rounded-2xl text-left transition-all border ${
-                    isSelected
-                      ? 'bg-surface shadow-md border-primary ring-2 ring-focus/20'
-                      : 'bg-surface/70 hover:bg-surface border-glass-stroke shadow-xs'
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-1.5 mb-1.5">
-                    <span
-                      className={`w-6 h-6 rounded-md font-heading font-bold text-[10px] flex items-center justify-center shrink-0 ${ent.avatarBg}`}
-                    >
-                      {ent.avatarText}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full tabular-nums ${
-                        stat.isCompleted
-                          ? 'bg-success-soft text-success'
-                          : 'bg-warm-soft text-warm'
-                      }`}
-                    >
-                      {stat.total}/12
-                    </span>
-                  </div>
-
-                  <p className="font-heading font-bold text-xs text-fg truncate">
-                    {ent.shortName}
-                  </p>
-                  <p className="text-[10px] text-fg-3 truncate">
-                    {ent.category === 'kelompok' ? 'Area 1 Unit' : ent.roleTitle}
-                  </p>
-
-                  {/* Mini progress bar */}
-                  <div className="w-full h-1.5 rounded-full bg-muted overflow-hidden mt-2">
-                    <div
-                      className={`h-full rounded-full transition-all duration-300 ${
-                        stat.isCompleted ? 'bg-success-solid' : 'bg-primary'
-                      }`}
-                      style={{ width: `${stat.percent}%` }}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-[9px] text-fg-3 mt-1 tabular-nums">
-                    <span>ACC: {stat.verified}/12</span>
-                    <span>{stat.percent}%</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* FILTER & SEARCH BAR */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-4 space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* Entity Filter Pills */}
-          <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-bold text-fg mr-1 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5 text-primary" />
-              ENTITAS:
-            </span>
-            <button
-              onClick={() => setFilterEntity('All')}
-              className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
-                filterEntity === 'All'
-                  ? 'bg-ink text-on-ink shadow-xs'
-                  : 'bg-surface/70 text-fg-3 border border-glass-stroke hover:bg-surface'
-              }`}
-            >
-              Semua ({logbooks.length})
-            </button>
-            {entities.map((ent) => {
-              const count = statsByEntity[ent.id]?.total || 0;
-              const isSelected = filterEntity === ent.id;
-              return (
-                <button
-                  key={ent.id}
-                  onClick={() => setFilterEntity(ent.id)}
-                  className={`px-3 py-1 rounded-full text-xs font-semibold transition-all flex items-center gap-1 ${
-                    isSelected
-                      ? 'bg-ink text-on-ink shadow-xs'
-                      : 'bg-surface/70 text-fg-3 border border-glass-stroke hover:bg-surface'
-                  }`}
-                >
-                  <span>{ent.shortName}</span>
-                  <span className="text-[10px] opacity-80 tabular-nums">({count})</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Search box */}
-          <div className="relative min-w-[200px] max-w-xs w-full sm:w-auto">
-            <Search className="w-3.5 h-3.5 text-fg-3 absolute left-3 top-1/2 -translate-y-1/2" />
+            <option value="All">Minggu: Semua</option>
+            {Array.from({ length: MAX_WEEK }, (_, i) => i + 1).map((w) => (
+              <option key={w} value={String(w)}>
+                Minggu: W{w}
+              </option>
+            ))}
+          </select>
+          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value as typeof filterStatus)} aria-label="Filter status paraf" className="min-h-[38px] pl-3.5 pr-2 rounded-full border border-line bg-surface text-xs font-medium text-fg outline-none focus:border-primary">
+            <option value="All">Paraf: Semua</option>
+            <option value="verified">Paraf: Terverifikasi</option>
+            <option value="unverified">Paraf: Belum diparaf</option>
+          </select>
+          <div className="relative w-full sm:w-56">
+            <Search className="w-3.5 h-3.5 text-fg-3 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cari uraian, kendala..."
-              className="w-full h-8 pl-8 pr-3 bg-surface/80 border border-glass-stroke rounded-full text-xs outline-none focus:bg-surface focus:ring-1 focus:ring-focus"
+              aria-label="Cari logbook"
+              className="w-full min-h-[38px] pl-9 pr-8 bg-surface border border-line rounded-full text-xs text-fg outline-none focus:border-primary"
             />
             {searchQuery && (
-              <button
-                onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg"
-              >
+              <button type="button" onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-fg-3 hover:text-fg" aria-label="Hapus pencarian">
                 <X className="w-3 h-3" />
               </button>
             )}
           </div>
+          <button
+            type="button"
+            onClick={() =>
+              downloadText(`logbook_area1_${new Date().toISOString().slice(0, 10)}.csv`, buildLogbookCsv(filteredLogbooks, (id) => getUser(id)))
+            }
+            disabled={filteredLogbooks.length === 0}
+            className="min-h-[38px] px-3 text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1.5 disabled:opacity-50"
+            title="Unduh entri yang sedang tampil (sesuai filter) sebagai CSV rekap untuk Simaster"
+          >
+            <Download className="w-3.5 h-3.5" />
+            Ekspor CSV ({filteredLogbooks.length})
+          </button>
+          {/* Tombol "Sinkronkan 72 Entri" dihapus (LOG-052): mengisi logbook dengan entri contoh sama dengan memalsukan logbook. */}
         </div>
-
-        {/* Secondary Filter: Week & Verification Status */}
-        <div className="pt-2 border-t border-glass-stroke flex flex-wrap items-center justify-between gap-3 text-xs">
-          {/* Week Selector */}
-          <div className="flex flex-wrap items-center gap-1">
-            <span className="text-[11px] font-semibold text-fg-3 mr-1">Minggu:</span>
-            <button
-              onClick={() => setFilterWeek('All')}
-              className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
-                filterWeek === 'All'
-                  ? 'bg-primary text-on-primary'
-                  : 'bg-surface/60 text-fg-3 hover:bg-surface'
-              }`}
-            >
-              Semua
-            </button>
-            {Array.from({ length: MAX_WEEK }, (_, i) => i + 1).map((w) => {
-              const isSelected = filterWeek === String(w);
-              return (
-                <button
-                  key={w}
-                  onClick={() => setFilterWeek(String(w))}
-                  className={`px-2 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
-                    isSelected
-                      ? 'bg-primary text-on-primary'
-                      : 'bg-surface/60 text-fg-3 hover:bg-surface'
-                  }`}
-                >
-                  W{w < 10 ? `0${w}` : w}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Status Filter */}
-          <div className="flex items-center gap-1.5">
-            <span className="text-[11px] font-semibold text-fg-3 mr-1">Status Paraf:</span>
-            {(['All', 'verified', 'unverified'] as const).map((st) => {
-              const label =
-                st === 'All'
-                  ? 'Semua'
-                  : st === 'verified'
-                  ? 'Terverifikasi'
-                  : 'Belum Diparaf';
-              const isSelected = filterStatus === st;
-              return (
-                <button
-                  key={st}
-                  onClick={() => setFilterStatus(st)}
-                  className={`px-2.5 py-0.5 rounded-md text-[11px] font-semibold transition-all ${
-                    isSelected
-                      ? 'bg-ink text-on-ink'
-                      : 'bg-surface/60 text-fg-3 hover:bg-surface'
-                  }`}
-                >
-                  {label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* LOGBOOK TABLE */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-5 sm:p-6 space-y-4">
+        <p className="text-xs text-fg-3">
+          6 logbook (1 kelompok + 5 anggota) × 12 baris. Diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Format uraian: <em>Judul Uraian: Isi Uraian</em>.
+        </p>
         <div className="overflow-x-auto rounded-2xl border border-glass-stroke bg-surface/60">
           <table className="w-full text-left border-collapse min-w-[860px]">
             <thead>

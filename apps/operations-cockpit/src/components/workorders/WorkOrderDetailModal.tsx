@@ -229,6 +229,16 @@ export const WorkOrderDetailModal: React.FC = () => {
   };
 
   const completedChecklistCount = wo.checklist.filter((c) => c.done).length;
+  const waShareText = [
+    `*${wo.code}: ${wo.title}*`,
+    `Status: ${wo.status}${wo.needsRevision ? ' (perlu revisi)' : ''} | Prioritas: ${wo.priority}`,
+    `Tenggat: ${formatYmdToIndonesian(wo.dueDate)}${overdue ? ` (TERLAMBAT ${Math.abs(daysDelta)} hari)` : ''}`,
+    `PIC: ${wo.assigneeIds.map((id) => getUser(id)?.nickname || getUser(id)?.name || id).join(', ')}`,
+    wo.blockedReason && wo.status === 'Blocked' ? `Kendala: ${wo.blockedReason}` : '',
+    `Cek di cockpit Area 1-DME > Work Order.`,
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   return (
     <div
@@ -242,74 +252,36 @@ export const WorkOrderDetailModal: React.FC = () => {
         }
       }}
     >
-      <div className="w-full max-w-2xl h-full bg-surface shadow-cockpit-pop border-l border-glass-stroke flex flex-col overflow-hidden animate-in slide-in-from-right duration-200">
-        {/* Top Sticky Header */}
-        <div className="px-6 py-4 border-b border-line bg-surface/95 flex items-start justify-between gap-3">
+      <div className="anim-pop w-full max-w-xl h-full sm:h-[calc(100%-2rem)] sm:m-4 bg-surface shadow-cockpit-pop sm:rounded-[32px] flex flex-col overflow-hidden">
+        {/* Header */}
+        <div className="px-6 sm:px-7 pt-6 pb-3 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-mono text-xs font-extrabold px-2.5 py-0.5 rounded-full bg-ink text-on-ink">
-                {wo.code}
-              </span>
-              <WorkOrderStatusBadge
-                status={wo.status}
-                needsRevision={wo.needsRevision}
-                size="sm"
-              />
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-primary-soft text-fg-2 tabular-nums">{wo.code}</span>
+              <WorkOrderStatusBadge status={wo.status} needsRevision={wo.needsRevision} size="sm" />
               <WorkOrderPriorityBadge priority={wo.priority} size="sm" />
-              {overdue && (
-                <WorkOrderOverdueBadge daysLate={Math.abs(daysDelta)} size="sm" />
-              )}
+              {overdue && <WorkOrderOverdueBadge daysLate={Math.abs(daysDelta)} size="sm" />}
             </div>
-            <h2
-              id="wo-detail-title"
-              className="font-heading font-bold text-base sm:text-lg text-fg mt-2 leading-snug"
-            >
+            <h2 id="wo-detail-title" className="font-heading text-2xl font-normal text-fg mt-3 leading-snug">
               {wo.title}
             </h2>
           </div>
-
-          <div className="flex items-center gap-1.5 shrink-0">
-            {isPM ? (
-              <button
-                type="button"
-                onClick={() => setWaOpen(true)}
-                title={`Kirim pesan WhatsApp ${wo.code} (template Rakai)`}
-                aria-label={`Kirim pesan WhatsApp ${wo.code}`}
-                className="min-h-[44px] px-3.5 rounded-full bg-success-soft hover:bg-success-soft text-success text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
-              >
-                <MessageCircle className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">WhatsApp</span>
-              </button>
-            ) : (
-            <WhatsAppShareButton
-              label={`Bagikan ${wo.code} ke WhatsApp`}
-              text={[
-                `*${wo.code}: ${wo.title}*`,
-                `Status: ${wo.status}${wo.needsRevision ? ' (perlu revisi)' : ''} | Prioritas: ${wo.priority}`,
-                `Tenggat: ${formatYmdToIndonesian(wo.dueDate)}${overdue ? ` (TERLAMBAT ${Math.abs(daysDelta)} hari)` : ''}`,
-                `PIC: ${wo.assigneeIds.map((id) => getUser(id)?.nickname || getUser(id)?.name || id).join(', ')}`,
-                wo.blockedReason && wo.status === 'Blocked' ? `Kendala: ${wo.blockedReason}` : '',
-                `Cek di cockpit Area 1-DME > Work Order.`,
-              ]
-                .filter(Boolean)
-                .join('\n')}
-            />
-            )}
+          <div className="flex items-center gap-1 shrink-0">
             {isPM && wo.status !== 'Dibatalkan' && (
               <button
                 type="button"
                 onClick={() => openWorkOrderForm({ editingWorkOrderId: wo.id })}
-                className="min-h-[44px] px-3.5 rounded-full bg-muted hover:bg-muted text-primary text-xs font-bold inline-flex items-center gap-1.5 transition-colors"
+                className="w-10 h-10 rounded-full hover:bg-muted text-fg-2 hover:text-primary flex items-center justify-center"
                 title="Ubah Work Order"
+                aria-label="Ubah Work Order"
               >
-                <Pencil className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Ubah</span>
+                <Pencil className="w-4 h-4" />
               </button>
             )}
             <button
               type="button"
               onClick={() => setSelectedWorkOrderId(null)}
-              className="w-11 h-11 rounded-full hover:bg-muted text-fg-3 hover:text-fg flex items-center justify-center transition-colors"
+              className="w-10 h-10 rounded-full bg-muted text-fg hover:bg-primary-soft flex items-center justify-center"
               aria-label="Tutup panel detail Work Order"
             >
               <X className="w-4 h-4" />
@@ -318,7 +290,7 @@ export const WorkOrderDetailModal: React.FC = () => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+        <div className="flex-1 overflow-y-auto px-6 sm:px-7 pb-5 space-y-5">
           {actionError && (
             <div
               role="alert"
@@ -373,29 +345,80 @@ export const WorkOrderDetailModal: React.FC = () => {
             </div>
           )}
 
-          {/* Instruksi / Deskripsi */}
-          <div className="p-4 rounded-2xl bg-muted border border-line space-y-1.5">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3">
-              Instruksi &amp; Ruang Lingkup
-            </span>
-            <p className="text-xs text-fg leading-relaxed whitespace-pre-line">
-              {wo.description || 'Tidak ada catatan instruksi tambahan.'}
-            </p>
+          {/* Blok info 2×2 */}
+          <div className="rounded-[24px] bg-muted/70 p-5 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-sm">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Penanggung jawab</p>
+              <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-1">
+                {wo.assigneeIds.map((uid) => (
+                  <UserChip key={uid} uid={uid} variant="avatar-nama-jabatan" size="xs" useNickname inlineTitle nameClassName="!text-sm !font-medium !text-fg" titleClassName="!text-xs !text-fg-3" />
+                ))}
+              </div>
+              {wo.supporterIds.length > 0 && (
+                <p className="mt-1 text-xs text-fg-3">
+                  Pendukung: {wo.supporterIds.map((id) => getUser(id)?.nickname || id).join(', ')}
+                </p>
+              )}
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Tenggat</p>
+              <p className={`mt-1.5 font-medium ${overdue ? 'text-warm' : 'text-fg'}`}>
+                {formatYmdToIndonesian(wo.dueDate)} · W{weekInfo.week}
+              </p>
+              {weekInfo.isOutOfRange && <p className="text-xs text-warm">Di luar rentang Minggu 1–16</p>}
+              {wo.completedAt && wo.status === 'Selesai' && <p className="text-xs text-success">Selesai: {formatIsoDateTimeShort(wo.completedAt)}</p>}
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Sumber</p>
+              {wo.origin.type === 'mom' ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedWorkOrderId(null);
+                    setActiveTab('weekly-mom');
+                  }}
+                  className="mt-1.5 font-medium text-primary hover:underline text-left"
+                >
+                  MoM {wo.origin.trackerActionCode}
+                </button>
+              ) : (
+                <p className="mt-1.5 font-medium text-fg">Dibuat manual</p>
+              )}
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Jadwal</p>
+              {linkedGantt || linkedPlan ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedWorkOrderId(null);
+                    setActiveTab('schedule');
+                  }}
+                  className="mt-1.5 max-w-full font-medium text-primary hover:underline text-left inline-flex items-center gap-1"
+                >
+                  <Link2 className="w-3.5 h-3.5 shrink-0" />
+                  <span className="truncate">{linkedGantt ? `Gantt ${linkedGantt.name}` : `Plan W${linkedPlan!.week}: ${linkedPlan!.title}`}</span>
+                </button>
+              ) : (
+                <p className="mt-1.5 text-fg-3">Tidak ditautkan</p>
+              )}
+            </div>
+          </div>
+
+          {/* Instruksi */}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Instruksi &amp; ruang lingkup</p>
+            <p className="mt-2 text-sm text-fg-2 leading-relaxed whitespace-pre-line">{wo.description || 'Tidak ada catatan instruksi tambahan.'}</p>
             {(wo.outputText || wo.fileUrl) && (
-              <div className="pt-2 mt-1 border-t border-line space-y-1 text-xs">
+              <div className="mt-2 space-y-1 text-sm">
                 {wo.outputText && (
                   <p className="text-fg">
-                    <span className="font-bold">Output: </span>
+                    <span className="font-semibold">Output: </span>
                     {wo.outputText}
                   </p>
                 )}
                 {wo.fileUrl && sanitizeExternalUrl(wo.fileUrl) !== '#' && (
-                  <a
-                    href={sanitizeExternalUrl(wo.fileUrl)}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 font-bold text-primary hover:underline break-all"
-                  >
+                  <a href={sanitizeExternalUrl(wo.fileUrl)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 font-semibold text-primary hover:underline break-all">
                     <ExternalLink className="w-3.5 h-3.5 shrink-0" />
                     Buka file kerja
                   </a>
@@ -404,273 +427,109 @@ export const WorkOrderDetailModal: React.FC = () => {
             )}
           </div>
 
-          {/* Grid Metadata: Penanggung Jawab, Pendukung, Waktu, Asal & Tautan Jadwal */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="p-4 rounded-2xl bg-surface border border-line space-y-2.5">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3 block">
-                Penanggung Jawab ({wo.assigneeIds.length})
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {wo.assigneeIds.map((uid) => (
-                  <div
-                    key={uid}
-                    className="px-2.5 py-1.5 rounded-xl bg-muted/70 border border-line"
-                  >
-                    <UserChip
-                      uid={uid}
-                      variant="avatar-nama-jabatan"
-                      size="xs"
-                      useNickname
-                    />
-                  </div>
-                ))}
-              </div>
-
-              {wo.supporterIds.length > 0 && (
-                <div className="pt-2 border-t border-line">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-fg-3 block mb-1.5">
-                    Pendukung
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {wo.supporterIds.map((uid) => (
-                      <UserChip
-                        key={uid}
-                        uid={uid}
-                        variant="avatar-nama"
-                        size="xs"
-                        useNickname
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="p-4 rounded-2xl bg-surface border border-line space-y-2.5 text-xs">
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-fg-3 block">
-                  Tenggat &amp; Minggu Proyek
-                </span>
-                <div className="flex flex-wrap items-center gap-1.5 mt-1 font-bold text-fg">
-                  <Calendar className="w-3.5 h-3.5 text-primary" />
-                  <span>{formatYmdToIndonesian(wo.dueDate)}</span>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-muted text-primary">
-                    W{weekInfo.week}
-                  </span>
-                </div>
-                {weekInfo.isOutOfRange && (
-                  <p className="text-[11px] text-warm font-semibold mt-1">
-                    Di luar rentang Minggu 1–16
-                  </p>
-                )}
-                {wo.completedAt && wo.status === 'Selesai' && (
-                  <p className="text-[11px] text-success font-semibold mt-1">
-                    Selesai: {formatIsoDateTimeShort(wo.completedAt)}
-                  </p>
-                )}
-              </div>
-
-              <div className="pt-2 border-t border-line space-y-1.5">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[11px] text-fg-3">Asal:</span>
-                  {wo.origin.type === 'mom' ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedWorkOrderId(null);
-                        setActiveTab('weekly-mom');
-                      }}
-                      className="text-[11px] font-bold text-primary hover:underline"
-                    >
-                      MoM ({wo.origin.trackerActionCode})
-                    </button>
-                  ) : (
-                    <span className="text-[11px] font-semibold text-fg">
-                      Dibuat Manual
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex items-start justify-between gap-2">
-                  <span className="text-[11px] text-fg-3 shrink-0">
-                    Tautan Jadwal:
-                  </span>
-                  {linkedGantt ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedWorkOrderId(null);
-                        setActiveTab('schedule');
-                      }}
-                      className="text-[11px] font-bold text-primary hover:underline text-right inline-flex items-center gap-1"
-                    >
-                      <Link2 className="w-3 h-3 shrink-0" />
-                      <span className="truncate max-w-[180px]">
-                        Gantt: {linkedGantt.name}
-                      </span>
-                    </button>
-                  ) : linkedPlan ? (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedWorkOrderId(null);
-                        setActiveTab('schedule');
-                      }}
-                      className="text-[11px] font-bold text-primary hover:underline text-right inline-flex items-center gap-1"
-                    >
-                      <Link2 className="w-3 h-3 shrink-0" />
-                      <span className="truncate max-w-[180px]">
-                        Plan W{linkedPlan.week}: {linkedPlan.title}
-                      </span>
-                    </button>
-                  ) : (
-                    <span className="text-[11px] text-fg-3">Tidak ditautkan</span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Checklist Langkah Kerja */}
+          {/* Checklist */}
           {wo.checklist.length > 0 && (
-            <div className="p-4 rounded-2xl bg-surface border border-line space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-fg">
-                  Checklist Langkah Kerja
-                </span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary tabular-nums">
-                  {completedChecklistCount}/{wo.checklist.length} selesai
-                </span>
-              </div>
-
-              <div className="space-y-1.5">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">
+                Checklist · {completedChecklistCount}/{wo.checklist.length}
+              </p>
+              <ul className="mt-2 space-y-0.5">
                 {wo.checklist.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    disabled={!canExecute || isBusy}
-                    onClick={() => handleToggleChecklistItem(item.id)}
-                    className={`w-full min-h-[44px] px-3 py-2 rounded-xl border text-left flex items-center gap-2.5 transition-all ${
-                      item.done
-                        ? 'bg-success-soft/40 border-success-line text-success'
-                        : 'bg-muted border-line text-fg'
-                    } ${
-                      canExecute
-                        ? 'hover:border-primary cursor-pointer'
-                        : 'cursor-default opacity-85'
-                    }`}
-                  >
-                    {item.done ? (
-                      <CheckSquare className="w-4 h-4 text-success shrink-0" />
-                    ) : (
-                      <Square className="w-4 h-4 text-fg-3 shrink-0" />
-                    )}
-                    <span
-                      className={`text-xs font-medium ${
-                        item.done ? 'line-through opacity-80' : ''
-                      }`}
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      disabled={!canExecute || isBusy}
+                      onClick={() => handleToggleChecklistItem(item.id)}
+                      className={`w-full min-h-[40px] px-1 rounded-xl text-left flex items-center gap-3 text-sm ${canExecute ? 'hover:bg-muted/60 cursor-pointer' : 'cursor-default'}`}
                     >
-                      {item.text}
-                    </span>
-                  </button>
+                      {item.done ? <CheckSquare className="w-5 h-5 text-success-solid shrink-0" /> : <Square className="w-5 h-5 text-line-strong shrink-0" />}
+                      <span className={item.done ? 'line-through text-fg-3' : 'text-fg'}>{item.text}</span>
+                    </button>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           )}
 
-          {/* Bukti Hasil Pelaksanaan */}
-          <div className="p-4 rounded-2xl bg-surface border border-line space-y-3">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="text-xs font-bold text-fg">
-                Bukti Hasil Pekerjaan
-              </span>
-              <span
-                className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
-                  wo.requireEvidence
-                    ? 'bg-warm-soft text-warm'
-                    : 'bg-muted text-fg-3'
-                }`}
-              >
-                {wo.requireEvidence ? 'Wajib saat Submit' : 'Opsional'}
+          {/* Bukti & output */}
+          <div>
+            <div className="flex items-center justify-between gap-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Bukti &amp; output</p>
+              <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold ${wo.requireEvidence ? 'bg-warm-soft text-warm' : 'bg-muted text-fg-3'}`}>
+                {wo.requireEvidence ? 'Wajib saat diajukan' : 'Opsional'}
               </span>
             </div>
-
             {canExecute ? (
-              <form onSubmit={handleSaveEvidenceOnly} className="space-y-2.5">
-                <div>
-                  <label className="block text-[11px] font-semibold text-fg-3 mb-1">
-                    Tautan Bukti (Google Drive / Dokumen / Repository)
-                  </label>
+              <form onSubmit={handleSaveEvidenceOnly} className="mt-2 space-y-2.5">
+                <div className="relative">
+                  <Link2 className="w-4 h-4 text-fg-3 absolute left-4 top-1/2 -translate-y-1/2" />
                   <input
                     type="url"
                     value={evidenceUrlInput}
                     onChange={(e) => setEvidenceUrlInput(e.target.value)}
-                    placeholder="https://drive.google.com/..."
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
+                    placeholder="Tempel link Google Docs / Drive sebagai bukti..."
+                    aria-label="Tautan bukti"
+                    className="w-full min-h-[48px] pl-11 pr-4 rounded-2xl border border-line-strong bg-surface text-sm outline-none focus:border-primary"
                   />
                 </div>
-                <div>
-                  <label className="block text-[11px] font-semibold text-fg-3 mb-1">
-                    Catatan Hasil Singkat
-                  </label>
-                  <input
-                    type="text"
-                    value={evidenceNoteInput}
-                    onChange={(e) => setEvidenceNoteInput(e.target.value)}
-                    placeholder="Contoh: Revisi Rev-02 sudah sesuai batas konversi 82%"
-                    className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none focus:border-primary"
-                  />
-                </div>
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
+                <input
+                  type="text"
+                  value={evidenceNoteInput}
+                  onChange={(e) => setEvidenceNoteInput(e.target.value)}
+                  placeholder="Catatan hasil singkat (opsional)"
+                  aria-label="Catatan hasil"
+                  className="w-full min-h-[44px] px-4 rounded-2xl border border-line bg-surface text-sm outline-none focus:border-primary"
+                />
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   {safeExternalEvidence !== '#' ? (
-                    <a
-                      href={safeExternalEvidence}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="min-h-[38px] px-3.5 rounded-full bg-muted text-primary text-xs font-bold inline-flex items-center gap-1.5 hover:underline"
-                    >
-                      <span>Buka Bukti Tersimpan</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
+                    <a href={safeExternalEvidence} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-primary inline-flex items-center gap-1 hover:underline">
+                      Buka bukti tersimpan <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   ) : (
-                    <span className="text-[11px] text-fg-3">
-                      Belum ada tautan bukti tersimpan.
-                    </span>
+                    <span className="text-xs text-fg-3">{wo.requireEvidence ? 'Wajib diisi sebelum WO bisa diajukan ke PM.' : 'Belum ada tautan bukti tersimpan.'}</span>
                   )}
-
-                  <button
-                    type="submit"
-                    disabled={isBusy}
-                    className="min-h-[40px] px-4 rounded-full bg-muted hover:bg-muted text-fg border border-line text-xs font-bold inline-flex items-center gap-1.5"
-                  >
+                  <button type="submit" disabled={isBusy} className="min-h-[38px] px-4 rounded-full bg-muted text-fg text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary-soft">
                     <Save className="w-3.5 h-3.5 text-primary" />
-                    <span>Simpan Bukti</span>
+                    Simpan bukti
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="text-xs text-fg-2 space-y-2">
+              <div className="mt-2 text-sm space-y-2">
                 {safeExternalEvidence !== '#' ? (
-                  <a
-                    href={safeExternalEvidence}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="min-h-[40px] px-4 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-xs font-bold inline-flex items-center gap-1.5"
-                  >
-                    <span>Buka Tautan Bukti Hasil</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                  <a href={safeExternalEvidence} target="_blank" rel="noopener noreferrer" className="font-semibold text-primary inline-flex items-center gap-1 hover:underline">
+                    Buka tautan bukti hasil <ExternalLink className="w-3.5 h-3.5" />
                   </a>
                 ) : (
-                  <p className="text-fg-3 italic">
-                    Tidak ada tautan bukti dilampirkan.
-                  </p>
+                  <p className="text-fg-3">Tidak ada tautan bukti dilampirkan.</p>
                 )}
-                {wo.evidenceNote && (
-                  <p className="p-2.5 rounded-xl bg-muted border border-line text-xs text-fg">
-                    {wo.evidenceNote}
-                  </p>
-                )}
+                {wo.evidenceNote && <p className="p-3 rounded-2xl bg-muted text-fg">{wo.evidenceNote}</p>}
               </div>
+            )}
+          </div>
+
+          {/* Kirim pesan WO ke PIC (WhatsApp) */}
+          <div className="rounded-[22px] bg-success-soft px-4 py-3.5 flex items-center gap-3">
+            <span className="w-11 h-11 rounded-full bg-success-solid text-on-ink flex items-center justify-center shrink-0">
+              <MessageCircle className="w-5 h-5" />
+            </span>
+            <span className="flex-1 min-w-0">
+              <span className="block text-sm font-semibold text-fg">{isPM ? 'Kirim pesan WO ke PIC' : 'Bagikan WO ke WhatsApp'}</span>
+              <span className="block text-xs text-success truncate">
+                {isPM ? 'Template Rakai · nomor dari Profil · opsi tutorial AI' : 'Ringkasan status, tenggat, dan PIC'}
+              </span>
+            </span>
+            {isPM ? (
+              <button
+                type="button"
+                onClick={() => setWaOpen(true)}
+                className="shrink-0 min-h-[38px] px-4 rounded-full bg-success-solid text-on-ink text-xs font-semibold hover:opacity-90"
+                aria-label={`Kirim pesan WhatsApp ${wo.code}`}
+              >
+                Kirim
+              </button>
+            ) : (
+              <WhatsAppShareButton label={`Bagikan ${wo.code} ke WhatsApp`} text={waShareText} />
             )}
           </div>
 
@@ -730,53 +589,32 @@ export const WorkOrderDetailModal: React.FC = () => {
             </form>
           )}
 
-          {/* Riwayat Perubahan */}
-          <div className="p-4 rounded-2xl bg-muted border border-line space-y-3">
-            <div className="flex items-center gap-1.5">
-              <History className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-bold text-fg">
-                Riwayat Perubahan ({wo.history.length})
-              </span>
-            </div>
-
-            <div className="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+          {/* Riwayat */}
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Riwayat · {wo.history.length}</p>
+            <ul className="mt-2 space-y-2 max-h-60 overflow-y-auto pr-1">
               {[...wo.history].reverse().map((entry) => {
                 const actor = getUser(entry.actorId);
                 return (
-                  <div
-                    key={entry.id}
-                    className="p-3 rounded-xl bg-surface border border-line text-xs space-y-1"
-                  >
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <span className="font-bold text-fg">
-                        {entry.eventLabel}
+                  <li key={entry.id} className="flex items-start gap-3 text-sm">
+                    <span className="mt-2 w-1.5 h-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
+                    <span className="flex-1 min-w-0">
+                      <span className="text-fg">
+                        {actor?.nickname || entry.actorId} · {entry.eventLabel}
+                        {entry.fromStatus && entry.fromStatus !== entry.toStatus ? ` (${entry.fromStatus} → ${entry.toStatus})` : ''}
                       </span>
-                      <span className="text-[10px] text-fg-3 font-mono">
-                        {formatIsoDateTimeShort(entry.at)}
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-2 text-[11px] text-fg-3">
-                      <span>Oleh: {actor?.nickname || entry.actorId}</span>
-                      {entry.fromStatus && entry.fromStatus !== entry.toStatus && (
-                        <span>
-                          • {entry.fromStatus} → <strong>{entry.toStatus}</strong>
-                        </span>
-                      )}
-                    </div>
-                    {entry.note && (
-                      <p className="text-[11px] text-fg-2 bg-muted px-2.5 py-1.5 rounded-lg border border-line mt-1">
-                        {entry.note}
-                      </p>
-                    )}
-                  </div>
+                      {entry.note && <span className="block text-xs text-fg-3 mt-0.5">{entry.note}</span>}
+                    </span>
+                    <span className="text-xs text-fg-3 shrink-0 tabular-nums">{formatIsoDateTimeShort(entry.at)}</span>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         </div>
 
         {/* Sticky Footer: Contextual Role-Based Transition Buttons */}
-        <div className="px-6 py-4 border-t border-line bg-surface flex flex-wrap items-center justify-between gap-2.5">
+        <div className="px-6 sm:px-7 py-4 border-t border-line bg-surface flex flex-wrap items-center justify-between gap-2.5">
           <div className="flex flex-wrap items-center gap-2">
             {/* Ditugaskan -> Dikerjakan */}
             {wo.status === 'Ditugaskan' && (isAssignee || isPM) && (

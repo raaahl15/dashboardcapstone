@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePageAction } from '../layout/navigation';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { StageGateTimeline } from '../common/StageGateTimeline';
@@ -120,7 +121,7 @@ export const StageGateView: React.FC = () => {
     isPM,
   } = useApp();
 
-  const [expandedParam, setExpandedParam] = useState<string>('rubric-1');
+  const [expandedParam, setExpandedParam] = useState<string>('');
   const [activeDossierAxis, setActiveDossierAxis] = useState<'all' | 'koordinator' | 'praktisi'>('all');
 
   // Modals / Editing state
@@ -163,6 +164,8 @@ export const StageGateView: React.FC = () => {
     setShowAddQuestionModal(false);
   };
 
+  usePageAction('stage-gate', () => window.print());
+
   const filteredQuestions = defenseQuestions.filter((q) => {
     if (activeDossierAxis === 'all') return true;
     return q.axis === activeDossierAxis;
@@ -170,369 +173,168 @@ export const StageGateView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, description, and Stage-Gate actions */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
+      {/* Kartu gate G1–G4 */}
+      <StageGateTimeline />
 
-        <div className="space-y-2.5">
-          <div className="max-w-4xl">
-            <p className="text-[13px] leading-relaxed text-fg-3">
-              Evaluasi kematangan teknis internal dan verifikasi berkas tender sebelum G2 Evaluasi PSTF 1 ({config.tenderDeadline})
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
-                G2 Evaluasi PSTF 1: {config.tenderDeadline}
-              </span>
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
+        {/* Indeks kesiapan (cincin) */}
+        <section className="xl:col-span-4 glass-card p-6 flex flex-col">
+          <h2 className="font-heading text-2xl font-normal text-fg">Indeks kesiapan berkas &amp; sidang</h2>
+          <div className="relative mx-auto my-6 w-52 h-52">
+            <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90" aria-hidden="true">
+              <circle cx="50" cy="50" r="42" fill="none" stroke="var(--muted)" strokeWidth="10" />
+              <circle
+                cx="50"
+                cy="50"
+                r="42"
+                fill="none"
+                stroke={stageGateReadinessPercent >= 85 ? 'var(--success)' : stageGateReadinessPercent >= 70 ? 'var(--chart-1)' : 'var(--warm)'}
+                strokeWidth="10"
+                strokeLinecap="round"
+                strokeDasharray="263.9"
+                strokeDashoffset={(263.9 * (1 - Math.min(100, Math.max(0, stageGateReadinessPercent)) / 100)).toFixed(1)}
+              />
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="font-heading text-5xl font-light text-fg tabular-nums">{stageGateReadinessPercent}%</span>
+              <span className="text-xs text-fg-3 mt-1">target ≥ 85%</span>
             </div>
+          </div>
+          <span
+            className={`self-center px-3.5 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 ${
+              stageGateReadinessPercent >= 85
+                ? 'bg-success-soft text-success'
+                : stageGateReadinessPercent >= 70
+                ? 'bg-primary-soft text-fg-2'
+                : 'bg-warm-soft text-warm'
+            }`}
+          >
+            {stageGateReadinessPercent >= 85 ? <CheckCircle2 className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />}
+            {stageGateReadinessPercent >= 85
+              ? 'Siap untuk Stage-Gate'
+              : stageGateReadinessPercent >= 70
+              ? 'Siap bersyarat · perlu revisi'
+              : 'Belum siap · critical gap'}
+          </span>
+          <div className="mt-auto pt-6 grid grid-cols-3 gap-2.5">
+            {[
+              [`${averageRubricScore}/100`, 'Rubrik mandiri', ''],
+              [`${defenseQuestions.length} butir`, 'Defense bank', ''],
+              [`${readyPhysicalCount}/${physicalChecklist.length}`, 'Hardcopy', readyPhysicalCount < physicalChecklist.length ? 'text-warm' : ''],
+            ].map(([v, l, tone]) => (
+              <div key={l} className="rounded-[20px] bg-surface p-3">
+                <p className={`text-lg font-semibold tabular-nums ${tone || 'text-fg'}`}>{v}</p>
+                <p className="text-[11px] text-fg-3">{l}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
+        {/* Audit rubrik mandiri */}
+        <section className="xl:col-span-8 glass-card p-6 flex flex-col">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="font-heading text-2xl font-normal text-fg">
+              Audit rubrik mandiri · {rubricParameters.length} parameter
+            </h2>
             <div className="flex flex-wrap items-center gap-2">
-              <button
-                onClick={() => window.print()}
-                className="min-h-[44px] px-4 py-2 bg-surface/70 hover:bg-surface text-fg rounded-full text-xs font-bold border border-glass-stroke flex items-center gap-1.5 shadow-xs transition-all"
-              >
-                <Printer className="w-3.5 h-3.5 text-primary" />
-                Cetak Rubrik Form
-              </button>
-
+              <span className="px-3 py-1 rounded-full bg-primary-soft text-fg-2 text-xs font-semibold">
+                {config.readinessLocked ? 'Terkunci oleh PM' : 'Belum dikunci PM'}
+              </span>
               {isPM && (
                 <button
+                  type="button"
                   onClick={handleToggleLock}
-                  className={`min-h-[44px] px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all ${
-                    config.readinessLocked
-                      ? 'bg-ink text-on-ink hover:bg-ink-2'
-                      : 'bg-primary hover:bg-primary-hover text-on-primary'
+                  className={`min-h-[40px] px-4 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 ${
+                    config.readinessLocked ? 'bg-ink text-on-ink' : 'bg-primary text-on-primary hover:bg-primary-hover'
                   }`}
                 >
-                  {config.readinessLocked ? (
-                    <>
-                      <Lock className="w-3.5 h-3.5" />
-                      Status Terkunci
-                    </>
-                  ) : (
-                    <>
-                      <Unlock className="w-3.5 h-3.5" />
-                      Kunci Status Final
-                    </>
-                  )}
+                  {config.readinessLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
+                  {config.readinessLocked ? 'Status terkunci' : 'Kunci status final'}
                 </button>
               )}
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* PEMETAAN STAGE-GATE G1–G4 (Blueprint §1.7) */}
-      <StageGateTimeline />
-
-      {/* ========================================================================= */}
-      {/* MASTER READINESS GAUGE & METRIC CARDS */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-6 space-y-5">
-        <div className="flex flex-col items-center text-center">
-          <span className="text-[11px] font-bold text-fg-3 uppercase tracking-wider mb-2">
-            INDEKS KESIAPAN BERKAS & SIDANG
-          </span>
-
-          {/* Semicircle Gauge Graphic */}
-          <div className="relative w-64 sm:w-80 aspect-[21/11] flex items-end justify-center">
-            <svg
-              className="absolute inset-0 h-full w-full"
-              viewBox="0 0 420 220"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M 50 210 A 160 160 0 0 1 370 210"
-                pathLength="100"
-                stroke="var(--muted)"
-                strokeWidth="16"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 50 210 A 160 160 0 0 1 370 210"
-                pathLength="100"
-                strokeDasharray="70 30"
-                strokeDashoffset="0"
-                stroke="var(--danger)"
-                strokeWidth="16"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 50 210 A 160 160 0 0 1 370 210"
-                pathLength="100"
-                strokeDasharray="15 85"
-                strokeDashoffset="-70"
-                stroke="var(--warm)"
-                strokeWidth="16"
-                strokeLinecap="round"
-              />
-              <path
-                d="M 50 210 A 160 160 0 0 1 370 210"
-                pathLength="100"
-                strokeDasharray="15 85"
-                strokeDashoffset="-85"
-                stroke="var(--success)"
-                strokeWidth="16"
-                strokeLinecap="round"
-              />
-
-              {/* Threshold flags */}
-              <text x="312" y="65" fill="var(--warm)" fontSize="13" fontWeight="bold" fontFamily="Inter">
-                70%
-              </text>
-              <text x="365" y="128" fill="var(--success)" fontSize="13" fontWeight="bold" fontFamily="Inter">
-                85%
-              </text>
-              <text x="40" y="215" fill="var(--danger)" fontSize="11" fontWeight="bold" fontFamily="Inter">
-                0%
-              </text>
-              <text x="360" y="215" fill="var(--success)" fontSize="11" fontWeight="bold" fontFamily="Inter">
-                100%
-              </text>
-
-              {/* Dynamic Needle pointing to stageGateReadinessPercent (0%..100%) */}
-              <g
-                transform={`translate(210, 210) rotate(${Math.max(
-                  0,
-                  Math.min(180, (stageGateReadinessPercent / 100) * 180)
-                )})`}
-              >
-                <polygon fill="var(--text)" points="0,-5 0,5 -135,0" />
-                <circle cx="0" cy="0" r="14" fill="var(--text)" />
-                <circle cx="0" cy="0" r="5" fill="white" />
-              </g>
-            </svg>
-
-            {/* Central Dial Value */}
-            <div className="absolute bottom-2 flex flex-col items-center">
-              <span className="font-heading text-4xl sm:text-5xl font-extrabold text-fg tabular-nums">
-                {stageGateReadinessPercent}%
-              </span>
-            </div>
-          </div>
-
-          {/* Status Badge */}
-          <div className="mt-3">
-            <span
-              className={`px-4 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 ${
-                stageGateReadinessPercent >= 85
-                  ? 'bg-success-soft text-success'
-                  : stageGateReadinessPercent >= 70
-                  ? 'bg-warm-soft text-warm'
-                  : 'bg-danger-soft text-danger'
-              }`}
-            >
-              {stageGateReadinessPercent >= 85 ? (
-                <CheckCircle2 className="w-3.5 h-3.5" />
-              ) : (
-                <AlertTriangle className="w-3.5 h-3.5" />
-              )}
-              {stageGateReadinessPercent >= 85
-                ? 'READY FOR STAGE-GATE DEFENSE'
-                : stageGateReadinessPercent >= 70
-                ? 'CONDITIONAL READY / NEED REVISION'
-                : 'NOT READY / CRITICAL GAP'}
-            </span>
-          </div>
-
-          <p className="text-[11px] text-fg-3 mt-2">
-            Ambang hijau: ≥ 85% (Ready for Stage-Gate Defense & Tender Submission) • Target KAK: ≥ 80%
-          </p>
-        </div>
-
-        {/* 3 Mini Score Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-glass-stroke">
-          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
-            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
-              RUBRIK MANDIRI
-            </span>
-            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
-              {averageRubricScore} / 100
-            </span>
-            <span className="text-[11px] text-warm font-medium block mt-0.5">
-              {rubricParameters.filter((p) => p.score < 70).length} parameter skor &lt; 70
-            </span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
-            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
-              DEFENSE BANK
-            </span>
-            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
-              {defenseQuestions.length} Butir
-            </span>
-            <span className="text-[11px] text-success font-medium block mt-0.5">
-              {defenseQuestions.filter((q) => !q.verifiedResponse.trim()).length} belum ada jawaban
-            </span>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke text-center shadow-xs">
-            <span className="text-[10px] font-bold text-fg-3 uppercase tracking-wider block">
-              HARDCOPY BERKAS
-            </span>
-            <span className="font-heading text-2xl font-extrabold text-fg block mt-1 tabular-nums">
-              {readyPhysicalCount} / {physicalChecklist.length} Bundel
-            </span>
-            <span className="text-[11px] text-primary font-medium block mt-0.5">
-              {physicalChecklist.length
-                ? Math.round((readyPhysicalCount / physicalChecklist.length) * 100)
-                : 0}
-              % Cetak Beres
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* SEKSI 1: AUDIT RUBRIK MANDIRI */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-6 space-y-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
-                Audit Rubrik Mandiri
-              </h2>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-warm-soft text-warm tabular-nums">
-                Rata-rata Skor: {averageRubricScore}
-              </span>
-            </div>
-            <p className="text-xs text-fg-3">
-              5 Parameter Rubrik Capstone DTNTF
-            </p>
-          </div>
-          <span className="text-[11px] text-fg-3">
-            {config.readinessLocked ? 'Status Terkunci oleh PM' : 'Belum dikunci PM'}
-          </span>
-        </div>
-
-        {/* 5 Parameters Accordion Cards */}
-        <div className="space-y-3">
-          {rubricParameters.map((param) => {
-            const isExpanded = expandedParam === param.id;
-            const picRef = param.pic || param.picCode || param.picName;
-
-            return (
-              <div
-                key={param.id}
-                className="rounded-2xl border border-glass-stroke bg-surface/60 overflow-hidden shadow-xs"
-              >
-                {/* Header Bar */}
-                <div
-                  onClick={() => setExpandedParam(isExpanded ? '' : param.id)}
-                  className="p-4 flex items-center justify-between gap-3 cursor-pointer hover:bg-surface/70 transition-colors"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <span className="w-7 h-7 rounded-full bg-surface/70 text-primary font-heading font-extrabold text-xs flex items-center justify-center shrink-0">
+          <ul className="mt-5 space-y-2.5 flex-1">
+            {rubricParameters.map((param) => {
+              const isExpanded = expandedParam === param.id;
+              const picRef = param.pic || param.picCode || param.picName;
+              const tone = param.score >= 85 ? 'success' : param.score >= 70 ? 'primary' : 'warm';
+              return (
+                <li key={param.id} className="rounded-[22px] bg-surface overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => setExpandedParam(isExpanded ? '' : param.id)}
+                    aria-expanded={isExpanded}
+                    className="w-full px-4 py-3 flex items-center gap-4 text-left hover:bg-muted/40 transition-colors"
+                  >
+                    <span className="w-9 h-9 rounded-xl bg-primary-soft text-fg-2 text-sm font-semibold flex items-center justify-center shrink-0">
                       {param.num}
                     </span>
-                    <div className="min-w-0">
-                      <h4 className="font-heading font-bold text-xs sm:text-sm text-fg truncate">
-                        {param.title}
-                      </h4>
-                      <p className="text-[11px] text-fg-3 truncate">
-                        {param.subtitle}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold tabular-nums ${
-                        param.score >= 85
-                          ? 'bg-success-soft text-success'
-                          : param.score >= 70
-                          ? 'bg-warm-soft text-warm'
-                          : 'bg-danger-soft text-danger'
-                      }`}
-                    >
-                      Skor: {param.score}
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-sm font-semibold text-fg truncate">{param.title}</span>
+                      <span className="block text-xs text-fg-3 truncate">{param.subtitle}</span>
                     </span>
-                    <div className="hidden sm:inline-flex">
-                      <UserChip
-                        uid={picRef}
-                        variant="avatar-nama-jabatan"
-                        size="xs"
-                        useNickname
-                        inlineTitle
-                        nameClassName="!text-[11px] !font-semibold !text-fg-3"
-                        titleClassName="!text-[10px] !text-fg-3"
-                      />
-                    </div>
-                    {isExpanded ? (
-                      <ChevronUp className="w-4 h-4 text-fg-3" />
-                    ) : (
-                      <ChevronDown className="w-4 h-4 text-fg-3" />
-                    )}
-                  </div>
-                </div>
-
-                {/* Expanded Details */}
-                {isExpanded && (
-                  <div className="p-4 pt-2 border-t border-glass-stroke bg-surface/40 space-y-4 text-xs">
-                    <div>
-                      <span className="font-bold text-[10px] text-primary uppercase tracking-wider block mb-2">
-                        KRITERIA VERIFIKASI PARAMETER
+                    <span className="hidden md:inline-flex shrink-0">
+                      <UserChip uid={picRef} variant="avatar" size="sm" avatarClassName="w-8 h-8 rounded-full text-[10px]" />
+                    </span>
+                    <span className="w-32 sm:w-40 shrink-0">
+                      <span className="flex items-baseline justify-between">
+                        <span className="text-xs text-fg-3">Skor</span>
+                        <span className={`text-xl font-semibold tabular-nums ${tone === 'warm' ? 'text-warm' : tone === 'success' ? 'text-success' : 'text-primary'}`}>
+                          {param.score}
+                        </span>
                       </span>
+                      <span className="mt-1 block h-1.5 rounded-full bg-muted overflow-hidden">
+                        <span
+                          className={`block h-full rounded-full ${tone === 'warm' ? 'bg-warm-solid' : tone === 'success' ? 'bg-success-solid' : 'bg-primary'}`}
+                          style={{ width: `${Math.min(100, param.score)}%` }}
+                        />
+                      </span>
+                    </span>
+                    {isExpanded ? <ChevronUp className="w-4 h-4 text-fg-3 shrink-0" /> : <ChevronDown className="w-4 h-4 text-fg-3 shrink-0" />}
+                  </button>
+
+                  {isExpanded && (
+                    <div className="px-4 pb-4 pt-1 space-y-4 text-xs">
                       <div className="space-y-2">
                         {param.items.map((it, idx) => (
-                          <div
+                          <button
+                            type="button"
                             key={idx}
-                            onClick={() => !config.readinessLocked && toggleRubricItem(param.id, idx)}
-                            className={`p-2.5 rounded-xl bg-surface/70 border border-glass-stroke flex items-center justify-between gap-3 transition-colors ${
-                              config.readinessLocked
-                                ? 'opacity-75 cursor-not-allowed'
-                                : 'cursor-pointer hover:bg-surface'
-                            }`}
+                            disabled={Boolean(config.readinessLocked)}
+                            onClick={() => toggleRubricItem(param.id, idx)}
+                            className="w-full p-2.5 rounded-2xl bg-muted/60 flex items-center justify-between gap-3 text-left disabled:opacity-75 disabled:cursor-not-allowed hover:bg-muted"
                           >
-                            <div className="flex items-center gap-2.5">
-                              {it.checked ? (
-                                <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
-                              ) : (
-                                <Circle className="w-4 h-4 text-fg-3 shrink-0" />
-                              )}
-                              <span
-                                className={
-                                  it.checked
-                                    ? 'text-fg font-semibold'
-                                    : 'text-fg-3'
-                                }
-                              >
-                                {it.text}
-                              </span>
-                            </div>
-                            <span
-                              className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
-                                it.checked
-                                  ? 'bg-success-soft text-success'
-                                  : 'bg-warm-soft text-warm'
-                              }`}
-                            >
+                            <span className="flex items-center gap-2.5">
+                              {it.checked ? <CheckCircle2 className="w-4 h-4 text-primary shrink-0" /> : <Circle className="w-4 h-4 text-fg-3 shrink-0" />}
+                              <span className={it.checked ? 'text-fg font-medium' : 'text-fg-3'}>{it.text}</span>
+                            </span>
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${it.checked ? 'bg-success-soft text-success' : 'bg-warm-soft text-warm'}`}>
                               {it.statusText}
                             </span>
-                          </div>
+                          </button>
                         ))}
                       </div>
+                      <RubricInputs
+                        paramId={param.id}
+                        initialScore={param.score}
+                        initialMitigation={param.mitigation}
+                        disabled={Boolean(config.readinessLocked)}
+                        onSaveScore={updateRubricScore}
+                        onSaveMitigation={updateRubricMitigation}
+                      />
                     </div>
-
-                    <RubricInputs
-                      paramId={param.id}
-                      initialScore={param.score}
-                      initialMitigation={param.mitigation}
-                      disabled={Boolean(config.readinessLocked)}
-                      onSaveScore={updateRubricScore}
-                      onSaveMitigation={updateRubricMitigation}
-                    />
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-4 text-xs text-fg-3">
+            Rata-rata {averageRubricScore} · {rubricParameters.filter((p) => p.score < 70).length} parameter di bawah 70 · ambang hijau ≥ 85% (target KAK ≥ 80%).
+            Klik parameter untuk kriteria, skor, dan mitigasi.
+          </p>
+        </section>
       </div>
 
       {/* ========================================================================= */}

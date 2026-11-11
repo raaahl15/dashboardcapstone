@@ -320,6 +320,7 @@ export const HomepageView: React.FC = () => {
   };
 
   const [showNoticeModal, setShowNoticeModal] = useState(false);
+  const [noticeHidden, setNoticeHidden] = useState(false);
   const [noticeText, setNoticeText] = useState(config.noticeBanner.text);
 
   const [showStatusModal, setShowStatusModal] = useState(false);
@@ -409,18 +410,18 @@ export const HomepageView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-4 animate-in fade-in duration-200">
+    <div className="flex flex-col gap-4 animate-in fade-in duration-200">
       {/* TOP ZONE v2.0: sapaan + kartu hero tenggat FEED + 4 ubin metrik */}
-      <div className="space-y-4">
-        <h1 className="font-heading text-3xl sm:text-4xl font-normal leading-tight text-fg">
+      <div className="flex flex-col gap-4 max-sm:contents">
+        <h1 className="max-sm:order-1 font-heading text-3xl sm:text-4xl font-normal leading-tight text-fg">
           Selamat datang, {currentUser.nickname || currentUser.name.split(' ')[0]}{' '}
           <span className="font-accent text-primary text-[0.8em] whitespace-nowrap">
             — {tenderCountdown.days} hari menuju FEED
           </span>
         </h1>
 
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
-          <div className="xl:col-span-5 bg-hero rounded-[32px] p-6 sm:p-7 shadow-cockpit-pop flex flex-col justify-between gap-5 min-h-[280px]">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch max-sm:contents">
+          <div className="max-sm:order-2 xl:col-span-4 bg-hero rounded-[32px] p-6 sm:p-7 shadow-cockpit-pop flex flex-col justify-between gap-5 min-h-[280px]">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-on-ink-2">
                 Tenggat FEED · Gate G2
@@ -451,7 +452,7 @@ export const HomepageView: React.FC = () => {
             </div>
           </div>
 
-          <div className="xl:col-span-7 grid grid-cols-2 gap-4">
+          <div className="max-sm:order-3 xl:col-span-4 grid grid-cols-2 gap-4">
             <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
               <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Logbook ACC</span>
               <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
@@ -473,14 +474,14 @@ export const HomepageView: React.FC = () => {
                 {teamOverdueCount} terlambat
               </span>
             </div>
-            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+            <div className="max-sm:hidden glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
               <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Sesi asistensi</span>
               <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
                 {meetingLogs.length}
               </span>
               <span className="text-xs text-fg-2">weekly review tercatat</span>
             </div>
-            <div className="glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
+            <div className="max-sm:hidden glass-card !rounded-[28px] p-5 flex flex-col gap-2 min-h-[132px]">
               <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">ACC pembimbing</span>
               <span className="font-heading text-4xl font-semibold leading-none tabular-nums text-fg">
                 {accSummary.acc}
@@ -491,868 +492,380 @@ export const HomepageView: React.FC = () => {
               </span>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* NOTICE BANNER ("INFORMASI PENTING! - PM") */}
-      {/* ========================================================================= */}
-      <div className="glass-card px-5 sm:px-6 py-3.5 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-10 h-10 rounded-full bg-danger-soft text-danger flex items-center justify-center shrink-0">
-            <AlertTriangle className="w-5 h-5 text-danger" />
-          </div>
-          <div className="flex flex-wrap items-center gap-2 min-w-0">
-            <span className="font-heading text-xs font-bold text-fg">
-              {config.noticeBanner.title}
-            </span>
-            <span className="px-2.5 py-0.5 bg-warm-soft text-warm rounded-full text-[10px] font-extrabold uppercase">
-              {config.noticeBanner.badge}
-            </span>
-            <span className="text-xs text-fg-2 truncate">
-              {config.noticeBanner.text}
-            </span>
-          </div>
-        </div>
-
-        {isPM && (
-          <button
-            type="button"
-            onClick={() => {
-              setNoticeText(config.noticeBanner.text);
-              setShowNoticeModal(true);
-            }}
-            className="w-11 h-11 rounded-full hover:bg-muted/70 text-fg-2 hover:text-primary flex items-center justify-center transition-colors shrink-0"
-            title="Edit Pengumuman PM"
-          >
-            <Pencil className="w-3.5 h-3.5" />
-          </button>
-        )}
-      </div>
-
-      {/* KESEHATAN DATA REKAYASA (Blueprint BAB IV tambahan v2.0; data public/data/health.json) */}
-      <DataHealthPanel />
-
-      {/* ========================================================================= */}
-      {/* CORE BENTO GRID (3 Columns on >= 1280px, aligned bottom edges) */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch">
-        {/* ==================== LEFT COLUMN (3 cols) ==================== */}
-        <div className="xl:col-span-3 flex flex-col gap-5">
-          {/* Profile Identity Card */}
-          <div className="relative w-full h-[340px] rounded-[32px] overflow-hidden border border-glass-stroke shadow-cockpit-card hover:shadow-cockpit-pop transition-all group">
-            {currentUser.photoURL ? (
-              <img
-                src={currentUser.photoURL}
-                alt={currentUser.name}
-                className="absolute inset-0 w-full h-full object-cover object-[center_18%] group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-            ) : (
-              <div className="absolute inset-0 bg-hero flex items-center justify-center pb-12">
-                <div className="w-24 h-24 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 text-on-ink font-heading font-extrabold text-3xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-500">
-                  {currentUser.avatarInitial || currentUser.code}
-                </div>
-              </div>
-            )}
-
-            <div className="absolute top-4 inset-x-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/45 backdrop-blur-md text-on-ink text-[10px] font-heading font-extrabold border border-white/20 shadow-xs pointer-events-auto">
-                <span className="w-2 h-2 rounded-full bg-success-solid animate-pulse"></span>
-                <span>{currentUser.role === 'admin' ? 'PM LEAD' : 'ENGINEER'}</span>
-              </div>
-            </div>
-
-            <div className="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/90 via-black/55 to-transparent pt-16 pb-5 px-5 flex items-end justify-between gap-3">
-              <div className="min-w-0 pr-2">
-                <h3 className="font-heading font-extrabold text-lg text-on-ink leading-tight drop-shadow-sm truncate">
-                  {currentUser.name}
-                </h3>
-                <p className="text-xs text-on-ink/80 font-medium mt-0.5 drop-shadow-xs truncate flex items-center gap-1.5">
-                  <span>{currentUser.title}</span>
-                  <span className="text-on-ink/40">•</span>
-                  <span className="text-on-ink-accent font-semibold">@{currentUser.nickname}</span>
-                </p>
-              </div>
-              <div className="shrink-0 px-3.5 py-1.5 rounded-full border border-glass-stroke bg-white/15 backdrop-blur-md text-on-ink text-xs font-heading font-extrabold tracking-wide shadow-xs flex items-center justify-center">
-                {currentUser.raciTag}
-              </div>
-            </div>
-          </div>
-
-          {/* Tugas Saya (Work Order) Dark Accent Card (Exception: Solid var(--text), Last card in Left Column -> flex-1) */}
-          <div className="flex-1 bg-ink text-on-ink rounded-[28px] p-5 shadow-cockpit-pop border border-ink-2 flex flex-col justify-between">
-            <div className="flex flex-col flex-1 min-h-0">
-              {/* Header & Summary Badges */}
-              <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <h3 className="font-heading font-bold text-sm text-on-ink">
-                  Tugas Saya
-                </h3>
-                <div className="flex flex-wrap items-center gap-1.5">
-                  <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-white/15 text-on-ink">
-                    {isPM && woWidgetScope === 'team'
-                      ? `${teamActiveWorkOrders.length} Aktif`
-                      : `${myActiveWorkOrders.length} Aktif`}
-                  </span>
-                  {(isPM && woWidgetScope === 'team'
-                    ? teamOverdueCount
-                    : myOverdueCount) > 0 && (
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold tabular-nums bg-danger-solid text-on-ink inline-flex items-center gap-1">
-                      <AlertTriangle className="w-3 h-3 shrink-0" />
-                      {isPM && woWidgetScope === 'team'
-                        ? teamOverdueCount
-                        : myOverdueCount}{' '}
-                      Terlambat
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* PM Scope Switch: Saya / Seluruh Tim */}
-              {isPM && (
-                <div className="grid grid-cols-2 gap-1 p-1 rounded-full bg-white/10 border border-white/10 mb-3">
-                  <button
-                    type="button"
-                    onClick={() => setWoWidgetScope('mine')}
-                    className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
-                      woWidgetScope === 'mine'
-                        ? 'bg-primary text-on-primary shadow-xs'
-                        : 'text-on-ink-2 hover:text-on-ink'
-                    }`}
-                  >
-                    Saya ({myActiveWorkOrders.length})
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setWoWidgetScope('team')}
-                    className={`min-h-[34px] rounded-full text-[11px] font-bold transition-all ${
-                      woWidgetScope === 'team'
-                        ? 'bg-primary text-on-primary shadow-xs'
-                        : 'text-on-ink-2 hover:text-on-ink'
-                    }`}
-                  >
-                    Seluruh Tim ({teamActiveWorkOrders.length})
-                  </button>
-                </div>
-              )}
-
-              {/* Content: Team Mode vs Personal Mode */}
-              {isPM && woWidgetScope === 'team' ? (
-                <div className="space-y-3 flex-1 min-h-0 flex flex-col">
-                  {/* Status Distribution Grid */}
-                  <div className="grid grid-cols-5 gap-1.5 text-center">
-                    {WO_BOARD_COLUMNS.map((st) => (
-                      <div
-                        key={st}
-                        className="p-2 rounded-xl bg-white/10 border border-white/10"
-                      >
-                        <span className="font-heading text-sm font-extrabold text-on-ink tabular-nums block leading-none">
-                          {teamStatusCounts[st]}
-                        </span>
-                        <span className="text-[9px] text-on-ink-2 font-semibold block mt-1 truncate">
-                          {st}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Top 5 Team Active Work Orders */}
-                  {teamActiveWorkOrders.length === 0 ? (
-                    <div className="flex-1 flex flex-col items-center justify-center text-center py-5 px-3 rounded-2xl bg-white/5 border border-white/10">
-                      <CheckCircle2 className="w-6 h-6 text-[#34D399] mb-1.5" />
-                      <p className="text-xs font-semibold text-on-ink">
-                        Tidak ada tugas aktif di seluruh tim
-                      </p>
-                      <p className="text-[11px] text-on-ink-2 mt-0.5">
-                        Seluruh Work Order tim telah selesai dikerjakan.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="space-y-2 max-h-56 overflow-y-auto pr-1 flex-1">
-                      {teamActiveWorkOrders.slice(0, 5).map((wo) => {
-                        const overdue = isWorkOrderOverdue(wo, todayYmd);
-                        const daysDelta = getDaysUntilDue(wo.dueDate, todayYmd);
-                        return (
-                          <div
-                            key={wo.id}
-                            onClick={() => setSelectedWorkOrderId(wo.id)}
-                            className="p-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 transition-all cursor-pointer space-y-1.5"
-                          >
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <span className="font-mono text-[10px] font-extrabold text-on-ink-accent shrink-0">
-                                  {wo.code}
-                                </span>
-                                <span className="px-1.5 py-0.5 rounded bg-white/15 text-[9px] font-bold text-on-ink truncate">
-                                  {wo.status}
-                                </span>
-                                {overdue && (
-                                  <span className="px-1.5 py-0.5 rounded bg-danger-solid text-[9px] font-bold text-on-ink shrink-0">
-                                    +{Math.abs(daysDelta)}h
-                                  </span>
-                                )}
-                              </div>
-                              <span className="text-[10px] text-on-ink-2 shrink-0">
-                                {formatYmdToIndonesian(wo.dueDate)}
-                              </span>
-                            </div>
-                            <p className="text-xs font-medium text-on-ink leading-snug line-clamp-1">
-                              {wo.title}
-                            </p>
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-1 flex-wrap">
-                                {wo.assigneeIds.slice(0, 3).map((uid) => (
-                                  <UserChip
-                                    key={`${wo.id}-tm-${uid}`}
-                                    uid={uid}
-                                    variant="avatar-nama"
-                                    size="xs"
-                                    useNickname
-                                    avatarClassName="w-4 h-4 text-[8px]"
-                                    nameClassName="!text-[10px] !text-on-ink-2 !font-normal"
-                                  />
-                                ))}
-                              </div>
-                              {wo.status === 'Diajukan' && (
-                                <span className="px-2 py-0.5 rounded-full bg-warm-soft text-warm text-[9px] font-extrabold shrink-0">
-                                  Review PM
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              ) : myActiveWorkOrders.length === 0 ? (
-                /* Empty State Personal Mode */
-                <div className="flex-1 flex flex-col items-center justify-center text-center py-6 px-3 rounded-2xl bg-white/5 border border-white/10">
-                  <CheckCircle2 className="w-7 h-7 text-[#34D399] mb-2" />
-                  <p className="text-xs font-bold text-on-ink">
-                    Tidak ada tugas aktif
-                  </p>
-                  <p className="text-[11px] text-on-ink-2 mt-1 leading-relaxed">
-                    Semua Work Order milik Anda sudah tuntas atau terkendali.
-                  </p>
-                </div>
-              ) : (
-                /* Top 5 Personal Active Work Orders */
-                <div className="space-y-2 max-h-64 overflow-y-auto pr-1 flex-1">
-                  {myActiveWorkOrders.slice(0, 5).map((wo) => {
-                    const overdue = isWorkOrderOverdue(wo, todayYmd);
-                    const daysDelta = getDaysUntilDue(wo.dueDate, todayYmd);
-                    const isSelfPM = isExclusivelyAssignedToCurrentPM(
-                      wo,
-                      currentUser.id,
-                      isPM,
-                      getUser
-                    );
-                    const isRowBusy = busyWoId === wo.id;
-
-                    return (
-                      <div
-                        key={wo.id}
-                        onClick={() => setSelectedWorkOrderId(wo.id)}
-                        className="p-2.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/10 transition-all cursor-pointer space-y-1.5"
-                      >
-                        <div className="flex items-center justify-between gap-1.5">
-                          <div className="flex flex-wrap items-center gap-1.5">
-                            <span className="font-mono text-[10px] font-extrabold text-on-ink-accent">
-                              {wo.code}
-                            </span>
-                            {overdue && (
-                              <span className="px-1.5 py-0.5 rounded bg-danger-solid text-[9px] font-bold text-on-ink">
-                                Terlambat {Math.abs(daysDelta)}h
-                              </span>
-                            )}
-                            {wo.needsRevision && wo.status === 'Dikerjakan' && (
-                              <span className="px-1.5 py-0.5 rounded bg-warm-soft text-warm text-[9px] font-extrabold inline-flex items-center gap-0.5">
-                                <RotateCcw className="w-2.5 h-2.5" />
-                                Revisi
-                              </span>
-                            )}
-                            {wo.priority === 'Kritis' && (
-                              <span className="px-1.5 py-0.5 rounded bg-danger-soft text-danger text-[9px] font-extrabold">
-                                Kritis
-                              </span>
-                            )}
-                          </div>
-                          <span
-                            className={`text-[10px] font-semibold shrink-0 ${
-                              overdue ? 'text-[#FCA5A5]' : 'text-on-ink-2'
-                            }`}
-                          >
-                            {formatYmdToIndonesian(wo.dueDate)}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-2">
-                          <p className="text-xs font-medium text-on-ink leading-snug line-clamp-2 flex-1 min-w-0">
-                            {wo.title}
-                          </p>
-
-                          {/* Quick Action Button */}
-                          {wo.status === 'Ditugaskan' && (
-                            <button
-                              type="button"
-                              disabled={isRowBusy}
-                              onClick={(e) => void handleQuickWoAction(e, wo, 'start')}
-                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-primary hover:bg-primary-hover disabled:opacity-50 text-on-primary text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
-                            >
-                              <Play className="w-2.5 h-2.5" />
-                              Mulai
-                            </button>
-                          )}
-
-                          {wo.status === 'Dikerjakan' &&
-                            (isSelfPM ? (
-                              <button
-                                type="button"
-                                disabled={isRowBusy}
-                                onClick={(e) =>
-                                  void handleQuickWoAction(e, wo, 'complete-self')
-                                }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-success-solid hover:bg-success-solid disabled:opacity-50 text-on-ink text-[10px] font-bold inline-flex items-center gap-1 transition-colors"
-                              >
-                                <CheckCircle2 className="w-2.5 h-2.5" />
-                                Selesai
-                              </button>
-                            ) : wo.requireEvidence && !wo.evidenceUrl ? (
-                              <button
-                                type="button"
-                                onClick={(e) =>
-                                  void handleQuickWoAction(e, wo, 'detail')
-                                }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-warm-soft text-warm text-[10px] font-extrabold transition-colors"
-                              >
-                                Isi Bukti
-                              </button>
-                            ) : (
-                              <button
-                                type="button"
-                                disabled={isRowBusy}
-                                onClick={(e) =>
-                                  void handleQuickWoAction(e, wo, 'submit')
-                                }
-                                className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-chart-2 hover:bg-primary disabled:opacity-50 text-fg text-[10px] font-extrabold inline-flex items-center gap-1 transition-colors"
-                              >
-                                <Send className="w-2.5 h-2.5" />
-                                Ajukan
-                              </button>
-                            ))}
-
-                          {wo.status === 'Blocked' && (
-                            <button
-                              type="button"
-                              disabled={isRowBusy}
-                              onClick={(e) =>
-                                void handleQuickWoAction(e, wo, 'unblock')
-                              }
-                              className="shrink-0 min-h-[30px] px-2.5 rounded-full bg-danger-soft text-danger text-[10px] font-extrabold transition-colors"
-                            >
-                              Lanjut
-                            </button>
-                          )}
-
-                          {wo.status === 'Diajukan' && (
-                            <span className="shrink-0 px-2 py-0.5 rounded-full bg-white/15 text-[#FDE68A] text-[10px] font-bold">
-                              Diajukan
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {/* Footer: Navigate to Work Order Menu & Read-Only Legacy Tasks Archive */}
-            <div className="pt-3 mt-3 border-t border-white/10 space-y-2">
-              <button
-                type="button"
-                onClick={() => setActiveTab('work-orders')}
-                className="w-full min-h-[44px] bg-white/15 hover:bg-white/25 text-on-ink rounded-full text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-white/20"
-              >
-                <span>Buka Menu Work Order</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-
-              {tasks.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setShowLegacyTasksModal(true)}
-                  className="w-full py-1.5 text-[11px] text-on-ink-2 hover:text-on-ink font-medium flex items-center justify-center gap-1.5 transition-colors"
-                >
-                  <Archive className="w-3 h-3" />
-                  <span>
-                    Arsip Checklist Lama ({completedTasksCount}/{tasks.length})
-                  </span>
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* ==================== CENTER COLUMN (5 cols) ==================== */}
-        <div className="xl:col-span-5 flex flex-col gap-5">
-          <div className="flex flex-col gap-5 xl:h-[340px] xl:grid xl:grid-rows-2">
-          {/* Project Status Card */}
-          <div
-            className={`${activeStatusConfig.cardBg} ${activeStatusConfig.cardBorder} xl:h-full rounded-[28px] p-5 border shadow-cockpit-card relative overflow-hidden transition-colors duration-200`}
-          >
-            <div
-              className={`absolute inset-y-0 left-0 w-2 ${activeStatusConfig.accentStrip}`}
-              aria-hidden="true"
-            />
-
-            <div className="pl-2">
-              <div className="flex items-center justify-between gap-2 mb-3">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span
-                    className={`px-3 py-1 rounded-full text-[11px] font-extrabold border ${activeStatusConfig.badgeBg} ${activeStatusConfig.badgeText} ${activeStatusConfig.badgeBorder} inline-flex items-center gap-1.5`}
-                  >
-                    <StatusIcon className={`w-3.5 h-3.5 ${activeStatusConfig.iconColor}`} />
-                    <span>{activeStatusConfig.label}</span>
-                  </span>
-                  <span className={`text-xs font-semibold ${activeStatusConfig.subText}`}>
-                    Disiplin Proses &amp; Instrumentasi
-                  </span>
-                </div>
-
+          {/* Bimbingan berikutnya (dipindah ke baris atas, v2.0) */}
+          <div className="max-sm:order-6 xl:col-span-4 glass-card p-6 flex flex-col gap-4">
+            <div className="flex items-center justify-between gap-2">
+              <h2 className="font-heading text-2xl font-normal text-fg">Bimbingan</h2>
+              <div className="flex items-center gap-1">
+                <span className="px-3 py-1 rounded-full bg-primary-soft text-fg-2 text-xs font-semibold">Berikutnya</span>
                 {isPM && (
                   <button
                     type="button"
-                    onClick={handleOpenStatusModal}
-                    className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors shrink-0 ${activeStatusConfig.editBtnHover}`}
-                    title="Ubah Status Proyek (PM)"
+                    onClick={() => {
+                      setMeetingDate(config.upcomingMeeting.date);
+                      setMeetingAgenda(config.upcomingMeeting.mainAgenda);
+                      setShowMeetingModal(true);
+                    }}
+                    className="w-10 h-10 rounded-full hover:bg-muted text-fg-2 hover:text-primary flex items-center justify-center transition-colors"
+                    title="Ubah jadwal bimbingan (PM)"
+                    aria-label="Ubah jadwal bimbingan"
                   >
                     <Pencil className="w-3.5 h-3.5" />
                   </button>
                 )}
               </div>
-
-              <p className={`font-heading font-bold text-sm ${activeStatusConfig.headingText}`}>
-                {config.statusDescription}
-              </p>
-
-              <div
-                className={`mt-3 pt-2.5 border-t ${activeStatusConfig.dividerBorder} text-xs ${activeStatusConfig.subText} flex flex-wrap items-center justify-between gap-2 font-semibold`}
-              >
-                <div className="flex items-center gap-2">
-                  <span className="tabular-nums">
-                    Audit Kecepatan: {config.speedAuditPercent}%
-                  </span>
-                  <span>•</span>
-                  <span>
-                    {config.projectStatus === 'CRITICAL'
-                      ? 'Perlu Tindakan Eskalasi Segera'
-                      : config.projectStatus === 'NEEDS ATTENTION'
-                      ? 'Perlu Perhatian & Evaluasi'
-                      : 'Zero Blocker Open'}
-                  </span>
-                </div>
-                <span className={`text-[11px] font-extrabold ${activeStatusConfig.headingText}`}>
-                  Status: {activeStatusConfig.label}
-                </span>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-[22px] bg-primary text-on-primary flex flex-col items-center justify-center shrink-0">
+                <span className="font-heading text-3xl font-semibold leading-none tabular-nums">{config.upcomingMeeting.dayNum}</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.12em] mt-1">{config.upcomingMeeting.month}</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-base font-semibold text-fg">{config.upcomingMeeting.date}</p>
+                <p className="text-sm text-fg-2">{config.upcomingMeeting.location}</p>
+                <p className="text-xs text-fg-3 truncate">{config.supervisorReviewer}</p>
               </div>
             </div>
-          </div>
-
-          {/* Kartu tenggat ganda dihapus (tenggat sudah di kartu Countdown); tersisa status ACC (P2, LOG-032) */}
-          <div className="grid grid-cols-1 gap-4 xl:h-full">
-            <div className="glass-card xl:h-full p-4 flex flex-col justify-between">
-              <div>
-                <span className="text-[11px] text-fg-2 font-medium block">
-                  Status ACC Pembimbing
-                </span>
-                {/* Dihitung dari status deliverable §1.4, bukan teks config manual (P1 audit, LOG-030) */}
-                <span className="font-heading text-lg font-bold text-fg block mt-1 tabular-nums">
-                  {accSummary.acc} / {accSummary.total} ACC
-                </span>
-              </div>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className="px-2 py-0.5 rounded-md bg-warm-soft text-warm text-[10px] font-bold flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-warm" />
-                  {accSummary.submitted} menunggu ACC
-                </span>
-                <span className="text-[10px] text-fg-2 truncate">
-                  {config.supervisorReviewer}
-                </span>
-              </div>
-            </div>
-          </div>
-          </div>
-
-          {/* Bimbingan Mendatang Card */}
-          <div className="glass-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-primary" />
-                <span className="font-heading font-bold text-xs text-fg">
-                  Bimbingan Mendatang
-                </span>
-              </div>
-              {isPM && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setMeetingDate(config.upcomingMeeting.date);
-                    setMeetingAgenda(config.upcomingMeeting.mainAgenda);
-                    setShowMeetingModal(true);
-                  }}
-                  className="w-11 h-11 rounded-full hover:bg-muted/70 text-fg-2 hover:text-primary flex items-center justify-center transition-colors"
-                >
-                  <Pencil className="w-3.5 h-3.5" />
-                </button>
-              )}
-            </div>
-
-            <div className="flex items-start gap-4">
-              {/* Date Box */}
-              <div className="w-14 h-16 rounded-2xl bg-muted/70 border border-line/60 flex flex-col items-center justify-center shrink-0">
-                <span className="font-heading text-xl font-extrabold text-primary leading-none tabular-nums">
-                  {config.upcomingMeeting.dayNum}
-                </span>
-                <span className="text-[10px] font-bold text-fg-2 mt-0.5 uppercase">
-                  {config.upcomingMeeting.month}
-                </span>
-              </div>
-
-              <div className="min-w-0 flex-1">
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-fg">
-                  {config.upcomingMeeting.date}
-                </h4>
-                <p className="text-[11px] text-fg-2 mt-0.5 leading-snug">
-                  {config.upcomingMeeting.location}
-                </p>
-
-                <div className="mt-2.5 p-3 rounded-2xl bg-muted/70 border border-line">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary block mb-0.5">
-                    AGENDA UTAMA
-                  </span>
-                  <p className="text-xs font-semibold text-fg">
-                    {config.upcomingMeeting.mainAgenda}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Timeline Minggu Ini Card */}
-          <div className="glass-card p-5">
-            <div className="flex items-center justify-between mb-3">
-              <span className="font-heading font-bold text-xs text-fg">
-                Timeline Minggu Ini
-              </span>
-              <span className="text-[10px] font-semibold text-fg-2">
-                ISO 10628 &amp; ISA-5.1 Workflow
-              </span>
-            </div>
-
-            <div className="flex items-start gap-3">
-              <span className="px-2.5 py-1 rounded-xl bg-primary text-on-primary font-heading text-xs font-extrabold shrink-0">
-                {config.weeklyFocus.week}
-              </span>
-              <div>
-                <p className="text-xs font-bold text-fg">
-                  {config.weeklyFocus.title}
-                </p>
-                <div className="flex items-center gap-2 mt-1.5 text-[11px] text-fg-2">
-                  <span className="inline-flex items-center gap-1">
-                    <Flag className="w-3.5 h-3.5 text-primary" />
-                    {config.weeklyFocus.tag}
-                  </span>
-                  <span>•</span>
-                  <span>{config.weeklyFocus.targetDate}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* RACI Assignment Ringkas (Last card in Center Column -> flex-1) */}
-          <div className="flex-1 glass-card p-5 flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-heading font-bold text-xs text-fg">
-                  RACI Assignment Ringkas
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('team-raci')}
-                  className="text-xs text-primary font-bold hover:underline flex items-center gap-1"
-                >
-                  Lihat Matriks Penuh
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* Dihitung dari matriks Team RACI (Firestore), bukan teks tetap (audit Fase 4 / LOG-028) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {raciRows.slice(0, 6).map((row) => {
-                  const responsible = users.filter((u) => getRaciRoleForUserRecord(row, u) === 'R');
-                  return (
-                    <div
-                      key={row.id}
-                      className="px-3 py-2 rounded-2xl bg-muted/70 text-xs font-medium text-fg flex items-center justify-between gap-2"
-                    >
-                      <span className="text-[11px] text-fg-2 font-semibold truncate" title={row.deliverable}>
-                        {row.deliverable}
-                      </span>
-                      <div className="inline-flex items-center gap-1.5 shrink-0">
-                        {responsible.length === 0 ? (
-                          <span className="text-[11px] text-warm font-bold">Belum ada R</span>
-                        ) : (
-                          responsible.slice(0, 2).map((u) => (
-                            <UserChip
-                              key={u.id}
-                              uid={u.id}
-                              variant="avatar-nama"
-                              size="xs"
-                              useNickname
-                              nameClassName="!font-bold !text-primary"
-                            />
-                          ))
-                        )}
-                        <span className="font-extrabold text-primary">(R)</span>
-                      </div>
-                    </div>
-                  );
-                })}
-                {raciRows.length === 0 && (
-                  <p className="text-xs text-fg-2">Matriks RACI belum diisi.</p>
-                )}
-              </div>
-            </div>
-
-            <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-fg-2">
-              <span>Aturan Governance: Tepat 1 Accountable (A) &amp; min. 1 Responsible (R)</span>
-              <span
-                className={`px-2 py-0.5 rounded-full font-bold text-[10px] tabular-nums ${
-                  validRaciCount === raciRows.length
-                    ? 'bg-success-soft text-success'
-                    : 'bg-warm-soft text-warm'
-                }`}
-              >
-                {validRaciCount}/{raciRows.length} Valid
-              </span>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Agenda utama</p>
+              <p className="mt-1.5 text-sm leading-relaxed text-fg-2 line-clamp-5">{config.upcomingMeeting.mainAgenda}</p>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* ==================== RIGHT COLUMN (4 cols) ==================== */}
-        <div className="xl:col-span-4 flex flex-col gap-5">
-          {/* Progress Dokumen FEED Card */}
-          <div className="glass-card p-6 flex flex-col justify-between">
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <div>
-                  <h3 className="font-heading font-bold text-sm text-fg">
-                    Progress Dokumen FEED
-                  </h3>
-                  <p className="text-[11px] text-fg-2">
-                    Total Pembobotan Bab &amp; Lampiran A3
-                  </p>
-                </div>
-                <span className="font-heading text-4xl font-extrabold text-primary tabular-nums">
-                  {overallWeightedProgress}%
-                </span>
-              </div>
-
-              {/* Hatched Master Progress Bar */}
-              <div className="w-full h-4 rounded-full bg-muted overflow-hidden my-3.5 p-0.5">
-                <div
-                  className="h-full rounded-full bg-hatch-pattern transition-all duration-500"
-                  style={{ width: `${overallWeightedProgress}%` }}
-                ></div>
-              </div>
-
-              {/* Chapter Milestone Bars */}
-              <div className="space-y-3 pt-1">
-                {deliverables
-                  .filter((d) => d.weight > 0)
-                  .map((del) => {
-                    // Progres dihitung dari status baku §1.4 (P1 audit, LOG-030); ubah status di Workspaces
-                    const delStatus = deliverableStatus(del);
-                    const delProgress = deliverableProgress(del);
-                    return (
-                    <div key={del.id} className="space-y-1">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-bold text-fg truncate max-w-[210px]">
-                          {del.title}
-                        </span>
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <span className="font-bold text-fg tabular-nums">
-                            {delProgress}%
-                          </span>
-                          {isPM && (
-                            <button
-                              type="button"
-                              onClick={() => setActiveTab('workspaces')}
-                              className="min-w-[28px] min-h-[28px] flex items-center justify-center text-fg-2 hover:text-primary"
-                              title={`Ubah status ${del.title} di Workspaces`}
-                              aria-label={`Ubah status ${del.title} di Workspaces`}
-                            >
-                              <Pencil className="w-3 h-3" />
-                            </button>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between text-[11px] text-fg-2">
-                        <div className="flex items-center gap-1.5">
-                          <span>{del.targetWeek}</span>
-                          {del.badgeNote && (
-                            <span className="px-1.5 py-0.5 bg-danger-soft text-danger text-[10px] font-bold rounded-md flex items-center gap-0.5">
-                              <AlertTriangle className="w-2.5 h-2.5" />
-                              {del.badgeNote}
-                            </span>
-                          )}
-                          <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded-md ${STATUS_PILL[delStatus]}`}>
-                            {delStatus}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
-                        <div
-                          className="h-full bg-primary rounded-full transition-all duration-300"
-                          style={{ width: `${delProgress}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                    );
-                  })}
-              </div>
-            </div>
-
-            {/* Tombol "Ekspor Paket FEED" (hanya alert palsu) diganti tautan ke dokumen master asli (LOG-028) */}
+      {/* Pengumuman PM: strip tipis, bisa ditutup untuk sesi ini */}
+      {!noticeHidden && (
+        <div className="max-sm:order-5 rounded-full bg-warm-soft pl-2 pr-3 py-2 flex items-center gap-3 min-h-[52px]">
+          <span className="shrink-0 px-3.5 py-1.5 rounded-full bg-warm-solid text-on-ink text-xs font-semibold uppercase tracking-wide">
+            {config.noticeBanner.badge}
+          </span>
+          <p className="flex-1 min-w-0 text-sm text-fg truncate" title={config.noticeBanner.text}>
+            <span className="font-semibold">{config.noticeBanner.title}:</span> {config.noticeBanner.text}
+          </p>
+          {isPM && (
             <button
               type="button"
-              onClick={() => setActiveTab('gworkspace')}
-              className="w-full mt-5 min-h-[44px] bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
+              onClick={() => {
+                setNoticeText(config.noticeBanner.text);
+                setShowNoticeModal(true);
+              }}
+              className="w-9 h-9 rounded-full hover:bg-surface/60 text-warm flex items-center justify-center shrink-0"
+              title="Edit pengumuman PM"
+              aria-label="Edit pengumuman PM"
             >
-              <ExternalLink className="w-3.5 h-3.5" />
-              Buka Dokumen Master (Google Workspace)
+              <Pencil className="w-3.5 h-3.5" />
+            </button>
+          )}
+          <button type="button" onClick={() => setNoticeHidden(true)} className="shrink-0 px-2 text-sm font-semibold text-warm hover:underline">
+            Tutup
+          </button>
+        </div>
+      )}
+
+      {/* Baris utama bawah: Tugas saya, Dokumen FEED, Kesehatan data */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-5 items-stretch max-sm:contents">
+        {/* Tugas saya */}
+        <section className="max-sm:order-4 xl:col-span-5 glass-card p-5 sm:p-6 flex flex-col">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-heading text-2xl font-normal text-fg">Tugas saya</h2>
+            <button
+              type="button"
+              onClick={() => setActiveTab('work-orders')}
+              className="text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1"
+            >
+              {(isPM && woWidgetScope === 'team' ? teamActiveWorkOrders : myActiveWorkOrders).length} aktif · Semua WO
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
-          {/* Terbaru dari Weekly MoM Card (Last card in Right Column -> flex-1) */}
-          <div className="flex-1 glass-card p-6 flex flex-col justify-between">
-            {/* Header */}
-            <div className="flex items-center justify-between gap-2 mb-3">
-              <h3 className="font-heading font-bold text-sm text-fg">
-                Terbaru dari Weekly MoM
-              </h3>
+          {isPM && (
+            <div className="mt-3 inline-flex self-start items-center gap-1 p-1 rounded-full bg-muted border border-line">
+              {(['mine', 'team'] as const).map((sc) => (
+                <button
+                  key={sc}
+                  type="button"
+                  onClick={() => setWoWidgetScope(sc)}
+                  className={`min-h-[34px] px-3.5 rounded-full text-xs transition-all ${
+                    woWidgetScope === sc ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium'
+                  }`}
+                >
+                  {sc === 'mine' ? `Saya (${myActiveWorkOrders.length})` : `Seluruh tim (${teamActiveWorkOrders.length})`}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {isPM && woWidgetScope === 'team' && (
+            <div className="mt-3 grid grid-cols-5 gap-1.5 text-center">
+              {WO_BOARD_COLUMNS.map((st) => (
+                <div key={st} className="py-2 rounded-2xl bg-muted">
+                  <span className="block text-base font-semibold text-fg tabular-nums leading-none">{teamStatusCounts[st]}</span>
+                  <span className="block text-[10px] text-fg-3 mt-1 truncate">{st}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {(() => {
+            const list = isPM && woWidgetScope === 'team' ? teamActiveWorkOrders : myActiveWorkOrders;
+            const pillOf = (wo: WorkOrder) => {
+                  const overdue = isWorkOrderOverdue(wo, todayYmd);
+                  if (overdue) return { cls: 'bg-warm-soft text-warm', label: `Terlambat ${Math.abs(getDaysUntilDue(wo.dueDate, todayYmd))}h` };
+                  if (wo.status === 'Dikerjakan' && wo.needsRevision) return { cls: 'bg-warm-soft text-warm', label: 'Revisi' };
+                  if (wo.status === 'Dikerjakan') return { cls: 'bg-primary-soft text-fg-2', label: 'Dikerjakan' };
+                  if (wo.status === 'Blocked') return { cls: 'bg-danger-soft text-danger', label: 'Blocked' };
+                  if (wo.status === 'Diajukan') return { cls: 'bg-warm-soft text-warm', label: 'Review PM' };
+                  return { cls: 'border border-line-strong text-fg-2', label: wo.status };
+                };
+            if (list.length === 0) {
+              return (
+                <div className="flex-1 mt-4 flex flex-col items-center justify-center text-center py-8 rounded-[24px] border border-dashed border-line-strong">
+                  <CheckCircle2 className="w-6 h-6 text-success mb-2" />
+                  <p className="text-sm font-semibold text-fg">Tidak ada tugas aktif</p>
+                  <p className="text-xs text-fg-3 mt-1">Semua Work Order sudah tuntas atau terkendali.</p>
+                </div>
+              );
+            }
+            return (
+              <ul className="mt-4 space-y-2.5 flex-1">
+                {list.slice(0, 5).map((wo) => {
+                  const pill = pillOf(wo);
+                  const isSelfPM = isExclusivelyAssignedToCurrentPM(wo, currentUser.id, isPM, getUser);
+                  const isRowBusy = busyWoId === wo.id;
+                  const mine = woWidgetScope === 'mine' || !isPM;
+                  const action: { key: 'start' | 'submit' | 'unblock' | 'complete-self' | 'detail'; label: string } | null = !mine
+                    ? null
+                    : wo.status === 'Ditugaskan'
+                    ? { key: 'start', label: 'Mulai' }
+                    : wo.status === 'Blocked'
+                    ? { key: 'unblock', label: 'Lanjut' }
+                    : wo.status === 'Dikerjakan'
+                    ? isSelfPM
+                      ? { key: 'complete-self', label: 'Selesai' }
+                      : wo.requireEvidence && !wo.evidenceUrl
+                      ? { key: 'detail', label: 'Isi bukti' }
+                      : { key: 'submit', label: 'Ajukan' }
+                    : null;
+                  return (
+                    <li key={wo.id}>
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setSelectedWorkOrderId(wo.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') setSelectedWorkOrderId(wo.id);
+                        }}
+                        className="min-h-[64px] px-3 py-2.5 rounded-[20px] bg-surface hover:shadow-cockpit-card transition-all flex items-center gap-3 cursor-pointer"
+                      >
+                        <span className="shrink-0 px-2.5 py-1 rounded-xl bg-primary-soft text-fg-2 text-xs font-semibold tabular-nums">
+                          {wo.code}
+                        </span>
+                        <span className="flex-1 min-w-0">
+                          <span className="block text-sm font-medium text-fg truncate">{wo.title}</span>
+                          <span className="block text-xs text-fg-3 truncate">
+                            {wo.priority} · tenggat {formatYmdToIndonesian(wo.dueDate)} ·{' '}
+                            {wo.origin.type === 'mom' ? `MoM ${wo.origin.trackerActionCode}` : `W${wo.projectWeek}`}
+                          </span>
+                        </span>
+                        {action ? (
+                          <button
+                            type="button"
+                            disabled={isRowBusy}
+                            onClick={(e) => void handleQuickWoAction(e, wo, action.key)}
+                            className={`shrink-0 min-h-[32px] px-3 rounded-full text-xs font-semibold disabled:opacity-50 transition-colors ${
+                              action.key === 'complete-self'
+                                ? 'bg-success-solid text-on-ink'
+                                : action.key === 'detail' || action.key === 'unblock'
+                                ? 'bg-warm-soft text-warm'
+                                : 'bg-primary text-on-primary'
+                            }`}
+                            title={pill.label}
+                          >
+                            {action.label}
+                          </button>
+                        ) : (
+                          <span className={`shrink-0 px-3 py-1 rounded-full text-xs font-semibold ${pill.cls}`}>{pill.label}</span>
+                        )}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            );
+          })()}
+
+          {tasks.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setShowLegacyTasksModal(true)}
+              className="mt-3 self-center py-1.5 text-xs text-fg-3 hover:text-fg font-medium inline-flex items-center gap-1.5"
+            >
+              <Archive className="w-3 h-3" />
+              Arsip checklist lama ({completedTasksCount}/{tasks.length})
+            </button>
+          )}
+        </section>
+
+        {/* Dokumen FEED */}
+        <section className="max-sm:order-7 xl:col-span-4 glass-card p-5 sm:p-6 flex flex-col">
+          <div className="flex items-center justify-between gap-2">
+            <h2 className="font-heading text-2xl font-normal text-fg">Dokumen FEED</h2>
+            <span className="text-sm font-semibold text-primary tabular-nums">Total {overallWeightedProgress}%</span>
+          </div>
+          <ul className="mt-4 space-y-3.5 flex-1">
+            {deliverables
+              .filter((d) => d.weight > 0)
+              .map((del) => {
+                const delStatus = deliverableStatus(del);
+                const delProgress = deliverableProgress(del);
+                const critical = !!del.badgeNote && delProgress === 0;
+                return (
+                  <li key={del.id}>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('workspaces')}
+                      className="w-full text-left"
+                      title={del.badgeNote ? `${del.title} — ${del.badgeNote}` : del.title}
+                    >
+                      <span className="flex items-center justify-between gap-3 text-sm">
+                        <span className="text-fg truncate">{del.title}</span>
+                        <span className={`shrink-0 tabular-nums ${critical ? 'font-semibold text-warm' : 'text-fg-2'}`}>
+                          {delProgress}% · {critical ? 'Jalur kritis' : delStatus}
+                        </span>
+                      </span>
+                      <span className={`mt-1.5 block h-1.5 rounded-full overflow-hidden ${critical ? 'bg-warm-soft' : 'bg-muted'}`}>
+                        <span
+                          className={`block h-full rounded-full ${delProgress >= 80 ? 'bg-primary' : 'bg-chart-2'}`}
+                          style={{ width: `${delProgress}%` }}
+                        />
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
+          </ul>
+          <button
+            type="button"
+            onClick={() => setActiveTab('gworkspace')}
+            className="mt-5 w-full min-h-[48px] rounded-full border border-line-strong bg-surface text-primary text-sm font-semibold inline-flex items-center justify-center gap-2 hover:bg-muted transition-colors"
+          >
+            Buka dokumen master
+            <ExternalLink className="w-4 h-4" />
+          </button>
+        </section>
+
+        {/* Kesehatan data */}
+        <div className="max-sm:order-8 xl:col-span-3">
+          <DataHealthPanel variant="list" />
+        </div>
+      </div>
+
+      {/* Ringkasan lain: tidak ada di desain utama, dipertahankan agar fitur PM (status proyek, fokus minggu) tetap ada */}
+      <div className="max-sm:order-9 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+        {/* Status proyek */}
+        <section className={`rounded-[28px] p-5 border shadow-cockpit-card ${activeStatusConfig.cardBg} ${activeStatusConfig.cardBorder}`}>
+          <div className="flex items-center justify-between gap-2">
+            <span className={`px-3 py-1 rounded-full text-[11px] font-semibold border inline-flex items-center gap-1.5 ${activeStatusConfig.badgeBg} ${activeStatusConfig.badgeText} ${activeStatusConfig.badgeBorder}`}>
+              <StatusIcon className={`w-3.5 h-3.5 ${activeStatusConfig.iconColor}`} />
+              {activeStatusConfig.label}
+            </span>
+            {isPM && (
               <button
                 type="button"
-                onClick={() => setActiveTab('weekly-mom')}
-                className="text-xs text-primary font-bold hover:underline inline-flex items-center gap-1 shrink-0"
+                onClick={handleOpenStatusModal}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${activeStatusConfig.editBtnHover}`}
+                title="Ubah status proyek (PM)"
+                aria-label="Ubah status proyek"
               >
-                Lihat Semua
-                <ArrowRight className="w-3.5 h-3.5" />
+                <Pencil className="w-3.5 h-3.5" />
               </button>
-            </div>
+            )}
+          </div>
+          <p className={`mt-3 text-sm font-semibold leading-snug ${activeStatusConfig.headingText}`}>{config.statusDescription}</p>
+          <p className={`mt-2 text-xs ${activeStatusConfig.subText}`}>
+            Audit kecepatan {config.speedAuditPercent}% · Disiplin Proses &amp; Instrumentasi
+          </p>
+        </section>
 
-            {/* Two Stacked Blocks Separated by 1px var(--border) */}
-            <div className="flex-1 flex flex-col justify-between gap-3">
-              {/* Block A: Meeting Log Terbaru */}
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-fg-2 mb-1.5">
-                  <MessagesSquare className="w-3.5 h-3.5 text-primary" />
-                  <span>Meeting Log Terbaru</span>
-                </div>
-
-                <div className="rounded-[20px] bg-muted/70 p-3.5 border border-line">
-                  {latestMeetingLog ? (
-                    <div className="space-y-1.5">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full bg-muted text-fg-2 text-[10px] font-bold">
-                          {latestMeetingLog.weekLabel || `Week ${latestMeetingLog.week}`}
-                        </span>
-                        <span className="text-[11px] font-medium text-fg-2">
-                          {latestMeetingLog.dayText}
-                        </span>
-                      </div>
-
-                      <p className="text-xs font-bold text-fg line-clamp-2 leading-snug">
-                        {latestMeetingLog.topic}
-                      </p>
-
-                      <p className="text-[11px] font-semibold text-fg-2 truncate">
-                        Evaluator: <span className="text-fg">{latestMeetingLog.evaluator}</span>
-                      </p>
-
-                      <p className="text-[11px] text-fg-2 line-clamp-2 leading-relaxed">
-                        {latestMeetingLog.summary}
-                      </p>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-fg-2 py-2">
-                      Belum ada Meeting Log.
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              {/* 1px var(--border) Horizontal Divider */}
-              <div className="border-t border-line" />
-
-              {/* Block B: Slide Deck Terbaru */}
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1.5 text-[11px] font-bold text-fg-2 mb-1.5">
-                  <Presentation className="w-3.5 h-3.5 text-primary" />
-                  <span>Slide Deck Terbaru</span>
-                </div>
-
-                <div className="rounded-[20px] bg-muted/70 p-3.5 border border-line">
-                  {latestSlideDeck ? (
-                    <div className="space-y-2">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <span className="px-2.5 py-0.5 rounded-full bg-muted text-fg-2 text-[10px] font-bold">
-                          {latestSlideDeck.weekLabel || `Week ${latestSlideDeck.week}`}
-                        </span>
-                        <span className="text-[11px] font-medium text-fg-2">
-                          {latestSlideDeck.date}
-                        </span>
-                      </div>
-
-                      <p className="text-xs font-bold text-fg line-clamp-2 leading-snug">
-                        {latestSlideDeck.title.toLowerCase().startsWith('slide deck')
-                          ? latestSlideDeck.title
-                          : `Slide Deck Week ${latestSlideDeck.week}: ${latestSlideDeck.title}`}
-                      </p>
-
-                      <div className="pt-1.5 border-t border-line/60 flex items-center justify-between gap-2">
-                        <UserChip
-                          uid={latestSlideDeck.presenter}
-                          variant="avatar-nama-jabatan"
-                          size="xs"
-                          useNickname
-                          nameClassName="!text-[11px] !font-bold !text-fg"
-                          titleClassName="!text-[10px] !text-fg-2"
-                        />
-
-                        <a
-                          href={latestSlideDeck.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-full bg-primary hover:bg-primary-hover text-on-primary text-[11px] font-bold inline-flex items-center gap-1.5 shrink-0 transition-colors"
-                        >
-                          <span>Buka</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
-                        </a>
-                      </div>
-                    </div>
-                  ) : (
-                    <p className="text-xs text-fg-2 py-2">
-                      Belum ada Slide Deck.
-                    </p>
-                  )}
-                </div>
-              </div>
+        {/* Fokus minggu ini */}
+        <section className="glass-card !rounded-[28px] p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Fokus minggu ini</p>
+          <div className="mt-3 flex items-start gap-3">
+            <span className="px-2.5 py-1 rounded-xl bg-primary text-on-primary text-xs font-semibold shrink-0">{config.weeklyFocus.week}</span>
+            <div className="min-w-0">
+              <p className="text-sm font-medium text-fg leading-snug">{config.weeklyFocus.title}</p>
+              <p className="mt-1.5 text-xs text-fg-3 inline-flex items-center gap-1">
+                <Flag className="w-3 h-3 text-primary" /> {config.weeklyFocus.tag} · {config.weeklyFocus.targetDate}
+              </p>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* RACI ringkas */}
+        <section className="glass-card !rounded-[28px] p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">RACI · responsible</p>
+            <span
+              className={`px-2 py-0.5 rounded-full text-[10px] font-semibold tabular-nums ${
+                validRaciCount === raciRows.length ? 'bg-success-soft text-success' : 'bg-warm-soft text-warm'
+              }`}
+            >
+              {validRaciCount}/{raciRows.length} valid
+            </span>
+          </div>
+          <ul className="mt-3 space-y-1.5">
+            {raciRows.slice(0, 6).map((row) => {
+              const responsible = users.filter((u) => getRaciRoleForUserRecord(row, u) === 'R');
+              return (
+                <li key={row.id} className="flex items-center justify-between gap-2 text-xs">
+                  <span className="text-fg-2 truncate" title={row.deliverable}>{row.deliverable}</span>
+                  <span className="shrink-0 font-semibold text-primary">
+                    {responsible.length === 0 ? <span className="text-warm">Belum ada R</span> : responsible.map((u) => u.code).join(', ')}
+                  </span>
+                </li>
+              );
+            })}
+            {raciRows.length === 0 && <li className="text-xs text-fg-3">Matriks RACI belum diisi.</li>}
+          </ul>
+          <button type="button" onClick={() => setActiveTab('team-raci')} className="mt-3 text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1">
+            Matriks penuh <ArrowRight className="w-3 h-3" />
+          </button>
+        </section>
+
+        {/* MoM & slide terbaru */}
+        <section className="glass-card !rounded-[28px] p-5 flex flex-col">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">Terbaru dari rapat</p>
+            <button type="button" onClick={() => setActiveTab('weekly-mom')} className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1">
+              Semua <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+          {latestMeetingLog ? (
+            <div className="mt-3">
+              <p className="text-xs text-fg-3">
+                <MessagesSquare className="w-3 h-3 inline text-primary mr-1" />
+                {latestMeetingLog.weekLabel || `Week ${latestMeetingLog.week}`} · {latestMeetingLog.dayText}
+              </p>
+              <p className="mt-1 text-sm font-medium text-fg leading-snug line-clamp-2">{latestMeetingLog.topic}</p>
+            </div>
+          ) : (
+            <p className="mt-3 text-xs text-fg-3">Belum ada Meeting Log.</p>
+          )}
+          {latestSlideDeck && (
+            <a
+              href={latestSlideDeck.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto pt-3 text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1.5"
+            >
+              <Presentation className="w-3.5 h-3.5" />
+              Slide {latestSlideDeck.weekLabel || `Week ${latestSlideDeck.week}`}
+              <ExternalLink className="w-3 h-3" />
+            </a>
+          )}
+        </section>
       </div>
 
       {/* ========================================================================= */}

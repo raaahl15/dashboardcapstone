@@ -114,185 +114,104 @@ export const StandardsView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* TOP ZONE: Heading, description, and standards summary */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
-
-        <div className="space-y-2.5">
-          <div className="max-w-4xl">
-            <p className="text-[13px] leading-relaxed text-fg-3">
-              Pedoman kepatuhan regulasi Capstone DTNTF dan direktori standar internasional
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
-                CAPSTONE DTNTF
-              </span>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
-                <BookOpen className="w-3.5 h-3.5" /> 3 Regulasi Utama
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
-                <FileText className="w-3.5 h-3.5" /> {standards.length} Standar Industri
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-success-soft border border-glass-stroke text-success text-[12px] font-semibold inline-flex items-center gap-2">
-                <ShieldCheck className="w-3.5 h-3.5 text-success" /> EPC Compliance Active
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 3 MASTER REGULATION CARDS */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {regulations.map((reg) => (
+      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-fg-3">Regulasi utama · Capstone DTNTF</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {regulations.map((reg, i) => (
           <div
             key={reg.id}
-            className="glass-card p-6 flex flex-col justify-between hover:shadow-cockpit-pop transition-all group"
+            className={`rounded-[28px] p-6 flex flex-col gap-1.5 min-h-[150px] transition-all ${
+              i === 0 ? 'bg-hero shadow-cockpit-pop' : 'glass-card hover:shadow-cockpit-pop'
+            }`}
           >
-            <div>
-              <div className="flex items-center justify-between mb-4">
-                <div className="w-10 h-10 rounded-2xl bg-surface/70 text-primary flex items-center justify-center shadow-xs">
-                  <FileText className="w-5 h-5" />
-                </div>
-                <div className="flex items-center gap-2">
-                  {isPM && (
-                    <button
-                      type="button"
-                      onClick={() => openEditRegulationModal(reg)}
-                      aria-label={`Edit regulasi ${reg.title}`}
-                      title="Edit Regulasi"
-                      className="w-10 h-10 rounded-full text-fg-3 hover:bg-muted hover:text-primary transition-colors flex items-center justify-center"
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </button>
-                  )}
-                  <a
-                    href={reg.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`Buka dokumen ${reg.title}`}
-                    className="text-fg-3 hover:text-primary transition-colors"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
-                </div>
-              </div>
-
-              <h3 className="font-heading font-bold text-sm sm:text-base text-fg mb-1.5 leading-snug">
-                {reg.title}
-              </h3>
-              <p className="text-xs text-fg-3 mb-5 leading-relaxed">
-                {reg.subtitle}
-              </p>
+            <div className="flex items-start justify-between gap-2">
+              <h3 className={`text-lg font-semibold leading-snug ${i === 0 ? '' : 'text-fg'}`}>{reg.title}</h3>
+              {isPM && (
+                <button
+                  type="button"
+                  onClick={() => openEditRegulationModal(reg)}
+                  aria-label={`Edit regulasi ${reg.title}`}
+                  title="Edit regulasi"
+                  className={`w-9 h-9 -mt-1 shrink-0 rounded-full flex items-center justify-center transition-colors ${
+                    i === 0 ? 'text-on-ink-2 hover:bg-white/15' : 'text-fg-3 hover:bg-muted hover:text-primary'
+                  }`}
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
-
-            <div>
-              <div className="p-2.5 rounded-xl bg-surface/50 text-center mb-4 border border-glass-stroke">
-                <span className="text-[11px] font-bold text-primary">
-                  {reg.badge}
-                </span>
-              </div>
-
-              <a
-                href={reg.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full h-11 bg-primary hover:bg-primary-hover text-on-primary rounded-full font-heading text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all"
-              >
-                Buka <ExternalLink className="w-3.5 h-3.5" />
-              </a>
-            </div>
+            <p className={`text-sm ${i === 0 ? 'text-on-ink-2' : 'text-fg-2'}`}>{reg.subtitle}</p>
+            <p className={`text-xs ${i === 0 ? 'text-on-ink-2' : 'text-fg-3'}`}>{reg.badge}</p>
+            <a
+              href={reg.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`mt-auto pt-2 text-sm font-semibold inline-flex items-center gap-1 hover:underline ${i === 0 ? '' : 'text-primary'}`}
+            >
+              Buka <ExternalLink className="w-3.5 h-3.5" />
+            </a>
           </div>
         ))}
       </div>
 
-      {/* ========================================================================= */}
-      {/* STANDARD REFERENCES DIRECTORY */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-6 space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="font-heading font-bold text-base sm:text-lg text-fg">
-              Standard References
-            </h2>
-            <p className="text-xs text-fg-3">
-              Direktori standar desain rekayasa kimia dan instrumentasi proses
-            </p>
-          </div>
-
-          {isPM && (
-            <button
-              onClick={openAddModal}
-              className="px-4 py-2 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              Add
-            </button>
-          )}
-        </div>
-
-        {/* Standards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {standards.map((std) => (
-            <div
-              key={std.id}
-              className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs flex flex-col justify-between hover:shadow-sm transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="w-10 h-10 rounded-xl bg-surface/70 text-primary font-heading font-extrabold text-[10px] flex items-center justify-center leading-none text-center p-1 border border-glass-stroke">
-                    {std.subCode}
-                  </span>
-                  <div className="flex items-center gap-1 text-fg-3">
-                    {isPM && (
-                      <>
-                        <button
-                          onClick={() => openEditModal(std)}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-muted hover:text-primary transition-colors"
-                          title="Edit Standar"
-                          aria-label={`Edit Standar ${std.subCode} - ${std.title}`}
-                        >
-                          <Pencil className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => deleteStandard(std.id)}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-black/5 hover:text-danger transition-colors"
-                          title="Hapus Standar"
-                          aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                <h4 className="font-heading font-bold text-xs sm:text-sm text-fg mb-1">
-                  {std.title}
-                </h4>
-                <p className="text-[11px] text-fg-3 leading-snug mb-4">
-                  {std.subtitle}
-                </p>
-              </div>
-
-              <a
-                href={std.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2 bg-muted hover:bg-muted text-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all border border-line"
-              >
-                Buka <ExternalLink className="w-3 h-3" />
-              </a>
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-fg-3">
+          Standar industri · desain rekayasa kimia &amp; instrumentasi · {standards.length} standar
+        </p>
+        {isPM && (
+          <button
+            type="button"
+            onClick={openAddModal}
+            className="min-h-[40px] px-4 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-semibold inline-flex items-center gap-1.5"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Tambah standar
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {standards.map((std) => (
+          <div key={std.id} className="glass-card !rounded-[28px] p-5 min-h-[220px] flex flex-col gap-2 hover:shadow-cockpit-pop transition-all">
+            <div className="flex items-center justify-between gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-primary-soft text-fg-2 text-[11px] font-semibold">{std.subCode}</span>
+              {isPM && (
+                <span className="flex items-center text-fg-3">
+                  <button
+                    type="button"
+                    onClick={() => openEditModal(std)}
+                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-muted hover:text-primary"
+                    title="Edit standar"
+                    aria-label={`Edit Standar ${std.subCode} - ${std.title}`}
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => deleteStandard(std.id)}
+                    className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-danger-soft hover:text-danger"
+                    title="Hapus standar"
+                    aria-label={`Hapus Standar ${std.subCode} - ${std.title}`}
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </span>
+              )}
             </div>
-          ))}
-        </div>
+            <h4 className="font-heading text-3xl font-normal text-fg leading-tight">
+              {std.title.startsWith(std.subCode + ' ') && std.subCode !== 'ISO' && std.subCode !== 'ISA' && std.subCode !== 'IEC' && std.subCode !== 'API'
+                ? std.title.slice(std.subCode.length + 1)
+                : std.title}
+            </h4>
+            <p className="text-sm text-fg-2 leading-snug">{std.subtitle}</p>
+            <a
+              href={std.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto pt-2 text-sm font-semibold text-primary inline-flex items-center gap-1 hover:underline"
+            >
+              Buka <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        ))}
       </div>
 
       {/* Edit Regulation Modal */}

@@ -60,6 +60,46 @@ export const DwsimStreamView: React.FC = () => {
   );
   const tagOf = (dwsim: string) => data?.streams.find((s) => s.dwsim_tag === dwsim)?.plant_tag || dwsim;
 
+  /** Strip alur: aliran umpan → unit operasi Area 1 (urutan data) → aliran keluar ke Area 2. */
+  const flow = useMemo(() => {
+    if (!data) return null;
+    const UNIT_LABEL: Record<string, string> = {
+      'Adiabatic Pump': 'Pompa adiabatik',
+      'Material Stream Mixer': 'Mixer',
+      'Material Stream Heater': 'Heater',
+      'Conversion Reactor': 'Reaktor konversi',
+      'Material Stream Cooler': 'Cooler',
+    };
+    const byTag = (t: string) => data.streams.find((x) => x.dwsim_tag === t);
+    const area1Units = data.unit_operations.filter((u) => (u.area ?? '').startsWith('1'));
+    const feed = data.streams.find((x) => x.scope === 'AREA_1');
+    const out = data.streams.find((x) => x.scope === 'INTERFACE_OUT');
+    type Node = { key: string; tag: string; label: string; value: string; kind: 'in' | 'unit' | 'reactor' | 'out'; tone?: 'heat' };
+    const nodes: Node[] = [];
+    if (feed) nodes.push({ key: 'feed', tag: feed.plant_tag ?? feed.dwsim_tag, label: 'Umpan metanol', value: `${fmtNum(feed.T, 0)} °C · ${fmtNum(feed.P, 0)} bar`, kind: 'in' });
+    for (const u of area1Units) {
+      const recycle = u.inlets.map(byTag).find((x) => x?.scope === 'INTERFACE_IN');
+      const outT = u.outlets.map(byTag).find((x) => x && x.mass_flow > 0)?.T;
+      const reactor = /reactor/i.test(u.type);
+      nodes.push({
+        key: u.dwsim_tag,
+        tag: u.plant_tag ?? u.dwsim_tag,
+        label: UNIT_LABEL[u.type] ?? u.type,
+        value: recycle
+          ? `+ ${recycle.plant_tag ?? recycle.dwsim_tag} recycle`
+          : u.duty_kW === null
+          ? '–'
+          : reactor && outT !== undefined
+          ? `${fmtNum(u.duty_kW, 0)} kW · ${fmtNum(outT, 0)} °C`
+          : `${fmtNum(u.duty_kW, u.duty_kW < 100 ? 1 : 0)} kW`,
+        kind: reactor ? 'reactor' : 'unit',
+        tone: /heater/i.test(u.type) ? 'heat' : undefined,
+      });
+    }
+    if (out) nodes.push({ key: 'out', tag: `${out.plant_tag ?? out.dwsim_tag} → Area 2`, label: 'Battery limit', value: `${fmtNum(out.T, 0)} °C · ${fmtNum(out.P, 1)} bar`, kind: 'out' });
+    return nodes.length > 1 ? nodes : null;
+  }, [data]);
+
   if (loading) return <div className="py-20 text-center text-xs text-fg-3">Memuat data HMB...</div>;
   if (error || !data) return <div className="glass-card p-6 text-sm text-danger">{error ?? 'Data HMB tidak tersedia.'}</div>;
 
@@ -77,7 +117,7 @@ export const DwsimStreamView: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium inline-flex items-center gap-2">
+          <span className="h-8 px-3.5 rounded-full bg-surface border border-line text-[12px] font-medium text-fg-2 inline-flex items-center gap-2">
             <Database className="w-3.5 h-3.5" /> Ekstraksi {fmtDateTime(data.meta.extracted_at)}
             {age !== null && <span className="opacity-75">({age} hari lalu)</span>}
           </span>
@@ -110,8 +150,51 @@ export const DwsimStreamView: React.FC = () => {
         </div>
       </div>
 
+      {flow && (
+        <section className="glass-card p-5 sm:p-6" aria-label="Alur proses Area 1">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-heading text-2xl font-normal text-fg">Alur proses Area 1 · dehidrasi metanol</h2>
+            <span className="text-xs text-fg-3">Duty dalam kW · model referensi RFP KAK-IC-DME-2026-001</span>
+          </div>
+          <ol className="mt-4 flex items-stretch gap-2 overflow-x-auto pb-1">
+            {flow.map((n, i) => (
+              <React.Fragment key={n.key}>
+                {i > 0 && (
+                  <li aria-hidden="true" className="self-center text-fg-3 shrink-0">
+                    →
+                  </li>
+                )}
+                <li
+                  className={`shrink-0 min-w-[150px] flex-1 rounded-[20px] px-4 py-3 ${
+                    n.kind === 'reactor'
+                      ? 'bg-hero'
+                      : n.kind === 'in'
+                      ? 'bg-primary-soft'
+                      : n.kind === 'out'
+                      ? 'bg-warm-soft'
+                      : 'bg-surface'
+                  }`}
+                >
+                  <p className={`text-base font-semibold ${n.kind === 'reactor' ? '' : n.kind === 'out' ? 'text-warm' : n.kind === 'in' ? 'text-primary' : 'text-fg'}`}>
+                    {n.tag}
+                  </p>
+                  <p className={`text-xs ${n.kind === 'reactor' ? 'text-on-ink-2' : 'text-fg-3'}`}>{n.label}</p>
+                  <p
+                    className={`mt-1 text-sm font-semibold tabular-nums ${
+                      n.kind === 'reactor' ? '' : n.tone === 'heat' ? 'text-warm' : n.kind === 'out' || n.kind === 'in' ? 'text-fg' : 'text-primary'
+                    }`}
+                  >
+                    {n.value}
+                  </p>
+                </li>
+              </React.Fragment>
+            ))}
+          </ol>
+        </section>
+      )}
+
       <div className="glass-card p-4 sm:p-6 overflow-x-auto">
-        <h2 className="font-heading font-bold text-base sm:text-lg text-fg mb-3">Tabel Aliran</h2>
+        <h2 className="font-heading text-2xl font-normal text-fg mb-3">Tabel aliran</h2>
         <table className="w-full text-xs min-w-[900px]">
           <thead>
             <tr className="text-left text-fg-3 border-b border-line">
@@ -132,10 +215,10 @@ export const DwsimStreamView: React.FC = () => {
           </thead>
           <tbody>
             {streams.map((s) => (
-              <tr key={s.dwsim_tag} className="border-b border-line/70">
+              <tr key={s.dwsim_tag} className={`border-b border-line/70 ${s.scope === 'INTERFACE_OUT' ? 'bg-warm-soft' : s.scope === 'INTERFACE_IN' ? 'bg-primary-soft/60' : ''}`}>
                 <td className="py-2 pr-3 font-bold text-fg">{s.plant_tag ?? '–'}</td>
                 <td className="py-2 pr-3 font-mono text-fg-3">{s.dwsim_tag}</td>
-                <td className="py-2 pr-3 text-fg-3">{s.scope}</td>
+                <td className={`py-2 pr-3 ${s.scope === 'INTERFACE_OUT' ? 'text-warm font-semibold' : 'text-fg-3'}`}>{s.scope === 'AREA_1' ? 'Area 1' : s.scope === 'INTERFACE_OUT' ? 'Keluar → Area 2' : s.scope === 'INTERFACE_IN' ? 'Masuk · recycle' : s.scope}</td>
                 <td className="py-2 pr-3 text-right">{fmtNum(s.T, 1)}</td>
                 <td className="py-2 pr-3 text-right">{fmtNum(s.P, 2)}</td>
                 <td className="py-2 pr-3 text-right">{fmtNum(s.mass_flow, 1)}</td>
@@ -156,7 +239,7 @@ export const DwsimStreamView: React.FC = () => {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         <div className="glass-card p-4 sm:p-6 overflow-x-auto">
-          <h2 className="font-heading font-bold text-base sm:text-lg text-fg mb-3">Unit Operasi</h2>
+          <h2 className="font-heading text-2xl font-normal text-fg mb-3">Unit Operasi</h2>
           <table className="w-full text-xs">
             <thead>
               <tr className="text-left text-fg-3 border-b border-line">
@@ -184,7 +267,7 @@ export const DwsimStreamView: React.FC = () => {
           </table>
         </div>
         <div className="glass-card p-4 sm:p-6 overflow-x-auto">
-          <h2 className="font-heading font-bold text-base sm:text-lg text-fg mb-3">Neraca Massa per Unit</h2>
+          <h2 className="font-heading text-2xl font-normal text-fg mb-3">Neraca Massa per Unit</h2>
           <table className="w-full text-xs">
             <thead>
               <tr className="text-left text-fg-3 border-b border-line">

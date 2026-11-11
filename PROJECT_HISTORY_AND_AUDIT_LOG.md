@@ -293,6 +293,32 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-074] 2026-11-11 WIB — UI v2.0 putaran 3: semua modul mengikuti FigCraft (Beranda, Stage-Gate, Rapat, Logbook, Data Rekayasa, Dokumen, drawer WO, bar atas, mobile)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("lanjutkan sesuai dengan saranmu") setelah audit selisih desain vs situs (FigCraft terhubung kembali).
+* **Fase**: operasional (pasca-roadmap) — lanjutan LOG-073
+* **Acuan**: file FigCraft `2026-11-11_cockpit-ui-v2.0` (halaman 01 Desktop, 02 Mobile), dibandingkan layar demi layar dengan pratinjau lokal.
+* **Perubahan** (branch `cockpit-ui-v3` → merge ke `main`):
+  - **Beranda**: kartu Bimbingan pindah ke baris atas; pengumuman PM jadi strip oranye tipis (bisa ditutup per sesi); baris bawah = Tugas saya (terang, aksi cepat Mulai/Ajukan/Lanjut/Isi bukti tetap), Dokumen FEED (batang per bab, jalur kritis oranye), Kesehatan data (varian daftar `DataHealthPanel variant="list"`). Kartu yang tidak ada di desain tetapi berisi fitur PM (status proyek, fokus minggu, RACI ringkas, MoM terbaru) dipertahankan sebagai baris "ringkasan lain" di bawah. Kartu foto profil dihapus (foto tetap di Tim & RACI dan menu profil).
+  - **Stage-Gate**: kartu gate besar G1–G4 (gate aktif = hero biru, gate terkunci bergaris putus-putus), indeks kesiapan berbentuk cincin + 3 angka ringkas, rubrik 5 parameter dengan batang skor (klik untuk kriteria/skor/mitigasi). Defense dossier & checklist berkas tetap.
+  - **Rapat (MoM)**: kartu besar MoM terakhir (ringkasan bernomor, kehadiran, chip ACT → WO, buat draf logbook) + panel "WO sejak rapat lalu" (4 angka + daftar) + kartu format slide. Slide deck, action item, dan daftar MoM lengkap tetap di bawah.
+  - **Logbook**: strip pengingat 1×24 jam, 6 kartu kuota (klik = filter), satu kartu "Entri logbook" dengan filter dropdown (entitas, minggu, paraf), cari, ekspor CSV.
+  - **Data Rekayasa**: strip alur proses Area 1 (S-101 → P-101 → M-101 → E-101 → R-101 → E-102 → S-107, dihitung dari `hmb_streams.json`), baris S-107/S-114 disorot; Kalkulator jadi grid kartu per tag + pita "Aturan kutip" (klik kartu = tabel rincian); Validasi Tag punya kartu Error/Warning/Sumber dan filter default "Semua" (sebelumnya "ERROR" sehingga peringatan FE-101 tersembunyi).
+  - **Dokumen**: Deliverable = strip siklus status + grid 3 kolom persen besar (Bab 4 bergaris oranye); Companion .md = daftar 2 kolom dengan filter pil, pembaca terbuka saat dokumen dipilih; Standar & Regulasi = kartu regulasi (pertama hero) + kartu standar kode besar; Google Workspace = ikon berwarna & tombol penuh.
+  - **Drawer detail WO**: panel membulat, blok info 2×2 (PJ, tenggat, sumber, jadwal), checklist sederhana, bukti & output, kartu hijau "Kirim pesan WO ke PIC" (PM: penyusun WA Rakai; anggota: bagikan), riwayat berbentuk daftar. Alur status & tombol bawah tidak berubah.
+  - **Bar atas & sidebar**: tombol utama per halaman di kanan atas (Buat Work Order, Tambah task Gantt, Catat MoM, Tambah logbook, Cetak rubrik) lewat `usePageAction`/`triggerPageAction` di `navigation.ts`; tombol ganda di badan halaman dihapus. Kolom cari lebar, sync jadi ikon. Desktop: sakelar tema matahari/bulan + avatar (menu Profil, Backup & Restore, Keluar) di bawah sidebar.
+  - **Mobile**: header ringkas (avatar kiri, judul satu baris, cari & lonceng), tombol utama jadi FAB di atas navigasi bawah, tab aktif berlabel ("Beranda"), urutan Beranda di HP = hero → 2 ubin → Tugas saya.
+* **Bukti / Verifikasi**:
+  - `npm run lint` PASS, `vite build` PASS, `node tools/check_companions.js` PASS.
+  - Pratinjau lokal (data cadangan 5 Nov; kode pratinjau tidak di-commit) dipotret lewat Chrome DevTools Protocol: 14 modul 1440 px terang, Beranda/Stage-Gate/Kalkulator/drawer WO mode gelap, Beranda/WO/Jadwal/Rapat di 390 px.
+  - Sapuan error konsol (CDP) di 14 modul + drawer WO + form WO + Login (1440 px) dan 4 modul di 390 px: **0 error**.
+  - "Ruang kosong" di Google Workspace dari audit sebelumnya ternyata artefak tangkapan layar headless; posisi elemen diukur via CDP normal (bukan bug).
+* **Belum diverifikasi**: login asli di produksi, HP sungguhan, dan isi modal (Profil, penyusun WA, form Rapat/Logbook/Gantt, Ekspor/Impor) yang hanya ikut gaya token. Tombol "Jalankan ulang"/"Validasi ulang" di desain tidak dibuat karena menjalankan skrip Python di repo, bukan di website.
+* **Tindak Lanjut**:
+  - [ ] PM: cek produksi di laptop & HP, termasuk mode gelap; smoke test `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/`.
+  - [ ] Bila diminta: samakan isi modal dengan halaman 03 desain.
+
+---
+
 ### [LOG-073] 2026-11-11 WIB — UI v2.0 putaran 2: tata letak isi modul mengikuti PDF desain
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("lanjutkan" — menyusun ulang isi modul agar sesuai PDF, mulai Work Order & mobile)
 * **Fase**: operasional (pasca-roadmap) — lanjutan LOG-072

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Flag, CheckCircle2, Lock } from 'lucide-react';
+import { CheckCircle2, Lock } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useStaticData } from '../../utils/staticData';
 
@@ -103,66 +103,63 @@ export const StageGateTimeline: React.FC = () => {
   const activeId = (GATES.find((g) => dates[g.id] === null || (dates[g.id] as Date) >= today) ?? GATES[3]).id;
   const ready = (lib.data?.documents ?? []).filter((d) => d.status === 'Diajukan' || d.status === 'ACC Pembimbing').length;
 
+  const activeIdx = GATES.findIndex((x) => x.id === activeId);
+  const daysTo = (d: Date | null) => (d ? Math.ceil((d.getTime() - today.getTime()) / 86400000) : null);
+
   return (
-    <section className="glass-card p-4 sm:p-6 space-y-4" aria-label="Pemetaan Stage-Gate G1 sampai G4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <h2 className="font-heading font-bold text-base sm:text-lg text-fg">Stage-Gate G1–G4</h2>
-          <p className="text-xs text-fg-3">
-            Pemetaan ke titik kontrol Panduan Capstone (Blueprint §1.7). Gate berikutnya baru terbuka setelah gate sebelumnya lolos.
-          </p>
-        </div>
-        <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-[12px] font-semibold text-primary inline-flex items-center">
-          {lib.data ? `${ready} artefak berstatus Diajukan/ACC (syarat masuk bundel)` : 'Memuat status artefak...'}
-        </span>
-      </div>
-      <ol className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+    <section className="space-y-2" aria-label="Pemetaan Stage-Gate G1 sampai G4">
+      <ol className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {GATES.map((g, i) => {
           const date = dates[g.id];
-          const active = g.id === activeId;
-          const past = GATES.findIndex((x) => x.id === activeId) > i;
+          const active = i === activeIdx;
+          const past = i < activeIdx;
+          const next = i === activeIdx + 1;
+          const locked = i > activeIdx + 1;
+          const left = daysTo(date);
           return (
             <li
               key={g.id}
-              className={`p-4 rounded-2xl border space-y-2 ${active ? 'bg-surface border-primary shadow-xs' : 'bg-surface/60 border-glass-stroke'}`}
               aria-current={active ? 'step' : undefined}
+              className={`rounded-[32px] p-6 min-h-[250px] flex flex-col gap-2 ${
+                active
+                  ? 'bg-hero shadow-cockpit-pop'
+                  : locked
+                  ? 'border-2 border-dashed border-line-strong text-fg-3'
+                  : 'glass-card'
+              }`}
             >
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-heading font-extrabold text-sm text-fg inline-flex items-center gap-1.5">
-                  {past ? (
-                    <CheckCircle2 className="w-4 h-4 text-success" />
-                  ) : active ? (
-                    <Flag className="w-4 h-4 text-primary" />
-                  ) : (
-                    <Lock className="w-4 h-4 text-fg-3" />
-                  )}
-                  {g.id}
-                </span>
-                <span className="text-[11px] font-semibold text-fg-3 text-right leading-tight">
-                  {fmt(date)}
-                  <span className="block text-[10px] font-normal">{DATE_NOTE[g.id]}</span>
-                </span>
+              <div className="flex items-start justify-between gap-2">
+                <span className={`font-heading text-5xl font-extralight leading-none ${active ? '' : locked ? 'text-fg-3' : 'text-fg'}`}>{g.id}</span>
+                {active ? (
+                  <span className="px-3 py-1 rounded-full bg-surface text-fg-2 text-[11px] font-semibold uppercase tracking-wide">Berikutnya</span>
+                ) : past ? (
+                  <span className="px-3 py-1 rounded-full bg-success-soft text-success text-[11px] font-semibold inline-flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Lewat
+                  </span>
+                ) : next ? (
+                  <span className="px-3 py-1 rounded-full bg-warm-soft text-warm text-[11px] font-semibold uppercase tracking-wide">{DATE_NOTE[g.id]}</span>
+                ) : (
+                  <Lock className="w-4 h-4" aria-label="Terkunci" />
+                )}
               </div>
-              <p className="text-xs font-bold text-fg leading-snug">{g.title}</p>
-              <p className="text-[11px] text-fg-3">{g.control}</p>
-              <p className="text-[11px]">
-                <span className="text-fg-3">Penentu: </span>
-                {g.decider}
+              <p className={`text-xs ${active ? 'text-on-ink-2' : 'text-fg-3'}`}>
+                {fmt(date)}
+                {active && left !== null ? ` · ${left} hari lagi` : ` · ${DATE_NOTE[g.id]}`}
               </p>
-              <p className="text-[11px]">
-                <span className="text-fg-3">Bukti: </span>
-                {g.evidence}
+              <p className={`text-lg font-semibold leading-snug ${active ? '' : locked ? 'text-fg-2' : 'text-fg'}`}>{g.title}</p>
+              <p className={`text-xs leading-relaxed ${active ? 'text-on-ink-2' : 'text-fg-3'}`}>
+                {g.control} · Penentu: {g.decider} · Bukti: {g.evidence}
               </p>
-              <ul className="text-[11px] text-fg list-disc pl-4">
-                {g.bundle.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
-              {past && <p className="text-[10px] text-warm">Tanggal lewat; konfirmasi status lolos lewat MoM/berita acara.</p>}
+              <p className={`mt-auto pt-3 text-xs leading-relaxed ${active ? 'text-on-ink' : 'text-fg-2'}`}>{g.bundle.join(' · ')}</p>
+              {past && <p className="text-[11px] text-warm">Tanggal lewat; konfirmasi status lolos lewat MoM/berita acara.</p>}
             </li>
           );
         })}
       </ol>
+      <p className="text-xs text-fg-3">
+        Gate berikutnya baru terbuka setelah gate sebelumnya lolos (Blueprint §1.7).{' '}
+        {lib.data ? `${ready} artefak berstatus Diajukan/ACC (syarat masuk bundel).` : 'Memuat status artefak...'}
+      </p>
     </section>
   );
 };

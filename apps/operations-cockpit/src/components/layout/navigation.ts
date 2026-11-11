@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { NavTab } from '../../context/AppContext';
 
 /**
@@ -60,12 +61,14 @@ export interface PageMeta {
   eyebrow: string;
   title?: string;
   accent?: string;
+  /** Tombol utama di kanan atas bar (v2.0). pmOnly: hanya tampil untuk PM. */
+  action?: { label: string; pmOnly?: boolean };
 }
 
 export const PAGE_META: Record<NavTab, PageMeta> = {
   homepage: { eyebrow: 'Area 1 Reaktor · PSTF 1 (FEED)' },
-  'work-orders': { eyebrow: 'Governance · Pusat penugasan resmi PM & persetujuan penyelesaian', title: 'Work Order', accent: 'satu sumber kebenaran' },
-  schedule: { eyebrow: 'Governance · Gantt 18 minggu + rencana minggu berjalan', title: 'Jadwal', accent: 'rencana & Gantt PSTF 1' },
+  'work-orders': { eyebrow: 'Governance · Pusat penugasan resmi PM & persetujuan penyelesaian', title: 'Work Order', accent: 'satu sumber kebenaran', action: { label: 'Buat Work Order', pmOnly: true } },
+  schedule: { eyebrow: 'Governance · Gantt 18 minggu + rencana minggu berjalan', title: 'Jadwal', accent: 'rencana & Gantt PSTF 1', action: { label: 'Tambah task Gantt', pmOnly: true } },
   'team-raci': { eyebrow: 'Governance · Struktur tim EPC & akuntabilitas deliverable (KAK-IC-DME-2026-001)', title: 'Tim & RACI', accent: 'engineer & deliverable inti' },
   dwsim: { eyebrow: 'Engineering Hub · Hasil ekstraksi model DME.dwxmz', title: 'Data Rekayasa', accent: 'neraca massa & panas' },
   calc: { eyebrow: 'Engineering Hub · Verifikasi silang mesin kalkulator tools/calc', title: 'Data Rekayasa', accent: 'hasil kalkulator' },
@@ -74,7 +77,25 @@ export const PAGE_META: Record<NavTab, PageMeta> = {
   gworkspace: { eyebrow: 'Engineering Hub · Master kolaborasi Sheets/Docs & folder Drive proyek', title: 'Dokumen', accent: 'Google Workspace' },
   library: { eyebrow: 'Engineering Hub · Companion .md dari repo beserta status dokumen', title: 'Dokumen', accent: 'companion .md' },
   standards: { eyebrow: 'Engineering Hub · Pedoman Capstone DTNTF & direktori standar internasional', title: 'Dokumen', accent: 'standar & regulasi' },
-  'weekly-mom': { eyebrow: 'DTNTF Academic · Materi asistensi & tindak lanjut bimbingan', title: 'Rapat & Logbook', accent: 'rapat mingguan (MoM)' },
-  logbook: { eyebrow: 'DTNTF Academic · 1 logbook kelompok + 5 logbook anggota', title: 'Rapat & Logbook', accent: 'logbook kegiatan' },
-  'stage-gate': { eyebrow: 'DTNTF Academic · Kematangan teknis & berkas sebelum evaluasi', title: 'Stage-Gate', accent: 'kesiapan G1–G4' },
+  'weekly-mom': { eyebrow: 'DTNTF Academic · Materi asistensi & tindak lanjut bimbingan', title: 'Rapat & Logbook', accent: 'rapat mingguan (MoM)', action: { label: 'Catat MoM', pmOnly: true } },
+  logbook: { eyebrow: 'DTNTF Academic · 1 logbook kelompok + 5 logbook anggota', title: 'Rapat & Logbook', accent: 'logbook kegiatan', action: { label: 'Tambah logbook' } },
+  'stage-gate': { eyebrow: 'DTNTF Academic · Kematangan teknis & berkas sebelum evaluasi', title: 'Stage-Gate', accent: 'kesiapan G1–G4', action: { label: 'Cetak rubrik' } },
+};
+
+const PAGE_ACTION_EVENT = 'cockpit:page-action';
+
+/** Dipanggil bar atas saat tombol utama diklik; view yang aktif menangani lewat usePageAction. */
+export const triggerPageAction = (tab: NavTab) => window.dispatchEvent(new CustomEvent(PAGE_ACTION_EVENT, { detail: tab }));
+
+/** Daftarkan penangan tombol utama untuk satu tab (pakai di dalam view). */
+export const usePageAction = (tab: NavTab, handler: () => void) => {
+  const ref = useRef(handler);
+  ref.current = handler;
+  useEffect(() => {
+    const on = (e: Event) => {
+      if ((e as CustomEvent<NavTab>).detail === tab) ref.current();
+    };
+    window.addEventListener(PAGE_ACTION_EVENT, on);
+    return () => window.removeEventListener(PAGE_ACTION_EVENT, on);
+  }, [tab]);
 };

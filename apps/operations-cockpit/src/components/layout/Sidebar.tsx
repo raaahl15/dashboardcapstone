@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   LayoutGrid,
   ClipboardCheck,
@@ -15,11 +15,13 @@ import {
   LogOut,
   CircleUser,
   X,
+  Download,
   type LucideIcon,
 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { NAV_GROUPS, groupOfTab } from './navigation';
-import { useTheme } from '../../utils/theme';
+import { useTheme, setTheme } from '../../utils/theme';
+import { resolveAvatarBgProps } from '../common/UserChip';
 
 /** Ikon per menu (kunci = NavGroup.key). */
 export const NAV_ICONS: Record<string, LucideIcon> = {
@@ -34,9 +36,30 @@ export const NAV_ICONS: Record<string, LucideIcon> = {
 };
 
 /** Sidebar pil 80px (desktop ≥ lg) — Cockpit UI v2.0. */
-export const Sidebar: React.FC = () => {
-  const { activeTab, setActiveTab } = useApp();
-  const [theme, toggleTheme] = useTheme();
+interface SidebarProps {
+  onOpenProfile: () => void;
+  onOpenExportImport: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ onOpenProfile, onOpenExportImport }) => {
+  const { activeTab, setActiveTab, currentUser, isPM, logout } = useApp();
+  const [theme] = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const close = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && setMenuOpen(false);
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', esc);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', esc);
+    };
+  }, [menuOpen]);
+  const avatarBg = resolveAvatarBgProps(currentUser.avatarBg);
   const activeGroup = groupOfTab(activeTab);
 
   return (
@@ -83,20 +106,65 @@ export const Sidebar: React.FC = () => {
           );
         })}
       </nav>
-      <button
-        type="button"
-        onClick={toggleTheme}
-        className="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-fg-2 hover:bg-muted transition-colors"
-        aria-label={theme === 'dark' ? 'Ganti ke mode terang' : 'Ganti ke mode gelap'}
-        title={theme === 'dark' ? 'Mode terang' : 'Mode gelap'}
-      >
-        {theme === 'dark' ? <Sun className="w-5 h-5" strokeWidth={1.75} /> : <Moon className="w-5 h-5" strokeWidth={1.75} />}
-      </button>
+      <div className="flex flex-col items-center gap-1 p-1 rounded-full bg-muted" role="radiogroup" aria-label="Tema tampilan">
+        {(['light', 'dark'] as const).map((t) => (
+          <button
+            key={t}
+            type="button"
+            role="radio"
+            aria-checked={theme === t}
+            onClick={() => setTheme(t)}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${theme === t ? 'bg-surface text-primary shadow-xs' : 'text-fg-3 hover:text-fg'}`}
+            title={t === 'light' ? 'Mode terang' : 'Mode gelap'}
+            aria-label={t === 'light' ? 'Mode terang' : 'Mode gelap'}
+          >
+            {t === 'light' ? <Sun className="w-4 h-4" strokeWidth={1.75} /> : <Moon className="w-4 h-4" strokeWidth={1.75} />}
+          </button>
+        ))}
+      </div>
+      <div className="relative mt-1" ref={menuRef}>
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
+          aria-label="Menu profil"
+          className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-surface shadow-cockpit-card flex items-center justify-center"
+        >
+          {currentUser.photoURL ? (
+            <img src={currentUser.photoURL} alt={currentUser.name} className="w-full h-full object-cover" />
+          ) : (
+            <span style={avatarBg.style} className={`w-full h-full flex items-center justify-center text-xs font-semibold text-on-ink ${avatarBg.className}`}>
+              {currentUser.avatarInitial || currentUser.code}
+            </span>
+          )}
+        </button>
+        {menuOpen && (
+          <div role="menu" className="anim-pop absolute left-full bottom-0 ml-3 w-64 bg-surface rounded-[24px] shadow-cockpit-pop border border-line p-2 z-50">
+            <div className="px-3 py-2.5">
+              <p className="text-sm font-semibold text-fg truncate">{currentUser.name}</p>
+              <p className="text-xs text-fg-3 truncate">{currentUser.title}</p>
+            </div>
+            <button type="button" role="menuitem" onClick={() => { setMenuOpen(false); onOpenProfile(); }} className="w-full min-h-[44px] px-3 rounded-2xl text-sm text-fg hover:bg-muted flex items-center gap-2.5">
+              <CircleUser className="w-4 h-4 text-primary" /> Profil saya
+            </button>
+            {isPM && (
+              <button type="button" role="menuitem" onClick={() => { setMenuOpen(false); onOpenExportImport(); }} className="w-full min-h-[44px] px-3 rounded-2xl text-sm text-fg hover:bg-muted flex items-center gap-2.5">
+                <Download className="w-4 h-4 text-primary" /> Backup &amp; Restore
+              </button>
+            )}
+            <button type="button" role="menuitem" onClick={() => { setMenuOpen(false); void logout(); }} className="w-full min-h-[44px] px-3 rounded-2xl text-sm font-semibold text-warm hover:bg-warm-soft flex items-center gap-2.5">
+              <LogOut className="w-4 h-4" /> Keluar
+            </button>
+          </div>
+        )}
+      </div>
     </aside>
   );
 };
 
 const PRIMARY_MOBILE = ['beranda', 'wo', 'jadwal', 'dokumen'];
+const SHORT_LABEL: Record<string, string> = { beranda: 'Beranda', wo: 'WO', jadwal: 'Jadwal', dokumen: 'Dokumen' };
 
 interface BottomNavProps {
   onOpenProfile: () => void;
@@ -210,11 +278,12 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenProfile }) => {
               onClick={() => go(g)}
               aria-current={active ? 'page' : undefined}
               aria-label={g.label}
-              className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors ${
-                active ? 'bg-primary text-on-primary' : 'text-fg-2'
+              className={`h-12 rounded-full flex items-center justify-center gap-1.5 transition-all ${
+                active ? 'bg-primary text-on-primary px-4' : 'w-12 text-fg-2'
               }`}
             >
               <Icon className="w-5 h-5" strokeWidth={1.75} />
+              {active && <span className="text-sm font-semibold">{SHORT_LABEL[g.key] ?? g.label}</span>}
             </button>
           );
         })}

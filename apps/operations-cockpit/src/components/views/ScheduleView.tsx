@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { usePageAction } from '../layout/navigation';
 import { useApp } from '../../context/AppContext';
 import { UserChip } from '../common/UserChip';
 import { GanttTaskStatus, WeeklyPlanItem } from '../../types';
@@ -307,6 +308,8 @@ export const ScheduleView: React.FC = () => {
   };
 
   const selectedFilterUser = selectedPicFilter === 'All' ? undefined : getUser(selectedPicFilter);
+
+  usePageAction('schedule', () => isPM && openAddGanttModal());
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">

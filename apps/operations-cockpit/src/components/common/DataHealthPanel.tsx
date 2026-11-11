@@ -34,7 +34,7 @@ export const estimateProjectDocKb = (exportJson: string): number => {
   return new TextEncoder().encode(JSON.stringify(parsed)).length / 1024;
 };
 
-export const DataHealthPanel: React.FC = () => {
+export const DataHealthPanel: React.FC<{ variant?: 'grid' | 'list' }> = ({ variant = 'grid' }) => {
   const { setActiveTab, exportDataToJson } = useApp();
   const { data, error } = useStaticData<Health>('health.json');
   const docKb = useMemo(() => {
@@ -58,6 +58,9 @@ export const DataHealthPanel: React.FC = () => {
     tone: Tone;
     /** Sub-tab yang dibuka langsung (menu Data Rekayasa / Dokumen, LOG-032) */
     tab: NavTab;
+    short: string;
+    shortValue: string;
+    shortDetail: string;
   }[] = [
     {
       key: 'hmb',
@@ -67,6 +70,9 @@ export const DataHealthPanel: React.FC = () => {
       detail: `${data.hmb.solver_status} · neraca maks ${fmtNum(data.hmb.mass_balance_max_error_pct, 3)} %`,
       tone: data.hmb.solver_status !== 'AllObjectsCalculated' || data.hmb.mass_balance_max_error_pct > 0.5 ? 'bad' : age > 14 ? 'warn' : 'ok',
       tab: 'dwsim',
+      short: 'HMB DWSIM',
+      shortValue: `${age} hari`,
+      shortDetail: `neraca maks ${fmtNum(data.hmb.mass_balance_max_error_pct, 3)} %`,
     },
     {
       key: 'calc',
@@ -76,6 +82,9 @@ export const DataHealthPanel: React.FC = () => {
       detail: `${data.calc.pass}/${data.calc.total} PASS · ${data.calc.placeholder} masih PLACEHOLDER · ${data.calc.not_calculated} belum dihitung`,
       tone: data.calc.fail > 0 ? 'bad' : data.calc.placeholder > 0 || data.calc.not_calculated > 0 ? 'warn' : 'ok',
       tab: 'calc',
+      short: 'Kalkulator',
+      shortValue: `${data.calc.pass}/${data.calc.total}`,
+      shortDetail: data.calc.fail > 0 ? `${data.calc.fail} FAIL` : `${data.calc.placeholder} masih placeholder`,
     },
     {
       key: 'tags',
@@ -85,6 +94,9 @@ export const DataHealthPanel: React.FC = () => {
       detail: `${data.tags.WARNING} peringatan · P&ID diperiksa: ${data.tags.pid_checked}`,
       tone: data.tags.ERROR > 0 ? 'bad' : data.tags.WARNING > 0 ? 'warn' : 'ok',
       tab: 'tags',
+      short: 'Tag P&ID',
+      shortValue: String(data.tags.ERROR + data.tags.WARNING),
+      shortDetail: `${data.tags.ERROR} error · ${data.tags.WARNING} peringatan`,
     },
     {
       key: 'comp',
@@ -94,6 +106,9 @@ export const DataHealthPanel: React.FC = () => {
       detail: data.companions.pass ? 'npm run check: PASS' : 'npm run check: FAIL',
       tone: data.companions.pass ? 'ok' : 'bad',
       tab: 'library',
+      short: 'Companion .md',
+      shortValue: data.companions.total ? `${data.companions.covered}/${data.companions.total}` : '–',
+      shortDetail: data.companions.pass ? 'npm run check: PASS' : 'npm run check: FAIL',
     },
     {
       key: 'doc',
@@ -103,8 +118,43 @@ export const DataHealthPanel: React.FC = () => {
       detail: `Batas aturan ${PROJECT_DOC_LIMIT_KB} KB (batas Firestore 1 MiB); lebih → pindah MoM/logbook ke koleksi sendiri`,
       tone: docKb === null ? 'warn' : docKb > PROJECT_DOC_LIMIT_KB ? 'bad' : docKb > PROJECT_DOC_LIMIT_KB * 0.7 ? 'warn' : 'ok',
       tab: 'homepage',
+      short: 'Ukuran data proyek',
+      shortValue: docKb === null ? '–' : `${fmtNum(docKb, 0)} KB`,
+      shortDetail: `batas aturan ${PROJECT_DOC_LIMIT_KB} KB`,
     },
   ];
+
+  if (variant === 'list') {
+    const DOT: Record<Tone, string> = { ok: 'bg-success-solid', warn: 'bg-warm-solid', bad: 'bg-danger-solid' };
+    return (
+      <section className="glass-card p-5 sm:p-6 h-full flex flex-col" aria-label="Kesehatan Data">
+        <h2 className="font-heading text-2xl font-normal text-fg">Kesehatan data</h2>
+        <p className="text-xs text-fg-2 mt-1">Dibundel {fmtDateTime(data.generated_at)}</p>
+        <ul className="mt-4 space-y-2.5 flex-1">
+          {tiles.map((t) => (
+            <li key={t.key}>
+              <button
+                type="button"
+                onClick={() => setActiveTab(t.tab)}
+                className="w-full min-h-[56px] px-4 py-2.5 rounded-[20px] bg-surface hover:shadow-cockpit-card transition-all flex items-center gap-3 text-left"
+                title={t.detail}
+              >
+                <span className={`w-2 h-2 rounded-full shrink-0 ${DOT[t.tone]}`} aria-hidden />
+                <span className="flex-1 min-w-0">
+                  <span className="block text-sm font-medium text-fg truncate">{t.short}</span>
+                  <span className="block text-xs text-fg-3 truncate">{t.shortDetail}</span>
+                </span>
+                <span className={`text-sm font-semibold tabular-nums shrink-0 ${t.tone === 'ok' ? 'text-fg' : t.tone === 'warn' ? 'text-warm' : 'text-danger'}`}>
+                  {t.shortValue}
+                  {t.tone !== 'ok' && ' ▲'}
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  }
 
   return (
     <section className="glass-card p-4 sm:p-5" aria-label="Kesehatan Data">

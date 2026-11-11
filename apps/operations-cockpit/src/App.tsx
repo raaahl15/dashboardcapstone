@@ -201,7 +201,7 @@ const MainApp: React.FC = () => {
 
   return (
     <div className="bg-cockpit-canvas min-h-screen text-fg flex flex-col antialiased lg:pl-[6.5rem]">
-      <Sidebar />
+      <Sidebar onOpenProfile={() => setShowProfileModal(true)} onOpenExportImport={() => setShowExportImport(true)} />
       {(syncError || authError) && (
         <div
           className="mx-4 lg:mx-8 mt-4 rounded-2xl border border-danger-line bg-danger-soft px-4 py-2.5 text-center text-xs font-semibold text-danger"
