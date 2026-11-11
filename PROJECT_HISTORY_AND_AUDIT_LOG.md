@@ -293,6 +293,18 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-079] 2026-11-12 WIB — DME-PFD-001 Rev A dibersihkan: PFD murni tanpa overlay I&C
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas keputusan PM: "jadi PFD saja, I&C-nya di P&ID".
+* **Keputusan**: PFD hanya memuat peralatan, aliran bernomor, utilitas, kondisi operasi, duty, dan tabel neraca massa & energi (Panduan). Instrumen, loop kontrol, SIS, dan katup kendali hanya digambar di P&ID DME-PID-002 (JN). Serahan RFP Tabel 3 no. 2 "PFD / P&ID I&C overlay" ditafsirkan sebagai paket PFD + P&ID dengan overlay I&C di P&ID. Ini mengoreksi tafsiran di LOG-078.
+* **Perubahan pada `DME-PFD-001_PFD_Area1_RevA_A3` (.dxf/.pdf/_preview.png, ditimpa; masih Rev A karena belum direview)**:
+  - Dihapus: FT/FIC/FV-101, FE-101, TT/TIC-101 dan kaskade, TT-102A/B/C, TSHH-102, XV-102, TT-104/TAH-104, PT-103, TT/TIC/TV-109, garis sinyal, legenda I&C, dan subjudul "+ I&C OVERLAY". Subjudul kembali ke template ("METHANOL FEED, VAPORIZATION & REACTION SECTION").
+  - Legenda diganti menjadi: garis proses, arah aliran, garis utilitas, nomor aliran, dan anatomi nomor line 6 segmen. Catatan G dan catatan template 5 sekarang merujuk ke P&ID DME-PID-002 untuk I&C/SIS.
+  - Isi lain tetap: topologi DWSIM, tabel HMB, neraca energi unit, dan nomor line. DXF sekarang 533 entitas, sha256 `613c2b18ccf07dfe…`.
+* **Bukti / Verifikasi**: dibangun ulang dengan ezdxf, lalu render A3 diperiksa visual.
+* **Belum selesai**: sama dengan LOG-078 (review IH/JN, simpan DWG native, unggah ke Drive, Gambar 3.1 laporan, butir TBC).
+
+---
+
 ### [LOG-078] 2026-11-11 WIB — PFD Area 1 DME-PFD-001 Rev A digambar ulang sesuai DWSIM, RFP, dan Panduan
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("perbaiki PFD sesuai DWSIM, RFP dan Panduan, buat ulang DXF sesuai template dan symbol library, tampilkan preview PDF"). Lanjutan temuan LOG-077 (PFD AREA 1.pdf 23 Okt tidak sesuai HMB).
 * **Fase**: G1 (ACC draf PSTF 1) — mendukung WO-025 (Gambar 3.1) dan serahan RFP Tabel 3 no. 2 (PFD/P&ID I&C overlay, PDF & native DWG)
