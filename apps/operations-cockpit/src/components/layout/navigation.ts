@@ -54,3 +54,27 @@ export const NAV_GROUPS: NavGroup[] = [
 
 export const groupOfTab = (tab: NavTab): NavGroup =>
   NAV_GROUPS.find((g) => g.tabs.some((t) => t.key === tab)) ?? NAV_GROUPS[0];
+
+/** Kepala halaman v2.0 per modul: eyebrow (grup · keterangan), judul, dan aksen miring. */
+export interface PageMeta {
+  eyebrow: string;
+  title?: string;
+  accent?: string;
+}
+
+export const PAGE_META: Record<NavTab, PageMeta> = {
+  homepage: { eyebrow: 'Area 1 Reaktor · PSTF 1 (FEED)' },
+  'work-orders': { eyebrow: 'Governance · Pusat penugasan resmi PM & persetujuan penyelesaian', title: 'Work Order', accent: 'satu sumber kebenaran' },
+  schedule: { eyebrow: 'Governance · Gantt 18 minggu + rencana minggu berjalan', title: 'Jadwal', accent: 'rencana & Gantt PSTF 1' },
+  'team-raci': { eyebrow: 'Governance · Struktur tim EPC & akuntabilitas deliverable (KAK-IC-DME-2026-001)', title: 'Tim & RACI', accent: 'engineer & deliverable inti' },
+  dwsim: { eyebrow: 'Engineering Hub · Hasil ekstraksi model DME.dwxmz', title: 'Data Rekayasa', accent: 'neraca massa & panas' },
+  calc: { eyebrow: 'Engineering Hub · Verifikasi silang mesin kalkulator tools/calc', title: 'Data Rekayasa', accent: 'hasil kalkulator' },
+  tags: { eyebrow: 'Engineering Hub · Hasil tools/validate_tags.py terhadap tag_map.csv', title: 'Data Rekayasa', accent: 'validasi tag' },
+  workspaces: { eyebrow: 'Engineering Hub · Siklus Draft → WIP → Review Internal → Diajukan → ACC', title: 'Dokumen', accent: 'deliverable FEED' },
+  gworkspace: { eyebrow: 'Engineering Hub · Master kolaborasi Sheets/Docs & folder Drive proyek', title: 'Dokumen', accent: 'Google Workspace' },
+  library: { eyebrow: 'Engineering Hub · Companion .md dari repo beserta status dokumen', title: 'Dokumen', accent: 'companion .md' },
+  standards: { eyebrow: 'Engineering Hub · Pedoman Capstone DTNTF & direktori standar internasional', title: 'Dokumen', accent: 'standar & regulasi' },
+  'weekly-mom': { eyebrow: 'DTNTF Academic · Materi asistensi & tindak lanjut bimbingan', title: 'Rapat & Logbook', accent: 'rapat mingguan (MoM)' },
+  logbook: { eyebrow: 'DTNTF Academic · 1 logbook kelompok + 5 logbook anggota', title: 'Rapat & Logbook', accent: 'logbook kegiatan' },
+  'stage-gate': { eyebrow: 'DTNTF Academic · Kematangan teknis & berkas sebelum evaluasi', title: 'Stage-Gate', accent: 'kesiapan G1–G4' },
+};

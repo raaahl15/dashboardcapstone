@@ -62,111 +62,55 @@ export const LoginGateway: React.FC = () => {
       {/* ========================================================================= */}
       {/* HERO / FIRST SCREEN: 1440x900 Gateway & ISA-5.1 Line Art Background */}
       {/* ========================================================================= */}
-      <section
-        id="login-anchor"
-        className="relative w-full min-h-screen flex flex-col items-center justify-center bg-sexy-blue bg-tech-grid overflow-hidden px-4 pt-20 pb-16"
-      >
-        {/* Concentric Technical Rings */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[420px] h-[420px] rounded-full border border-line"></div>
-          <div className="absolute w-[680px] h-[680px] rounded-full border border-line"></div>
-          <div className="absolute w-[980px] h-[980px] rounded-full border border-line"></div>
-          <div className="absolute w-[1280px] h-[1280px] rounded-full border border-line"></div>
-        </div>
+      <section id="login-anchor" className="relative w-full min-h-screen bg-cockpit-canvas px-4 lg:px-6 pt-24 pb-6 flex flex-col">
+        <div className="flex-1 grid grid-cols-1 lg:grid-cols-[1.15fr_1fr] gap-6 items-stretch">
+          {/* Panel hero (desktop) */}
+          <div className="hidden lg:flex relative overflow-hidden bg-hero rounded-[40px] p-12 xl:p-16 flex-col justify-between shadow-cockpit-pop">
+            <span className="absolute -right-40 -top-40 w-[520px] h-[520px] rounded-full bg-white/10 blur-3xl" aria-hidden="true" />
+            <p className="relative text-xs font-semibold uppercase tracking-[0.2em] text-on-ink-accent">
+              Capstone DTNTF 2026/2027 · Area 1 Reaktor
+            </p>
+            <div className="relative">
+              <h1 className="font-heading font-extralight text-6xl xl:text-8xl leading-[0.98] tracking-[-0.03em]">
+                Operations
+                <br />
+                Cockpit
+              </h1>
+              <p className="font-accent text-4xl xl:text-5xl text-on-ink-accent mt-3">pabrik DME, satu layar.</p>
+              <p className="mt-6 max-w-lg text-base leading-relaxed text-on-ink-2">
+                Work Order, jadwal Gantt, data rekayasa DWSIM, dokumen FEED, MoM bimbingan, dan kesiapan Stage-Gate tim
+                Area 1 dehidrasi metanol.
+              </p>
+            </div>
+            <dl className="relative flex gap-10">
+              {[
+                [String(users.length), 'engineer'],
+                ['8', 'menu kerja'],
+                ['18', 'minggu PSTF 1'],
+              ].map(([n, label]) => (
+                <div key={label}>
+                  <dt className="font-heading text-4xl font-semibold tabular-nums">{n}</dt>
+                  <dd className="text-sm text-on-ink-2">{label}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
 
-        {/* Decorative 2px Stroke Simplified P&ID Compliant Vector Art (ISA-5.1 / ISO 10628) */}
-        <svg
-          className="absolute inset-0 w-full h-full pointer-events-none stroke-line-strong text-line-strong hidden md:block"
-          fill="none"
-          viewBox="0 0 1440 900"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g strokeWidth="2">
-            {/* Feed In line */}
-            <path d="M 80 450 L 220 450"></path>
-            <polygon fill="var(--border-strong)" points="160,446 172,450 160,454"></polygon>
-            {/* Field instrument bubble TI-103 */}
-            <circle cx="150" cy="380" r="22" stroke="currentColor"></circle>
-            <line strokeDasharray="3 3" x1="150" x2="150" y1="402" y2="450"></line>
-            <text fill="var(--text-3)" fontFamily="Inter" fontSize="10" fontWeight="600" opacity="0.7" textAnchor="middle" x="150" y="384">
-              TI-103
-            </text>
-            {/* Bowtie Gate Valve */}
-            <polygon fill="var(--border-strong)" points="220,442 245,458 245,442 220,458" stroke="currentColor"></polygon>
-            <line x1="232.5" x2="232.5" y1="450" y2="435"></line>
-            <line x1="225" x2="240" y1="435" y2="435"></line>
-            {/* Vertical process branch */}
-            <path d="M 245 450 L 320 450 L 320 300 L 380 300"></path>
-            <polygon fill="var(--border-strong)" points="320,360 324,350 316,350"></polygon>
-            {/* Field Instrument TT-102 */}
-            <circle cx="320" cy="230" r="22" stroke="currentColor"></circle>
-            <line strokeDasharray="3 3" x1="320" x2="320" y1="252" y2="300"></line>
-            <text fill="var(--text-3)" fontFamily="Inter" fontSize="10" fontWeight="600" opacity="0.7" textAnchor="middle" x="320" y="234">
-              TT-102
-            </text>
-            {/* Reactor Vessel Silhouette outline on right flank */}
-            <rect fill="none" height="260" rx="35" stroke="currentColor" strokeWidth="2" width="110" x="1100" y="280"></rect>
-            <path d="M 1100 330 L 1210 330 M 1100 490 L 1210 490" strokeDasharray="4 4"></path>
-            <text fill="var(--text-3)" fontFamily="Outfit" fontSize="13" fontWeight="700" opacity="0.6" textAnchor="middle" x="1155" y="415">
-              R-101
-            </text>
-            <text fill="var(--text-3)" fontFamily="Inter" fontSize="9" opacity="0.5" textAnchor="middle" x="1155" y="432">
-              DME REACTOR
-            </text>
-            {/* Process lines to reactor */}
-            <path d="M 1030 410 L 1100 410"></path>
-            <polygon fill="var(--border-strong)" points="1070,406 1082,410 1070,414"></polygon>
-            {/* Panel Mounted Instrument TIC-101 */}
-            <g transform="translate(1030, 270)">
-              <circle cx="0" cy="0" r="24" stroke="currentColor"></circle>
-              <line stroke="currentColor" x1="-24" x2="24" y1="0" y2="0"></line>
-              <text fill="var(--text-3)" fontFamily="Inter" fontSize="9" fontWeight="700" opacity="0.8" textAnchor="middle" x="0" y="-5">
-                TIC
-              </text>
-              <text fill="var(--text-3)" fontFamily="Inter" fontSize="9" fontWeight="700" opacity="0.8" textAnchor="middle" x="0" y="14">
-                101
-              </text>
-              <line strokeDasharray="3 3" x1="0" x2="0" y1="24" y2="140"></line>
-            </g>
-            {/* Panel Mounted Instrument FIC-104 */}
-            <g transform="translate(1260, 360)">
-              <circle cx="0" cy="0" r="24" stroke="currentColor"></circle>
-              <line stroke="currentColor" x1="-24" x2="24" y1="0" y2="0"></line>
-              <text fill="var(--text-3)" fontFamily="Inter" fontSize="9" fontWeight="700" opacity="0.8" textAnchor="middle" x="0" y="-5">
-                FIC
-              </text>
-              <text fill="var(--text-3)" fontFamily="Inter" fontSize="9" fontWeight="700" opacity="0.8" textAnchor="middle" x="0" y="14">
-                104
-              </text>
-              <line strokeDasharray="3 3" x1="-24" x2="-50" y1="0" y2="0"></line>
-            </g>
-            {/* Field Instrument PI-102 */}
-            <g transform="translate(1155, 180)">
-              <circle cx="0" cy="0" r="22" stroke="currentColor"></circle>
-              <line strokeDasharray="3 3" x1="0" x2="0" y1="22" y2="100"></line>
-              <text fill="var(--text-3)" fontFamily="Inter" fontSize="10" fontWeight="600" opacity="0.7" textAnchor="middle" x="0" y="4">
-                PI-102
-              </text>
-            </g>
-          </g>
-        </svg>
-
+          <div className="flex flex-col items-center justify-center gap-6 py-6">
         {/* CENTERED SOLID WHITE LOGIN CARD */}
-        <div className="relative z-10 w-[420px] max-w-[94vw] bg-surface/[0.98] rounded-[28px] p-7 sm:p-8 shadow-cockpit-pop border border-glass-stroke">
+        <div className="relative z-10 w-[460px] max-w-full glass-card !rounded-[36px] p-7 sm:p-9">
           {/* Top Pill Badge */}
           <div className="mb-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-muted text-primary rounded-full font-heading text-[11px] font-bold tracking-wide">
-              Area 1-DME
+            <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary text-on-primary font-heading text-lg font-semibold">
+              A1
             </span>
           </div>
 
           {/* Heading & Subtitle */}
           <div className="mb-5">
-            <h2 className="font-heading text-xl sm:text-2xl font-bold text-fg tracking-tight">
-              Masuk ke Dashboard Area 1
-            </h2>
-            <p className="text-xs text-fg-3 mt-1">
-              Khusus anggota tim Area 1 dan dosen pembimbing.
+            <h2 className="font-heading text-3xl font-normal text-fg tracking-tight">Masuk ke cockpit</h2>
+            <p className="text-sm text-fg-2 mt-2">
+              Khusus anggota tim Area 1 dan dosen pembimbing. Pakai email UGM atau nama panggilan.
             </p>
           </div>
 
@@ -261,7 +205,7 @@ export const LoginGateway: React.FC = () => {
         {/* Scroll Indicator */}
         <a
           href="#scene-1"
-          className="mt-8 flex flex-col items-center gap-2 group cursor-pointer z-10 transition-transform hover:translate-y-0.5"
+          className="flex flex-col items-center gap-2 group cursor-pointer z-10 transition-transform hover:translate-y-0.5"
         >
           <div className="px-4 py-1.5 bg-surface rounded-full shadow-xs border border-glass-stroke flex items-center gap-2">
             <span className="text-xs text-fg-3 group-hover:text-fg transition-colors font-medium">
@@ -270,6 +214,8 @@ export const LoginGateway: React.FC = () => {
             <ChevronDown className="w-3.5 h-3.5 text-fg-3 group-hover:text-fg animate-bounce" />
           </div>
         </a>
+          </div>
+        </div>
       </section>
 
       {/* ========================================================================= */}

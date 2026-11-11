@@ -263,240 +263,42 @@ export const WorkOrdersView: React.FC = () => {
 
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
-      {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
-      {/* ========================================================================= */}
+      {/* BILAH ALAT v2.0: mode tampilan, lingkup, filter, dan ringkasan sebaris */}
       <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
-            WORK ORDER • SINGLE SOURCE OF TRUTH
-          </span>
-          <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold tracking-normal inline-flex items-center">
-            Alur Satu Arah → Homepage • Schedule • Weekly MoM
-          </span>
-        </div>
-
-        <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
-          <div>
-            <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-              Work Order
-            </h1>
-            <p className="text-xs sm:text-[13.5px] text-fg-2 mt-1.5">
-              Pusat penugasan resmi Project Manager, pelacakan eksekusi anggota, dan persetujuan penyelesaian pekerjaan Area 1 DME.
-            </p>
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-muted border border-line" role="tablist" aria-label="Mode tampilan Work Order">
+            <button type="button" role="tab" aria-selected={viewMode === 'board'} onClick={() => setViewMode('board')} className={`min-h-[40px] px-4 rounded-full text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                viewMode === 'board' ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium hover:text-fg'
+              }`}>
+              <LayoutGrid className="w-3.5 h-3.5" />
+              Board
+            </button>
+            <button type="button" role="tab" aria-selected={viewMode === 'list'} onClick={() => setViewMode('list')} className={`min-h-[40px] px-4 rounded-full text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                viewMode === 'list' ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium hover:text-fg'
+              }`}>
+              <List className="w-3.5 h-3.5" />
+              Daftar
+            </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-            {isPM && (
-              <button
-                type="button"
-                onClick={() => openWorkOrderForm()}
-                className="min-h-[44px] px-5 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-xs font-bold flex items-center gap-1.5 shadow-xs transition-all"
-              >
-                <Plus className="w-4 h-4" />
-                Buat Work Order
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* 4 KPI SUMMARY CARDS */}
-      {/* ========================================================================= */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3.5">
-        <div className="glass-card px-4 py-3.5 flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[11px] font-semibold text-fg-3 block">
-              WO Aktif ({assigneeFilter === 'ALL' ? 'Tim' : 'Terfilter'})
-            </span>
-            <span className="font-heading text-2xl sm:text-3xl font-extrabold text-fg tabular-nums mt-0.5 block">
-              {kpiStats.activeCount}
-            </span>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-muted text-primary flex items-center justify-center shrink-0">
-            <ClipboardList className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="glass-card px-4 py-3.5 flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[11px] font-semibold text-fg-3 block">
-              Menunggu Review PM
-            </span>
-            <span className="font-heading text-2xl sm:text-3xl font-extrabold text-warm tabular-nums mt-0.5 block">
-              {kpiStats.awaitingReviewCount}
-            </span>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-warm-soft text-warm flex items-center justify-center shrink-0">
-            <Send className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div className="glass-card px-4 py-3.5 flex items-center justify-between gap-3">
-          <div>
-            <span className="text-[11px] font-semibold text-fg-3 block">
-              Status Blocked
-            </span>
-            <span className="font-heading text-2xl sm:text-3xl font-extrabold text-danger tabular-nums mt-0.5 block">
-              {kpiStats.blockedCount}
-            </span>
-          </div>
-          <div className="w-10 h-10 rounded-full bg-danger-soft text-danger flex items-center justify-center shrink-0">
-            <PauseCircle className="w-5 h-5" />
-          </div>
-        </div>
-
-        <div
-          className={`rounded-[28px] px-4 py-3.5 border shadow-cockpit-card flex items-center justify-between gap-3 transition-colors ${
-            kpiStats.overdueCount > 0
-              ? 'bg-danger-soft border-danger-line'
-              : 'glass-card'
-          }`}
-        >
-          <div>
-            <span
-              className={`text-[11px] font-semibold block ${
-                kpiStats.overdueCount > 0 ? 'text-danger' : 'text-fg-3'
-              }`}
-            >
-              Melewati Tenggat
-            </span>
-            <span
-              className={`font-heading text-2xl sm:text-3xl font-extrabold tabular-nums mt-0.5 block ${
-                kpiStats.overdueCount > 0 ? 'text-danger' : 'text-fg'
-              }`}
-            >
-              {kpiStats.overdueCount}
-            </span>
-          </div>
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
-              kpiStats.overdueCount > 0
-                ? 'bg-danger-solid text-on-ink'
-                : 'bg-success-soft text-success'
-            }`}
-          >
-            {kpiStats.overdueCount > 0 ? (
-              <AlertTriangle className="w-5 h-5" />
-            ) : (
-              <CheckCircle2 className="w-5 h-5" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
-      {/* VIEW SWITCHER & FILTER CONTROLS */}
-      {/* ========================================================================= */}
-      <div className="glass-card p-4 sm:p-5 space-y-3.5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          {/* Left: Board / Daftar Tabs + Quick Scope Toggle */}
-          <div className="flex flex-wrap items-center gap-2.5">
-            <div
-              className="inline-flex items-center p-1 rounded-full bg-surface/80 border border-line"
-              role="tablist"
-              aria-label="Mode tampilan Work Order"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === 'board'}
-                onClick={() => setViewMode('board')}
-                className={`min-h-[40px] px-4 rounded-full text-xs font-bold inline-flex items-center gap-1.5 transition-all ${
-                  viewMode === 'board'
-                    ? 'bg-ink text-on-ink shadow-xs'
-                    : 'text-fg-3 hover:text-fg'
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                Board
-              </button>
-              <button
-                type="button"
-                role="tab"
-                aria-selected={viewMode === 'list'}
-                onClick={() => setViewMode('list')}
-                className={`min-h-[40px] px-4 rounded-full text-xs font-bold inline-flex items-center gap-1.5 transition-all ${
-                  viewMode === 'list'
-                    ? 'bg-ink text-on-ink shadow-xs'
-                    : 'text-fg-3 hover:text-fg'
-                }`}
-              >
-                <List className="w-3.5 h-3.5" />
-                Daftar
-              </button>
-            </div>
-
-            {/* Ownership Quick Switch */}
-            <div className="inline-flex items-center p-1 rounded-full bg-surface/80 border border-line">
-              <button
-                type="button"
-                onClick={() => setAssigneeFilter(currentUser.id)}
-                className={`min-h-[40px] px-3.5 rounded-full text-xs font-bold inline-flex items-center gap-1.5 transition-all ${
-                  assigneeFilter === currentUser.id
-                    ? 'bg-primary text-on-primary shadow-xs'
-                    : 'text-fg-3 hover:text-fg'
-                }`}
-              >
-                <UserCheck className="w-3.5 h-3.5" />
-                Milik Saya
-              </button>
-              <button
-                type="button"
-                onClick={() => setAssigneeFilter('ALL')}
-                className={`min-h-[40px] px-3.5 rounded-full text-xs font-bold transition-all ${
-                  assigneeFilter === 'ALL'
-                    ? 'bg-primary text-on-primary shadow-xs'
-                    : 'text-fg-3 hover:text-fg'
-                }`}
-              >
-                Semua Tim
-              </button>
-            </div>
+          <div className="inline-flex items-center gap-1 p-1 rounded-full bg-muted border border-line">
+            <button type="button" onClick={() => setAssigneeFilter(currentUser.id)} className={`min-h-[40px] px-4 rounded-full text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                assigneeFilter === currentUser.id ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium hover:text-fg'
+              }`}>
+              <UserCheck className="w-3.5 h-3.5" />
+              Milik Saya
+            </button>
+            <button type="button" onClick={() => setAssigneeFilter('ALL')} className={`min-h-[40px] px-4 rounded-full text-[13px] inline-flex items-center gap-1.5 whitespace-nowrap transition-all ${
+                assigneeFilter === 'ALL' ? 'bg-surface text-fg font-semibold shadow-xs' : 'text-fg-2 font-medium hover:text-fg'
+              }`}>
+              Semua Tim
+            </button>
           </div>
 
-          {/* Right: Search & Cancelled Toggle */}
-          <div className="flex flex-wrap items-center gap-2.5 flex-1 sm:flex-initial justify-end">
-            <div className="relative flex-1 sm:w-64 min-w-[200px]">
-              <Search className="w-3.5 h-3.5 text-fg-3 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari kode WO atau judul..."
-                aria-label="Cari Work Order"
-                className="w-full min-h-[44px] pl-9 pr-3.5 rounded-full bg-surface/90 border border-line text-xs text-fg outline-none focus:border-primary"
-              />
-            </div>
+          <span className="hidden xl:block w-px h-7 bg-line" aria-hidden="true" />
 
-            <label className="min-h-[44px] px-3.5 rounded-full bg-surface/85 border border-line text-xs font-semibold text-fg-2 inline-flex items-center gap-2 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                checked={showCancelled}
-                onChange={(e) => setShowCancelled(e.target.checked)}
-                className="accent-primary"
-              />
-              <span>Tampilkan Dibatalkan</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Detailed Filter Dropdowns */}
-        <div className="pt-3 border-t border-line/60 flex flex-wrap items-center gap-2.5">
-          <span className="text-[11px] font-bold text-fg-2 inline-flex items-center gap-1 mr-1">
-            <Filter className="w-3.5 h-3.5 text-primary" />
-            Filter:
-          </span>
-
-          {/* Penanggung Jawab */}
-          <select
-            value={assigneeFilter}
-            onChange={(e) => setAssigneeFilter(e.target.value)}
-            aria-label="Filter Penanggung Jawab"
-            className="min-h-[40px] px-3 rounded-xl bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
-          >
-            <option value="ALL">Penanggung Jawab: Semua</option>
+          <select value={assigneeFilter} onChange={(e) => setAssigneeFilter(e.target.value)} aria-label="Filter Penanggung Jawab" className="min-h-[40px] w-[150px] pl-4 pr-2 rounded-full bg-surface border border-line text-[13px] font-medium text-fg outline-none focus:border-primary">
+            <option value="ALL">PIC: Semua</option>
             {users.map((u) => (
               <option key={u.id} value={u.id}>
                 PIC: {u.nickname} ({u.code})
@@ -504,15 +306,7 @@ export const WorkOrdersView: React.FC = () => {
             ))}
           </select>
 
-          {/* Prioritas */}
-          <select
-            value={priorityFilter}
-            onChange={(e) =>
-              setPriorityFilter(e.target.value as 'ALL' | WorkOrderPriority)
-            }
-            aria-label="Filter Prioritas"
-            className="min-h-[40px] px-3 rounded-xl bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
-          >
+          <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value as 'ALL' | WorkOrderPriority)} aria-label="Filter Prioritas" className="min-h-[40px] w-[150px] pl-4 pr-2 rounded-full bg-surface border border-line text-[13px] font-medium text-fg outline-none focus:border-primary">
             <option value="ALL">Prioritas: Semua</option>
             {WO_PRIORITIES.map((p) => (
               <option key={p} value={p}>
@@ -521,12 +315,11 @@ export const WorkOrdersView: React.FC = () => {
             ))}
           </select>
 
-          {/* Minggu Proyek */}
           <select
             value={weekFilter}
             onChange={(e) => setWeekFilter(e.target.value)}
             aria-label="Filter Minggu Proyek"
-            className="min-h-[40px] px-3 rounded-xl bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
+            className={`min-h-[40px] w-[150px] pl-4 pr-2 rounded-full bg-surface border border-line text-[13px] font-medium text-fg outline-none focus:border-primary ${weekFilter !== 'ALL' ? '!bg-primary-soft !border-primary !text-fg-2' : ''}`}
           >
             <option value="ALL">Minggu: Semua</option>
             {availableWeekOptions.map((w) => (
@@ -537,29 +330,18 @@ export const WorkOrdersView: React.FC = () => {
             ))}
           </select>
 
-          {/* Sumber */}
-          <select
-            value={originFilter}
-            onChange={(e) => setOriginFilter(e.target.value as OriginFilter)}
-            aria-label="Filter Sumber Work Order"
-            className="min-h-[40px] px-3 rounded-xl bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
-          >
+          <select value={originFilter} onChange={(e) => setOriginFilter(e.target.value as OriginFilter)} aria-label="Filter Sumber Work Order" className="min-h-[40px] w-[150px] pl-4 pr-2 rounded-full bg-surface border border-line text-[13px] font-medium text-fg outline-none focus:border-primary">
             <option value="ALL">Sumber: Semua</option>
             <option value="manual">Sumber: Manual</option>
             <option value="mom">Sumber: Action MoM</option>
           </select>
 
-          {/* Status (Khusus Tab Daftar) */}
           {viewMode === 'list' && (
             <select
               value={statusFilter}
-              onChange={(e) =>
-                setStatusFilter(
-                  e.target.value as 'ALL' | 'ACTIVE' | WorkOrderStatus
-                )
-              }
+              onChange={(e) => setStatusFilter(e.target.value as 'ALL' | 'ACTIVE' | WorkOrderStatus)}
               aria-label="Filter Status Work Order"
-              className="min-h-[40px] px-3 rounded-xl bg-surface/90 border border-line text-xs font-semibold text-fg outline-none focus:border-primary"
+              className="min-h-[40px] w-[150px] pl-4 pr-2 rounded-full bg-surface border border-line text-[13px] font-medium text-fg outline-none focus:border-primary"
             >
               <option value="ALL">Status: Semua</option>
               <option value="ACTIVE">Status: Aktif Saja</option>
@@ -575,16 +357,59 @@ export const WorkOrdersView: React.FC = () => {
             <button
               type="button"
               onClick={handleResetFilters}
-              className="min-h-[40px] px-3.5 rounded-full text-xs font-bold text-primary hover:bg-muted inline-flex items-center gap-1 transition-colors"
+              className="min-h-[40px] px-3.5 rounded-full text-[13px] font-semibold text-primary hover:bg-muted inline-flex items-center gap-1 transition-colors"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              Reset Filter
+              Reset
             </button>
           )}
 
-          <span className="ml-auto text-[11px] font-semibold text-fg-3">
-            Menampilkan <strong className="text-fg">{filteredWorkOrders.length}</strong> Work Order
-          </span>
+          {isPM && (
+            <button
+              type="button"
+              onClick={() => openWorkOrderForm()}
+              className="ml-auto min-h-[44px] px-5 bg-primary hover:bg-primary-hover text-on-primary rounded-full text-sm font-semibold flex items-center gap-1.5 shadow-cockpit-card transition-all"
+            >
+              <Plus className="w-4 h-4" />
+              Buat Work Order
+            </button>
+          )}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5">
+          <div className="relative w-full sm:w-72">
+            <Search className="w-4 h-4 text-fg-3 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari kode WO atau judul..."
+              aria-label="Cari Work Order"
+              className="w-full min-h-[40px] pl-10 pr-4 rounded-full bg-surface border border-line text-[13px] text-fg placeholder:text-fg-3 outline-none focus:border-primary"
+            />
+          </div>
+
+          <label className="text-[13px] font-medium text-fg-2 inline-flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" checked={showCancelled} onChange={(e) => setShowCancelled(e.target.checked)} className="accent-primary" />
+            <span>Tampilkan dibatalkan</span>
+          </label>
+
+          {/* Ringkasan sebaris (menggantikan 4 kartu KPI) */}
+          <p className="ml-auto flex flex-wrap items-center gap-x-5 gap-y-1 text-sm tabular-nums" aria-live="polite">
+            <span className="font-semibold text-fg">
+              {kpiStats.activeCount} aktif{assigneeFilter === 'ALL' ? '' : ' (terfilter)'}
+            </span>
+            <span className={kpiStats.awaitingReviewCount > 0 ? 'font-semibold text-warm' : 'text-fg-2'}>
+              {kpiStats.awaitingReviewCount} menunggu review
+            </span>
+            <span className={kpiStats.blockedCount > 0 ? 'font-semibold text-danger' : 'text-fg-2'}>
+              {kpiStats.blockedCount} blocked
+            </span>
+            <span className={kpiStats.overdueCount > 0 ? 'font-semibold text-warm' : 'text-fg-2'}>
+              {kpiStats.overdueCount} terlambat
+            </span>
+            <span className="text-fg-3">· {filteredWorkOrders.length} ditampilkan</span>
+          </p>
         </div>
       </div>
 
@@ -609,13 +434,13 @@ export const WorkOrdersView: React.FC = () => {
             return (
               <div
                 key={colStatus}
-                className="glass-card p-3.5 flex flex-col gap-3 min-h-[340px]"
+                className="glass-card p-3 flex flex-col gap-3 min-h-[340px]"
               >
                 {/* Column Header */}
-                <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-line/70">
+                <div className="flex items-center justify-between gap-2 px-2 pt-1.5">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${colCfg.dot}`} />
-                    <h2 className="font-heading font-bold text-xs text-fg truncate">
+                    <h2 className="text-sm font-semibold text-fg truncate !font-[Inter]">
                       {colStatus}
                     </h2>
                   </div>
@@ -629,8 +454,8 @@ export const WorkOrdersView: React.FC = () => {
                 {/* Cards */}
                 <div className="space-y-2.5 flex-1">
                   {items.length === 0 ? (
-                    <div className="py-8 px-3 text-center rounded-2xl border border-dashed border-line bg-surface/40">
-                      <p className="text-[11px] text-fg-3 font-medium">
+                    <div className="py-10 px-3 text-center rounded-[24px] border border-dashed border-line-strong">
+                      <p className="text-xs text-fg-2 font-medium">
                         Tidak ada WO di kolom {colStatus}
                       </p>
                     </div>
@@ -649,26 +474,20 @@ export const WorkOrdersView: React.FC = () => {
                           key={wo.id}
                           type="button"
                           onClick={() => setSelectedWorkOrderId(wo.id)}
-                          className={`w-full text-left p-3.5 rounded-2xl bg-surface/85 hover:bg-surface border shadow-xs hover:shadow-sm transition-all space-y-2.5 focus:outline-none focus:ring-2 focus:ring-focus ${
+                          className={`w-full text-left p-4 rounded-[24px] bg-surface border shadow-cockpit-card hover:shadow-cockpit-pop transition-all space-y-3 focus:outline-none focus:ring-2 focus:ring-focus ${
                             overdue
                               ? 'border-danger-line'
                               : wo.needsRevision && wo.status === 'Dikerjakan'
                               ? 'border-warm-line'
-                              : 'border-glass-stroke'
+                              : 'border-transparent'
                           }`}
                         >
                           {/* Top Badges Row */}
                           <div className="flex flex-wrap items-center justify-between gap-1.5">
-                            <span className="font-mono text-[11px] font-extrabold text-primary">
+                            <span className="text-xs font-semibold tracking-wide text-fg-3">
                               {wo.code}
                             </span>
                             <div className="flex flex-wrap items-center gap-1">
-                              {overdue && (
-                                <WorkOrderOverdueBadge
-                                  daysLate={Math.abs(daysDelta)}
-                                  size="xs"
-                                />
-                              )}
                               {wo.needsRevision && wo.status === 'Dikerjakan' && (
                                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-warm-soft text-warm border border-warm-line">
                                   <RotateCcw className="w-2.5 h-2.5" />
@@ -680,9 +499,7 @@ export const WorkOrdersView: React.FC = () => {
                           </div>
 
                           {/* Title */}
-                          <h3 className="font-heading font-bold text-xs text-fg leading-snug line-clamp-2">
-                            {wo.title}
-                          </h3>
+                          <p className="text-sm font-semibold text-fg leading-snug line-clamp-3">{wo.title}</p>
 
                           {/* Callouts for Blocked / Revision */}
                           {wo.status === 'Blocked' && wo.blockedReason && (
@@ -699,34 +516,25 @@ export const WorkOrdersView: React.FC = () => {
                             )}
 
                           {/* Tags: Origin, Schedule, Checklist, Evidence */}
-                          {(wo.origin.type === 'mom' ||
-                            scheduleLabel ||
-                            wo.checklist.length > 0 ||
-                            wo.requireEvidence) && (
-                            <div className="flex flex-wrap items-center gap-1.5 text-[10px]">
+                          {(wo.origin.type === 'mom' || scheduleLabel || wo.requireEvidence) && (
+                            <div className="flex flex-wrap items-center gap-1.5 text-[11px]">
                               {wo.origin.type === 'mom' && (
-                                <span className="px-2 py-0.5 rounded-md bg-muted text-primary font-bold">
+                                <span className="px-2.5 py-0.5 rounded-full bg-primary-soft text-fg-2 font-semibold">
                                   MoM {wo.origin.trackerActionCode}
                                 </span>
                               )}
                               {scheduleLabel && (
                                 <span
-                                  className="px-2 py-0.5 rounded-md bg-muted text-fg-2 font-semibold inline-flex items-center gap-1 max-w-full truncate"
+                                  className="px-2.5 py-0.5 rounded-full bg-primary-soft text-fg-2 font-semibold inline-flex items-center gap-1 max-w-full truncate"
                                   title={scheduleLabel}
                                 >
                                   <Link2 className="w-2.5 h-2.5 shrink-0 text-primary" />
                                   <span className="truncate">{scheduleLabel}</span>
                                 </span>
                               )}
-                              {wo.checklist.length > 0 && (
-                                <span className="px-2 py-0.5 rounded-md bg-muted text-fg-2 font-bold inline-flex items-center gap-1">
-                                  <ListChecks className="w-2.5 h-2.5 text-primary" />
-                                  {doneSteps}/{wo.checklist.length}
-                                </span>
-                              )}
                               {wo.requireEvidence && (
                                 <span
-                                  className={`px-2 py-0.5 rounded-md font-bold inline-flex items-center gap-1 ${
+                                  className={`px-2.5 py-0.5 rounded-full font-semibold inline-flex items-center gap-1 ${
                                     wo.evidenceUrl
                                       ? 'bg-success-soft text-success'
                                       : 'bg-warm-soft text-warm'
@@ -739,56 +547,54 @@ export const WorkOrdersView: React.FC = () => {
                             </div>
                           )}
 
-                          {/* Footer: Assignees & Due Date */}
-                          <div className="pt-2 border-t border-line flex items-center justify-between gap-2">
-                            <div className="flex items-center gap-1 flex-wrap min-w-0">
+                          {wo.checklist.length > 0 && (
+                            <div>
+                              <div className="flex items-center justify-between text-xs text-fg-3">
+                                <span>Checklist</span>
+                                <span className="font-semibold text-fg-2 tabular-nums">
+                                  {doneSteps}/{wo.checklist.length}
+                                </span>
+                              </div>
+                              <div className="mt-1.5 h-1 rounded-full bg-muted overflow-hidden">
+                                <div
+                                  className={`h-full rounded-full ${doneSteps === wo.checklist.length ? 'bg-success-solid' : 'bg-primary'}`}
+                                  style={{ width: `${Math.max(3, Math.round((doneSteps / wo.checklist.length) * 100))}%` }}
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Footer: penanggung jawab & tenggat */}
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center min-w-0">
                               {wo.assigneeIds.slice(0, 3).map((uid) => (
                                 <UserChip
                                   key={`${wo.id}-pic-${uid}`}
                                   uid={uid}
                                   variant="avatar"
                                   size="xs"
-                                  avatarClassName="w-6 h-6 rounded-full text-[9px] font-bold ring-1 ring-surface"
+                                  avatarClassName="w-7 h-7 -ml-1 first:ml-0 rounded-full text-[10px] font-semibold ring-2 ring-surface"
                                 />
                               ))}
                               {wo.assigneeIds.length > 3 && (
-                                <span className="px-1.5 py-0.5 rounded-full bg-muted text-fg-2 text-[9px] font-bold">
+                                <span className="-ml-1 w-7 h-7 rounded-full bg-ink text-on-ink text-[10px] font-semibold ring-2 ring-surface inline-flex items-center justify-center">
                                   +{wo.assigneeIds.length - 3}
                                 </span>
                               )}
                               {wo.supporterIds.length > 0 && (
-                                <span
-                                  className="text-[10px] text-fg-3 font-medium ml-0.5"
-                                  title={`${wo.supporterIds.length} pendukung`}
-                                >
-                                  (+{wo.supporterIds.length})
+                                <span className="text-[11px] text-fg-3 font-medium ml-1.5 whitespace-nowrap" title={`${wo.supporterIds.length} pendukung`}>
+                                  +{wo.supporterIds.length}
                                 </span>
                               )}
                             </div>
-
-                            <div className="text-right shrink-0">
-                              <span
-                                className={`text-[10px] font-bold inline-flex items-center gap-1 ${
-                                  overdue ? 'text-danger' : 'text-fg-2'
-                                }`}
-                              >
-                                <Clock className="w-2.5 h-2.5" />
-                                {formatYmdToIndonesian(wo.dueDate)}
-                              </span>
-                              <span
-                                className={`block text-[10px] font-bold ${
-                                  isWeekOut ? 'text-warm' : 'text-fg-3'
-                                }`}
-                                title={
-                                  isWeekOut
-                                    ? 'Tenggat berada di luar rentang minggu proyek W1–W16'
-                                    : undefined
-                                }
-                              >
-                                W{wo.projectWeek}
-                                {isWeekOut ? ' (!)' : ''}
-                              </span>
-                            </div>
+                            <span
+                              className={`text-xs tabular-nums shrink-0 ${overdue ? 'font-semibold text-warm' : isWeekOut ? 'text-warm' : 'text-fg-3'}`}
+                              title={isWeekOut ? 'Tenggat berada di luar rentang minggu proyek W1–W16' : undefined}
+                            >
+                              {overdue
+                                ? `Terlambat ${Math.abs(daysDelta)}h`
+                                : `${formatYmdToIndonesian(wo.dueDate)} · W${wo.projectWeek}${isWeekOut ? ' (!)' : ''}`}
+                            </span>
                           </div>
                         </button>
                       );

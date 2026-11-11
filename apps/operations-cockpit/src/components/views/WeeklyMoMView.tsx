@@ -310,20 +310,14 @@ export const WeeklyMoMView: React.FC = () => {
       {/* TOP ZONE: Heading, description, and MoM actions */}
       {/* ========================================================================= */}
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-          Rapat Mingguan (MoM)
-        </h1>
 
         <div className="space-y-2.5">
-          <div className="glass-faint w-full px-4 py-2.5 flex items-center">
-            <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
+          <div className="max-w-4xl">
+            <p className="text-[13px] leading-relaxed text-fg-3">
               Repositori materi presentasi asistensi mingguan, pelacak komitmen tindakan korektif, dan logbook asistensi DTNTF.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
-              FEED ASISTENSI &amp; EVALUASI
-            </span>
             <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold tracking-normal inline-flex items-center">
               Semester Gasal 2026/2027
             </span>

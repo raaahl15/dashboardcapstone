@@ -37,12 +37,8 @@ const Pill: React.FC<{ label: string }> = ({ label }) => (
 
 const PageHead: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
   <div className="space-y-3">
-    <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg inline-flex items-center gap-3">
-      {icon}
-      {title}
-    </h1>
-    <div className="glass-faint w-full px-4 py-2.5">
-      <p className="text-xs sm:text-[13.5px] leading-snug text-fg">{children}</p>
+    <div className="max-w-4xl">
+      <p className="text-[13px] leading-relaxed text-fg-3">{children}</p>
     </div>
   </div>
 );

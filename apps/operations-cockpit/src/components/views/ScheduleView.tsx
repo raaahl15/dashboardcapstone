@@ -311,115 +311,85 @@ export const ScheduleView: React.FC = () => {
   return (
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* ========================================================================= */}
-      {/* HEADER COCKPIT BAR */}
-      {/* ========================================================================= */}
-      <div className="space-y-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
-            AREA 1 • PSTF 1
-          </span>
-          <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
-            Gantt + Rencana Minggu Ini
-          </span>
-        </div>
-
-        <div className="flex flex-col xl:flex-row items-start xl:items-end justify-between gap-3">
-          <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-            Jadwal Tim
-          </h1>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="h-8 px-3.5 bg-surface/70 border border-glass-stroke text-primary rounded-full text-[12px] font-semibold flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5" />
-              <span>
-                Minggu berjalan: W{currentGanttWeek} —{' '}
-                {GANTT_WEEKS[currentGanttWeek - 1]?.date} 2026
-              </span>
-            </div>
-
-            {isPM && (
-              <button
-                type="button"
-                onClick={openAddGanttModal}
-                className="min-h-[44px] px-4 py-2 bg-surface/70 hover:bg-surface text-fg rounded-full text-xs font-bold border border-glass-stroke shadow-xs flex items-center gap-1.5 transition-all"
-              >
-                <Calendar className="w-3.5 h-3.5 text-primary" />
-                Tambah Task Gantt
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* ========================================================================= */}
       {/* STACKED LAYOUT: Weekly Planner (Top) & Interactive Gantt (Bottom) */}
       {/* ========================================================================= */}
       <div className="flex flex-col gap-5">
         {/* ==================== TOP: Rencana Minggu Ini (dari Gantt, P2 LOG-032) ==================== */}
-        <div className="glass-card p-5 sm:p-6 space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <h2 className="font-heading font-bold text-base text-fg">
-                Rencana Minggu Ini (W{currentGanttWeek})
-              </h2>
-              <p className="text-xs text-fg-3">
-                Diambil otomatis dari task Gantt yang berjalan di minggu ini. Tambah/ubah rencana lewat Gantt di bawah;
-                tugas harian dikerjakan sebagai Work Order yang ditautkan ke task Gantt.
+        <div className="space-y-4">
+          <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4">
+            <li className="bg-hero rounded-[32px] p-6 shadow-cockpit-pop flex flex-col justify-between gap-4 min-h-[200px]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-on-ink-2">Rencana minggu ini</p>
+              <p className="font-heading text-6xl font-extralight leading-none tabular-nums">W{currentGanttWeek}</p>
+              <p className="text-[13px] leading-relaxed text-on-ink-2">
+                {thisWeekTasks.length} task Gantt berjalan (mulai {GANTT_WEEKS[currentGanttWeek - 1]?.date} 2026). Diambil
+                otomatis dari Gantt; dikerjakan lewat Work Order.
               </p>
-            </div>
-          </div>
-
-          {thisWeekTasks.length === 0 ? (
-            <p className="text-xs text-fg-3 py-2">Tidak ada task Gantt yang berjalan di W{currentGanttWeek}.</p>
-          ) : (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
-              {thisWeekTasks.map((task) => {
-                const woProgress = getLinkedScheduleProgress(workOrders, 'gantt', task.id, todayYmd);
-                const picRef = task.pic || task.picCode;
-                return (
-                  <li key={task.id} className="p-4 rounded-2xl bg-surface/70 border border-glass-stroke shadow-xs space-y-2">
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="font-heading font-bold text-xs text-fg">{task.name}</p>
-                        <p className="text-[10px] text-fg-3 truncate">{task.phaseName}</p>
-                      </div>
+            </li>
+            {thisWeekTasks.length === 0 && (
+              <li className="glass-card !rounded-[28px] p-5 text-[13px] text-fg-3 flex items-center xl:col-span-4">
+                Tidak ada task Gantt yang berjalan di W{currentGanttWeek}.
+              </li>
+            )}
+            {thisWeekTasks.map((task) => {
+              const woProgress = getLinkedScheduleProgress(workOrders, 'gantt', task.id, todayYmd);
+              const picRef = task.pic || task.picCode;
+              return (
+                <li
+                  key={task.id}
+                  className={`glass-card !rounded-[28px] p-5 flex flex-col justify-between gap-4 min-h-[200px] ${
+                    task.isCritical ? '!border-warm' : ''
+                  }`}
+                >
+                  <div className="space-y-1.5 min-w-0">
+                    <p
+                      className={`text-[11px] font-semibold uppercase tracking-[0.12em] truncate ${
+                        task.isCritical ? 'text-warm' : 'text-fg-3'
+                      }`}
+                      title={task.phaseName}
+                    >
+                      {task.isCritical ? 'Jalur kritis · ' : ''}
+                      {task.phaseName}
+                    </p>
+                    <p className="text-sm font-semibold leading-snug text-fg line-clamp-3">{task.name}</p>
+                  </div>
+                  <div className="space-y-2.5">
+                    <div className="flex items-center justify-between gap-2 text-xs text-fg-3">
+                      {picRef && picRef !== 'ALL' ? (
+                        <UserChip uid={picRef} variant="avatar-nama" size="xs" useNickname />
+                      ) : (
+                        <span>Semua anggota</span>
+                      )}
+                      <span className="tabular-nums shrink-0">
+                        W{task.startWeek}–W{task.endWeek}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      {woProgress.total > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => setInspectLinkedTarget({ linkType: 'gantt', targetId: task.id, label: task.name })}
+                          className="min-h-[32px] px-2.5 rounded-full text-[11px] font-semibold inline-flex items-center gap-1 bg-primary-soft text-fg-2"
+                        >
+                          <ClipboardList className="w-3 h-3 shrink-0" />
+                          {woProgress.completed}/{woProgress.total} WO
+                          {woProgress.overdue > 0 ? ` · ${woProgress.overdue} terlambat` : ''}
+                        </button>
+                      ) : (
+                        <span className="text-[11px] text-fg-3">Belum ada WO</span>
+                      )}
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-on-ink shrink-0 ${
+                        className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold text-on-ink shrink-0 ${
                           GANTT_STATUS_STYLES[task.status || 'Belum']
                         }`}
                       >
                         {task.status || 'Belum'}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-fg-3">
-                      <span>
-                        W{task.startWeek}–W{task.endWeek}
-                        {task.isCritical ? ' · jalur kritis' : ''}
-                      </span>
-                      {picRef && picRef !== 'ALL' ? (
-                        <UserChip uid={picRef} variant="avatar-nama" size="xs" useNickname />
-                      ) : (
-                        <span>Semua anggota</span>
-                      )}
-                    </div>
-                    {woProgress.total > 0 && (
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setInspectLinkedTarget({ linkType: 'gantt', targetId: task.id, label: task.name })
-                        }
-                        className="min-h-[32px] px-2.5 rounded-full text-[10px] font-bold inline-flex items-center gap-1 border bg-muted text-primary border-line"
-                      >
-                        <ClipboardList className="w-3 h-3 shrink-0" />
-                        {woProgress.completed}/{woProgress.total} WO selesai
-                        {woProgress.overdue > 0 ? ` · ${woProgress.overdue} terlambat` : ''}
-                      </button>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          )}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
 
           {weeklyPlans.length > 0 && (
             <details className="rounded-2xl bg-surface/50 border border-glass-stroke p-3">

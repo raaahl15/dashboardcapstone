@@ -378,9 +378,6 @@ export const LogbookView: React.FC = () => {
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h1 className="font-heading text-3xl sm:text-4xl xl:text-[44px] font-bold tracking-[-0.02em] leading-[1.1] text-fg">
-              Logbook Kegiatan
-            </h1>
             <p className="text-xs sm:text-sm text-fg-3 mt-1">
               <strong>6 logbook</strong>: 1 logbook kelompok Area 1 + 5 logbook per anggota, masing-masing <strong>12 baris</strong>. Diisi maksimal 1×24 jam setelah pertemuan dan diparaf dosen tiap minggu (Panduan Lampiran 2). Format uraian: <em>Judul Uraian: Isi Uraian</em>.
             </p>

@@ -47,11 +47,11 @@ export const Sidebar: React.FC = () => {
       <button
         type="button"
         onClick={() => setActiveTab('homepage')}
-        className="w-12 h-12 rounded-2xl bg-primary text-on-primary font-heading text-xs font-semibold flex items-center justify-center shrink-0"
+        className="w-12 h-12 rounded-full bg-primary text-on-primary font-heading text-base font-semibold flex items-center justify-center shrink-0"
         title="Area 1-DME · Operations Cockpit"
         aria-label="Beranda Area 1-DME"
       >
-        DME
+        A1
       </button>
       <span className="w-8 h-px bg-line my-1" aria-hidden="true" />
       <nav className="flex-1 flex flex-col items-center gap-1.5 overflow-y-auto scrollbar-none w-full">

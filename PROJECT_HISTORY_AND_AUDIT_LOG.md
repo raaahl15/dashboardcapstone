@@ -293,6 +293,27 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-073] 2026-11-11 WIB — UI v2.0 putaran 2: tata letak isi modul mengikuti PDF desain
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("lanjutkan" — menyusun ulang isi modul agar sesuai PDF, mulai Work Order & mobile)
+* **Fase**: operasional (pasca-roadmap) — lanjutan LOG-072
+* **Acuan**: PDF ekspor `D:\rahul\dme-cockpit-design\export\01a_cockpit-desktop_layar-1-8.pdf` (koneksi FigCraft terputus selama sesi ini, jadi desain dibaca dari PDF).
+* **Perubahan** (branch `cockpit-ui-v2b` → merge ke `main`):
+  - **Kepala halaman terpadu** di semua 14 modul (`PAGE_META` di `layout/navigation.ts`, dirender `Header.tsx`): eyebrow "grup · keterangan", judul Outfit besar, aksen Instrument Serif miring. Judul besar dan pil gelap lama di tiap view dihapus; kotak deskripsi menjadi teks biasa. Bar atas tidak lagi menempel saat digulir.
+  - **Work Order**: 4 kartu KPI + kartu filter diganti satu bilah alat (segmen Board/Daftar, Milik Saya/Semua Tim, filter pil, tombol Buat WO) dengan ringkasan sebaris "aktif · menunggu review · blocked · terlambat". Kartu papan: judul lebih besar, chip pil, batang progres checklist, avatar bertumpuk, tenggat/“Terlambat Nh” di kaki kartu. Semua filter dan aksi tetap ada.
+  - **Jadwal**: kartu hero "Rencana minggu ini · W{n}" + kartu per task Gantt (fase, PIC, rentang minggu, progres WO, status; jalur kritis bergaris oranye). Tombol "Tambah Task Gantt" ganda di kepala halaman dihapus (tetap ada di bilah Gantt).
+  - **Tim & RACI**: 5 kartu anggota berjajar di atas (tetap bisa di-flip & diedit), matriks RACI selebar halaman di bawah.
+  - **Login**: layar pertama menjadi panel hero gelap "Operations Cockpit — pabrik DME, satu layar." + kartu masuk kaca; pintasan akun, catatan NAMUR, dan bagian gulir di bawahnya tetap.
+  - Logo sidebar/bar atas menjadi lingkaran "A1".
+* **Bukti / Verifikasi**: `npm run lint` PASS, `vite build` PASS, `node tools/check_companions.js` PASS. Pratinjau lokal (data cadangan 5 Nov, kode pratinjau tidak di-commit): Work Order, Jadwal, Tim & RACI, Standar, Login di 1440 px dan Work Order di 500 px dipotret dan diperiksa.
+* **Belum dikerjakan / belum diverifikasi**:
+  - Belum mengikuti PDF: strip alur proses di Data Rekayasa, susunan bawah Beranda (Tugas saya terang, Bimbingan di baris atas), isi Dokumen, Rapat & Logbook, Stage-Gate, tampilan Daftar WO, dan isi modal (hanya gaya v2.0).
+  - Belum diuji dengan login asli di produksi dan di HP sungguhan (< 500 px).
+* **Tindak Lanjut**:
+  - [ ] PM: cek produksi (desktop + HP) dan jalankan smoke test (`node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/`).
+  - [ ] Putaran 3 bila diminta: Data Rekayasa, Beranda bagian bawah, Dokumen, Rapat & Logbook, Stage-Gate, modal.
+
+---
+
 ### [LOG-072] 2026-11-11 WIB — Implementasi UI/UX cockpit v2.0 ke kode (semua menu) + merge ke main
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("sudah ku review, terapkan langsung semua menu dll ke kode, lalu merge ke main")
 * **Fase**: operasional (pasca-roadmap) — implementasi desain LOG-071

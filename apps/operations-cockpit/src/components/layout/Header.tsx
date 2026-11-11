@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { UserChip, resolveAvatarBgProps } from '../common/UserChip';
-import { groupOfTab } from './navigation';
+import { groupOfTab, PAGE_META } from './navigation';
 import {
   Bell,
   LogOut,
@@ -108,28 +108,40 @@ export const Header: React.FC<HeaderProps> = ({
 
   // 8 menu bergrup (Blueprint v2.4 BAB IV, LOG-032); sub-tab dirender di App.tsx
   const activeGroup = groupOfTab(activeTab);
-  const todayLabel = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'short' });
+  const todayLabel = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const pageMeta = PAGE_META[activeTab];
 
   const avatarBgProps = resolveAvatarBgProps(currentUser.avatarBg);
   const avatarInitials = currentUser.avatarInitial || currentUser.code;
 
   return (
-    <header className="sticky top-0 z-30 w-full px-4 lg:px-8 pt-4 pb-3 bg-canvas/70 backdrop-blur-md">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
+    <header className="relative z-30 w-full px-4 lg:px-8 pt-5 pb-4">
+      <div className="max-w-[1440px] mx-auto flex items-start justify-between gap-3">
         {/* Kiri: eyebrow tanggal + judul menu aktif */}
         <div className="min-w-0 flex items-center gap-3">
           <button
             type="button"
             onClick={() => setActiveTab('homepage')}
-            className="lg:hidden w-11 h-11 shrink-0 rounded-2xl bg-primary text-on-primary font-heading text-[11px] font-semibold flex items-center justify-center"
+            className="lg:hidden w-11 h-11 shrink-0 rounded-full bg-primary text-on-primary font-heading text-sm font-semibold flex items-center justify-center"
             aria-label="Beranda Area 1-DME"
           >
-            DME
+            A1
           </button>
-          <p className="min-w-0 truncate text-[11px] font-semibold uppercase tracking-[0.12em] text-fg-3">
-            <span className="hidden sm:inline">{todayLabel} · </span>
-            <span className="text-fg-2">{activeGroup.label}</span>
-          </p>
+          <div className="min-w-0">
+            <p className="text-xs sm:text-[13px] text-fg-3 line-clamp-2 sm:truncate">
+              {pageMeta.title ? pageMeta.eyebrow : `${todayLabel} · ${pageMeta.eyebrow}`}
+            </p>
+            {pageMeta.title && (
+              <h1 className="font-heading text-[26px] sm:text-4xl leading-tight font-normal tracking-[-0.02em] text-fg">
+                {pageMeta.title}
+                {pageMeta.accent && (
+                  <span className="hidden sm:inline font-accent text-primary text-[0.72em] ml-3 whitespace-nowrap">
+                    — {pageMeta.accent}
+                  </span>
+                )}
+              </h1>
+            )}
+          </div>
         </div>
 
         {/* Right Actions: Sync, Notifications, 44x44 Profile Button */}

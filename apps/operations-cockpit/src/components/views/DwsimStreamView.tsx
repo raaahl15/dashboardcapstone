@@ -69,11 +69,8 @@ export const DwsimStreamView: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-          Neraca Massa &amp; Panas (DWSIM)
-        </h1>
-        <div className="glass-faint w-full px-4 py-2.5">
-          <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
+        <div className="max-w-4xl">
+          <p className="text-[13px] leading-relaxed text-fg-3">
             Neraca massa &amp; panas (HMB) hasil ekstraksi model <span className="font-mono">{'DME.dwxmz'}</span> oleh{' '}
             <span className="font-mono">tools/dwsim/export_hmb.py</span>. Tag pabrik mengikuti <span className="font-mono">tag_map.csv</span>.
             Data statis: hanya sesegar deploy terakhir.
@@ -103,7 +100,7 @@ export const DwsimStreamView: React.FC = () => {
             {onlyArea1 ? 'Tampilkan semua area' : 'Hanya lingkup Area 1'}
           </button>
         </div>
-        <div className="glass-faint px-4 py-2.5 flex items-start gap-2 text-xs text-warm">
+        <div className="max-w-4xl flex items-start gap-2 text-xs text-warm">
           <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
           <span>
             Model referensi klien dari RFP KAK-IC-DME-2026-001 (fraksi mol Tabel 1 RFP identik; disimpan{' '}

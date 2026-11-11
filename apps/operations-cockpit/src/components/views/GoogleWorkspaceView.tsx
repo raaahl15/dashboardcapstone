@@ -48,11 +48,8 @@ export const GoogleWorkspaceView: React.FC = () => {
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
       <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-          Google Workspace
-        </h1>
-        <div className="glass-faint w-full px-4 py-2.5">
-          <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
+        <div className="max-w-4xl">
+          <p className="text-[13px] leading-relaxed text-fg-3">
             Tautan master dokumen kolaborasi (Sheets/Docs) dan folder Drive proyek, dari{' '}
             <span className="font-mono">google_workspace_registry.json</span> (diperbarui {fmtDateTime(data.updated_at)}). Akses
             mengikuti izin berbagi Google Drive masing-masing akun.

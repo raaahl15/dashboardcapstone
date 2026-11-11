@@ -130,133 +130,43 @@ export const TeamRaciView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-in fade-in duration-200">
-      {/* Header */}
-      <div className="space-y-3">
-        <h1 className="font-heading text-4xl sm:text-5xl xl:text-[54px] font-bold tracking-[-0.02em] leading-[1.08] text-fg">
-          Tim &amp; Matriks RACI
-        </h1>
-
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
-          <div className="xl:col-span-7 flex flex-col justify-between gap-2.5">
-            <div className="glass-faint px-4 py-2.5 flex items-center">
-              <p className="text-xs sm:text-[13.5px] leading-snug text-fg">
-                Struktur tata kelola EPC dan akuntabilitas deliverable sesuai KAK-IC-DME-2026-001
-              </p>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="h-8 px-3.5 rounded-full bg-ink text-on-ink text-[12px] font-medium tracking-normal inline-flex items-center">
-                EPC WORK PACKAGE 1.0
-              </span>
-              <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-fg text-[12px] font-medium tracking-normal inline-flex items-center">
-                Revisi Dokumen: Rev.03
-              </span>
-            </div>
-          </div>
-
-          <div className="xl:col-span-5 flex flex-wrap items-end gap-2">
-            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
-              <Users className="w-3.5 h-3.5" /> {users.length} Engineers
-            </span>
-            <span className="h-8 px-3.5 rounded-full bg-surface/70 border border-glass-stroke text-primary text-[12px] font-semibold inline-flex items-center gap-2">
-              <FileText className="w-3.5 h-3.5" /> 6 Core Deliverables
-            </span>
-            <span className="h-8 px-3.5 rounded-full bg-success-soft border border-glass-stroke text-success text-[12px] font-semibold inline-flex items-center gap-2">
-              <ShieldCheck className="w-3.5 h-3.5 text-success" /> PM AUTHORIZATION ACTIVE
-            </span>
-          </div>
-        </div>
+      {/* Ringkasan + kartu anggota (v2.0: berjajar, klik untuk flip rincian) */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="h-8 px-3.5 rounded-full bg-primary-soft text-fg-2 text-[12px] font-semibold inline-flex items-center gap-2">
+          <Users className="w-3.5 h-3.5" /> {users.length} Engineers
+        </span>
+        <span className="h-8 px-3.5 rounded-full bg-primary-soft text-fg-2 text-[12px] font-semibold inline-flex items-center gap-2">
+          <FileText className="w-3.5 h-3.5" /> 6 Core Deliverables
+        </span>
+        <span className="h-8 px-3.5 rounded-full bg-surface border border-line text-fg-2 text-[12px] font-medium inline-flex items-center">
+          Revisi Dokumen: Rev.03
+        </span>
+        <span className="h-8 px-3.5 rounded-full bg-success-soft text-success text-[12px] font-semibold inline-flex items-center gap-2">
+          <ShieldCheck className="w-3.5 h-3.5 text-success" /> PM AUTHORIZATION ACTIVE
+        </span>
+        <span className="ml-auto text-xs text-fg-3">Klik kartu untuk flip rincian</span>
       </div>
 
-      {/* 2-Column Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
-        {/* ==================== LEFT: Struktur Tim Operasional (5 cols) ==================== */}
-        <div className="lg:col-span-5 glass-card p-5 sm:p-6 space-y-4 lg:flex lg:flex-col">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading font-bold text-base text-fg flex items-center gap-2">
-              <Users className="w-4 h-4 text-primary" />
-              Struktur Tim Operasional
-            </h2>
-            <span className="text-[11px] text-fg-3 font-medium">
-              Klik kartu untuk flip rincian
-            </span>
-          </div>
-
-          {/* Org Tree Flow */}
-          <div className="space-y-4 pt-1 lg:min-h-0 lg:flex-1 lg:grid lg:grid-rows-[minmax(0,1fr)_16px_minmax(0,1fr)_16px_minmax(0,1fr)] lg:space-y-0">
-            {/* Level 1: Project Manager (Rahul) */}
-            <div className="flex min-h-0 justify-center">
-              <div className="h-full w-full max-w-sm">
-                {rahulUser && (
-                  <FlipCard
-                    user={rahulUser}
-                    isFlipped={!!flippedCards['user-rahul']}
-                    onFlip={() => toggleFlip('user-rahul')}
-                    canEdit={isPM || currentUser.id === rahulUser.id}
-                    onEdit={(e) => openEditProfile(rahulUser, e)}
-                  />
-                )}
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+        {[rahulUser, ihsanUser, althafUser, jonathanUser, heidiUser].map(
+          (member) =>
+            member && (
+              <div key={member.id} className="h-[300px]">
+                <FlipCard
+                  user={member}
+                  isFlipped={!!flippedCards[member.legacyId || member.id]}
+                  onFlip={() => toggleFlip(member.legacyId || member.id)}
+                  canEdit={isPM || currentUser.id === member.id}
+                  onEdit={(e) => openEditProfile(member, e)}
+                />
               </div>
-            </div>
+            )
+        )}
+      </div>
 
-            {/* Connecting Tree Line */}
-            <div className="flex w-full justify-center">
-              <div className="h-full w-0.5 bg-line"></div>
-            </div>
-
-            {/* Level 2: Ihsan & Althaf */}
-            <div className="grid min-h-0 grid-cols-1 gap-3.5 sm:grid-cols-2">
-              {ihsanUser && (
-                <FlipCard
-                  user={ihsanUser}
-                  isFlipped={!!flippedCards['user-ihsan']}
-                  onFlip={() => toggleFlip('user-ihsan')}
-                  canEdit={isPM || currentUser.id === ihsanUser.id}
-                  onEdit={(e) => openEditProfile(ihsanUser, e)}
-                />
-              )}
-              {althafUser && (
-                <FlipCard
-                  user={althafUser}
-                  isFlipped={!!flippedCards['user-althaf']}
-                  onFlip={() => toggleFlip('user-althaf')}
-                  canEdit={isPM || currentUser.id === althafUser.id}
-                  onEdit={(e) => openEditProfile(althafUser, e)}
-                />
-              )}
-            </div>
-
-            {/* Connecting Tree Line */}
-            <div className="flex w-full justify-center">
-              <div className="h-full w-0.5 bg-line"></div>
-            </div>
-
-            {/* Level 3: Jonathan & Heidi */}
-            <div className="grid min-h-0 grid-cols-1 gap-3.5 sm:grid-cols-2">
-              {jonathanUser && (
-                <FlipCard
-                  user={jonathanUser}
-                  isFlipped={!!flippedCards['user-jonathan']}
-                  onFlip={() => toggleFlip('user-jonathan')}
-                  canEdit={isPM || currentUser.id === jonathanUser.id}
-                  onEdit={(e) => openEditProfile(jonathanUser, e)}
-                />
-              )}
-              {heidiUser && (
-                <FlipCard
-                  user={heidiUser}
-                  isFlipped={!!flippedCards['user-heidi']}
-                  onFlip={() => toggleFlip('user-heidi')}
-                  canEdit={isPM || currentUser.id === heidiUser.id}
-                  onEdit={(e) => openEditProfile(heidiUser, e)}
-                />
-              )}
-            </div>
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 gap-5">
         {/* ==================== RIGHT: Matriks RACI Capstone (7 cols) ==================== */}
-        <div className="lg:col-span-7 glass-card p-5 sm:p-6 space-y-4">
+        <div className="glass-card p-5 sm:p-6 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="font-heading font-bold text-base text-fg">
