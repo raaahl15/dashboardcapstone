@@ -293,6 +293,27 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-077] 2026-11-11 WIB — WO-025 Bab 3.1–3.2 Laporan PSTF 1 dilengkapi (PFD, HMB, verifikasi manual, kesesuaian PFD–P&ID)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("kerjain punya Ihsan dulu, lengkapin pekerjaan Ihsan yang WO-025"). Penulis bagian tetap Ihsan (IH); reviewer JN (3.1) dan AL (3.2).
+* **Fase**: G1 (ACC draf PSTF 1, 29 Nov) — WO-025, tenggat 12 Nov
+* **Dokumen**: Google Doc Laporan PSTF 1 (1sR0IRYj…c62w), hanya subbab 3.1 dan 3.2. Subbab 3.3 (JN) dan bab lain tidak disentuh.
+* **Temuan pada isi sebelumnya (versi Ihsan 11 Nov 22.55 WIB)**:
+  - 3.1 berisi tabel tag_map mentah (kolom dwsim_tag/scope) tanpa narasi PFD.
+  - 3.2 memakai tag DWSIM, memuat aliran/unit Area 2–3, dan verifikasi manual R-101 (persamaan berupa gambar) **salah basis**: dihitung dari umpan segar 8.321 kg/jam yang dianggap metanol murni, mengabaikan daur ulang S-114. Hasilnya metanol keluar 51,94 kmol/jam, sedangkan DWSIM 63,95 kmol/jam. Isi lama dapat dilihat di riwayat versi Google Docs.
+  - Gambar PFD AREA 1.pdf (DME-PFD-004, 23 Okt) memakai konfigurasi lain: E-102 FEHE + E-103 pendingin, reaktor adiabatik keluar 364 °C, T-101 atmosferik sebelum P-101; tabel alirannya salah desimal (aliran 2–3 tertulis 253 °C, seharusnya 25,3 °C).
+* **Perubahan**:
+  - **3.1**: narasi PFD dari HMB/tag_map FINAL; Tabel 3.1 aliran (asal–tujuan–fasa); Tabel 3.2 simpul kontrol utama (FIC-101, TIC-101, LIC-105, TIC-109, TT-104/TAH-104, PT-103, TSHH-102); placeholder Gambar 3.1; **3.1.1 Kesesuaian PFD, HMB, dan Draf P&ID** + Tabel 3.3 (10 butir: topologi FEHE vs HMB, tekanan T-101 0–4 bar vs aliran 15,5 bar(a), pembuangan panas R-101, kendali media E-101, FE-101 belum digambar, penurunan tekanan E-102 4,3 bar, ukuran pipa/line S-114, 364 vs 371 °C, tabel aliran PFD, S-106).
+  - **3.2**: Tabel 3.4 HMB 8 aliran Area 1 (tag pabrik), Tabel 3.5 laju molar komponen, Tabel 3.6 neraca per unit; **3.2.1** verifikasi manual neraca massa R-101 (Pers. 3.1–3.6, basis S-104, konversi 0,800) + Tabel 3.7 manual vs DWSIM (selisih 0,000 %) + neraca komponen M-101 (Pers. 3.7, selisih 0,023 %); **3.2.2** verifikasi termal: daya hidrolik P-101 4,23 kW → η 75,0 % (Pers. 3.8), ΔHR efektif −20,6 kJ/mol, neraca energi Area 1 (Pers. 3.9, 753,1 kW).
+  - Semua angka dihitung skrip dari `hmb_streams.json` (ekstraksi 3 Nov 2026), bukan diketik tangan; gaya mengikuti Bab 1 (justify, persamaan tengah bernomor, kepala tabel tebal berlatar abu kebiruan).
+* **Bukti / Verifikasi**: dua batch Docs API dengan `requiredRevisionId` (tanpa galat); isi dibaca ulang lewat Drive; ekspor PDF dirender dan halaman 18–21 diperiksa visual.
+* **Belum selesai (milik IH)**:
+  - [ ] Gambar 3.1: PFD diperbarui ke konfigurasi HMB (atau keputusan FEHE → HMB/DWSIM diubah), tabel aliran PFD diganti nilai Tabel 3.4.
+  - [ ] Verifikasi manual beban E-101 dan E-102 dari data literatur (placeholder di 3.2.2).
+  - [ ] Keputusan TBD-07 (urutan P-101/T-101, tekanan T-101) bersama JN; TBD-05 pembuangan panas R-101.
+  - [ ] Review JN (3.1) dan AL (3.2), lalu status WO-025 di cockpit diubah oleh Ihsan/PM (agen tidak punya akses Firestore).
+
+---
+
 ### [LOG-076] 2026-11-11 WIB — Pemeriksaan progres & hasil WO minggu 13 per anggota (tenggat 12 Nov, Bimbingan 7)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("cek progres WO yang sudah dikerjakan setiap anggota, apa sudah dikerjakan dan hasilnya seperti apa").
 * **Fase**: operasional — pemantauan WO (read-only, tidak ada data yang diubah)
