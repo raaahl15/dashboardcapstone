@@ -1,17 +1,17 @@
 {
   "meta": {
-    "generated_at": "2026-11-12T06:13:30+07:00",
+    "generated_at": "2026-11-12T06:17:05+07:00",
     "validator": "tools/validate_tags.py",
     "firm_area": "1",
-    "index_instruments": 30,
+    "index_instruments": 46,
     "tag_map_plant_tags": 14,
     "pid_dxf_checked": [],
     "sources": [
       {
         "source": "Master Instrument Index (kolom lokasi/layanan)",
         "path": "04_INSTRUMENTATION_ISA20\\Master_Instrument_Index_DME.csv",
-        "sha256": "03ff5424f9b6",
-        "tags_found": 14
+        "sha256": "af7744631c4c",
+        "tags_found": 17
       },
       {
         "source": "Cause_and_Effect_Matrix_ESD",

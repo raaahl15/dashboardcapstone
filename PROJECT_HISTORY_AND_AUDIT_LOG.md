@@ -293,6 +293,23 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-082] 2026-11-12 WIB — Master Instrument Index Rev C (data WO-026): 46 tag, mendahului gambar P&ID Rev C
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas persetujuan PM (urutan kerja no. 2 setelah koreksi T-101).
+* **Fase**: G1 — WO-026 bagian data (JN); basis kuantitas CAPEX I&C WO-027
+* **Perubahan di Google Sheets** (`Instrument_Index`, master; ditulis ulang A1:O47 lalu dibaca ulang):
+  - **+16 tag**: TAL/TAH/TAHH-101 (penanda L/H/HH pada TT-101, arahan Bimbingan 6, nilai dari WO-031, PLACEHOLDER); PIC-103 + PV-103 FO (tekanan balik S-107); TIC-104 + TV-104 FC (minyak panas E-101); PT-111 + PIC-111 + PV-111 FO (kukus sisi cangkang R-101, SP 21 bar(a)); PDT-112 + PDAH-112 (ΔP unggun); LT-113 + LIC-113 + LV-113 FO + LAL-113 (level air ketel sisi cangkang; LV-113 FO agar pendinginan tidak hilang saat gagal).
+  - LV-105 dipindah ke aliran masuk T-101 dari tangki OSBL (LOG-081); PSV-102 set "≤ tekanan desain T-101 (drum atmosferik)".
+  - Tag SIS 102 (TE-102A/B/C, TSHH-102, XA-102, XV-102, XY-102) diberi keterangan "lingkup PSTF 2, arahan Bimbingan 6" (tidak dihapus).
+  - Kolom LINE_EQUIPMENT_NO memakai format 6 segmen Legend Rev 1 (mis. `2"-ME-10-1002-A1A-NI`).
+  - Tab `IO_List` (formula) otomatis: **22 I/O fisik = 13 AI, 7 AO, 1 DI, 1 DO**.
+* **Repo**: snapshot `Master_Instrument_Index_DME.csv` disinkron via `npm run pull:sheets -- --key instrument_index` (+16 baris, 21 baris berubah); companion .md rev 0.7. `validate_tags.py`: 0 ERROR, 0 WARNING (satu ERROR sementara karena teks "URS-013" di kolom setpoint PDAH-112 terbaca sebagai tag; teks diganti).
+* **Belum selesai**:
+  - [ ] JN: gambar P&ID Rev C mengikuti index ini (T-101 sebelum P-101, loop baru, hapus jalur merah SIS, FE-101, nomor line 6 segmen).
+  - [ ] Master_Alarm_Database_ISA182: tambahkan TAL/TAH/TAHH-101, PDAH-112, LAL-113 setelah nilai WO-031 ditetapkan.
+  - [ ] Sizing katup baru PV-103, TV-104, PV-111, LV-113 (CALC_ISA75).
+
+---
+
 ### [LOG-081] 2026-11-12 WIB — Koreksi keputusan T-101 (LOG-080): drum dipertahankan sebagai drum umpan atmosferik sebelum P-101
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas persetujuan PM ("kerjakan dari no 1").
 * **Fase**: G1 (ACC draf PSTF 1) — koreksi WO-025
