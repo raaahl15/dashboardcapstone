@@ -28,8 +28,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   PauseCircle,
-  PlayCircle,
-} from 'lucide-react';
+  PlayCircle, X } from 'lucide-react';
 
 export const WeeklyMoMView: React.FC = () => {
   const {
@@ -952,11 +951,20 @@ export const WeeklyMoMView: React.FC = () => {
       {/* MODALS: Add Slide Deck & Add Action Item & Add MoM */}
       {/* ========================================================================= */}
       {showDeckModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Rapat mingguan</p>
+                <h3 className="v2-modal-title">
               {editingDeckId ? 'Edit Slide Deck Asistensi' : 'Tambah Slide Deck Asistensi'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowDeckModal(false);
+                    setEditingDeckId(null);
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveDeck} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -1022,7 +1030,7 @@ export const WeeklyMoMView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {
@@ -1046,11 +1054,20 @@ export const WeeklyMoMView: React.FC = () => {
       )}
 
       {showActionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Rapat mingguan</p>
+                <h3 className="v2-modal-title">
               {editingActionId ? 'Edit Action Item Asistensi' : 'Tambah Action Item Asistensi'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowActionModal(false);
+                    setEditingActionId(null);
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveAction} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -1131,7 +1148,7 @@ export const WeeklyMoMView: React.FC = () => {
                 </label>
               )}
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {
@@ -1155,11 +1172,20 @@ export const WeeklyMoMView: React.FC = () => {
       )}
 
       {showMomModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl max-h-[92vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Rapat mingguan</p>
+                <h3 className="v2-modal-title">
               {editingMomId ? 'Edit Catatan Meeting Log (MoM)' : 'Tambah Catatan Meeting Log (MoM)'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowMomModal(false);
+                    setEditingMomId(null);
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveMom} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -1252,7 +1278,7 @@ export const WeeklyMoMView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {

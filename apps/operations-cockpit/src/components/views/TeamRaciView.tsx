@@ -12,8 +12,7 @@ import {
   Edit3,
   AlertTriangle,
   CheckCircle2,
-  Pencil,
-} from 'lucide-react';
+  Pencil, X } from 'lucide-react';
 import { User, RaciRoleValue } from '../../types';
 
 export const TeamRaciView: React.FC = () => {
@@ -324,11 +323,17 @@ export const TeamRaciView: React.FC = () => {
 
       {/* Add Row Modal */}
       {showAddRowModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Tim & RACI</p>
+                <h3 className="v2-modal-title">
               Tambah Baris Deliverable RACI
             </h3>
+              </div>
+              <button type="button" onClick={() => setShowAddRowModal(false)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleAddDeliverable} className="mt-4 space-y-3">
               <div>
                 <label className="block text-xs font-semibold mb-1">Judul Deliverable</label>
@@ -351,7 +356,7 @@ export const TeamRaciView: React.FC = () => {
                   className="w-full p-3 rounded-xl border border-line-strong text-xs outline-none"
                 />
               </div>
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setShowAddRowModal(false)}

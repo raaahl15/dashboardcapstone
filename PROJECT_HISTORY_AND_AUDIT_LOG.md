@@ -293,6 +293,26 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-075] 2026-11-11 WIB — UI v2.0 putaran 4: semua modal, panel notifikasi, dan form mengikuti halaman 03 desain
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("okey lanjutkan") setelah LOG-074.
+* **Fase**: operasional (pasca-roadmap) — penutup implementasi UI v2.0
+* **Acuan**: FigCraft halaman "03 · Cockpit — Modal, Form & State" (Catat MoM, Ubah status dokumen, Panel notifikasi, dst.).
+* **Perubahan** (branch `cockpit-ui-v4` → merge ke `main`):
+  - **23 modal** di 13 berkas diseragamkan lewat codemod + kelas CSS bersama di `index.css` (`v2-modal`, `v2-modal-head`, `v2-modal-eyebrow`, `v2-modal-title`, `v2-modal-close`, `v2-modal-foot`, `v2-form`): kepala berisi eyebrow menu + judul Outfit + tombol tutup bulat (ditambahkan pada modal yang sebelumnya tidak punya, memakai aksi tombol Batal yang sama), isi berbingkai field membulat dengan cincin fokus, kaki berwarna lembut menempel di bawah (tombol Batal bergaris, tombol utama tetap), panel radius 32 dan dapat digulir maksimal 90% tinggi layar. Pilihan kotak-centang bergaris (mis. anggota hadir MoM) tampil hijau saat tercentang.
+  - **Ubah status dokumen**: dropdown status diganti deretan pil status (status sekarang ditandai, pilihan baru tercentang; ACC hijau, Revisi oranye) + kotak pratinjau "Progres Bab n berubah x% → y%". Validasi bukti wajib tidak berubah.
+  - **Form Buat/Ubah WO**: label pil gelap diganti eyebrow "Work Order · baru / kode".
+  - **Panel notifikasi**: judul "Notifikasi", filter "Belum dibaca · n / Semua", baris bertitik warna (oranye = mendesak/peringatan), "Tandai semua dibaca"; klik tetap membuka WO terkait.
+  - Mobile: navigasi bawah dan FAB berada di bawah lapisan modal; strip pengingat logbook membungkus rapi di HP.
+* **Bukti / Verifikasi**:
+  - `npm run lint` PASS, `vite build` PASS, `node tools/check_companions.js` PASS.
+  - Pratinjau lokal (kode pratinjau tidak di-commit) dipotret via CDP dengan klik tombol: Ubah status dokumen, Catat MoM (terang & gelap), Tambah logbook, Tambah task Gantt, Buat WO, Kirim pesan WA, Profil, Backup & Restore, panel notifikasi; modal di HP 390 px.
+  - Sapuan error konsol 14 modul + drawer & form WO: 0 error.
+* **Tidak diubah / catatan**: isi dan logika semua form tetap (field, validasi, penyimpanan Firestore). Desain "Catat MoM" punya isian Keputusan dan baris tindak lanjut "Jadikan WO" di dalam modal; di cockpit action item tetap dibuat lewat tombol "Tambah Action Item" (alur ACT → WO sudah ada), jadi tidak ditambah field baru. Belum diuji dengan login asli di produksi dan di HP sungguhan.
+* **Tindak Lanjut**:
+  - [ ] PM: cek produksi (laptop + HP) dan smoke test `node tools/smoke_console.js --url https://dashboardcapstonearea1.vercel.app/`.
+
+---
+
 ### [LOG-074] 2026-11-11 WIB — UI v2.0 putaran 3: semua modul mengikuti FigCraft (Beranda, Stage-Gate, Rapat, Logbook, Data Rekayasa, Dokumen, drawer WO, bar atas, mobile)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("lanjutkan sesuai dengan saranmu") setelah audit selisih desain vs situs (FigCraft terhubung kembali).
 * **Fase**: operasional (pasca-roadmap) — lanjutan LOG-073

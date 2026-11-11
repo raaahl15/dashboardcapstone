@@ -874,10 +874,10 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Project Status Modal */}
       {showStatusModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <div className="flex items-center justify-between pb-3 border-b border-line">
-              <h3 className="font-heading font-bold text-sm text-fg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <h3 className="v2-modal-title">
                 Ubah Status Proyek (PM)
               </h3>
               <button
@@ -961,7 +961,7 @@ export const HomepageView: React.FC = () => {
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setShowStatusModal(false)}
@@ -984,17 +984,17 @@ export const HomepageView: React.FC = () => {
       {/* Read-Only Legacy Tasks Archive Modal */}
       {showLegacyTasksModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-labelledby="legacy-tasks-archive-title"
         >
-          <div className="w-full max-w-md max-h-[88vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-line">
+          <div className="w-full max-w-xl max-h-[88vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop space-y-4 v2-modal v2-form">
+            <div className="v2-modal-head">
               <div>
                 <h3
                   id="legacy-tasks-archive-title"
-                  className="font-heading font-bold text-sm text-fg"
+                  className="v2-modal-title"
                 >
                   Arsip Checklist Lama ({completedTasksCount}/{tasks.length})
                 </h3>
@@ -1054,7 +1054,7 @@ export const HomepageView: React.FC = () => {
               ))}
             </div>
 
-            <div className="pt-2 flex justify-end gap-2">
+            <div className="v2-modal-foot">
               <button
                 type="button"
                 onClick={() => setShowLegacyTasksModal(false)}
@@ -1079,11 +1079,17 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Notice Modal */}
       {showNoticeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Beranda · PM</p>
+                <h3 className="v2-modal-title">
               Perbarui Informasi Penting (PM)
             </h3>
+              </div>
+              <button type="button" onClick={() => setShowNoticeModal(false)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveNotice} className="mt-4 space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-fg mb-1">
@@ -1097,7 +1103,7 @@ export const HomepageView: React.FC = () => {
                   required
                 />
               </div>
-              <div className="flex justify-end gap-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setShowNoticeModal(false)}
@@ -1119,11 +1125,17 @@ export const HomepageView: React.FC = () => {
 
       {/* Edit Meeting Modal */}
       {showMeetingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Beranda · PM</p>
+                <h3 className="v2-modal-title">
               Perbarui Jadwal Bimbingan
             </h3>
+              </div>
+              <button type="button" onClick={() => setShowMeetingModal(false)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveMeeting} className="mt-4 space-y-3">
               <div>
                 <label className="block text-xs font-semibold text-fg mb-1">
@@ -1149,7 +1161,7 @@ export const HomepageView: React.FC = () => {
                   required
                 />
               </div>
-              <div className="flex justify-end gap-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setShowMeetingModal(false)}

@@ -100,9 +100,9 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full max-w-2xl max-h-[94vh] flex flex-col bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke overflow-hidden">
+      <div className="w-full max-w-2xl max-h-[94vh] flex flex-col bg-surface rounded-[32px] shadow-cockpit-pop overflow-hidden v2-form">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-line flex items-start justify-between gap-3">
+        <div className="v2-modal-head v2-head-flat">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-success-soft text-success">
@@ -112,7 +112,7 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
                 {wo.code}
               </span>
             </div>
-            <h2 id="wa-composer-title" className="font-heading font-bold text-base text-fg mt-1.5 truncate">
+            <h2 id="wa-composer-title" className="v2-modal-title">
               Kirim pesan ke PIC
             </h2>
           </div>
@@ -244,7 +244,7 @@ export const WaComposerModal: React.FC<Props> = ({ open, onClose, wo, initialTem
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-line flex flex-wrap items-center justify-end gap-2">
+        <div className="v2-modal-foot v2-foot-flat">
           <button
             type="button"
             onClick={onClose}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Calendar, Layers, Upload, ExternalLink, Pencil, FileText, AlertTriangle } from 'lucide-react';
+import { Calendar, Layers, Upload, ExternalLink, Pencil, FileText, AlertTriangle, X } from 'lucide-react';
 import { DeliverableItem } from '../../types';
 import {
   DOC_STATUSES,
@@ -184,37 +184,67 @@ export const WorkspacesView: React.FC = () => {
 
       {/* Edit Deliverable Modal */}
       {selectedItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
           <div
-            className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke"
+            className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form"
             role="dialog"
             aria-modal="true"
             aria-labelledby="edit-deliverable-title"
           >
-            <h3
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Dokumen · deliverable</p>
+                <h3
               id="edit-deliverable-title"
-              className="font-heading font-bold text-sm text-fg pb-3 border-b border-line"
+              className="v2-modal-title"
             >
               Perbarui Deliverable: {selectedItem.title}
             </h3>
-            <form onSubmit={handleSaveEdit} className="mt-4 space-y-3">
-              <div>
-                <label htmlFor="deliv-status" className="block text-xs font-semibold mb-1">
-                  Status Dokumen (Blueprint §1.4)
-                </label>
-                <select
-                  id="deliv-status"
-                  value={editStatus}
-                  onChange={(e) => setEditStatus(e.target.value as DocStatus)}
-                  className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
-                >
-                  {DOC_STATUSES.map((s) => (
-                    <option key={s} value={s}>
-                      {s} — progres {STATUS_PROGRESS[s]}%
-                    </option>
-                  ))}
-                </select>
               </div>
+              <button type="button" onClick={() => setSelectedItem(null)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
+            <form onSubmit={handleSaveEdit} className="mt-4 space-y-3">
+              <p className="text-base font-semibold text-fg">{selectedItem.title}</p>
+              <div>
+                <p className="text-[13px] font-semibold text-fg mb-2">Status baru</p>
+                <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Status dokumen (Blueprint §1.4)">
+                  {DOC_STATUSES.map((st) => {
+                    const current = st === deliverableStatus(selectedItem);
+                    const chosen = st === editStatus;
+                    return (
+                      <button
+                        key={st}
+                        type="button"
+                        role="radio"
+                        aria-checked={chosen}
+                        onClick={() => setEditStatus(st)}
+                        className={`min-h-[38px] px-3.5 rounded-full text-xs font-semibold transition-colors ${
+                          chosen
+                            ? st === 'ACC Pembimbing'
+                              ? 'bg-success-solid text-on-ink'
+                              : st === 'Revisi'
+                              ? 'bg-warm-solid text-on-ink'
+                              : 'bg-primary text-on-primary'
+                            : current
+                            ? 'border border-primary text-fg-2 bg-surface'
+                            : st === 'Revisi'
+                            ? 'bg-warm-soft text-warm'
+                            : 'bg-primary-soft text-fg-2'
+                        }`}
+                      >
+                        {chosen ? '✓ ' : ''}
+                        {st}
+                        {current ? ' (sekarang)' : ''}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              {editStatus !== deliverableStatus(selectedItem) && (
+                <p className="rounded-2xl bg-success-soft text-success text-xs font-semibold px-4 py-3">
+                  Progres {selectedItem.title.split(':')[0]} berubah {deliverableProgress(selectedItem)}% → {STATUS_PROGRESS[editStatus]}%.
+                </p>
+              )}
 
               <div>
                 <label htmlFor="deliv-evidence" className="block text-xs font-semibold mb-1">
@@ -249,7 +279,7 @@ export const WorkspacesView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setSelectedItem(null)}
@@ -268,19 +298,25 @@ export const WorkspacesView: React.FC = () => {
 
       {/* Perbarui Tautan Berkas Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
           <div
-            className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke"
+            className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form"
             role="dialog"
             aria-modal="true"
             aria-labelledby="upload-link-title"
           >
-            <h3
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Dokumen · deliverable</p>
+                <h3
               id="upload-link-title"
-              className="font-heading font-bold text-sm text-fg pb-3 border-b border-line"
+              className="v2-modal-title"
             >
               Perbarui Tautan Berkas
             </h3>
+              </div>
+              <button type="button" onClick={() => setShowUploadModal(false)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <p className="text-xs text-fg-3 mt-1 mb-4">
               Tempel tautan Google Docs/Drive dari modul G-Workspace. File biner (CAD, PDF) tetap disimpan di Drive.
             </p>
@@ -319,7 +355,7 @@ export const WorkspacesView: React.FC = () => {
                 className="w-full min-h-[44px] px-3 rounded-xl border border-line-strong text-xs outline-none"
                 required
               />
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setShowUploadModal(false)}

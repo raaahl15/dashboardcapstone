@@ -282,13 +282,13 @@ export const WorkOrderFormModal: React.FC = () => {
       aria-modal="true"
       aria-labelledby="wo-form-modal-title"
     >
-      <div className="w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
+      <div className="w-full max-w-2xl max-h-[92vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 pb-4 border-b border-line">
+        <div className="v2-modal-head">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-ink text-on-ink">
-                {isEditMode && editingWo ? editingWo.code : 'WORK ORDER BARU'}
+              <span className="v2-modal-eyebrow">
+                {isEditMode && editingWo ? `Work Order · ${editingWo.code}` : 'Work Order · baru'}
               </span>
               {origin.type === 'mom' && (
                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-muted text-primary">
@@ -298,7 +298,7 @@ export const WorkOrderFormModal: React.FC = () => {
             </div>
             <h2
               id="wo-form-modal-title"
-              className="font-heading font-bold text-base text-fg mt-1.5"
+              className="v2-modal-title"
             >
               {isEditMode
                 ? `Ubah Konfigurasi ${editingWo?.code}`
@@ -309,7 +309,7 @@ export const WorkOrderFormModal: React.FC = () => {
           <button
             type="button"
             onClick={closeWorkOrderForm}
-            className="w-11 h-11 rounded-full hover:bg-muted text-fg-3 hover:text-fg flex items-center justify-center transition-colors shrink-0"
+            className="v2-modal-close"
             aria-label="Tutup modal form Work Order"
           >
             <X className="w-4 h-4" />
@@ -707,7 +707,7 @@ export const WorkOrderFormModal: React.FC = () => {
           </label>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-line">
+          <div className="v2-modal-foot">
             <button
               type="button"
               onClick={closeWorkOrderForm}

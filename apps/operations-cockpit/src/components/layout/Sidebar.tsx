@@ -265,7 +265,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenProfile }) => {
       )}
 
       <nav
-        className="lg:hidden fixed z-50 inset-x-4 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] glass-card !rounded-full px-2 py-2 flex items-center justify-between"
+        className="lg:hidden fixed z-[45] inset-x-4 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] glass-card !rounded-full px-2 py-2 flex items-center justify-between"
         aria-label="Navigasi Utama (seluler)"
       >
         {primary.map((g) => {

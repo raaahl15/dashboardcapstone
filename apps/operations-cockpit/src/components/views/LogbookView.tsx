@@ -377,7 +377,7 @@ export const LogbookView: React.FC = () => {
     <div className="space-y-5 animate-in fade-in duration-200">
       {/* Pengingat 1×24 jam (strip tipis) */}
       <div
-        className={`rounded-full px-4 py-2.5 flex items-center gap-2.5 text-xs ${
+        className={`rounded-[20px] sm:rounded-full px-4 py-2.5 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-xs ${
           momLogbookStatus.hasUnloggedMom ? 'bg-warm-soft text-warm' : 'bg-success-soft text-success'
         }`}
         title="Gunakan tombol &quot;Buat draf logbook&quot; di halaman Rapat, lalu lengkapi uraian pekerjaanmu sendiri. Paraf dosen tetap di buku logbook fisik."
@@ -388,7 +388,7 @@ export const LogbookView: React.FC = () => {
             ? `Pengingat 1×24 jam: untuk MoM ${momLogbookStatus.latestMomLabel}, belum ada entri dari ${momLogbookStatus.missingNames.join(', ')}.`
             : `Lengkap: semua anggota sudah mengisi logbook untuk MoM terbaru (${momLogbookStatus.latestMomLabel}).`}
         </span>
-        <span className="ml-auto shrink-0 tabular-nums font-semibold">
+        <span className="sm:ml-auto shrink-0 tabular-nums font-semibold">
           {totalFilled}/{TOTAL_TARGET} terisi · {totalVerified} terparaf ({overallVerifiedPercent}%)
         </span>
       </div>
@@ -692,11 +692,11 @@ export const LogbookView: React.FC = () => {
           role="dialog"
           aria-modal="true"
           aria-labelledby="logbook-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs animate-in fade-in duration-150"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm animate-in fade-in duration-150"
         >
-          <div className="w-full max-w-lg bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-3 border-b border-line">
-              <h3 id="logbook-modal-title" className="font-heading font-bold text-base text-fg flex items-center gap-2">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop space-y-4 max-h-[90vh] overflow-y-auto v2-modal v2-form">
+            <div className="v2-modal-head">
+              <h3 id="logbook-modal-title" className="v2-modal-title">
                 <BookOpen className="w-4 h-4 text-primary" />
                 {editingLog ? 'Edit Entri Logbook' : 'Tambah Entri Logbook Baru'}
               </h3>
@@ -832,7 +832,7 @@ export const LogbookView: React.FC = () => {
               )}
 
               {/* Action Buttons */}
-              <div className="flex justify-end gap-2 pt-3 border-t border-line">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {

@@ -269,7 +269,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs animate-in fade-in duration-150"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm animate-in fade-in duration-150"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget && !isSaving) {
           onClose();
@@ -279,9 +279,9 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
       aria-modal="true"
       aria-labelledby="profile-modal-title"
     >
-      <div className="w-full max-w-2xl bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke overflow-hidden max-h-[92vh] flex flex-col">
+      <div className="w-full max-w-2xl bg-surface rounded-[32px] shadow-cockpit-pop overflow-hidden max-h-[92vh] flex flex-col v2-form">
         {/* Modal Header */}
-        <div className="px-6 py-4 bg-muted/60 border-b border-line/60 flex items-center justify-between gap-3 shrink-0">
+        <div className="v2-modal-head v2-head-flat">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-primary text-on-primary flex items-center justify-center shadow-xs shrink-0">
               <CircleUser className="w-5 h-5" />
@@ -289,7 +289,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
             <div>
               <h2
                 id="profile-modal-title"
-                className="font-heading font-bold text-base text-fg"
+                className="v2-modal-title"
               >
                 Pengaturan Profil & Jabatan
               </h2>
@@ -867,7 +867,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
           )}
 
           {/* Modal Footer Actions (Pill buttons, min 44px touch targets) */}
-          <div className="pt-3 border-t border-line flex flex-wrap items-center justify-end gap-3">
+          <div className="v2-modal-foot v2-foot-flat">
             <button
               type="button"
               onClick={onClose}

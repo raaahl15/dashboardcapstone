@@ -7,8 +7,7 @@ import {
   ExternalLink,
   Plus,
   Trash2,
-  Pencil,
-} from 'lucide-react';
+  Pencil, X } from 'lucide-react';
 
 export const StandardsView: React.FC = () => {
   const {
@@ -216,11 +215,17 @@ export const StandardsView: React.FC = () => {
 
       {/* Edit Regulation Modal */}
       {editingRegulationId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Dokumen · standar & regulasi</p>
+                <h3 className="v2-modal-title">
               Edit Regulasi Utama
             </h3>
+              </div>
+              <button type="button" onClick={() => setEditingRegulationId(null)} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveRegulation} className="mt-4 space-y-3">
               <div>
                 <label className="block text-xs font-semibold mb-1">Judul Regulasi</label>
@@ -264,7 +269,7 @@ export const StandardsView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => setEditingRegulationId(null)}
@@ -286,11 +291,20 @@ export const StandardsView: React.FC = () => {
 
       {/* Add/Edit Standard Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Dokumen · standar & regulasi</p>
+                <h3 className="v2-modal-title">
               {editingStandardId ? 'Edit Standar Rujukan' : 'Tambah Standar Rujukan Baru'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowAddModal(false);
+                    setEditingStandardId(null);
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveStandard} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -351,7 +365,7 @@ export const StandardsView: React.FC = () => {
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {

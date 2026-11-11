@@ -945,11 +945,20 @@ export const ScheduleView: React.FC = () => {
       {/* MODALS: Weekly Plan & Gantt Task */}
       {/* ========================================================================= */}
       {showAddPlanModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Jadwal · Gantt PSTF 1</p>
+                <h3 className="v2-modal-title">
               {editingWeeklyPlanId ? 'Edit Weekly Plan' : 'Tambah Weekly Plan Baru'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowAddPlanModal(false);
+                    setEditingWeeklyPlanId(null);
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSavePlan} className="mt-4 space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
@@ -1031,7 +1040,7 @@ export const ScheduleView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {
@@ -1055,11 +1064,20 @@ export const ScheduleView: React.FC = () => {
       )}
 
       {showGanttPhaseModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Jadwal · Gantt PSTF 1</p>
+                <h3 className="v2-modal-title">
               {editingGanttPhaseId === null ? 'Tambah Fase Gantt' : 'Edit Nama Fase Gantt'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowGanttPhaseModal(false);
+                    setGanttPhaseFormError('');
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveGanttPhase} className="mt-4 space-y-3">
               <div>
                 <label htmlFor="gantt-phase-name" className="block text-xs font-semibold mb-1">
@@ -1084,7 +1102,7 @@ export const ScheduleView: React.FC = () => {
                   {ganttPhaseFormError}
                 </p>
               )}
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {
@@ -1108,11 +1126,20 @@ export const ScheduleView: React.FC = () => {
       )}
 
       {showAddGanttModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs">
-          <div className="w-full max-w-md bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke">
-            <h3 className="font-heading font-bold text-sm text-fg pb-3 border-b border-line">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm">
+          <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop v2-modal v2-form">
+            <div className="v2-modal-head">
+              <div className="min-w-0">
+                <p className="v2-modal-eyebrow">Jadwal · Gantt PSTF 1</p>
+                <h3 className="v2-modal-title">
               {editingGanttTaskId ? 'Edit Task Gantt' : 'Tambah Baris Task Gantt'}
             </h3>
+              </div>
+              <button type="button" onClick={() => {
+                    setShowAddGanttModal(false);
+                    setGanttFormError('');
+                  }} className="v2-modal-close" aria-label="Tutup"><X className="w-4 h-4" /></button>
+            </div>
             <form onSubmit={handleSaveGantt} className="mt-4 space-y-3">
               <div>
                 <label className="block text-xs font-semibold mb-1">Fase WBS</label>
@@ -1223,7 +1250,7 @@ export const ScheduleView: React.FC = () => {
                 </p>
               )}
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="v2-modal-foot">
                 <button
                   type="button"
                   onClick={() => {
@@ -1257,13 +1284,13 @@ export const ScheduleView: React.FC = () => {
 
         return (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm"
             role="dialog"
             aria-modal="true"
             aria-labelledby="schedule-linked-wo-title"
           >
-            <div className="w-full max-w-lg max-h-[88vh] overflow-y-auto bg-surface rounded-[28px] p-6 shadow-cockpit-pop border border-glass-stroke space-y-4">
-              <div className="flex items-start justify-between gap-3 pb-3 border-b border-line">
+            <div className="w-full max-w-xl max-h-[88vh] overflow-y-auto bg-surface rounded-[32px] shadow-cockpit-pop space-y-4 v2-modal v2-form">
+              <div className="v2-modal-head">
                 <div className="min-w-0">
                   <span className="text-[10px] font-extrabold uppercase tracking-wider text-primary block">
                     {inspectLinkedTarget.linkType === 'gantt'
@@ -1272,7 +1299,7 @@ export const ScheduleView: React.FC = () => {
                   </span>
                   <h3
                     id="schedule-linked-wo-title"
-                    className="font-heading font-bold text-sm text-fg mt-0.5 leading-snug"
+                    className="v2-modal-title"
                   >
                     {inspectLinkedTarget.label}
                   </h3>
@@ -1340,7 +1367,7 @@ export const ScheduleView: React.FC = () => {
                           {wo.title}
                         </p>
 
-                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-glass-stroke">
+                        <div className="v2-modal-foot">
                           <div className="flex flex-wrap items-center gap-1.5">
                             {wo.assigneeIds.map((uid) => (
                               <UserChip

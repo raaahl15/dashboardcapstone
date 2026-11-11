@@ -115,11 +115,11 @@ export const ExportImportModal: React.FC<ExportImportModalProps> = ({ isOpen, on
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink/45 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-6 sm:p-8 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-4 border-b border-line">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#021024]/45 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-xl bg-surface rounded-[32px] shadow-cockpit-pop sm:p-8 max-h-[90vh] overflow-y-auto v2-modal v2-form">
+        <div className="v2-modal-head">
           <div>
-            <h3 className="font-heading font-bold text-lg text-fg">
+            <h3 className="v2-modal-title">
               Cadangan & Pemulihan Data
             </h3>
             <p className="text-xs text-fg-3 mt-0.5">

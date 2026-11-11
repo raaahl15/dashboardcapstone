@@ -44,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
   } = useApp();
 
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notifFilter, setNotifFilter] = useState<'unread' | 'all'>('unread');
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
@@ -193,87 +194,82 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </button>
 
-            {/* Notification Popover */}
+            {/* Panel notifikasi (desain 03 · Panel notifikasi) */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-96 bg-surface rounded-[28px] shadow-cockpit-pop border border-glass-stroke p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="flex items-center justify-between pb-3 border-b border-line">
-                  <div className="flex items-center gap-2">
-                    <span className="font-heading font-bold text-sm text-fg">
-                      Notifikasi Operasional
-                    </span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-muted text-primary">
-                      {unreadNotificationsCount} Baru
-                    </span>
+              <div className="anim-pop absolute right-0 mt-2 w-[calc(100vw-2rem)] sm:w-[400px] bg-surface rounded-[28px] shadow-cockpit-pop border border-line z-50 overflow-hidden">
+                <div className="px-5 pt-5 pb-3 border-b border-line">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-heading text-xl font-normal text-fg">Notifikasi</span>
+                    {unreadNotificationsCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={markAllNotificationsAsRead}
+                        className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                      >
+                        <CheckCheck className="w-3.5 h-3.5" />
+                        Tandai semua dibaca
+                      </button>
+                    )}
                   </div>
-                  {unreadNotificationsCount > 0 && (
-                    <button
-                      type="button"
-                      onClick={markAllNotificationsAsRead}
-                      className="text-xs text-primary hover:underline font-medium inline-flex items-center gap-1"
-                    >
-                      <CheckCheck className="w-3.5 h-3.5" />
-                      Tandai dibaca
-                    </button>
-                  )}
-                </div>
-
-                <div className="divide-y divide-line max-h-80 overflow-y-auto my-2">
-                  {notifications.length === 0 ? (
-                    <div className="py-6 px-3 text-center text-xs text-fg-3">
-                      Belum ada notifikasi operasional untuk akun Anda.
-                    </div>
-                  ) : (
-                    notifications.map((notif) => (
-                      <div
-                        key={notif.id}
-                        onClick={() => {
-                          markNotificationAsRead(notif.id);
-                          if (notif.workOrderId) {
-                            openWorkOrderDetail(notif.workOrderId);
-                            setShowNotifications(false);
-                          }
-                        }}
-                        className={`p-3 rounded-2xl transition-colors cursor-pointer hover:bg-muted/70 ${
-                          notif.read ? 'bg-transparent opacity-75' : 'bg-muted/50'
+                  <div className="mt-3 inline-flex gap-1.5" role="tablist" aria-label="Filter notifikasi">
+                    {(['unread', 'all'] as const).map((k) => (
+                      <button
+                        key={k}
+                        type="button"
+                        role="tab"
+                        aria-selected={notifFilter === k}
+                        onClick={() => setNotifFilter(k)}
+                        className={`min-h-[30px] px-3 rounded-full text-xs font-semibold transition-colors ${
+                          notifFilter === k ? 'bg-ink text-on-ink' : 'border border-line text-fg-2 hover:border-primary'
                         }`}
                       >
-                        <div className="flex items-start gap-2.5">
-                          {notif.type === 'urgent' ? (
-                            <span className="p-1.5 rounded-full bg-danger-soft text-danger mt-0.5 shrink-0">
-                              <AlertTriangle className="w-3.5 h-3.5" />
-                            </span>
-                          ) : notif.type === 'warning' ? (
-                            <span className="p-1.5 rounded-full bg-warm-soft text-warm mt-0.5 shrink-0">
-                              <AlertTriangle className="w-3.5 h-3.5" />
-                            </span>
-                          ) : (
-                            <span className="p-1.5 rounded-full bg-muted text-primary mt-0.5 shrink-0">
-                              <Info className="w-3.5 h-3.5" />
-                            </span>
-                          )}
-                          <div className="flex-1 min-w-0">
-                            <p className="font-heading font-bold text-xs text-fg">
-                              {notif.title}
-                            </p>
-                            <p className="text-[12px] text-fg-3 mt-0.5 leading-snug">
-                              {notif.description}
-                            </p>
-                            <div className="flex items-center justify-between gap-2 mt-1">
-                              <span className="text-[10px] text-fg-3">
-                                {notif.timeAgo}
-                              </span>
-                              {notif.workOrderId && (
-                                <span className="text-[10px] font-bold text-primary">
-                                  Buka WO →
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
+                        {k === 'unread' ? `Belum dibaca · ${unreadNotificationsCount}` : 'Semua'}
+                      </button>
+                    ))}
+                  </div>
                 </div>
+
+                <ul className="max-h-[60vh] overflow-y-auto">
+                  {notifications.filter((n) => notifFilter === 'all' || !n.read).length === 0 ? (
+                    <li className="py-8 px-5 text-center text-xs text-fg-3">
+                      {notifFilter === 'unread' ? 'Semua notifikasi sudah dibaca.' : 'Belum ada notifikasi untuk akun Anda.'}
+                    </li>
+                  ) : (
+                    notifications
+                      .filter((n) => notifFilter === 'all' || !n.read)
+                      .map((notif) => (
+                        <li key={notif.id}>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              markNotificationAsRead(notif.id);
+                              if (notif.workOrderId) {
+                                openWorkOrderDetail(notif.workOrderId);
+                                setShowNotifications(false);
+                              }
+                            }}
+                            className={`w-full text-left px-5 py-3 flex items-start gap-3 border-b border-line/60 transition-colors hover:bg-muted/70 ${
+                              notif.read ? '' : 'bg-primary-soft/40'
+                            }`}
+                          >
+                            <span
+                              className={`mt-1.5 w-2 h-2 rounded-full shrink-0 ${
+                                notif.read ? 'bg-line-strong' : notif.type === 'urgent' || notif.type === 'warning' ? 'bg-warm-solid' : 'bg-primary'
+                              }`}
+                              aria-hidden="true"
+                            />
+                            <span className="flex-1 min-w-0">
+                              <span className={`block text-sm leading-snug ${notif.read ? 'text-fg-2' : 'font-semibold text-fg'}`}>{notif.title}</span>
+                              <span className="block text-xs text-fg-3 mt-0.5 line-clamp-2">
+                                {notif.description} · {notif.timeAgo}
+                              </span>
+                            </span>
+                            {notif.workOrderId && <span className="text-[11px] font-semibold text-primary shrink-0 mt-0.5">Buka WO →</span>}
+                          </button>
+                        </li>
+                      ))
+                  )}
+                </ul>
               </div>
             )}
           </div>
@@ -283,7 +279,7 @@ export const Header: React.FC<HeaderProps> = ({
               type="button"
               onClick={() => triggerPageAction(activeTab)}
               aria-label={pageMeta.action.label}
-              className="max-lg:fixed max-lg:z-40 max-lg:right-4 max-lg:bottom-[calc(6rem+env(safe-area-inset-bottom))] max-lg:shadow-cockpit-pop inline-flex items-center justify-center gap-1.5 px-5 min-h-[48px] lg:min-h-[44px] rounded-full bg-primary hover:bg-primary-hover text-on-primary text-sm font-semibold shadow-cockpit-card transition-colors"
+              className="max-lg:fixed max-lg:z-[44] max-lg:right-4 max-lg:bottom-[calc(6rem+env(safe-area-inset-bottom))] max-lg:shadow-cockpit-pop inline-flex items-center justify-center gap-1.5 px-5 min-h-[48px] lg:min-h-[44px] rounded-full bg-primary hover:bg-primary-hover text-on-primary text-sm font-semibold shadow-cockpit-card transition-colors"
             >
               {activeTab === 'stage-gate' ? <Printer className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
               <span>{pageMeta.action.label}</span>
