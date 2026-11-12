@@ -293,6 +293,30 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-084] 2026-11-12 WIB — Format Laporan PSTF 1 (Google Doc) diselaraskan dengan template LaTeX `laporan_pstf1.tex`
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("rapikan draft laporan PSTF sesuai panduan LaTeX: font, margin, layout, cover, dan semuanya"). Sebelum lanjut ke WO-031/WO-024.
+* **Fase**: G1 (ACC draf PSTF 1) — dokumen laporan, tanpa perubahan isi teknis.
+* **Spesifikasi yang diterapkan** (acuan `00_CORE_GUIDELINES/templates/PSTF1_LaTeX/laporan_pstf1.tex`):
+  - Kertas A4; margin atas/bawah/kanan 3 cm, kiri 4 cm; huruf Times New Roman 12 pt (pengganti lmodern serif).
+  - Isi rata kiri-kanan, indentasi baris pertama 18 pt (0 setelah judul/tabel), spasi 1,15, tanpa spasi antarparagraf.
+  - Judul bab: "BAB n" + baris baru + judul, tengah, tebal 14,4 pt, selalu di halaman baru (HEADING_1). Section HEADING_2 tebal 17,28 pt; subsection HEADING_3 tebal 14,4 pt.
+  - Tabel isi 10 pt, judul "Tabel n.m: …" di tengah (tidak tebal); 12 tabel ≥ 5 kolom diberi lebar kolom tetap proporsional isi (lebar teks 396 pt).
+  - Bagian depan sesuai urutan template: Sampul → Lembar Pengesahan (tabel tanda tangan tanpa garis) → Pakta Integritas (kotak e-meterai) → Ringkasan Eksekutif → Daftar Isi. Lampiran dikonversi dengan pola yang sama.
+* **Pemindahan isi**: meta penyusunan lama dan tabel pembagian kerja dipindah ke tab baru "Catatan Penyusunan (internal)", sehingga badan laporan bersih tanpa kehilangan data.
+* **Perbaikan selama proses**:
+  - Regex judul tabel ikut mengenai narasi "Tabel 3.6 merangkum…" → titik dua yang salah dihapus.
+  - Gaya global `weightedFontFamily` bobot 400 menghapus semua cetak tebal → dipulihkan dalam 2 batch (192 rentang: run tebal sebelum gaya + semua heading, bobot 700).
+  - Semua batch dijaga `requiredRevisionId`.
+* **Verifikasi**: ekspor PDF 40 halaman; sampul, pakta (e-meterai tetap di hal. 3), awal Bab 1, dan tabel Bab 1 diperiksa visual.
+* **Keterbatasan API (dikerjakan manual di Docs)**:
+  - [ ] Sisipkan logo UGM (`logoUGM.png` dari folder template, lebar 5 cm).
+  - [ ] Daftar Isi: Sisipkan → Daftar isi pada placeholder.
+  - [ ] Nomor halaman: romawi untuk bagian depan dan arab mulai Bab 1 (tidak bisa lewat API).
+  - [ ] Isi NIM, tanggal, nama koordinator dan praktisi (placeholder "[isi …]").
+  - [ ] Ganti gambar 3.1 dengan PNG PFD terbaru (sisa dari LOG-081); konfigurasi T-101 final masih menunggu keputusan PM.
+
+---
+
 ### [LOG-083] 2026-11-12 WIB — WO-027 Bab 4 Kajian Tekno-Ekonomi diisi (CAPEX/OPEX I&C + kelayakan Area 1 berbasis penjualan produk)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM (urutan kerja no. 3). Keputusan PM via pertanyaan terstruktur: **dua lapis** (I&C rinci sesuai RFP + kelayakan Area 1), pendapatan = **alokasi margin penjualan DME pabrik** (porsi α), harga dari **riset web dengan sitasi**.
 * **Fase**: G1 (ACC draf PSTF 1, jalur kritis) — WO-027 (PIC HD)
