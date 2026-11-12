@@ -300,8 +300,13 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - Pekerjaan yang diselesaikan PM bersama agen (Bab 3.1–3.2 lanjutan, Instrument Index Rev C, Bab 4) ditulis apa adanya dan tidak diatribusikan ke JN/HD/IH.
   - Kontribusi pribadi anggota dibiarkan sebagai `[isi: …]` untuk diisi anggota sendiri.
   - Arahan dosen B7 dibiarkan sebagai placeholder sampai sesi selesai.
+* **Berkas impor** `import_7_logbook_w13.json` (folder Downloads PM, tidak di Git):
+  - Isi: `schema_version` 3.4 dan hanya seksi `logbooks`, yaitu 36 entri lama + 6 entri W13 = 42 entri. 36 entri lama diambil dari `import_5_bimbingan6.json` (versi B6 yang sudah dilengkapi, LOG-058).
+  - Cek: lolos validator impor cockpit (`id`/`date`/`authorId`/`workDescription` string, `verifiedByLecturer` boolean); `issueSolution` cocok dengan regex Kendala/Solusi di form.
+  - Impor **menimpa seluruh seksi logbook**. Entri yang ditambahkan lewat website sesudah 5 Nov dan status paraf yang berubah sesudah itu akan hilang, jadi PM perlu ekspor cadangan dulu.
 * **Belum selesai**:
-  - [ ] Setiap anggota mengisi bagian `[isi: …]` dan arahan dosen, lalu menyimpan lewat cockpit "Tambah logbook" paling lambat 13 Nov.
+  - [ ] PM: ekspor cadangan, lalu impor `import_7_logbook_w13.json`; cek 42 entri dan status paraf.
+  - [ ] Setiap anggota mengisi bagian `[isi: …]` dan arahan dosen lewat tombol ubah di cockpit, paling lambat 13 Nov.
   - [ ] Paraf dosen.
 
 ---
