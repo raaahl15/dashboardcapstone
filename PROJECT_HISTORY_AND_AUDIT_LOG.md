@@ -293,6 +293,19 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-085] 2026-11-12 WIB — Draf entri logbook W13 (Bimbingan 7): kelompok + 5 anggota
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas permintaan PM ("buatkan entry logbook untuk W13 untuk semua anggota serta logbook kelompok").
+* **Berkas**: `06_COLLABORATIVE_WORKSPACE/LOGBOOK_W13_Bimbingan7.md`. Berisi 6 entri (Minggu 13, 12 Nov 2026) dengan kolom yang sama seperti form cockpit: Uraian ("Judul: Isi"), Kendala, dan Solusi. Isi diambil dari LOG-076…084.
+* **Integritas**:
+  - Pekerjaan yang diselesaikan PM bersama agen (Bab 3.1–3.2 lanjutan, Instrument Index Rev C, Bab 4) ditulis apa adanya dan tidak diatribusikan ke JN/HD/IH.
+  - Kontribusi pribadi anggota dibiarkan sebagai `[isi: …]` untuk diisi anggota sendiri.
+  - Arahan dosen B7 dibiarkan sebagai placeholder sampai sesi selesai.
+* **Belum selesai**:
+  - [ ] Setiap anggota mengisi bagian `[isi: …]` dan arahan dosen, lalu menyimpan lewat cockpit "Tambah logbook" paling lambat 13 Nov.
+  - [ ] Paraf dosen.
+
+---
+
 ### [LOG-084] 2026-11-12 WIB — Format Laporan PSTF 1 (Google Doc) diselaraskan dengan template LaTeX `laporan_pstf1.tex`
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("rapikan draft laporan PSTF sesuai panduan LaTeX: font, margin, layout, cover, dan semuanya"). Sebelum lanjut ke WO-031/WO-024.
 * **Fase**: G1 (ACC draf PSTF 1) — dokumen laporan, tanpa perubahan isi teknis.
