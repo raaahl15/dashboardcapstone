@@ -293,6 +293,24 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-086] 2026-11-26 WIB — WO-031 ditutup: batas suhu bed R-101 L/H/HH = 250/360/400 °C (diterima dosen, Bimbingan 8)
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM. Kata PM: Bimbingan 8 (19 Nov 2026) hanya membahas batas suhu reaktor, dan dosen menyatakan nilai Ihsan "sudah aman". PM mengonfirmasi bahwa yang dimaksud adalah nilai Ihsan (L 250, H 360, HH 400 °C).
+* **Keputusan**: nilai WO-031 **diterima dosen, Bimbingan 8**. Catatan teknis LOG-076 (L = setpoint, H dekat puncak adiabatik 371,2 °C) tidak lagi menghalangi; sebagai mitigasi, alarm L diberi deadband/penundaan waktu di DCS.
+* **Perubahan**:
+  - **Instrument Index** (Google Sheets master → CSV via `pull_sheets.js --from-file`): TT-101 dan TAL/TAH/TAHH-101 SETPOINT_ALARM diisi; TAL/TAH/TAHH-101 `PLACEHOLDER` → `ASUMSI`. Hanya 4 baris berubah. Companion rev 0.8.
+  - **Alarm Database ISA-18.2** (CSV + .md rev 0.4): + TAL-101 (250, Class 3), TAH-101 (360, Class 2), TAHH-101 (400, Class 1), PDAH-112 (+25 kPa, Class 3), LAL-113 (TBD, Class 2); prioritas masih usulan. Tindak lanjut LOG-082 ditutup.
+  - **FDS Google Doc** (master, PIC AL): Tabel 6.2 baris TT-101 diisi TAL/TAH/TAHH-101; paragraf 6.2 diperbarui; log revisi + baris 0.4.1. Semua batch dijaga `requiredRevisionId`, lalu dibaca ulang.
+  - **Laporan PSTF 1 Google Doc + `BAB1_Konseptualisasi_Sistem.md`**: TBD-04 (Tabel 1.10) bagian suhu maksimum ditutup, parameter kinetika tetap terbuka; URS-012 memuat penanda L/H/HH dan TAL/TAH/TAHH-101. Masing-masing `replaceAllText` mengubah tepat 1 kemunculan. Di .md ditambah pustaka [6] Turton.
+  - **Logbook W14** `06_COLLABORATIVE_WORKSPACE/LOGBOOK_W14_Bimbingan8.md`: entri kelompok + 5 anggota; pekerjaan anggota yang tidak diketahui dibiarkan `[isi: …]`.
+* **Verifikasi**: `validate_tags.py` 0 ERROR 0 WARNING; FDS dibaca ulang (Tabel 6.2 dan paragraf benar).
+* **Belum selesai**:
+  - [ ] PM: catat MoM Bimbingan 8 di cockpit (agen tidak punya ekspor cockpit sesudah 12 Nov); entri logbook W14 diinput anggota; impor W13 (LOG-085) bila belum.
+  - [ ] AL: FDS Rev 0.5 (header, Bab 1, narasi loop Rev C, Tabel 6.3 tambah TAH-101/TAHH-101).
+  - [ ] IH: sitasi lengkap batas 400 °C (γ-Al₂O₃ vs zeolit Turton) dan bukti WO-031 ke 08_WORK_ORDERS_EVIDENCE.
+  - [ ] Status WO-031 di cockpit → Selesai (PM/IH).
+
+---
+
 ### [LOG-085] 2026-11-12 WIB — Draf entri logbook W13 (Bimbingan 7): kelompok + 5 anggota
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas permintaan PM ("buatkan entry logbook untuk W13 untuk semua anggota serta logbook kelompok").
 * **Berkas**: `06_COLLABORATIVE_WORKSPACE/LOGBOOK_W13_Bimbingan7.md`. Berisi 6 entri (Minggu 13, 12 Nov 2026) dengan kolom yang sama seperti form cockpit: Uraian ("Judul: Isi"), Kendala, dan Solusi. Isi diambil dari LOG-076…084.

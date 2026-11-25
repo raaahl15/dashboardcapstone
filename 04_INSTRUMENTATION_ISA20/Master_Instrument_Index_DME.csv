@@ -4,11 +4,11 @@ FT-101,DME-PID-002,Transmitter laju umpan metanol (DP orifice FE-101),Discharge 
 FIC-101,DME-PID-002,"Kontrol laju umpan metanol (slave kaskade, SP dari TIC-101)",DCS (CCR),"2""-ME-10-1002-A1A-NI",Soft (DCS),Soft,0,12500,kg/h,SP normal 8321 kg/h (HMB S-102),-,DCS,NO,ASUMSI
 FV-101,DME-PID-002,Katup kendali laju umpan metanol,Discharge P-101,"2""-ME-10-1002-A1A-NI",HART (4-20mA) + I/P,AO,0,100,%,"Kv 9,4 normal / 11,7 maks (CALC_ISA75)",FC,DCS,NO,ASUMSI
 TE-101,DME-PID-002,Elemen suhu multi-titik bed katalis R-101,R-101 bed,R-101,Thermocouple tipe K multi-titik,Mechanical,0,500,degC,-,-,-,NO,ASUMSI
-TT-101,DME-PID-002,Transmitter suhu bed katalis R-101 (multi-titik),R-101,R-101,HART (4-20mA),AI,0,500,degC,Penanda L/H/HH: TAL/TAH/TAHH-101 (WO-031),-,DCS,NO,ASUMSI
+TT-101,DME-PID-002,Transmitter suhu bed katalis R-101 (multi-titik),R-101,R-101,HART (4-20mA),AI,0,500,degC,Penanda L/H/HH: TAL/TAH/TAHH-101 = 250/360/400 degC (WO-031),-,DCS,NO,ASUMSI
 TIC-101,DME-PID-002,"Kontrol suhu bed R-101 (master kaskade, output = SP FIC-101)",DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,SP 250 degC (HMB S-105),-,DCS,NO,ASUMSI
-TAL-101,DME-PID-002,Penanda alarm suhu rendah bed R-101 (indikator TT-101),DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,L: TBD (WO-031),-,DCS,NO,PLACEHOLDER
-TAH-101,DME-PID-002,Penanda alarm suhu tinggi bed R-101 (indikator TT-101),DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,H: TBD (WO-031),-,DCS,NO,PLACEHOLDER
-TAHH-101,DME-PID-002,"Penanda alarm suhu tinggi-tinggi bed R-101 (indikator TT-101, bukan trip SIS)",DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,HH: TBD (WO-031),-,DCS,NO,PLACEHOLDER
+TAL-101,DME-PID-002,Penanda alarm suhu rendah bed R-101 (indikator TT-101),DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,"L: 250 degC (WO-031, diterima dosen Bimbingan 8)",-,DCS,NO,ASUMSI
+TAH-101,DME-PID-002,Penanda alarm suhu tinggi bed R-101 (indikator TT-101),DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,"H: 360 degC (WO-031, diterima dosen Bimbingan 8)",-,DCS,NO,ASUMSI
+TAHH-101,DME-PID-002,"Penanda alarm suhu tinggi-tinggi bed R-101 (indikator TT-101, bukan trip SIS)",DCS (CCR),R-101,Soft (DCS),Soft,0,500,degC,"HH: 400 degC (WO-031, batas katalis Turton, diterima dosen Bimbingan 8)",-,DCS,NO,ASUMSI
 TE-102A,DME-PID-002,"Elemen suhu SIS bed R-101, kanal A (2oo3) [lingkup PSTF 2, arahan Bimbingan 6]",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
 TE-102B,DME-PID-002,"Elemen suhu SIS bed R-101, kanal B (2oo3) [lingkup PSTF 2, arahan Bimbingan 6]",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI
 TE-102C,DME-PID-002,"Elemen suhu SIS bed R-101, kanal C (2oo3) [lingkup PSTF 2, arahan Bimbingan 6]",R-101 bed,R-101,Thermocouple tipe K + transmitter SIS 4-20mA,AI,0,500,degC,-,-,SIS / ESD,"YES (SIL TBD, HAZOP/LOPA)",ASUMSI

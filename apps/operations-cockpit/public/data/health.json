@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-12T00:26:55.064Z",
+ "generated_at": "2026-11-25T23:30:10.241Z",
  "hmb": {
   "extracted_at": "2026-11-03T13:09:55+07:00",
   "solver_status": "AllObjectsCalculated",
@@ -16,7 +16,7 @@
   "placeholder": 1
  },
  "tags": {
-  "generated_at": "2026-11-12T06:17:05+07:00",
+  "generated_at": "2026-11-26T06:26:09+07:00",
   "ERROR": 0,
   "WARNING": 0,
   "pid_checked": 0
@@ -28,7 +28,7 @@
   "status_distribution": {
    "WIP": 13,
    "Review Internal": 1,
-   "Draft": 15
+   "Draft": 16
   }
  },
  "sources": {
@@ -37,7 +37,7 @@
   "00_CORE_GUIDELINES/templates/PSTF1_LaTeX.md": "4c8b85f19d2ad26e7a635bf6f47c52025f40fb2510c682eb00744d80b74611e9",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.json": "1f19430f27ed3907a8ce9d8e32ae1034705dc1f0bedaf8790ddb6e7e8cb4fcdf",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/hmb_streams.md": "b42aff7037bf6a7728ef0be9135a96d318673433a85a3277f13be4e4b587b9d0",
-  "01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.json": "dee17aa15d5eeb36250d695cb52c84c01e36c9c6ec76b12a1ffb8f66529a0b27",
+  "01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.json": "7671d3cbbd64775dffa7ff180d04ff8a41fab905bcca3bd3763b5ab294a0b3e0",
   "01_PROCESS_SIMULATION_DWSIM/exported_data/tag_validation_report.md": "9d5aebf0e71e4e207cbe34e0d1c1d21d28f17515dd3565b38f0c5c6d96dd22b7",
   "01_PROCESS_SIMULATION_DWSIM/simulation_files/DME.md": "f30d52a1881dc55cdfd30c6d3706a8a1d44673ec9ce9e871446324a7e8d03b66",
   "01_PROCESS_SIMULATION_DWSIM/tag_map.md": "69db6eaa8950a8832785920844690df04cca2106b6ce0c32368fa10151ab8383",
@@ -58,18 +58,19 @@
   "03_CAD_AND_PID_LIBRARIES/symbol_libraries/SYMBOL_LIBRARIES.md": "bf7e91047a74ad8d366192d5ddb03f175de8472683fa386b6c6d772e9ec67140",
   "03_CAD_AND_PID_LIBRARIES/templates/DME_Master_Template.md": "8b66bc724e92fca344adb6df935b379e1a42e653933518c3c3e4cf4f45655d1b",
   "03_CAD_AND_PID_LIBRARIES/templates/acad_dme.md": "0698776baaeb96421de18267d8411616698ebbad6bf5b04406eb2ee9e3baa834",
-  "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.md": "d5e1fba4eebede94b36ec50bd79ad31851cc886a0336b35ca16d07072b2abcee",
+  "04_INSTRUMENTATION_ISA20/Master_Instrument_Index_DME.md": "512152ab3de316ac315fc68521517a2572c1e0ad9a1f14f6c59059747bf42a26",
   "05_SAFETY_AND_CONTROL/Cause_and_Effect_Matrix_ESD.md": "c97d3d837dd85d054e6831c1b216ec1f568e91a64d7fb365da61d8293cc6431b",
   "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md": "c3238d5f60d4ea7c34c82b2b904095a90cadd24e5fbdcf6fd8e7b69ee69f6620",
-  "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "dc726f0349271fb7af0cfdff98049a6c47807d09f6c5cfed8e907f5c33d6643d",
+  "05_SAFETY_AND_CONTROL/Master_Alarm_Database_ISA182.md": "cfd0f54dfec199aae8bf7c3c419af7767a31d73b516de7eea5e92ee10eb3c22e",
   "06_COLLABORATIVE_WORKSPACE/LOGBOOK_W13_Bimbingan7.md": "1e438719c4cb439b07e6919de4f99c5cc436fd56993638896b364365683c480e",
+  "06_COLLABORATIVE_WORKSPACE/LOGBOOK_W14_Bimbingan8.md": "67b626d1e120a5c1ba416293f95b21c732f290f7b2cf8524e1de57a129624816",
   "06_COLLABORATIVE_WORKSPACE/RENCANA_REKONSTRUKSI_W1-W18.md": "ac6181a4b90caa0800b205359d2f73e13d28e948df4c1a8fc991215bf56892e8",
   "06_COLLABORATIVE_WORKSPACE/TEMPLATE_PESAN_WA_WO.md": "6480bd294ae44584f47078a64f65f781668c69a7243a27fbe7728a2594ed4c11",
   "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.json": "a6b7844cdeca107926ad345df30679a19780fba990b62bdef8ed53082f3c6a52",
   "06_COLLABORATIVE_WORKSPACE/google_workspace_registry.md": "ad7dc09c4fec9d3c574191444cd8a9d0339c7cf0739c17b15ddeceb8c1e4e175",
   "06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md": "638ff23a640d80712e045d5d44eb11308ed4e05e2af9f91071bc7ef57a59821f",
   "07_FINAL_DELIVERABLES/reports/laporan_pstf1.md": "0b3fae1aa03c40114945506c02e32e4de287d5febf2bd925b5fa63d045858759",
-  "07_FINAL_DELIVERABLES/reports/laporan_pstf1/BAB1_Konseptualisasi_Sistem.md": "4513aba5ca2ca38c999a7e5c84143b29326f0a7ec3cca8b90cab6fa7fcc438ee",
+  "07_FINAL_DELIVERABLES/reports/laporan_pstf1/BAB1_Konseptualisasi_Sistem.md": "b21e6de6bedeff9772e1eccf28fe66c2712e63055c41df2c3f1b48800d3c66ed",
   "07_FINAL_DELIVERABLES/reports/laporan_pstf1/WO031_Langkah1_Sumber_Batas_Suhu_Katalis.md": "c019340bba69c1f6f94ab86d58c44a0aafdc5f0b0c515b9b836e5ea8924f73bb"
  }
 }

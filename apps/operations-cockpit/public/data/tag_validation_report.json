@@ -1,6 +1,6 @@
 {
  "meta": {
-  "generated_at": "2026-11-12T06:17:05+07:00",
+  "generated_at": "2026-11-26T06:26:09+07:00",
   "validator": "tools/validate_tags.py",
   "firm_area": "1",
   "index_instruments": 46,
@@ -10,7 +10,7 @@
    {
     "source": "Master Instrument Index (kolom lokasi/layanan)",
     "path": "04_INSTRUMENTATION_ISA20\\Master_Instrument_Index_DME.csv",
-    "sha256": "af7744631c4c",
+    "sha256": "f5d34400f202",
     "tags_found": 17
    },
    {

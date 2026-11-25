@@ -13,11 +13,13 @@ reviewer: "Altaf Ramadhan Parvez"
 status: "Draft"
 review_evidence: ""
 google_ref: "https://docs.google.com/spreadsheets/d/1-BvV9mhCch-APvT72VyMZlRTp4wXACQ_lQA2tuYV5kM/edit"
-last_updated: "2026-11-12"
+last_updated: "2026-11-26"
 tags: ["Instrument Index", "IO List", "ISA-5.1"]
 ---
 
 # Panduan Penggunaan: Master_Instrument_Index_DME.csv
+
+> ✅ **WO-031 (2026-11-26, LOG-086):** `TAL/TAH/TAHH-101` = 250/360/400 °C, nilai Ihsan yang **diterima dosen pada Bimbingan 8 (19 Nov 2026)**; status `PLACEHOLDER` → `ASUMSI`.
 
 > 🔁 **Rev C data (2026-11-12, LOG-082):** 46 tag, mendahului gambar P&ID Rev C (WO-026). Tambahan dari keputusan WO-025 dan arahan Bimbingan 6: penanda L/H/HH `TAL/TAH/TAHH-101` (nilai dari WO-031), `PIC-103`/`PV-103` (tekanan balik S-107), `TIC-104`/`TV-104` (minyak panas E-101), `PT-111`/`PIC-111`/`PV-111` (kukus sisi cangkang R-101), `PDT-112`/`PDAH-112` (ΔP unggun), `LT-113`/`LIC-113`/`LV-113`/`LAL-113` (level air ketel R-101). `LV-105` pindah ke aliran masuk T-101 (T-101 sebelum P-101, LOG-081). Tag SIS 102 ditandai lingkup PSTF 2. Nomor line memakai format 6 segmen Legend Rev 1. IO_List: 22 I/O (13 AI, 7 AO, 1 DI, 1 DO).
 
@@ -54,3 +56,4 @@ tags: ["Instrument Index", "IO List", "ISA-5.1"]
 | 0.5 | 2026-11-03 | Claude Code (AI) | `REAC-01` → `R-101` (tag_map FINAL) di Sheets lalu disinkron; reviewer Altaf (LOG-016). |
 | 0.6 | 2026-11-04 | Claude Code (AI) | Index dibangun ulang dari Draf P&ID DME-PID-002 Rev B (30 tag, FCV-101 → FV-101, ESDV-101 → XV-102, + SIS 2oo3 TE-102A/B/C/TSHH-102); loop 2xx dihapus; IO_List mengecualikan `Soft`; disinkron via `pull_sheets.js` (LOG-036). Perlu review JN/AL. |
 | 0.7 | 2026-11-12 | Claude Code (AI) | Rev C data: +16 tag (loop 101 L/H/HH, 103, 104, 111, 112, 113), LV-105 di aliran masuk T-101, SIS 102 → lingkup PSTF 2, nomor line 6 segmen; Sheets diperbarui lalu disinkron via `pull_sheets.js`; `validate_tags.py` 0 ERROR 0 WARNING (LOG-082). Gambar P&ID Rev C menyusul (WO-026, JN). |
+| 0.8 | 2026-11-26 | Claude Code (AI) | Setpoint `TAL/TAH/TAHH-101` = 250/360/400 °C (WO-031, diterima dosen Bimbingan 8) dan keterangan `TT-101`; status → `ASUMSI`; Sheets diperbarui lalu disinkron via `pull_sheets.js`; `validate_tags.py` 0 ERROR 0 WARNING (LOG-086). |

@@ -1,4 +1,9 @@
 TAG_NUMBER,INSTRUMENT_DESCRIPTION,ALARM_TYPE,SETPOINT,UNIT,PRIORITY_EEMUA_191,OPERATOR_RESPONSE_REQUIRED,POTENTIAL_CONSEQUENCE
+TAL-101,Reactor R-101 Bed Temp Low (TT-101),Low (L),250,degC,Low (Class 3),Cek suhu umpan TT-104/TIC-104 dan tekanan kukus PIC-111; naikkan suhu umpan bila perlu,Konversi metanol turun; risiko kondensasi umpan di bed katalis
+TAH-101,Reactor R-101 Bed Temp High (TT-101),High (H),360,degC,Medium (Class 2),Turunkan laju umpan (TIC-101/FIC-101) dan cek pendinginan sisi cangkang (PIC-111/LIC-113),Titik panas bed naik mendekati suhu adiabatik 371 degC
+TAHH-101,Reactor R-101 Bed Temp High-High (TT-101),High-High (HH),400,degC,Emergency / Critical (Class 1),Hentikan umpan secara manual dan ikuti prosedur shutdown normal (FDS Bab 7),Deaktivasi katalis (batas Turton 400 degC); risiko thermal runaway
 TAH-104,Preheater E-101 Outlet Temp High,High (H),TBD,degC,Medium (Class 2),Kurangi media pemanas E-101 dan cek TT-104,Umpan R-101 terlalu panas; titik panas bed katalis naik
 LAL-105,Feed Drum T-101 Level Low,Low (L),TBD,%,Medium (Class 2),Cek umpan segar P-101 dan posisi LV-105,Umpan E-101 terputus; kavitasi / gangguan laju umpan
+PDAH-112,Reactor R-101 Bed DP High (PDT-112),High (H),+25 di atas unggun bersih,kPa,Low (Class 3),Catat tren DP unggun dan jadwalkan inspeksi/penggantian katalis,Fouling atau kerusakan unggun katalis; aliran tidak merata
+LAL-113,R-101 Shell-Side Boiler Water Level Low (LT-113),Low (L),TBD,%,Medium (Class 2),Cek BFW dan posisi LV-113; turunkan beban reaktor bila level terus turun,Kehilangan pendinginan sisi cangkang R-101; suhu bed naik
 XA-102,Reactor SIS Trip (TSHH-102),Trip,-,State,Emergency / Critical (Class 1),Verifikasi XV-102 tertutup dan P-101 berhenti; ikuti prosedur shutdown darurat,Thermal runaway R-101

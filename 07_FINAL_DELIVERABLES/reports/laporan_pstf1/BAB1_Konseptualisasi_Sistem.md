@@ -15,7 +15,7 @@ reviewer: "Rahul Ghulam Hidayatulloh (PM); reviewer bagian: 1.1 Heidi Falina Bri
 status: "WIP"
 review_evidence: "WO-029"
 google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit"
-last_updated: "2026-11-12"
+last_updated: "2026-11-26"
 tags: ["Laporan PSTF 1", "Bab 1", "URS", "Model Dinamik", "NAMUR Phase 1", "Area-100"]
 ---
 
@@ -309,7 +309,7 @@ Pada tahap FEED, seluruh butir diverifikasi melalui *Design Qualification* (DQ):
 | Req ID | Persyaratan | Batas kuantitatif / kriteria penerimaan | Instrumen (P&ID) | Dasar | Crit. |
 | :--- | :--- | :--- | :--- | :--- | :---: |
 | URS-011 | Regulasi laju umpan metanol segar S-102 (*discharge* P-101) sebagai *slave* kaskade | Nominal 8.321,3 kg/jam (261,65 kmol/jam); deviasi ≤ ±2,0 % dari setpoint. Umpan total reaktor S-103 = 10.553,2 kg/jam (segar + daur ulang S-114 2.234,7 kg/jam) | FE-101, FT-101, FIC-101, FV-101 (FC) | HMB DWSIM; RFP 2.1 | H |
-| URS-012 | Pengendalian suhu unggun R-101 (*master* kaskade) dan pemantauan suhu umpan S-104 | Suhu umpan nominal 250 °C (beban E-101 4.726 kW), alarm suhu tinggi TAH-104. Suhu unggun dikendalikan dengan akurasi ≤ ±1,5 °C. Batas atas operasi dari spesifikasi katalis (TBD-04) | TE-101, TT-101, TIC-101; TT-104, TAH-104 | HMB DWSIM; RFP 2.1 | C |
+| URS-012 | Pengendalian suhu unggun R-101 (*master* kaskade) dan pemantauan suhu umpan S-104 | Suhu umpan nominal 250 °C (beban E-101 4.726 kW), alarm suhu tinggi TAH-104. Suhu unggun dikendalikan dengan akurasi ≤ ±1,5 °C. Penanda suhu unggun L/H/HH = 250/360/400 °C (batas katalis 400 °C, WO-031) | TE-101, TT-101, TIC-101, TAL/TAH/TAHH-101; TT-104, TAH-104 | HMB DWSIM; RFP 2.1 | C |
 | URS-013 | Pemantauan tekanan R-101 dan ΔP unggun katalis | Tekanan nominal 14,7 bar(a) (1.470 kPa) ±0,5 bar, alarm tekanan tinggi. Kenaikan ΔP unggun ≤ 25 kPa di atas kondisi unggun bersih (indikasi *fouling*) | PT-103 dan PIC-103; PDT-112 untuk ΔP unggun | HMB DWSIM; integritas reaktor | H |
 | URS-014 | Pengendalian suhu efluen S-107 keluaran E-102 | Nominal 89 °C ±2,0 °C (beban E-102 3.246 kW); katup air pendingin *fail-open* | TT-109, TIC-109, TV-109 (FO) | HMB DWSIM; antarmuka Area 2 | H |
 | URS-015 | Pengendalian level drum umpan T-101 | Setpoint 50 %, alarm level rendah untuk melindungi isap P-101 dari kekosongan; gelas penduga lokal | LT-105, LIC-105, LV-105 (FC) di aliran masuk dari tangki OSBL, LAL-105, LG-105 | Draf P&ID; kontinuitas umpan | H |
@@ -383,7 +383,7 @@ d. butir terbuka berikut tercatat dan memiliki rencana penutupan.
 | TBD-01 | Tekanan desain R-101 dan sizing PSV-101 (API 520/521: *fire case* dan *blocked outlet*) | Bab 2 PSTF 2; perhitungan awal tersedia sebagai verifikasi silang |
 | TBD-02 | Sizing katup kontrol FV-101, LV-105, dan TV-109 (ISA-75.01 / IEC 60534). Perkiraan awal FV-101: Kv 9,4 (normal) / 11,7 (maks.) pada line 2" | Bab 2 PSTF 2 (perhitungan manual) |
 | TBD-03 | Setpoint TSHH-102 dan target SIL seluruh SIF | HAZOP + LOPA, PSTF 2 |
-| TBD-04 | Parameter kinetika ($k_0$, $E_a$, $K_M$, $K_W$, $K_{eq}$) dan suhu maksimum katalis | Literatur / data vendor katalis, W13–W14 |
+| TBD-04 | Parameter kinetika ($k_0$, $E_a$, $K_M$, $K_W$, $K_{eq}$) dan suhu maksimum katalis | Suhu maksimum ditutup lewat WO-031 (diterima dosen, Bimbingan 8): batas katalis 400 °C [6]; penanda TAL/TAH/TAHH-101 = 250/360/400 °C. Parameter kinetika masih terbuka (literatur / data vendor katalis) |
 | TBD-05 | Mekanisme pembuangan panas R-101, volume reaktor, dan massa katalis (untuk $\tau_{th}$) | Mekanisme ditutup di 3.1.1 (R-101 multitubular, kukus 21 bar(a)); volume reaktor dan massa katalis lewat WO-031 |
 | TBD-06 | Transmitter ΔP unggun katalis dan kendali/isolasi media pemanas E-101 pada P&ID | Ditutup di 3.1.1: TIC-104/TV-104 minyak panas dan PDT-112, digambar di P&ID Rev C (JN) |
 | TBD-07 | Status T-101 (drum umpan) terhadap M-101 DWSIM dan tekanan desain T-101 | Ditutup di 3.1.1: T-101 dipertahankan (diterima dosen, Bimbingan 6) sebagai drum atmosferik sebelum P-101 |
@@ -412,6 +412,7 @@ d. butir terbuka berikut tercatat dan memiliki rencana penutupan.
 3. Berčič, G., & Levec, J. (1992). Intrinsic and global reaction rate of methanol dehydration over γ-Al₂O₃ pellets. *Industrial & Engineering Chemistry Research*, 31(4), 1035–1040.
 4. Seborg, D. E., Edgar, T. F., Mellichamp, D. A., & Doyle, F. J. (2016). *Process Dynamics and Control* (4th ed.). Wiley.
 5. ANSI/ISA-5.1-2009; ANSI/ISA-5.06.01-2007; ANSI/ISA-18.2-2016; ANSI/ISA-101.01-2015; IEC 61511; IEC 60079; API 520/521/526; AACE International RP 18R-97.
+6. Turton, R., Bailie, R. C., Whiting, W. B., Shaeiwitz, J. A., & Bhattacharyya, D. *Analysis, Synthesis, and Design of Chemical Processes*, studi kasus Produksi Dimetil Eter (Appendix B). Prentice Hall. (Edisi dan halaman dicek ulang, lihat WO-031 Langkah 1.)
 
 > Catatan untuk penulis: periksa kembali halaman/volume pustaka no. 3 dan nilai $\Delta H^\circ_{298}$ terhadap sumber aslinya sebelum laporan final.
 
