@@ -303,11 +303,16 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - **Laporan PSTF 1 Google Doc + `BAB1_Konseptualisasi_Sistem.md`**: TBD-04 (Tabel 1.10) bagian suhu maksimum ditutup, parameter kinetika tetap terbuka; URS-012 memuat penanda L/H/HH dan TAL/TAH/TAHH-101. Masing-masing `replaceAllText` mengubah tepat 1 kemunculan. Di .md ditambah pustaka [6] Turton.
   - **Logbook W14** `06_COLLABORATIVE_WORKSPACE/LOGBOOK_W14_Bimbingan8.md`: entri kelompok + 5 anggota; pekerjaan anggota yang tidak diketahui dibiarkan `[isi: …]`.
 * **Verifikasi**: `validate_tags.py` 0 ERROR 0 WARNING; FDS dibaca ulang (Tabel 6.2 dan paragraf benar).
+* **Cockpit produksi** (atas persetujuan PM, lewat Claude in Chrome dengan sesi login PM yang sudah ada; password tidak dipakai/diminta):
+  - Cek baca: impor W13 (LOG-085) sudah masuk (42 entri), tetapi placeholder `[arahan dosen: …]`/`[isi: …]` W13 belum diganti; MoM B7 dan B8 belum ada; belum ada WO W14/W15 (terakhir WO-031); paraf dosen baru sampai W11.
+  - WO-031 → Diajukan → **Selesai**; WO-006 dan WO-023 checklist dilengkapi → **Selesai** (tanggal selesai tercatat 26 Nov, bukan tanggal sebenarnya).
+  - **MoM Week 14 (Bimbingan 8, 19 Nov)** ditambahkan; hadir hanya PM yang dicentang karena kehadiran lain belum dikonfirmasi.
+  - **Logbook W14**: entri Kelompok, Rahul, dan Ihsan ditambahkan (45/72). Entri AL/JN/HD tidak dibuat agen karena isi pekerjaannya tidak diketahui.
 * **Belum selesai**:
-  - [ ] PM: catat MoM Bimbingan 8 di cockpit (agen tidak punya ekspor cockpit sesudah 12 Nov); entri logbook W14 diinput anggota; impor W13 (LOG-085) bila belum.
+  - [ ] PM: MoM Bimbingan 7 (arahan dosen 12 Nov) dan konfirmasi kehadiran B8; ganti placeholder entri W13; terbitkan WO W15 menuju G1.
+  - [ ] AL, JN, HD: isi entri logbook W14 sendiri; IH melengkapi `[isi: …]` W14.
   - [ ] AL: FDS Rev 0.5 (header, Bab 1, narasi loop Rev C, Tabel 6.3 tambah TAH-101/TAHH-101).
   - [ ] IH: sitasi lengkap batas 400 °C (γ-Al₂O₃ vs zeolit Turton) dan bukti WO-031 ke 08_WORK_ORDERS_EVIDENCE.
-  - [ ] Status WO-031 di cockpit → Selesai (PM/IH).
 
 ---
 
