@@ -19,6 +19,8 @@ tags: ["Logbook", "W14", "Bimbingan 8"]
 
 # Draf Entri Logbook W14 — Bimbingan 8 (Kamis, 19 Nov 2026)
 
+> ✅ **Diperbarui 2026-11-26 (LOG-087):** keenam entri W14 sudah ada di cockpit (hadir 5/5 menurut PM). Entri AL, JN, dan HD ditulis agen atas permintaan PM; isinya hanya pembahasan sesi B8 dan keterkaitannya dengan WO masing-masing. Placeholder `[isi: …]` di entri IH dihapus. Draf di bawah ini hanya arsip.
+
 **Cara pakai**: buka cockpit → Rapat & Logbook → **Tambah logbook**. Pilih entitas, lalu salin isi kolom di bawah:
 - **Minggu**: 14
 - **Tanggal**: 19 Nov 2026

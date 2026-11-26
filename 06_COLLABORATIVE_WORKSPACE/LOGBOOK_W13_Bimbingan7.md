@@ -19,6 +19,20 @@ tags: ["Logbook", "W13", "Bimbingan 7"]
 
 # Draf Entri Logbook W13 — Bimbingan 7 (Kamis, 12 Nov 2026)
 
+> ✅ **Diperbarui 2026-11-26 (LOG-087):** versi final keenam entri ada di cockpit. Arahan dosen diisi dari rekaman sesi Bimbingan 7. Placeholder `[isi: …]` dihapus, dan kendala/solusi disesuaikan. Draf di bawah ini hanya arsip.
+>
+> **Arahan dosen B7:**
+> - Batas L/H/HH (250/360/400) dinyatakan dalam °C.
+> - Besaran Bab 4 tetap dalam USD.
+> - Legend P&ID ditambah kode fluida (metanol segar).
+> - Off-page connector hanya untuk aliran yang keluar ke area/tahap berikutnya (kotak dengan sisi segitiga).
+> - Simbol nomor stream dipasang di tiap line P&ID; bila kode area tidak muat, simbol diperbesar (cek ke standar ISA).
+> - Laporan dilengkapi:
+>   - Bab 1 revisi kecil;
+>   - Bab 2 menunggu P&ID final;
+>   - Bab 3 tinggal sedikit;
+>   - Bab 4 masih kurang.
+
 **Cara pakai**: buka cockpit → Rapat & Logbook → **Tambah logbook**. Pilih entitas, lalu salin isi kolom di bawah:
 - **Minggu**: 13
 - **Tanggal**: 12 Nov 2026

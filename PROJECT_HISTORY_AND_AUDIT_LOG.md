@@ -293,6 +293,30 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-087] 2026-11-26 WIB — MoM Bimbingan 7 dari rekaman + logbook W13/W14 lengkap untuk 6 entitas
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "ini bimbingan 7, bimbingan 8 hadir semua, begitupun bimbingan 7. catat lengkap logbook nya dan buat semua entry nya untuk semua anggota". Pekerjaan dilakukan di cockpit produksi lewat Claude in Chrome dengan sesi login PM.
+* **Sumber**: rekaman Bimbingan 7 (m4a 5,3 menit, unggahan PM), ditranskripsi offline dengan faster-whisper medium int8 di venv scratchpad. Audio dan transkrip **tidak** masuk repo.
+* **Arahan dosen B7** (dari transkrip):
+  1. Batas L 250, H 360, HH 400 dalam °C.
+  2. Bab 4 baru Area 1; besaran tetap USD.
+  3. Legend P&ID ditambah kode fluida. Keluaran distilasi hanya air dan metanol, jadi cukup tambah kode metanol segar.
+  4. Off-page connector: aliran di dalam area tanpa kotak; aliran keluar ke tahap/area berikutnya memakai kotak dengan sisi segitiga.
+  5. Simbol nomor stream di tiap line P&ID; belah ketupat diperbesar bila kode area tidak muat (cek standar ISA).
+  6. Langkah berikutnya melengkapi laporan: Bab 1 revisi kecil, Bab 2 menunggu P&ID final, Bab 3 tinggal sedikit, Bab 4 masih kurang.
+  - Butir 4–5 adalah interpretasi agen atas rekaman yang kurang jelas; perlu dicek PM/JN.
+* **Perubahan cockpit**:
+  - MoM **Week 13 (B7, 12 Nov)** dibuat, hadir 5/5.
+  - MoM Week 14 (B8) dikoreksi: hadir 5/5, kalimat "kehadiran belum dikonfirmasi" dihapus.
+  - **Logbook W13**: keenam entri diperbarui. Placeholder arahan/[isi] diganti arahan B7, kendala T-101 yang sudah tuntas di B6 dihapus, dan kendala/solusi L/H/HH disesuaikan.
+  - **Logbook W14**: + entri AL, JN, HD (isi = pembahasan B8 dan kaitannya dengan WO masing-masing, tanpa klaim pekerjaan baru); [isi] di entri IH dihapus.
+  - Hasil: **48/72 entri**, semua 6 entitas 8/12, banner "Lengkap" untuk MoM terbaru.
+* **Repo**: catatan pembaruan di `LOGBOOK_W13_Bimbingan7.md` dan `LOGBOOK_W14_Bimbingan8.md`.
+* **Belum selesai**:
+  - [ ] Tindak lanjut B7 sebagai action item/WO: legend + connector + simbol stream (JN, WO-026); Bab 1 revisi kecil (RG/IH, WO-029).
+  - [ ] WO W15 menuju G1 (29 Nov); paraf dosen W12–W14.
+
+---
+
 ### [LOG-086] 2026-11-26 WIB — WO-031 ditutup: batas suhu bed R-101 L/H/HH = 250/360/400 °C (diterima dosen, Bimbingan 8)
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM. Kata PM: Bimbingan 8 (19 Nov 2026) hanya membahas batas suhu reaktor, dan dosen menyatakan nilai Ihsan "sudah aman". PM mengonfirmasi bahwa yang dimaksud adalah nilai Ihsan (L 250, H 360, HH 400 °C).
 * **Keputusan**: nilai WO-031 **diterima dosen, Bimbingan 8**. Catatan teknis LOG-076 (L = setpoint, H dekat puncak adiabatik 371,2 °C) tidak lagi menghalangi; sebagai mitigasi, alarm L diberi deadband/penundaan waktu di DCS.
