@@ -306,8 +306,9 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - **Daya P-101 dihitung ulang**: Q·ΔP = 3,709×10⁻³ m³/s × 14,5×10⁵ Pa = 5,38 kW hidrolik → ±7,2 kW poros (η 0,75). Sebelumnya 5,65 kW (DWSIM, metanol segar saja).
   - Catatan gambar A–I: basis DWSIM/RFP, T-101 sebagai feed vessel, S-102 dan daya P-101 dihitung, S-106 tidak digambar, basis entalpi, utilitas, konvensi simbol HX, nomor line, I&C di P&ID.
   - Dibangun dengan ezdxf dari skrip `build_pfd.py` (scratchpad, tidak di Git); dirender dan diperiksa visual per bagian.
+* **Drive `03_CAD_DWG`** (diunggah lewat konektor atas permintaan PM; Rev A tetap ada): PDF `1Y-ymGilomzP5XTFISfIF1HwuiLT828hA`, PNG `1f1O5B41S7387Z8U9gwc8MnF3bjINIx58`, DXF `1RXFA-pqTqDdpj5Wr5hT4Wg1iipZO4lMa`. Rujukan berkas lewat konektor hanya berhasil dari folder kerja repo (salinan sementara di `tools/out/pfd_revB/`, di-ignore Git); dari folder staging dan scratchpad ditolak.
 * **Belum selesai (menunggu PM menyetujui Rev B)**:
-  - [ ] Unggah PDF/PNG Rev B ke Drive `03_CAD_DWG` dan sisipkan di Gambar 3.1 (tab Bab 3).
+  - [ ] Sisipkan PNG Rev B di Gambar 3.1 (tab Bab 3, penanda □).
   - [ ] Turunannya: `tag_map.csv` (M-101 → padanan T-101; S-102 didefinisikan ulang), Bab 1 Tabel 1.1, Bab 3 (narasi 3.1, Tabel 3.1/3.3/3.4/3.5/3.6, Pers. 3.7–3.8 daya P-101), Bab 4 (listrik P-101, label baris T-101 di Tabel 4.2), Instrument Index (FE/FT-101 kini mengukur umpan total).
   - [ ] JN: P&ID Rev C mengikuti topologi ini (S-114 masuk T-101).
   - [ ] Konfirmasi ke dosen: T-101 sebagai feed vessel tempat pencampuran.
