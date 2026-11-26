@@ -61,3 +61,6 @@ temp_model.zip
 
 # Laporan uji console cockpit (tools/smoke_console.js)
 tools/out/
+
+# Peluncur Claude Code pribadi (path lokal + link Remote Control), jangan di-commit
+tools/launch_claude_rc.bat

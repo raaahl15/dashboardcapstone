@@ -293,6 +293,31 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-088] 2026-11-26 WIB — Rapikan repo, sinkron Drive↔repo, Laporan PSTF 1 dipecah per bab dalam tab Google Docs
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("rapikan dulu dan update GitHub serta gdrivenya, lalu sesuaikan gdocnya yang untuk laporan bab 1 sampai seterusnya itu di 1 gdocs tapi beda tab, dan rapikan yang lain juga"). Pilihan PM: tab per bab; Bab 2 dibiarkan kosong dulu; isi disalin dulu dan baru dihapus setelah dicek; rapikan repo, sinkron Drive↔repo, dan rapikan folder Drive.
+* **Repo / GitHub**:
+  - `tools/launch_claude_rc.bat` (path lokal + link Remote Control pribadi) masuk `.gitignore`, tidak di-commit.
+  - Worktree basi `wt-wa` di-prune; 5 branch lokal yang sudah di-merge dihapus (`git branch -d`).
+  - Penghapusan 9 branch remote yang sudah di-merge **diblokir permission classifier**. PM bisa menjalankannya sendiri: `git push origin --delete claude/brave-carson-u7myyl fase-4-cockpit fix-health-mojibake fix-raci-uid g1-minggu-efektif p1-status-deliverable p2-konsolidasi wa-ai-tutorial wa-template-wo`.
+* **Sinkron Drive → repo**:
+  - Mirror `06_COLLABORATIVE_WORKSPACE/mirrors/FDS-IC-DME-2026-001.md` diperbarui dari Doc FDS terkini (Rev 0.4.1, Bab 5–7 oleh AL; sebelumnya mirror masih Rev 0.4, 4 Nov) memakai konverter Docs JSON → Markdown.
+  - Teks FDS baru memuat kode `URS-0xx`/`TBD-0x`, yang dibaca `validate_tags.py` sebagai tag (8 ERROR palsu). Kedua prefiks ditambahkan ke `NOT_TAGS` → 0 ERROR 0 WARNING; `pytest tools` 45 passed.
+* **Folder Drive** (`CAPSTONE_DME_AREA1`): di root ada berkas lepas yang tidak bisa dipindah konektor (`canMoveItemWithinDrive=false`, unggahan manual): `Bimbingan6_Area1_DME.pdf`, `Bimbingan7_Area1_DME.pdf`, `F4336068.pdf` (isi tak terbaca), `Tabel_L_H_HH_Indikator_Suhu_Reaktor.csv` (milik IH) + pintasan dokumen verifikasi L/H/HH. Daftar usulan pemindahan diserahkan ke PM.
+* **Laporan PSTF 1 (Google Doc `1sR0IRYj…c62w`)**:
+  - Tab baru dibuat lewat `addDocumentTab`: **Bagian Depan, Bab 2, Bab 3, Bab 4, Lampiran**. Tab 1 diganti nama "Bab 1 (+ isi lama, dirapikan setelah dicek)"; tab "Catatan Penyusunan (internal)" tetap.
+  - Isi disalin dari Tab 1 dengan skrip `tabcopy.py` (scratchpad), yang membangun ulang teks, 20 tabel (isi sel, lebar kolom, warna header, border 0 tabel tanda tangan), gaya paragraf, gaya teks, dan ukuran halaman A4 + margin 4/3 cm per tab.
+  - Verifikasi: struktur elemen dan indeks identik dengan sumber (`tabverify.py`); gaya teks per karakter dan gaya paragraf identik (`stylecheck.py`, setelah normalisasi nilai bawaan).
+  - Dua koreksi selama proses: (1) `namedStyleType` di `updateParagraphStyle` mereset font run, jadi font TNR dikirim ulang sesudah gaya paragraf; (2) bobot 400 eksplisit membuat heading `bold=false`, jadi atribut bold heading di-reset agar ikut gaya heading seperti di sumber.
+  - **Gambar 3.1** tidak bisa disalin (API menolak akses URI gambar). Posisinya diisi penanda "□" untuk disisipkan ulang dengan PNG PFD terbaru (memang sudah tercatat sebagai pekerjaan manual di LOG-084).
+  - Bab 2 berisi judul + catatan rujukan ke Doc FDS; teks placeholder lama yang masih memakai FCV-101/ESDV diganti.
+  - Isi lama di Tab 1 **belum dihapus**, menunggu PM mengecek tab baru.
+* **Belum selesai**:
+  - [ ] PM cek tab baru → agen menghapus Bagian Depan dan Bab 2–Lampiran dari Tab 1 lalu mengganti namanya menjadi "Bab 1".
+  - [ ] Sisipkan PNG PFD di Gambar 3.1 (tab Bab 3), logo UGM, daftar isi, nomor halaman (manual).
+  - [ ] PM: hapus branch remote (perintah di atas) dan pindahkan berkas lepas di root Drive.
+
+---
+
 ### [LOG-087] 2026-11-26 WIB — MoM Bimbingan 7 dari rekaman + logbook W13/W14 lengkap untuk 6 entitas
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "ini bimbingan 7, bimbingan 8 hadir semua, begitupun bimbingan 7. catat lengkap logbook nya dan buat semua entry nya untuk semua anggota". Pekerjaan dilakukan di cockpit produksi lewat Claude in Chrome dengan sesi login PM.
 * **Sumber**: rekaman Bimbingan 7 (m4a 5,3 menit, unggahan PM), ditranskripsi offline dengan faster-whisper medium int8 di venv scratchpad. Audio dan transkrip **tidak** masuk repo.

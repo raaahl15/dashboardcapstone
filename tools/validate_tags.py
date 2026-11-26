@@ -50,7 +50,8 @@ FIRM_AREA = "1"  # firma ini = Area 1 (tag 1xx)
 LINE_NO = re.compile(r'\d+(?:\.\d+)?"\s*-\s*[A-Z]+-\d+')
 DOC_NO = re.compile(r"\b[A-Z]+(?:-[A-Z]+)+-\d+(?:-\d+)*\b")
 TOKEN = re.compile(r"(?<![A-Za-z0-9_-])([A-Z]{1,6})-(\d{2,3})([A-Z]?)(?![A-Za-z0-9])")
-NOT_TAGS = {"LOG", "SIL", "WO", "ISA", "IEC", "ISO", "API", "ASME", "NA", "REV", "G", "PSTF", "CPMK", "R-"}
+# URS = butir User Requirement Specification, TBD = butir terbuka laporan (kode dokumen, bukan instrumen).
+NOT_TAGS = {"LOG", "SIL", "WO", "ISA", "IEC", "ISO", "API", "ASME", "NA", "REV", "G", "PSTF", "CPMK", "R-", "URS", "TBD"}
 SKIP_SECTION = re.compile(r"^#+\s*.*(catatan inkonsistensi|log revisi)", re.IGNORECASE)
 ISA_FIRST = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 # Item perpipaan, bukan instrumen: katup tangan (HV), check valve (NRV), strainer (ST). Konvensi tim
