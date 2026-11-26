@@ -293,6 +293,27 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-089] 2026-11-26 WIB — PFD DME-PFD-001 Rev B: T-101 jadi feed vessel tempat pencampuran, simbol HX sesuai kesepakatan tim, tata letak gaya Turton
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "revisi total PFD, dengan acuan DWSIM RFP, serta buat lebih rapi … simbol stream itu ada di line … penempatannya seperti referensi … ikutin seluruh template cad".
+* **Keputusan (dari diskusi PM)**:
+  1. **T-101 = feed vessel tempat metanol segar S-101 dan recycle S-114 bercampur, sebelum P-101.** Ini bentuk fisik objek mixer M-101 di DWSIM. Acuannya studi kasus DME Turton Unit 200 (V-201 Feed Vessel menerima metanol segar dan recycle dari T-202, LIC ke metanol segar, lalu P-201) dan catatan Bimbingan 6 ("T-101 diterima sebagai penggambaran mixer M-101"). Keputusan ini mengoreksi tafsiran LOG-081 (T-101 hanya untuk metanol segar, recycle masuk in-line setelah pompa). Simbol M-101 dihapus dari PFD.
+  2. **Simbol penukar panas (kesepakatan tim, disetujui dosen menurut PM)**: heater/preheater memakai ISO X8079 (lingkaran + garis zig-zag), cooler memakai ISO 2512 (shell & tube). Agen sempat menyarankan simbol diseragamkan, tetapi PM memilih mengikuti kesepakatan tim.
+* **Isi Rev B** (`D:\rahul\CAPSTONE_DME_AREA1\03_CAD_DWG\DME-PFD-001_PFD_Area1_RevB_A3` .dxf/.pdf/_preview.png; Rev A tidak ditimpa):
+  - Bingkai dan blok judul dari template proyek (lembar 1 `DME_Master_Template`); REV dinaikkan ke B dengan baris revisi "B 26-11-26".
+  - Simbol dari `ISO10628_Equipment.dxf`: T-101 ISO_2062 (diputar −90°, drum horizontal seperti V-201), P-101 ISO_8093, E-101 ISO_X8079, R-101 ISO_X8015 (bejana fixed bed; menggantikan X8012 yang mirip kolom tray), E-102 ISO_2512.
+  - Tata letak gaya Turton: pita daftar alat di atas, alir kiri→kanan, belah ketupat nomor aliran **di garis** (garis terputus di belah ketupat), bendera T/P di S-103/104/105/107, off-page connector kotak bersisi segitiga untuk S-101, S-114, dan S-107 (arahan B7), utilitas garis putus-putus, nomor line 6 segmen. PFD tetap tanpa I&C (LOG-079).
+  - Tabel HMB 7 aliran (101, 114, 102, 103, 104, 105, 107). **S-102 baru = keluaran T-101** (campuran, dihitung): 25,1 °C, 1,0 bar(a), 10.556,0 kg/jam, 330,95 kmol/jam, entalpi −3.747,9 kW. S-103 dan seterusnya tetap angka DWSIM. Selisih massa S-102 vs S-103 (2,8 kg/jam) = toleransi recycle DWSIM 0,027 %.
+  - **Daya P-101 dihitung ulang**: Q·ΔP = 3,709×10⁻³ m³/s × 14,5×10⁵ Pa = 5,38 kW hidrolik → ±7,2 kW poros (η 0,75). Sebelumnya 5,65 kW (DWSIM, metanol segar saja).
+  - Catatan gambar A–I: basis DWSIM/RFP, T-101 sebagai feed vessel, S-102 dan daya P-101 dihitung, S-106 tidak digambar, basis entalpi, utilitas, konvensi simbol HX, nomor line, I&C di P&ID.
+  - Dibangun dengan ezdxf dari skrip `build_pfd.py` (scratchpad, tidak di Git); dirender dan diperiksa visual per bagian.
+* **Belum selesai (menunggu PM menyetujui Rev B)**:
+  - [ ] Unggah PDF/PNG Rev B ke Drive `03_CAD_DWG` dan sisipkan di Gambar 3.1 (tab Bab 3).
+  - [ ] Turunannya: `tag_map.csv` (M-101 → padanan T-101; S-102 didefinisikan ulang), Bab 1 Tabel 1.1, Bab 3 (narasi 3.1, Tabel 3.1/3.3/3.4/3.5/3.6, Pers. 3.7–3.8 daya P-101), Bab 4 (listrik P-101, label baris T-101 di Tabel 4.2), Instrument Index (FE/FT-101 kini mengukur umpan total).
+  - [ ] JN: P&ID Rev C mengikuti topologi ini (S-114 masuk T-101).
+  - [ ] Konfirmasi ke dosen: T-101 sebagai feed vessel tempat pencampuran.
+
+---
+
 ### [LOG-088] 2026-11-26 WIB — Rapikan repo, sinkron Drive↔repo, Laporan PSTF 1 dipecah per bab dalam tab Google Docs
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM ("rapikan dulu dan update GitHub serta gdrivenya, lalu sesuaikan gdocnya yang untuk laporan bab 1 sampai seterusnya itu di 1 gdocs tapi beda tab, dan rapikan yang lain juga"). Pilihan PM: tab per bab; Bab 2 dibiarkan kosong dulu; isi disalin dulu dan baru dihapus setelah dicek; rapikan repo, sinkron Drive↔repo, dan rapikan folder Drive.
 * **Repo / GitHub**:
