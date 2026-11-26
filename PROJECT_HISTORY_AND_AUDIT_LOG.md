@@ -301,7 +301,7 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
   - **Standar baru**: ISA-18.2 (manajemen alarm, dasar Master Alarm Database) dan ASME PTC 19.3 TW-2016 (PDF di Drive `00_CORE_GUIDELINES`).
   - **Deliverable**: Bab 3 → tab Bab 3 laporan (`?tab=t.hpfsf5fpr7u`), Bab 4 → tab Bab 4 (`?tab=t.33xr9zr6esko`), Sub-Antarmuka S-107 → PDF PFD Rev B (`1Y-ymGil…`). Bab 1 tetap ke `BAB_1.pdf` (berkas yang diajukan, bukti status Diajukan), Bab 2 tetap FDS, Lampiran A tetap PDF P&ID Rev B.
 * **Repo (main)**: `google_workspace_registry.json/.md` rev 0.9 (36 berkas Drive dalam 6 grup, `archived` untuk Rev A, `tab_links` laporan per bab); `google_ref` diisi di Panduan, RFP, BAB1 (tab t.0), CALC Bab 4 (tab Bab 4), dan WO031 Langkah 1. `build_manifest` + `check_companions` PASS.
-* **Branch `drive-files-hub`** (kode web, menunggu ACC PM untuk merge): `GoogleWorkspaceView.tsx` menampilkan chip tab per bab dan seksi "Berkas Drive" per grup (opsi tampilkan arsip); seed `initialData.ts` diselaraskan dengan link baru + 2 standar baru.
+* **Branch `drive-files-hub`** (kode web; di-merge fast-forward ke main atas instruksi PM "merge lgsg", commit `5ffb8e7`): `GoogleWorkspaceView.tsx` menampilkan chip tab per bab dan seksi "Berkas Drive" per grup (opsi tampilkan arsip); seed `initialData.ts` diselaraskan dengan link baru + 2 standar baru.
 
 ---
 
