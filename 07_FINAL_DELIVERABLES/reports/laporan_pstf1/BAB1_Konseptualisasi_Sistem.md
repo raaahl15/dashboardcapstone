@@ -14,7 +14,7 @@ author: "Ihsaan Zauhair Tsaqif Prawira (penulis Rev 0); revisi Rev 1 oleh Claude
 reviewer: "Rahul Ghulam Hidayatulloh (PM); reviewer bagian: 1.1 Heidi Falina Brilian, 1.2 Altaf Ramadhan Parvez, 1.3 Jonathan Pangihutan Michael Siahaan"
 status: "WIP"
 review_evidence: "WO-029"
-google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit"
+google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.0"
 last_updated: "2026-11-26"
 tags: ["Laporan PSTF 1", "Bab 1", "URS", "Model Dinamik", "NAMUR Phase 1", "Area-100"]
 ---

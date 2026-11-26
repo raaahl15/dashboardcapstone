@@ -1,7 +1,7 @@
 {
  "schema_version": 1,
- "updated_at": "2026-11-05T10:10:00+07:00",
- "updated_by": "Antigravity (LOG-060)",
+ "updated_at": "2026-11-26T09:30:00+07:00",
+ "updated_by": "Claude Code (LOG-090)",
  "owner_account": "akun Google pribadi PM (lihat Blueprint §3.3)",
  "drive": {
   "root": {
@@ -62,13 +62,22 @@
   "folders_pending": [],
   "files": [
    {
-    "key": "pid_dme_pid_002_revB",
-    "title": "DME-PID-002_Draft_PID_Area1_RevB.dxf",
-    "id": "1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR",
-    "url": "https://drive.google.com/file/d/1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR/view",
-    "folder": "03_CAD_DWG",
-    "sha256_16": "92135c824e85225c",
-    "note": "Draf P&ID Area 1 Rev B (LOG-036); Rev A 1BVOyqj0szbffzpYt4y1oWs68yRcwS96G di folder 'aa' (arsip)"
+    "key": "panduan_capstone_2026",
+    "title": "Panduan_Capstone_DTNTF_2026.pdf",
+    "id": "18YU_iS8LTZ6i7DJjw25XaYHswt58VFXu",
+    "url": "https://drive.google.com/file/d/18YU_iS8LTZ6i7DJjw25XaYHswt58VFXu/view",
+    "folder": "00_CORE_GUIDELINES",
+    "group": "Standar & Acuan",
+    "note": "Panduan Capstone Design DTNTF 2026 (struktur laporan, logbook, stage-gate)"
+   },
+   {
+    "key": "rfp_kak_ic_dme_2026_001",
+    "title": "KAK-IC-DME-2026-001_RFP.pdf",
+    "id": "1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn",
+    "url": "https://drive.google.com/file/d/1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn/view",
+    "folder": "00_CORE_GUIDELINES",
+    "group": "Standar & Acuan",
+    "note": "RFP/KAK layanan FEED & DED I&C pabrik DME (dokumen lelang, 7 halaman)"
    },
    {
     "key": "asme_ptc_19_3_tw_2016",
@@ -76,7 +85,67 @@
     "id": "1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F",
     "url": "https://drive.google.com/file/d/1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F/view",
     "folder": "00_CORE_GUIDELINES",
+    "group": "Standar & Acuan",
     "note": "Standar thermowell (hak cipta ASME, akses tim saja); dasar tools/calc/thermowell.py (LOG-035/036)"
+   },
+   {
+    "key": "pfd_dme_pfd_001_revB_pdf",
+    "title": "DME-PFD-001_PFD_Area1_RevB_A3.pdf",
+    "id": "1Y-ymGilomzP5XTFISfIF1HwuiLT828hA",
+    "url": "https://drive.google.com/file/d/1Y-ymGilomzP5XTFISfIF1HwuiLT828hA/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "PFD Area 1 Rev B (terkini): T-101 feed vessel tempat pencampuran S-101 + S-114, simbol HX kesepakatan tim (LOG-089)",
+    "sha256_16": "51cb6dd076714526"
+   },
+   {
+    "key": "pfd_dme_pfd_001_revB_png",
+    "title": "DME-PFD-001_PFD_Area1_RevB_A3_preview.png",
+    "id": "1f1O5B41S7387Z8U9gwc8MnF3bjINIx58",
+    "url": "https://drive.google.com/file/d/1f1O5B41S7387Z8U9gwc8MnF3bjINIx58/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "Pratinjau PNG PFD Rev B (untuk Gambar 3.1 laporan)",
+    "sha256_16": "1c29e90e6a39bf54"
+   },
+   {
+    "key": "pfd_dme_pfd_001_revB_dxf",
+    "title": "DME-PFD-001_PFD_Area1_RevB_A3.dxf",
+    "id": "1RXFA-pqTqDdpj5Wr5hT4Wg1iipZO4lMa",
+    "url": "https://drive.google.com/file/d/1RXFA-pqTqDdpj5Wr5hT4Wg1iipZO4lMa/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "DXF PFD Rev B (buka di AutoCAD, simpan sebagai DWG native)",
+    "sha256_16": "279e877ac70e55f9"
+   },
+   {
+    "key": "pfd_dme_pfd_001_revA_pdf",
+    "title": "DME-PFD-001_PFD_Area1_RevA_A3.pdf",
+    "id": "1HISWg19ijyfHglzKjLr5c8dcThzrPuxg",
+    "url": "https://drive.google.com/file/d/1HISWg19ijyfHglzKjLr5c8dcThzrPuxg/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "ARSIP: PFD Rev A (digantikan Rev B)",
+    "archived": true
+   },
+   {
+    "key": "pfd_dme_pfd_001_revA_png",
+    "title": "DME-PFD-001_PFD_Area1_RevA_A3_preview.png",
+    "id": "1C8_sFM4sh_SWQhN3un43LkQ2L3SysLk5",
+    "url": "https://drive.google.com/file/d/1C8_sFM4sh_SWQhN3un43LkQ2L3SysLk5/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "ARSIP: pratinjau PFD Rev A",
+    "archived": true
+   },
+   {
+    "key": "pid_dme_pid_002_revB_a3_pdf",
+    "title": "DME-PID-002_Draft_PID_Area1_RevB_A3-Model.pdf",
+    "id": "1ZiTbj2EO0v7hV0v2dJdpymXqxd894Mh8",
+    "url": "https://drive.google.com/file/d/1ZiTbj2EO0v7hV0v2dJdpymXqxd894Mh8/view",
+    "folder": "03_CAD_DWG",
+    "group": "Gambar Teknik (PFD & P&ID)",
+    "note": "PDF Draf P&ID Area 1 Rev B A3 (Rev C menyusul, WO-026)"
    },
    {
     "key": "pid_dme_pid_002_revB_a3",
@@ -85,7 +154,8 @@
     "url": "https://drive.google.com/file/d/139mgb1OOiHVfaICTTI8mvU8B30UethwH/view",
     "folder": "03_CAD_DWG",
     "sha256_16": "42972fbff65f11ca",
-    "note": "Draf P&ID Area 1 Rev B pada DME_Master_Template A3 (ISOCPEUR, logo UGM, title block resmi, LOG-055)"
+    "note": "Draf P&ID Area 1 Rev B pada DME_Master_Template A3 (ISOCPEUR, logo UGM, title block resmi, LOG-055)",
+    "group": "Gambar Teknik (PFD & P&ID)"
    },
    {
     "key": "pid_dme_pid_002_revB_a3_preview",
@@ -94,7 +164,36 @@
     "url": "https://drive.google.com/file/d/17RGU8aGjvnmexQzAtmXyJBw53snWQsLU/view",
     "folder": "03_CAD_DWG",
     "sha256_16": "165e03a959a4515b",
-    "note": "Gambar pratinjau Draf P&ID Area 1 Rev B A3 (LOG-055)"
+    "note": "Gambar pratinjau Draf P&ID Area 1 Rev B A3 (LOG-055)",
+    "group": "Gambar Teknik (PFD & P&ID)"
+   },
+   {
+    "key": "pid_dme_pid_002_revB",
+    "title": "DME-PID-002_Draft_PID_Area1_RevB.dxf",
+    "id": "1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR",
+    "url": "https://drive.google.com/file/d/1qdbzklqY3AtoZBy6To6xCuslK_2FyGZR/view",
+    "folder": "03_CAD_DWG",
+    "sha256_16": "92135c824e85225c",
+    "note": "Draf P&ID Area 1 Rev B (LOG-036); Rev A 1BVOyqj0szbffzpYt4y1oWs68yRcwS96G di folder 'aa' (arsip)",
+    "group": "Gambar Teknik (PFD & P&ID)"
+   },
+   {
+    "key": "cad_master_template_dwt",
+    "title": "DME_Master_Template.dwt",
+    "id": "119ylKMcvZiXHmLsD3nAxv0qeNrUKm2q4",
+    "url": "https://drive.google.com/file/d/119ylKMcvZiXHmLsD3nAxv0qeNrUKm2q4/view",
+    "folder": "03_CAD_DWG/templates",
+    "group": "Template & Library CAD",
+    "note": "Template gambar proyek (bingkai A3, blok judul, logo UGM)"
+   },
+   {
+    "key": "cad_master_template_dxf",
+    "title": "DME_Master_Template.dxf",
+    "id": "1SfjuTmC0G9lAbNKEiVFFiA8QgJzx3MB1",
+    "url": "https://drive.google.com/file/d/1SfjuTmC0G9lAbNKEiVFFiA8QgJzx3MB1/view",
+    "folder": "03_CAD_DWG/templates",
+    "group": "Template & Library CAD",
+    "note": "Template gambar proyek versi DXF"
    },
    {
     "key": "legend_dme_pid_master_legend_rev1",
@@ -103,7 +202,8 @@
     "url": "https://drive.google.com/file/d/1hnvC0CsV48WBpg0njxHQGbFbc3ahjBfR/view",
     "folder": "03_CAD_DWG/symbol_libraries",
     "sha256_16": "eb57e78bc4461434",
-    "note": "Master Legend P&ID Rev 1 (bahasa Inggris, penomoran jalur 6 segmen, title block IFR, LOG-059/060)"
+    "note": "Master Legend P&ID Rev 1 (bahasa Inggris, penomoran jalur 6 segmen, title block IFR, LOG-059/060)",
+    "group": "Template & Library CAD"
    },
    {
     "key": "legend_dme_pid_master_legend_rev1_preview",
@@ -112,8 +212,198 @@
     "url": "https://drive.google.com/file/d/1CmgqaIOxzk_QPcWwotjv0aUJ6JLn8GUf/view",
     "folder": "03_CAD_DWG/symbol_libraries",
     "sha256_16": "cb61e77cc425591e",
-    "note": "Gambar pratinjau Master Legend P&ID Rev 1 (LOG-059/060)"
+    "note": "Gambar pratinjau Master Legend P&ID Rev 1 (LOG-059/060)",
+    "group": "Template & Library CAD"
+   },
+   {
+    "key": "lib_iso10628",
+    "title": "ISO10628_Equipment.dxf",
+    "id": "1YwszWJxaderlqKRa9XOfmvJmtXLk6gnQ",
+    "url": "https://drive.google.com/file/d/1YwszWJxaderlqKRa9XOfmvJmtXLk6gnQ/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library simbol peralatan ISO 10628 (PFD/P&ID)"
+   },
+   {
+    "key": "lib_iso10628_dwg",
+    "title": "ISO10628_Equipment_recover.dwg",
+    "id": "15YPX2c0Y4GHxKa5FryEjTVCHjpwsszXh",
+    "url": "https://drive.google.com/file/d/15YPX2c0Y4GHxKa5FryEjTVCHjpwsszXh/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library ISO 10628 versi DWG"
+   },
+   {
+    "key": "lib_isa51",
+    "title": "ISA51_Instruments.dxf",
+    "id": "1hSTaN6nW_X02KxZrdQYIyGfp05-Y6pZE",
+    "url": "https://drive.google.com/file/d/1hSTaN6nW_X02KxZrdQYIyGfp05-Y6pZE/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library simbol instrumen ISA-5.1"
+   },
+   {
+    "key": "lib_isa52",
+    "title": "ISA52_LogicGates.dxf",
+    "id": "1BEyYrEWk8mPYs-yr59qeO2xPt_jYsClf",
+    "url": "https://drive.google.com/file/d/1BEyYrEWk8mPYs-yr59qeO2xPt_jYsClf/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library gerbang logika ISA-5.2"
+   },
+   {
+    "key": "lib_isa54",
+    "title": "ISA54_LoopDiagrams.dxf",
+    "id": "1hWYy009QOvGYLx6jG3PL118XEMinbA_Z",
+    "url": "https://drive.google.com/file/d/1hWYy009QOvGYLx6jG3PL118XEMinbA_Z/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library diagram loop ISA-5.4"
+   },
+   {
+    "key": "lib_isa101",
+    "title": "ISA101_HMI.dxf",
+    "id": "1XkbpOB6sJcKqRYzQvh3g4ygX7Elup1pB",
+    "url": "https://drive.google.com/file/d/1XkbpOB6sJcKqRYzQvh3g4ygX7Elup1pB/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library HMI ISA-101"
+   },
+   {
+    "key": "lib_isa62443",
+    "title": "ISA62443_Security.dxf",
+    "id": "1JdYfYU848oe8vJMccH27r4eMg5q219z9",
+    "url": "https://drive.google.com/file/d/1JdYfYU848oe8vJMccH27r4eMg5q219z9/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library keamanan siber ISA/IEC 62443"
+   },
+   {
+    "key": "lib_api551",
+    "title": "APIRP551_Hookup.dxf",
+    "id": "1g7LZJ2PtbowAGkMwvqfZRf4yBnGxpo4r",
+    "url": "https://drive.google.com/file/d/1g7LZJ2PtbowAGkMwvqfZRf4yBnGxpo4r/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "Library hook-up instrumen API RP 551"
+   },
+   {
+    "key": "legend_dme_pid_master_legend_rev0",
+    "title": "DME_PID_Master_Legend.dxf",
+    "id": "1DiefJLwTikEm81RciKIy-I2e88vyEy5Q",
+    "url": "https://drive.google.com/file/d/1DiefJLwTikEm81RciKIy-I2e88vyEy5Q/view",
+    "folder": "03_CAD_DWG/symbol_libraries",
+    "group": "Template & Library CAD",
+    "note": "ARSIP: Master Legend Rev 0 (digantikan Rev 1)",
+    "archived": true
+   },
+   {
+    "key": "slide_bimbingan6",
+    "title": "Bimbingan6_Area1_DME.pdf",
+    "id": "144BRGCkze0AOvGWkm2M_Fa2r9Wk9YMtU",
+    "url": "https://drive.google.com/file/d/144BRGCkze0AOvGWkm2M_Fa2r9Wk9YMtU/view",
+    "folder": "(root, belum dipindah)",
+    "group": "Bimbingan",
+    "note": "Slide Bimbingan 6 (5 Nov 2026)"
+   },
+   {
+    "key": "slide_bimbingan7",
+    "title": "Bimbingan7_Area1_DME.pdf",
+    "id": "1Gc5YsZdFVSdXzciRszPfYdbrXR5Foead",
+    "url": "https://drive.google.com/file/d/1Gc5YsZdFVSdXzciRszPfYdbrXR5Foead/view",
+    "folder": "(root, belum dipindah)",
+    "group": "Bimbingan",
+    "note": "Slide Bimbingan 7 (12 Nov 2026)"
+   },
+   {
+    "key": "wo031_tabel_lhhh_csv",
+    "title": "Tabel_L_H_HH_Indikator_Suhu_Reaktor.csv",
+    "id": "1b9M1oCXvzoCRWTfnBEzqOlQjtTa6ziki",
+    "url": "https://drive.google.com/file/d/1b9M1oCXvzoCRWTfnBEzqOlQjtTa6ziki/view",
+    "folder": "(root, belum dipindah)",
+    "group": "Bukti Work Order",
+    "note": "WO-031 (Ihsan): tabel batas L/H/HH = 250/360/400 C, diterima dosen B8"
+   },
+   {
+    "key": "wo031_verifikasi_doc",
+    "title": "Verifikasi perhitungan nilai L/H/HH (Google Docs, Ihsan)",
+    "id": "1hYOQtSmWjUV_yqRjEoZUFeJVrxWUQlhgUdkw_VK1F6k",
+    "url": "https://docs.google.com/document/d/1hYOQtSmWjUV_yqRjEoZUFeJVrxWUQlhgUdkw_VK1F6k/edit",
+    "folder": "(pintasan di root)",
+    "group": "Bukti Work Order",
+    "note": "WO-031: dokumen verifikasi suhu adiabatik 371,2 C dan batas L/H/HH"
+   },
+   {
+    "key": "cockpit_ui_v2_cover",
+    "title": "00_cover-design-system.pdf",
+    "id": "1GebmK36Rcg6TVh0dVOCewwAbVYKbN3aZ",
+    "url": "https://drive.google.com/file/d/1GebmK36Rcg6TVh0dVOCewwAbVYKbN3aZ/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Desain UI v2.0: sampul & design system"
+   },
+   {
+    "key": "cockpit_ui_v2_desktop_a",
+    "title": "01a_cockpit-desktop_layar-1-8.pdf",
+    "id": "168PAd092UtELhGT3d905Rosq0QuiyX0b",
+    "url": "https://drive.google.com/file/d/168PAd092UtELhGT3d905Rosq0QuiyX0b/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Desktop layar 1-8"
+   },
+   {
+    "key": "cockpit_ui_v2_desktop_b",
+    "title": "01b_cockpit-desktop_layar-9-17.pdf",
+    "id": "1uTNpdjSSVag2_X9s1OMYmRmZoBLWGBLX",
+    "url": "https://drive.google.com/file/d/1uTNpdjSSVag2_X9s1OMYmRmZoBLWGBLX/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Desktop layar 9-17"
+   },
+   {
+    "key": "cockpit_ui_v2_desktop_c",
+    "title": "01c_cockpit-desktop_layar-18-21.pdf",
+    "id": "1Nb67E1lGi5u0oKu5kfuWDP6Xsu0tHNfV",
+    "url": "https://drive.google.com/file/d/1Nb67E1lGi5u0oKu5kfuWDP6Xsu0tHNfV/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Desktop layar 18-21"
+   },
+   {
+    "key": "cockpit_ui_v2_desktop_d",
+    "title": "01d_cockpit-desktop_layar-22-25.pdf",
+    "id": "1naXJDD0rHZgdQSYczAcJ0L8ULXSF7RwQ",
+    "url": "https://drive.google.com/file/d/1naXJDD0rHZgdQSYczAcJ0L8ULXSF7RwQ/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Desktop layar 22-25"
+   },
+   {
+    "key": "cockpit_ui_v2_mobile",
+    "title": "02_cockpit-mobile.pdf",
+    "id": "1smKnRwgBRrj3P9WArAgOOU9ZEO_xQTIh",
+    "url": "https://drive.google.com/file/d/1smKnRwgBRrj3P9WArAgOOU9ZEO_xQTIh/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Mobile 12 layar"
+   },
+   {
+    "key": "cockpit_ui_v2_modal",
+    "title": "03_cockpit-modal-form-state.pdf",
+    "id": "1mOLLWHwCsZPe_fNRy3eNsILdGpxjH6Zj",
+    "url": "https://drive.google.com/file/d/1mOLLWHwCsZPe_fNRy3eNsILdGpxjH6Zj/view",
+    "folder": "10_COCKPIT_UI_DESIGN",
+    "group": "Desain Cockpit",
+    "note": "Modal, form & state"
    }
+  ],
+  "file_groups": [
+   "Standar & Acuan",
+   "Gambar Teknik (PFD & P&ID)",
+   "Template & Library CAD",
+   "Bimbingan",
+   "Bukti Work Order",
+   "Desain Cockpit"
   ]
  },
  "documents": [
@@ -153,7 +443,8 @@
    "target_folder": "04_INSTRUMENT_INDEX_SHEETS",
    "pic": "Jonathan Pangihutan Michael Siahaan",
    "status": "Draft",
-   "data_status": "PLACEHOLDER"
+   "data_status": "REV C (ASUMSI)",
+   "note": "46 tag, 22 I/O; TAL/TAH/TAHH-101 = 250/360/400 C (LOG-086)"
   },
   {
    "key": "fds",
@@ -165,8 +456,9 @@
    "repo_companion": "05_SAFETY_AND_CONTROL/FDS_Control_Narrative_ISA506.md",
    "target_folder": "06_LIVING_REPORTS_GDOCS",
    "pic": "Altaf Ramadhan Parvez",
-   "status": "Draft",
-   "data_status": "PLACEHOLDER"
+   "status": "WIP",
+   "data_status": "REV 0.4.1",
+   "note": "Bab 5-7 oleh AL (WO-024); Tabel 6.2 L/H/HH terisi (LOG-086); Rev 0.5 menunggu P&ID Rev C"
   },
   {
    "key": "laporan_pstf1",
@@ -221,8 +513,38 @@
     "Lampiran B Logbook": "Heidi Falina Brilian"
    },
    "final_check_before_submission": "Rahul Ghulam Hidayatulloh (PM)",
-   "status": "Draft",
-   "data_status": "KERANGKA"
+   "status": "WIP",
+   "data_status": "DRAF G1",
+   "tab_links": [
+    {
+     "title": "Bagian Depan",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.jfu8t43xndlz"
+    },
+    {
+     "title": "Bab 1",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.0"
+    },
+    {
+     "title": "Bab 2",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.zlt06enrvl6"
+    },
+    {
+     "title": "Bab 3",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.hpfsf5fpr7u"
+    },
+    {
+     "title": "Bab 4",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.33xr9zr6esko"
+    },
+    {
+     "title": "Lampiran",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.fbr1nvpab9tn"
+    },
+    {
+     "title": "Catatan Penyusunan",
+     "url": "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.wgbge79l9c60"
+    }
+   ]
   }
  ]
 }

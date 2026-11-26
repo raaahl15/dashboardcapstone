@@ -14,7 +14,7 @@ author: "Heidi Falina Brilian (PIC WO-027); model disusun Claude Code (AI) atas 
 reviewer: ""
 status: "Draft"
 review_evidence: ""
-google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit"
+google_ref: "https://docs.google.com/document/d/1sR0IRYj7mvfL_qnL9qyKI035ig14XihuafEGQR_c62w/edit?tab=t.33xr9zr6esko"
 last_updated: "2026-11-12"
 tags: ["Bab 4", "CAPEX", "OPEX", "I&C", "NPV", "IRR", "Sensitivitas", "WO-027"]
 ---

@@ -293,6 +293,18 @@ Entri diurutkan dari yang **terbaru di atas**. Setiap entri mengikuti format BAB
 
 ---
 
+### [LOG-090] 2026-11-26 WIB — Tautan dokumen cockpit diperbarui: standar, regulasi, deliverable, registry Drive
+* **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "update website cockpitnya kayak untuk link link dokumennya seperti standart dan lain lain, update linknya yang di website".
+* **Data live Firestore (diedit lewat UI cockpit, Claude in Chrome)**:
+  - **Regulasi**: Panduan Capstone → PDF Drive `18YU_iS8…`, KAK/RFP → PDF Drive `1kMWAbtp…`, Template Format → folder Drive Templates `1LrSEZhr…`. Link lama `ugm.id/...` fiktif.
+  - **Standar** (link lama 404/soft-404/salah halaman, dicek lewat web fetch): NAMUR NA 35 → dinmedia.de; ISO 10628 → iso.org/standard/51840 (Part 1); ISA-5.06.01 → halaman seri ISA-5; IEC 61511 → webstore.iec.ch/en/publication/24241 (sebelumnya membuka ISO/IEC 27000); API 520/521 → apiwebstore.org 520 Part 1; API RP 551 → Accuris store (r2024); API 650 → halaman standard650 api.org. ISA-5.1 tetap (valid).
+  - **Standar baru**: ISA-18.2 (manajemen alarm, dasar Master Alarm Database) dan ASME PTC 19.3 TW-2016 (PDF di Drive `00_CORE_GUIDELINES`).
+  - **Deliverable**: Bab 3 → tab Bab 3 laporan (`?tab=t.hpfsf5fpr7u`), Bab 4 → tab Bab 4 (`?tab=t.33xr9zr6esko`), Sub-Antarmuka S-107 → PDF PFD Rev B (`1Y-ymGil…`). Bab 1 tetap ke `BAB_1.pdf` (berkas yang diajukan, bukti status Diajukan), Bab 2 tetap FDS, Lampiran A tetap PDF P&ID Rev B.
+* **Repo (main)**: `google_workspace_registry.json/.md` rev 0.9 (36 berkas Drive dalam 6 grup, `archived` untuk Rev A, `tab_links` laporan per bab); `google_ref` diisi di Panduan, RFP, BAB1 (tab t.0), CALC Bab 4 (tab Bab 4), dan WO031 Langkah 1. `build_manifest` + `check_companions` PASS.
+* **Branch `drive-files-hub`** (kode web, menunggu ACC PM untuk merge): `GoogleWorkspaceView.tsx` menampilkan chip tab per bab dan seksi "Berkas Drive" per grup (opsi tampilkan arsip); seed `initialData.ts` diselaraskan dengan link baru + 2 standar baru.
+
+---
+
 ### [LOG-089] 2026-11-26 WIB — PFD DME-PFD-001 Rev B: T-101 jadi feed vessel tempat pencampuran, simbol HX sesuai kesepakatan tim, tata letak gaya Turton
 * **Pelaksana**: Claude Code (AI agent "Rakai"), atas instruksi PM: "revisi total PFD, dengan acuan DWSIM RFP, serta buat lebih rapi … simbol stream itu ada di line … penempatannya seperti referensi … ikutin seluruh template cad".
 * **Keputusan (dari diskusi PM)**:

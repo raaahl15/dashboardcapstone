@@ -12,7 +12,7 @@ author: "Claude Code (AI) atas instruksi PM; PIC WO-031 Ihsaan Zauhair Tsaqif Pr
 reviewer: "Ihsaan Zauhair Tsaqif Prawira; Jonathan Pangihutan Michael Siahaan"
 status: "Draft"
 review_evidence: "WO-031"
-google_ref: ""
+google_ref: "https://docs.google.com/document/d/1hYOQtSmWjUV_yqRjEoZUFeJVrxWUQlhgUdkw_VK1F6k/edit"
 last_updated: "2026-11-10"
 tags: ["WO-031", "TBD-04", "Katalis", "Kinetika", "Area-100"]
 ---

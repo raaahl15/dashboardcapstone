@@ -15,7 +15,7 @@ author: "DTNTF FT UGM (penerbit); ringkasan oleh Claude Code (AI)"
 reviewer: "Rahul Ghulam Hidayatulloh"
 status: "WIP"
 review_evidence: ""
-google_ref: ""
+google_ref: "https://drive.google.com/file/d/1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn/view"
 last_updated: "2026-11-03"
 tags: ["RFP", "TOR", "KAK", "I&C", "FEED", "DED", "Lingkup"]
 ---

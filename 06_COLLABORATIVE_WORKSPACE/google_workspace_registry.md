@@ -13,7 +13,7 @@ reviewer: "Rahul Ghulam Hidayatulloh"
 status: "WIP"
 review_evidence: ""
 google_ref: "https://drive.google.com/drive/folders/1aV2msrsmDPdYxKelZ3UlncmAsO6kmKod"
-last_updated: "2026-11-05"
+last_updated: "2026-11-26"
 tags: ["Google Workspace", "Registry", "Drive", "Sheets", "Docs"]
 ---
 
@@ -41,7 +41,8 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 ## 3. Skema
 - `drive.root`, `drive.folders[]`: `{key, title, id, url}`.
 - `drive.folders_pending[]`: nama folder Blueprint §3.3 yang belum ada di Drive.
-- `drive.files[]`: file biner penting di Drive (P&ID DXF, standar PDF) dengan `key`, `title`, `id`, `url`, `folder`, `note` (LOG-038).
+- `drive.files[]`: file biner penting di Drive (P&ID DXF, standar PDF) dengan `key`, `title`, `id`, `url`, `folder`, `note` (LOG-038). Sejak LOG-090 ada juga `group` (dikelompokkan di cockpit sesuai urutan `drive.file_groups`) dan `archived: true` untuk revisi lama.
+- `documents[].tab_links[]`: `{title, url}` link langsung ke tab Google Docs (laporan PSTF 1 per bab, LOG-088/090).
 - `documents[]`: `{key, type (sheets|docs|slides), title, doc_no, id, url, target_folder, pic, status, data_status}`, ditambah `repo_snapshot` + `sync_direction` untuk Sheets yang disalin ke CSV, atau `repo_companion` untuk Docs yang punya companion di repo.
 
 ## 4. SOP Pembaruan
@@ -60,3 +61,4 @@ Entri Sheets yang disinkron ke repo juga punya `sync_tab`, `key_column`, dan `re
 | 0.6 | 2026-11-04 | Claude Code (AI) | + `drive.files`: P&ID DME-PID-002 Rev B (03_CAD_DWG) dan ASME PTC 19.3 TW-2016 (00_CORE_GUIDELINES), diunggah PM, diverifikasi lewat konektor (LOG-038). |
 | 0.7 | 2026-11-05 | Antigravity (AI) | + `drive.files`: P&ID DME-PID-002 Rev B A3 DXF & gambar pratinjau PNG (03_CAD_DWG) diunggah ke Drive (LOG-056). |
 | 0.8 | 2026-11-05 | Antigravity (AI) | + `drive.files`: Master Legend P&ID Rev 1 DXF & gambar pratinjau PNG (`03_CAD_DWG/symbol_libraries`) diunggah ke Drive (LOG-060). |
+| 0.9 | 2026-11-26 | Claude Code (AI) | `drive.files` dilengkapi jadi 36 berkas dalam 6 grup (standar & acuan, PFD Rev B + arsip Rev A, P&ID, template & library CAD, slide bimbingan, bukti WO-031, desain cockpit); `tab_links` laporan per bab; status FDS/Instrument Index/laporan diperbarui (LOG-090). |

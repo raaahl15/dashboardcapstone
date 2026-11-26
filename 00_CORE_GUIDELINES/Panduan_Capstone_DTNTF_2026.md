@@ -15,7 +15,7 @@ author: "Claude Code (AI) — ringkasan"
 reviewer: ""
 status: "WIP"
 review_evidence: ""
-google_ref: ""
+google_ref: "https://drive.google.com/file/d/18YU_iS8LTZ6i7DJjw25XaYHswt58VFXu/view"
 last_updated: "2026-11-03"
 tags: ["Panduan", "Rubrik", "PSTF 1", "PSTF 2", "Stage-Gate"]
 ---
