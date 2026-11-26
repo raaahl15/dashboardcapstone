@@ -745,21 +745,21 @@ export const INITIAL_REGULATIONS: RegulationDirective[] = [
     title: 'Buku Panduan Capstone Design K2026 DTNTF',
     subtitle: 'Aturan, timeline, dan kriteria penilaian',
     badge: 'Buku Panduan Departemen - DTNTF UGM',
-    url: 'https://ugm.id/panduan-capstone-dtntf-k2026',
+    url: 'https://drive.google.com/file/d/18YU_iS8LTZ6i7DJjw25XaYHswt58VFXu/view',
   },
   {
     id: 'reg-2',
     title: 'KAK/RFP IC-DME-2026-001',
     subtitle: 'Battery limit, target produksi, dan kriteria evaluasi tender',
     badge: 'Spesifikasi Proyek Industri KAK-2026',
-    url: 'https://ugm.id/kak-rfp-ic-dme-2026-001',
+    url: 'https://drive.google.com/file/d/1kMWAbtpGL_Ez5ufpWGPKeM85rI4IVzzn/view',
   },
   {
     id: 'reg-3',
     title: 'Template Format Dokumen & Gambar Teknik',
     subtitle: 'Laporan A4, lembar gambar A3, unduhan .docx dan CAD',
     badge: 'Format Baku Laporan & Drafting A3',
-    url: 'https://ugm.id/template-dokumen-pstf',
+    url: 'https://drive.google.com/drive/folders/1LrSEZhrmwd3nZsbQjRL_qYifbKiKAkb3',
   },
 ];
 
@@ -770,7 +770,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'NAMUR',
     title: 'NAMUR NA 35',
     subtitle: 'Fase rekayasa dan gerbang evaluasi FEED',
-    url: 'https://www.namur.net/en/focus-areas/automation-security/na-35.html',
+    url: 'https://www.dinmedia.de/de/technische-regel/namur-na-35/302215972',
   },
   {
     id: 'std-2',
@@ -778,7 +778,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'ISO',
     title: 'ISO 10628',
     subtitle: 'Process Flow Diagram (PFD)',
-    url: 'https://www.iso.org/standard/54009.html',
+    url: 'https://www.iso.org/standard/51840.html',
   },
   {
     id: 'std-3',
@@ -794,7 +794,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'ISA',
     title: 'ISA-5.06.01',
     subtitle: 'Narasi kendali / FDS',
-    url: 'https://www.isa.org/standards-and-publications/isa-standards/isa-5-06-01',
+    url: 'https://www.isa.org/standards-and-publications/isa-standards/isa-5-standard',
   },
   {
     id: 'std-5',
@@ -802,7 +802,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'IEC',
     title: 'IEC 61511',
     subtitle: 'Sistem Instrumentasi Keselamatan (SIS)',
-    url: 'https://webstore.iec.ch/publication/24227',
+    url: 'https://webstore.iec.ch/en/publication/24241',
   },
   {
     id: 'std-6',
@@ -810,7 +810,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'API',
     title: 'API 520/521',
     subtitle: 'Pressure relief',
-    url: 'https://www.api.org/standards/petroleum-refinery/rp-520-521',
+    url: 'https://www.apiwebstore.org/standards/520__Part_1',
   },
   {
     id: 'std-7',
@@ -818,7 +818,7 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'API',
     title: 'API RP 551',
     subtitle: 'Penempatan dan pemasangan instrumen proses',
-    url: 'https://www.api.org/standards/petroleum-refinery/rp-551',
+    url: 'https://store.accuristech.com/tia/standards/api-rp-551-r2024?product_id=1909952',
   },
   {
     id: 'std-8',
@@ -826,7 +826,23 @@ export const INITIAL_STANDARDS: StandardReferenceItem[] = [
     subCode: 'API',
     title: 'API 650',
     subtitle: 'Tangki penyimpanan atmosferik DME & Metanol',
-    url: 'https://www.api.org/standards/petroleum-refinery/std-650',
+    url: 'https://www.api.org/products-and-services/standards/important-standards-announcements/standard650',
+  },
+  {
+    id: 'std-9',
+    code: 'ISA-18.2',
+    subCode: 'ISA',
+    title: 'Management of Alarm Systems for the Process Industries',
+    subtitle: 'Manajemen sistem alarm (Master Alarm Database)',
+    url: 'https://www.isa.org/standards-and-publications/isa-standards/isa-18-series-of-standards',
+  },
+  {
+    id: 'std-10',
+    code: 'ASME PTC 19.3 TW-2016',
+    subCode: 'ASME',
+    title: 'Thermowells: Performance Test Codes',
+    subtitle: 'Perhitungan kekuatan thermowell (salinan PDF di Drive 00_CORE_GUIDELINES)',
+    url: 'https://drive.google.com/file/d/1se5P9hzPljuUc8kF-6RBrqNwe5z4xq5F/view',
   },
 ];
 
